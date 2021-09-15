@@ -6,16 +6,16 @@ import { UserProviderQuery } from "./__generated__/UserProviderQuery.graphql";
 export const UserProviderQueryTag = graphql`
   query UserProviderQuery {
     me {
-      guid
-      firstName
+      id
+      name
     }
   }
 `;
 
 export type usertype = {
     readonly me: {
-      readonly guid: string | null;
-      readonly firstName: string | null;
+      readonly id: string | null;
+      readonly name: string | null;
   } | null;
 } | null;
 

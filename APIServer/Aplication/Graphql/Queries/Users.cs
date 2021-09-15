@@ -7,10 +7,10 @@ using Shared.Aplication.Interfaces;
 
 namespace APIServer.Aplication.GraphQL.Queries {
     
-        /// <summary>
+    /// <summary>
     /// UserQueries
     /// </summary>
-    [ExtendObjectType(Name = "Querry")]
+    [ExtendObjectType(OperationTypeNames.Query)]
     public class UserQueries {
             public async Task<GQL_User> me(
             [Service] ICurrentUser _current,
@@ -22,7 +22,8 @@ namespace APIServer.Aplication.GraphQL.Queries {
 
             return new GQL_User(){
                 Guid = _current.UserId !=null?_current.UserId.Value.ToString():"",
-                FirstName = _current.Name,
+                Name = _current.GetClaim("name"),
+                Email = _current.GetClaim("email")
             };
         }
     }

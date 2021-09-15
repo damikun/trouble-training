@@ -1,6 +1,7 @@
 using HotChocolate.Types;
 using HotChocolate.Resolvers;
 using APIServer.Aplication.GraphQL.DTO;
+using Aplication.GraphQL.DataLoaders;
 
 namespace APIServer.Aplication.GraphQL.Types {
 
@@ -11,10 +12,10 @@ namespace APIServer.Aplication.GraphQL.Types {
 
         protected override void Configure(IObjectTypeDescriptor<GQL_User> descriptor) {
 
-            // descriptor.AsNode().IdField(t => t.ID).NodeResolver((ctx, id) =>
-            //     ctx.DataLoader<WebHookByIdDataLoader>().LoadAsync(id, ctx.RequestAborted));
-
-            descriptor.Field(t => t.Guid).Type<IdType>();
+            descriptor.ImplementsNode().IdField(t => t.Guid)
+            .ResolveNode((ctx, id) =>
+                 ctx.DataLoader<UserByIdDataLoader>()
+                 .LoadAsync(id, ctx.RequestAborted));
 
             descriptor.Field("systemid").Type<NonNullType<LongType>>().Resolve((IResolverContext context) => {
                 return context.Parent<GQL_User>().Guid.ToString();
@@ -22,8 +23,7 @@ namespace APIServer.Aplication.GraphQL.Types {
 
         }
 
-        private class UserTypeResolvers {
-
+        private class UserResolvers {
 
         }
     }

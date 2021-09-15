@@ -1,5 +1,5 @@
 ﻿schema {
-  query: Querry
+  query: Query
   mutation: Mutation
 }
 
@@ -23,14 +23,14 @@ type BaseError implements IBaseError {
 type CreateWebHookPayload {
   hook: GQL_WebHook
   errors: [ICreateWebHookError]
-  query: Querry!
+  query: Query!
 }
 
-type GQL_User {
-  guid: ID
+type GQL_User implements Node {
+  id: ID!
   systemid: Long!
-  firstName: String
-  lastName: String
+  name: String
+  email: String
 }
 
 type GQL_WebHook implements Node {
@@ -107,21 +107,15 @@ type PageInfo {
   endCursor: String
 }
 
-type Querry {
+type Query {
   node(id: ID!): Node
-  webhooks(first: Int after: String last: Int before: String where: GQL_WebHookFilter): GQL_WebHookRecordConnection
-  webHookRecords(first: Int after: String last: Int before: String hook_id: ID! where: GQL_WebHookRecordFilter): GQL_WebHookRecordConnection
-  webHookEventsTriggers: [String]
-  webHookRecord(hook_record_id: ID!): GQL_WebHookRecord
-  webHookById(webhook_id: ID!): GQL_WebHook
-  webHookBySystemId(webhook_id: Long!): GQL_WebHook
   me: GQL_User
 }
 
 type RemoveWebHookPayload {
   removed_id: ID
   errors: [IRemoveWebHookError]
-  query: Querry!
+  query: Query!
 }
 
 type UnAuthorised implements IBaseError {
@@ -131,31 +125,31 @@ type UnAuthorised implements IBaseError {
 type UpdateWebHookActivStatePayload {
   hook: GQL_WebHook
   errors: [IUpdateWebHookActivStateError]
-  query: Querry!
+  query: Query!
 }
 
 type UpdateWebHookPayload {
   hook: GQL_WebHook
   errors: [IUpdateWebHookError]
-  query: Querry!
+  query: Query!
 }
 
 type UpdateWebHookSecretPayload {
   hook: GQL_WebHook
   errors: [IUpdateWebHookSecretError]
-  query: Querry!
+  query: Query!
 }
 
 type UpdateWebHookTriggerEventsPayload {
   hook: GQL_WebHook
   errors: [IUpdateWebHookTriggerEventsError]
-  query: Querry!
+  query: Query!
 }
 
 type UpdateWebHookUriPayload {
   hook: GQL_WebHook
   errors: [IUpdateWebHookUriError]
-  query: Querry!
+  query: Query!
 }
 
 type UserDeactivated implements IBaseError {

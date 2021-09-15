@@ -11,7 +11,7 @@ namespace APIServer.Aplication.GraphQL.Mutation {
     /// <summary>
     /// WebHooks Mutations
     /// </summary>
-    [ExtendObjectType(Name = "Mutation")]
+    [ExtendObjectType(OperationTypeNames.Mutation)]
     public class WebHookMutations {
 
         /// <summary>

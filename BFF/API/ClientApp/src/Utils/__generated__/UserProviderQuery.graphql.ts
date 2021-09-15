@@ -1,14 +1,14 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 7efb0df1701410878c28317b144766d0 */
+/* @relayHash 1c86c2c1da73968a7ac920a9a077af84 */
 
 import { ConcreteRequest } from "relay-runtime";
 export type UserProviderQueryVariables = {};
 export type UserProviderQueryResponse = {
     readonly me: {
-        readonly guid: string | null;
-        readonly firstName: string | null;
+        readonly id: string;
+        readonly name: string | null;
     } | null;
 };
 export type UserProviderQuery = {
@@ -21,8 +21,8 @@ export type UserProviderQuery = {
 /*
 query UserProviderQuery {
   me {
-    guid
-    firstName
+    id
+    name
   }
 }
 */
@@ -41,14 +41,14 @@ var v0 = [
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "guid",
+        "name": "id",
         "storageKey": null
       },
       {
         "alias": null,
         "args": null,
         "kind": "ScalarField",
-        "name": "firstName",
+        "name": "name",
         "storageKey": null
       }
     ],
@@ -62,7 +62,7 @@ return {
     "metadata": null,
     "name": "UserProviderQuery",
     "selections": (v0/*: any*/),
-    "type": "Querry",
+    "type": "Query",
     "abstractKey": null
   },
   "kind": "Request",
@@ -73,7 +73,7 @@ return {
     "selections": (v0/*: any*/)
   },
   "params": {
-    "id": "7efb0df1701410878c28317b144766d0",
+    "id": "1c86c2c1da73968a7ac920a9a077af84",
     "metadata": {},
     "name": "UserProviderQuery",
     "operationKind": "query",
@@ -81,5 +81,5 @@ return {
   }
 };
 })();
-(node as any).hash = 'eca19789b409ba82958d74519d2f46b3';
+(node as any).hash = '164a46198a3093985fdd717487d265c5';
 export default node;

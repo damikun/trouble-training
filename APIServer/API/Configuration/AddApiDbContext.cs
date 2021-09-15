@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Builder;
 using System;
 using APIServer.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using IdentityServer.Persistence;
 
 namespace APIServer.Configuration {
     public static partial class ServiceExtension {
@@ -14,8 +17,22 @@ namespace APIServer.Configuration {
         public static IServiceCollection AddDbContext(
             this IServiceCollection serviceCollection,
              IConfiguration Configuration, IWebHostEnvironment Environment) {
-
+                
+                // ApiDbContext
                 serviceCollection.AddApiDbContext(Configuration,Environment);
+
+                // AppIdnetityDbContext
+                serviceCollection.AddPooledDbContextFactory<AppIdnetityDbContext>(
+                    (s, o) => o
+                        .UseNpgsql(Configuration["ConnectionStrings:AppIdnetityDbContext"], option => {
+                        option.EnableRetryOnFailure();
+
+                        if (Environment.IsDevelopment()) {
+                            o.EnableDetailedErrors();
+                            o.EnableSensitiveDataLogging();
+                        }
+
+                        }).UseLoggerFactory(s.GetRequiredService<ILoggerFactory>()));
 
             return serviceCollection;
         }

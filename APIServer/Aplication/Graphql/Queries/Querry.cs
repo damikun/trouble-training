@@ -3,9 +3,9 @@
 namespace APIServer.Aplication.GraphQL.Queries {
 
     /// <summary>
-    /// Querry
+    /// Query
     /// </summary>
-    public class Querry {
+    public class Query {
 
 
     }

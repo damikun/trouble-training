@@ -1,3 +1,4 @@
 {
-  "7efb0df1701410878c28317b144766d0": "query UserProviderQuery {\n  me {\n    guid\n    firstName\n  }\n}\n"
+  "7efb0df1701410878c28317b144766d0": "query UserProviderQuery {\n  me {\n    guid\n    firstName\n  }\n}\n",
+  "1c86c2c1da73968a7ac920a9a077af84": "query UserProviderQuery {\n  me {\n    id\n    name\n  }\n}\n"
 }

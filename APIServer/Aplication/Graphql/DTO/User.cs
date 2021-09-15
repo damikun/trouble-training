@@ -12,15 +12,16 @@ namespace APIServer.Aplication.GraphQL.DTO {
         public string Guid { get; set; }
 
         /// <summary>
-        ///  Firstname
+        ///  Name
         /// </summary>
-        public string FirstName { get; set; }
+        public string Name { get; set; }
 
+        #nullable enable
         /// <summary>
-        ///  LastName
+        ///  Email
         /// </summary>
-        public string LastName { get; set; }
-
+        public string? Email { get; set; }
+        #nullable disable
     }
 }
 

@@ -31,13 +31,16 @@ namespace APIServer.Configuration {
                         AddQueryFieldToMutationPayloads = true
                     })
 
-                    .AddQueryType<Querry>()
+                    .AddQueryType<Query>()
                         .AddTypeExtension<WebHookQueries>()
                         .AddTypeExtension<UserQueries>()
+                        
                     .AddMutationType<Mutation>()
                         .AddTypeExtension<WebHookMutations>()
+
                     .BindRuntimeType<DateTime, DateTimeType>()
                     .BindRuntimeType<int, IntType>()
+
                     .AddType<BadRequestType>()
                     .AddType<InternalServerErrorType>()
                     .AddType<UnAuthorisedType>()

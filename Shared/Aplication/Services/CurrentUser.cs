@@ -35,7 +35,7 @@ namespace Shared.Aplication.Services {
             }
         }
 
-#nullable enable
+        #nullable enable
         public Guid? UserId {
 
             get {
@@ -47,9 +47,9 @@ namespace Shared.Aplication.Services {
                 }
             }
         }
-#nullable disable
+        #nullable disable
 
-#nullable enable
+        #nullable enable
         public ClaimsIdentity? Claims {
 
             get {
@@ -61,7 +61,7 @@ namespace Shared.Aplication.Services {
                 }
             }
         }
-#nullable disable
+        #nullable disable
 
         public string Name {
             get {
@@ -89,10 +89,15 @@ namespace Shared.Aplication.Services {
         }
 
         public string GetClaim(string type){
-            return _contextAccessor?.HttpContext?.User?.Claims
-            .Where(e => e.Type == "emails")
-            .Select(e => e.Value)
-            .SingleOrDefault();
+
+            try{
+                return _contextAccessor?.HttpContext?.User?.Claims
+                .Where(e => e.Type == type)
+                .Select(e => e.Value)
+                .SingleOrDefault();
+            }catch{
+                return null;
+            }
         }
 
         public static bool TestRole(IHttpContextAccessor context, string role) {

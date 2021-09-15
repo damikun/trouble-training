@@ -108,7 +108,7 @@ namespace BFF
                 // user or client access token will be attached in API call
                 // user access token will be managed automatically using the refresh token
                 
-                endpoints.MapRemoteBffApiEndpoint("/graphql", "https://localhost:5022/graphql",true)
+                endpoints.MapRemoteBffApiEndpoint("/graphql", "https://localhost:5022/graphql",false)
                     .WithOptionalUserAccessToken()
                     // or
                     // .RequireAccessToken(TokenType.UserOrClient);             
