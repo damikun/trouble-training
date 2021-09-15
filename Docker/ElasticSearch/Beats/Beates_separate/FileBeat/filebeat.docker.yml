@@ -1,0 +1,59 @@
+#========================== Filebeat ===========================================
+# The following reference file is available with your Filebeat installation.
+# The reference YAML: https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-reference-yml.html
+
+
+
+#========================== Filebeat autodiscover ==============================
+# Autodiscover allows you to track pods and adapt settings as changes happen in your environment.
+# https://www.elastic.co/guide/en/beats/filebeat/6.8/configuration-autodiscover.html
+filebeat.autodiscover:
+  # Providers are essential configurables that monitor system events and reformat them as internal autodiscover events. Providers must be defined in order for Autodiscover to work. 
+  providers:
+    - type: docker
+      # https://www.elastic.co/guide/en/beats/filebeat/current/configuration-autodiscover-hints.html
+      hints.enabled: true
+
+#========================== Filebeat inputs ===================================
+# Inputs specify how Filebeat locates and processes input data.
+# Filebeat support multiple inputs: https://www.elastic.co/guide/en/beats/filebeat/current/configuration-filebeat-options.html
+
+# Full docker input reference: https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-input-docker.html 
+filebeat.inputs:     
+- type: docker
+  combine_partial: true
+  exclude_lines: ['^DBG']  # Other options: '^ERR', '^WARN'
+  containers:
+    path: "/var/lib/docker/containers"
+    stream: "stdout"
+    ids:
+      - "*" # or specify concrete id. * -> means all
+
+# Concrete container logs
+# # Use the container input to read containers log files.
+# # This input searches for container logs under the given path,
+# - type: container
+#   exclude_lines: ['^DBG'] # Other options: '^ERR', '^WARN'
+#   stream: stdout
+#   paths:
+#     - "/var/log/containers/*.log"
+
+#========================== Filebeat modules ===================================
+# Filebeat modules provide a quick way to get started processing common log formats
+# Modules reference: https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-modules.html
+
+#========================== Elasticsearch output ===============================
+# Filebeat supports multuple outputs: https://www.elastic.co/guide/en/beats/filebeat/current/configuring-output.html
+output.elasticsearch:
+  hosts: ["localhost:9200"]
+
+##============================== Kibana =========================================
+# Kibana dashboards are loaded into Kibana via the Kibana API. This requires a Kibana endpoint configuration.
+# Kibana setup reference: https://www.elastic.co/guide/en/beats/filebeat/current/setup-kibana-endpoint.html
+
+setup.kibana:
+  host: "localhost:5601"
+
+#============================== Dashboards =====================================
+setup.dashboards:
+  enabled: true

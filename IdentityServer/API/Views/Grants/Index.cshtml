@@ -1,0 +1,98 @@
+@model GrantsViewModel
+
+<div class="flex h-full overflow-y-scroll flex-col space-y-5 p-5 max-h-full max-w-full text-xs md:text-sm relative mt-auto">
+    <div class="flex flex-col space-y-2">
+        <h1 class="font-semibold text-2xl">Client Application Permissions</h1>
+        <p class="text-base">Below is the list of applications you have given permission to and the resources they have access to.</p>
+    </div>
+
+    <div class="grants-page">
+
+        @if (Model.Grants.Any() == false)
+        {
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="alert alert-info">
+                        You have not given access to any applications
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            foreach (var grant in Model.Grants)
+            {
+
+                <div class="flex flex-col">
+                    <div class="flex flex-col border border-gray-600 shadow-md">
+                        <div class="bg-gray-200 px-2 flex flex-row bg-opacity-90 h-14 items-center justify-between">
+                            <h2 class="pl-3 font-semibold text-base flex flex-row space-x-2 items-center ">
+                                @if (grant.ClientLogoUrl != null)
+                                {
+                                    <img src="@grant.ClientLogoUrl">
+                                }
+                                <strong>@grant.ClientName</strong>
+                            </h2>
+                            <div class="">
+                                <form asp-action="Revoke">
+                                    <input type="hidden" name="clientId" value="@grant.ClientId">
+
+                                    <button name="button" value="cancel" class=" px-1 h-10 text-sm rounded-lg md:text-base focus:outline-none font-semibold border border-white border-opacity-75 outline-none transition duration-200 focus:delay-75 bg-red-500 text-white focus:ring-red-600 focus:ring-2 hover:bg-red-600">
+                                        <div class="flex flex-row flex-nowrap space-x-2 leading-none justify-center items-center">
+                                            <div class="text-center items-center p-1 flex-none truncate">
+                                                Revoke Access
+                                            </div>
+                                        </div>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="p-3 md:p-5 flex flex-col w-full ">
+                            <ul class="flex flex-col border ">
+                                @if (grant.Description == null)
+                                {
+                                    <li class="bg-white items-center p-2.5 pl-4 border-b">
+                                        <label class="font-semibold">Description:</label> @grant.Description
+                                    </li>   
+                                }
+                                <li class="bg-white items-center p-2.5 pl-4 border-b">
+                                    <label class="font-semibold">Created:</label> @grant.Created.ToString("yyyy-MM-dd")
+                                </li>
+                                @if (grant.Expires.HasValue)
+                                {
+                                    <li class="bg-white items-center p-2.5 pl-4 border-b">
+                                        <label class="font-semibold">Expires:</label> @grant.Expires.Value.ToString("yyyy-MM-dd")
+                                    </li>
+                                }
+                                @if (grant.IdentityGrantNames.Any())
+                                {
+                                    <li class="bg-white items-center p-2.5 pl-4 border-b">
+                                        <label class="font-semibold">Identity Grants</label>
+                                        <ul>
+                                            @foreach (var name in grant.IdentityGrantNames)
+                                            {
+                                                <li>@name</li>
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                                @if (grant.ApiGrantNames.Any())
+                                {
+                                    <li class="bg-white items-center p-2.5 pl-4 border-b">
+                                        <label class="font-semibold">API Grants</label>
+                                        <ul>
+                                            @foreach (var name in grant.ApiGrantNames)
+                                            {
+                                                <li>@name</li>
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

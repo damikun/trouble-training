@@ -1,0 +1,20 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:55680
+
+exporters:
+  otlp/2:
+    endpoint: apm-server:8200
+    insecure: true
+  logging:
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [logging, otlp/2]
+    metrics:
+      receivers: [otlp]
+      exporters: [logging, otlp/2]

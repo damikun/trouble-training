@@ -1,0 +1,21 @@
+version: '3'
+services:
+  heartbeat:
+    image: docker.elastic.co/beats/heartbeat:7.14.0
+    user: root
+    container_name: heartbeat
+    # configs:
+    #   - source: mb_config
+    #     target: /usr/share/metricbeat/metricbeat.yml:ro
+    volumes:
+      - ./heartbeat.yml:/usr/share/heartbeat/heartbeat.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    network_mode: "host"
+    environment:
+      - ELASTICSEARCH_HOST=localhost:9200
+      - KIBANA_HOST=localhost:5601
+    command: --strict.perms=false -e  # -e flag to log to stderr and disable syslog/file output
+
+# configs:
+#   mb_config:
+#     file: ./metricbeat.docker.yml

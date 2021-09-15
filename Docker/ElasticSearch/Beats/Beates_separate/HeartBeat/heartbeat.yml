@@ -1,0 +1,50 @@
+heartbeat.monitors:
+
+# Elastic tcp session monitor
+- type: tcp
+  name: Elasticsearch-TCP
+  schedule: '@every 5s'
+  hosts: ["localhost:9200"]
+  ipv4: true
+  ipv6: false
+  mode: any
+
+# Kibana tcp session monitor
+- type: tcp
+  name: Kibana-TCP
+  schedule: '@every 5s'
+  hosts: ["localhost:5601"]
+  ipv4: true
+  ipv6: false
+  mode: any
+
+# Elastic server status monitor
+- type: http
+  id: Elasticsearch-status
+  name: Elasticsearch
+  service.name: elasticsearch
+  hosts: ["http://localhost:9200/_cluster/health"]
+  check.response.status: [200]
+  schedule: '@every 5s'
+
+# Kibana server status monitor
+- type: http
+  id: Kibana-status
+  name: Kibana
+  service.name: kibana
+  hosts: ["http://localhost:5601/api/status"]
+  check.response.status: [200]
+  schedule: '@every 5s'
+
+processors:
+- add_docker_metadata: ~
+
+monitoring.enabled: true
+
+output.elasticsearch:
+  hosts: ["localhost:9200"]
+
+setup.kibana:
+  host: "localhost:5601"
+
+logging.to_files: false

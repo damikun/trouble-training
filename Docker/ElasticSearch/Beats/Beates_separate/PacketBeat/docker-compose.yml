@@ -1,0 +1,22 @@
+version: '3'
+services:
+  packetbeat:
+    image: docker.elastic.co/beats/packetbeat:7.14.0
+    container_name: packetbeat
+     # Need to override user so we can access the log files, and docker.sock
+    user: root
+    volumes:
+      - ./packetbeat.docker.yml:/usr/share/packetbeat/packetbeat.yml:ro
+      - packetbeat:/usr/share/packetbeat/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - ELASTICSEARCH_HOST=localhost:9200
+      - KIBANA_HOST=localhost:5601
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    command: --strict.perms=false -e  # -e flag to log to stderr and disable syslog/file output
+    network_mode: "host"
+
+volumes:
+  packetbeat:

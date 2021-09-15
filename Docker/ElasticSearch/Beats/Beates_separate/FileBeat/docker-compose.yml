@@ -1,0 +1,27 @@
+version: '3'
+services:
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.14.0
+    container_name: filebeat
+    # Need to override user so we can access the log files, and docker.sock
+    user: root
+    volumes:
+      - ./filebeat.docker.yml:/usr/share/filebeat/filebeat.yml:ro
+      - filebeat:/usr/share/filebeat/data
+      - /var/run/docker.sock:/var/run/docker.sock
+      # This is needed for filebeat to load container log path as specified in filebeat.yml
+      - /var/lib/docker/containers/:/var/lib/docker/containers/:ro
+      # This is needed for filebeat to load logs for system and auth modules
+      - /var/log/:/var/log/:ro
+      # This is needed for filebeat to load logs for auditd module. you might have to install audit system
+      # on ubuntu first (sudo apt-get install -y auditd audispd-plugins)
+      - /var/log/audit/:/var/log/audit/:ro
+    environment:
+      - ELASTICSEARCH_HOST=localhost:9200
+      - KIBANA_HOST=localhost:5601
+    # disable strict permission checks
+    command: --strict.perms=false -e  # -e flag to log to stderr and disable syslog/file output
+    network_mode: "host"
+
+volumes:
+  filebeat:

@@ -1,0 +1,110 @@
+#========================== Metricbeat ===========================================
+# Metricbeat is a lightweight shipper that you can install on your servers to periodically collect metrics from the operating system and from services running on the server. Metricbeat takes the metrics and statistics that it collects and ships them to the output that you specify, such as Elasticsearch or Logstash.
+# The reference YAML: https://www.elastic.co/guide/en/beats/metricbeat/current/metricbeat-reference-yml.html
+
+
+
+#========================== Metricbeat autodiscover ==============================
+# Autodiscover providers work by watching for events on the system and translating those events into internal autodiscover events with a common format
+# https://www.elastic.co/guide/en/beats/metricbeat/current/configuration-autodiscover.html
+metricbeat.autodiscover:
+  providers:
+    - type: docker
+      # https://www.elastic.co/guide/en/beats/metricbeat/current/configuration-autodiscover-hints.html
+      hints.enabled: true
+
+
+#========================== Metricbeat modules ===================================
+# Inputs specify how Filebeat locates and processes input data.
+# Modules reference: https://www.elastic.co/guide/en/beats/metricbeat/current/configuration-metricbeat.html
+# Modules official list: https://www.elastic.co/guide/en/beats/metricbeat/current/metricbeat-modules.html
+
+#------------------------------- System Module -------------------------------
+# The System module allows you to monitor your servers. Because the System module always applies to the local server, the hosts config option is not needed.
+# System module reference: https://www.elastic.co/guide/en/beats/metricbeat/6.8/metricbeat-module-system.html
+# The System core metricset provides usage statistics for each CPU core.
+
+# This metricset is available on:
+# FreeBSD, Linux, macOS, OpenBSD, Windows
+
+metricbeat.modules:
+- module: system
+  metricsets:
+    - cpu             # CPU usage
+    - load            # CPU load averages
+    - memory          # Memory usage
+    - network         # Network IO
+    - process         # Per process metrics
+    - process_summary # Process summary
+    - uptime          # System Uptime
+    - socket_summary  # Socket summary
+    - core           # Per CPU core usage
+    - diskio         # Disk IO
+    - filesystem     # File system usage for each mountpoint
+    - fsstat         # File system summary metrics
+    - raid           # Raid
+    #- socket         # Sockets and connection info (linux only)
+  processes: ['.*']
+  process.include_top_n:
+    by_cpu: 5
+    by_memory: 5
+  period: 10s
+  cpu.metrics:  ["percentages", "normalized_percentages"] # The other available options are normalized_percentages and ticks.
+  core.metrics: ["percentages"] # The other available option is ticks.
+
+
+# Docker module reference: https://www.elastic.co/guide/en/beats/metricbeat/6.8/metricbeat-module-docker.html
+- module: docker
+  metricsets: ["container", "cpu", "diskio", "healthcheck", "info", "memory", "network"]
+  period: 10s
+  hosts: ["unix:///var/run/docker.sock"]
+
+# - module: elasticsearch
+#   metricsets: ["node", "node_stats", "cluster_stats", "index"]
+#   period: 10s
+#   hosts: ["http://localhost:9200"]
+
+# - module: kibana
+#   period: 10s
+#   hosts: ["http://localhost:5601"]
+
+# - module: postgresql
+#   hosts: ["postgres://localhost:6543?sslmode=disable"]
+#   metricsets:
+#     - database
+#     - bgwriter
+#     - activity
+#     - statement
+#   period: 10s
+#   enabled: true
+#   username: postgres
+#   password: postgres
+
+# #================================ Processors ===================================
+# ou can use processors to filter and enhance data before sending it to the configured output.
+processors:
+- add_cloud_metadata: ~
+- add_docker_metadata: ~
+- add_locale:
+    format: offset
+- add_host_metadata:
+    netinfo.enabled: true
+
+#========================== Elasticsearch output ===============================
+# Metricsbeat supports multuple outputs: https://www.elastic.co/guide/en/beats/metricbeat/current/configuring-output.html
+output.elasticsearch:
+  hosts: ["localhost:9200"]
+
+# output.logstash:
+#   hosts: ["localhost:9200"]
+
+#============================== Kibana =========================================
+# Kibana dashboards are loaded into Kibana via the Kibana API. This requires a Kibana endpoint configuration.
+# Kibana setup reference: https://www.elastic.co/guide/en/beats/metricbeat/current/setup-kibana-endpoint.html
+
+setup.kibana:
+  host: "localhost:5601"
+
+#============================== Dashboards =====================================
+setup.dashboards:
+  enabled: true

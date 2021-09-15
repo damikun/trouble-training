@@ -1,0 +1,70 @@
+#========================== Heartbeat ===========================================
+# Heartbeat is a lightweight daemon that you install on a remote server to periodically check the status of your services and determine whether they are available.
+# The reference: https://www.elastic.co/guide/en/beats/heartbeat/current/configuring-howto-heartbeat.html
+
+monitoring.enabled: true
+logging.to_files: false
+
+#========================== Heartbeat monitors ===================================
+# Heartbeat define a set of monitors to check your remote hosts
+# Reference: https://www.elastic.co/guide/en/beats/heartbeat/current/configuration-heartbeat-options.html
+heartbeat.monitors:
+
+# Elastic tcp session monitor
+- type: tcp
+  name: Elasticsearch-TCP
+  schedule: '@every 5s'
+  hosts: ["localhost:9200"]
+  ipv4: true
+  ipv6: false
+  mode: any
+
+# Kibana tcp session monitor
+- type: tcp
+  name: Kibana-TCP
+  schedule: '@every 5s'
+  hosts: ["localhost:5601"]
+  ipv4: true
+  ipv6: false
+  mode: any
+
+# Elastic server status monitor
+- type: http
+  id: Elasticsearch-status
+  name: Elasticsearch
+  service.name: elasticsearch
+  hosts: ["http://localhost:9200/_cluster/health"]
+  check.response.status: [200]
+  schedule: '@every 5s'
+
+# Kibana server status monitor
+- type: http
+  id: Kibana-status
+  name: Kibana
+  service.name: kibana
+  hosts: ["http://localhost:5601/api/status"]
+  check.response.status: [200]
+  schedule: '@every 5s'
+
+#========================== Heartbeat processors ===============================
+
+processors:
+- add_docker_metadata: ~
+
+#========================== Elasticsearch output ===============================
+# Heartbeat supports multuple outputs: https://www.elastic.co/guide/en/beats/heartbeat/current/configuring-output.html
+
+
+output.elasticsearch:
+  hosts: ["localhost:9200"]
+
+##============================== Kibana =========================================
+# Kibana dashboards are loaded into Kibana via the Kibana API. This requires a Kibana endpoint configuration.
+# Kibana setup reference: https://www.elastic.co/guide/en/beats/heartbeat/current/setup-kibana-endpoint.html
+
+setup.kibana:
+  host: "localhost:5601"
+
+# #============================== Dashboards =====================================
+# setup.dashboards:
+#   enabled: true

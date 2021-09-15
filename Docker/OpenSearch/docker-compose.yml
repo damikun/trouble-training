@@ -1,0 +1,103 @@
+version: '3'
+services:
+  data-prepper:
+    restart: unless-stopped
+    container_name: data-prepper
+    image: opensearchproject/data-prepper:latest
+    volumes:
+      - ./trace_analytics_no_ssl.yml:/usr/share/data-prepper/pipelines.yaml
+      - ./data-prepper-config.yaml:/usr/share/data-prepper/data-prepper-config.yaml
+      - ./root-ca.pem:/usr/share/data-prepper/root-ca.pem
+    ports:
+      - "21890:21890"
+    depends_on:
+      opensearch-node0:
+        condition: service_healthy
+      opensearch-node1:
+        condition: service_healthy
+    networks:
+      - opensearch-net
+  otel-collector:
+    container_name: otel-collector
+    image: otel/opentelemetry-collector:0.24.0
+    command: [ "--config=/etc/otel-collector-config.yml" ]
+    volumes:
+      - ./otel-collector-config.yml:/etc/otel-collector-config.yml
+      - ./demo-data-prepper.crt:/etc/demo-data-prepper.crt
+    ports:
+      - "14250:14250"
+      - "55680:55680" 
+    depends_on:
+      - data-prepper
+    networks:
+      - opensearch-net
+  opensearch-node0:
+    image: opensearchproject/opensearch:1.0.0
+    container_name: node-0.example.com
+    environment:
+        - cluster.name=opensearch-cluster
+        - node.name=node-2.example.com
+        - discovery.seed_hosts=node-0.example.com,node-1.example.com
+        - cluster.initial_master_nodes=node-0.example.com,node-1.example.com
+        - bootstrap.memory_lock=true # along with the memlock settings below, disables swapping
+        - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m" # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+    ulimits:
+        memlock:
+            soft: -1
+            hard: -1
+    volumes:
+        - opensearch-data1:/usr/share/opensearch/data
+        - ./root-ca.pem:/usr/share/data-prepper/root-ca.pem
+    ports:
+        - 9200:9200
+        - 9600:9600 # required for Performance Analyzer
+    networks:
+        - opensearch-net
+    healthcheck:
+      test: curl --cacert /usr/share/data-prepper/root-ca.pem -u admin:admin -s -f https://node-0.example.com:9200/_cat/health >/dev/null || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+  opensearch-node1:
+    image: opensearchproject/opensearch:1.0.0
+    container_name: node-1.example.com
+    environment:
+        - cluster.name=opensearch-cluster
+        - node.name=node-2.example.com
+        - discovery.seed_hosts=node-0.example.com,node-1.example.com
+        - cluster.initial_master_nodes=node-0.example.com,node-1.example.com
+        - bootstrap.memory_lock=true
+        - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+        memlock:
+            soft: -1
+            hard: -1
+    volumes:
+        - opensearch-data2:/usr/share/opensearch/data
+        - ./root-ca.pem:/usr/share/data-prepper/root-ca.pem
+    networks:
+        - opensearch-net
+    healthcheck:
+      test: curl --cacert /usr/share/data-prepper/root-ca.pem -u admin:admin -s -f https://node-0.example.com:9200/_cat/health >/dev/null || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 5
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:1.0.0
+    container_name: opensearch-dashboards
+    ports:
+        - 5601:5601
+    expose:
+        - "5601"
+    environment:
+        OPENSEARCH_HOSTS: '["https://node-0.example.com:9200","https://node-1.example.com:9200"]' # must be a string with no spaces when specified as an environment variable
+    networks:
+        - "opensearch-net"
+
+volumes:
+    opensearch-data1:
+    opensearch-data2:
+
+networks:
+    opensearch-net:
+        driver: bridge

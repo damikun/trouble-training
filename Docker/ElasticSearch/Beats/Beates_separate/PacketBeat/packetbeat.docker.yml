@@ -1,0 +1,75 @@
+#========================== Packetbeat ===========================================
+# Packetbeat is a real-time network packet analyzer that you can use with Elasticsearch to provide an application monitoring and performance analytics system.
+# The reference YAML: https://www.elastic.co/guide/en/beats/packetbeat/current/configuration-protocols.html
+
+#========================== Capturing optionsedit =============================
+# Reference: https://www.elastic.co/guide/en/beats/packetbeat/6.8/configuration-interfaces.html#configuration-interfaces
+packetbeat.interfaces.device: any
+packetbeat.interfaces.buffer_size_mb: 100
+
+#================================== Flows =====================================
+# Reference: https://www.elastic.co/guide/en/beats/packetbeat/master/exported-fields-flows_event.html
+packetbeat.flows:
+  timeout: 30s
+  period: 10s
+
+#========================== Transaction protocols =============================
+# Protocol reference: https://www.elastic.co/guide/en/beats/packetbeat/current/configuration-protocols.html
+
+packetbeat.protocols:
+- type: http
+  ports: [80, 5601, 9200, 8080, 8081, 5000, 8002]
+  send_headers: true
+  send_all_headers: true
+
+- type: pgsql
+  ports: [6543]
+
+- type: icmp
+  enabled: true
+
+- type: dhcpv4
+  ports: [67, 68]
+
+- type: dns
+  ports: [53]
+  include_authorities: true
+  include_additionals: true
+
+- type: tls
+  ports: [443, 993, 995, 5223, 8443, 8883, 9243]
+  
+#================================== Procesors =====================================
+processors:
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+  - dns:
+      type: reverse
+      fields:
+        source.ip: source.hostname
+        destination.ip: destination.hostname
+
+#========================== Elasticsearch output ===============================
+# Packetbet supports multuple outputs: https://www.elastic.co/guide/en/beats/packetbeat/current/configuring-output.html
+output.elasticsearch:
+  hosts: ["localhost:9200"]
+
+# output.logstash:
+#   hosts: ["localhost:9200"]
+
+#============================== Kibana =========================================
+# Kibana dashboards are loaded into Kibana via the Kibana API. This requires a Kibana endpoint configuration.
+# Kibana setup reference: https://www.elastic.co/guide/en/beats/packetbeat/master/setup-kibana-endpoint.html
+
+setup.kibana:
+  host: "localhost:5601"
+
+#============================== Dashboards =====================================
+setup.dashboards:
+  enabled: true
+
+packetbeat.config.inputs:
+  enabled: true
+  path: ./*.yml
+  reload.enabled: true
+  reload.period: 10s

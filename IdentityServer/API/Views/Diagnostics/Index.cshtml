@@ -1,0 +1,64 @@
+@model DiagnosticsViewModel
+
+<div class="flex h-full overflow-y-scroll flex-col space-y-5 p-5 max-h-full max-w-full text-xs md:text-sm relative mt-auto">
+        <div class="flex">
+            <h1 class="font-semibold text-2xl">Authentication Cookie</h1>
+        </div>
+
+
+        <div class="flex flex-col">
+            <div class="flex flex-col border border-gray-600 shadow-md">
+                <div class="bg-gray-200 bg-opacity-90 h-12 items-center flex">
+                    <h2 class="pl-3 font-semibold text-base">Claims</h2>
+                </div>
+                <div class="p-3 md:p-5 flex">
+                    <dl class="space-y-1">
+                        @foreach (var claim in Model.AuthenticateResult.Principal.Claims)
+                        {
+                            <dt>@claim.Type</dt>
+                            <dd>@claim.Value</dd>
+                        }
+                    </dl>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flex flex-col">
+            <div class="flex flex-col border border-gray-600 shadow-md">
+                <div class="bg-gray-200 bg-opacity-90 h-12 items-center flex">
+                    <h2 class="pl-3 font-semibold text-base">Properties</h2>
+                </div>
+                <div class="p-3 md:p-5">
+                    <dl>
+                        @foreach (var prop in Model.AuthenticateResult.Properties.Items)
+                        {
+                            <dt>@prop.Key</dt>
+                            <dd>@prop.Value</dd>
+                        }
+                        @if (Model.Clients.Any())
+                        {
+                            <dt>Clients</dt>
+                            <dd>
+                            @{
+                                var clients = Model.Clients.ToArray();
+                                for(var i = 0; i < clients.Length; i++)
+                                {
+                                    <text>@clients[i]</text>
+                                    if (i < clients.Length - 1)
+                                    {
+                                        <text>, </text>
+                                    }
+                                }
+                            }
+                            </dd>
+                        }
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+</div>
+
+
+
+

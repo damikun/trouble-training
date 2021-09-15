@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Duende.IdentityServer.EntityFramework" Version="5.2.2" />
+    <PackageReference Include="Duende.IdentityServer" Version="5.2.2" />
+    <PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="5.2.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.9">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Npgsql" Version="5.0.4" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.5.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../IdentityServer/Domain/Domain.csproj" />
+    <ProjectReference Include="../../IdentityServer/Aplication/Aplication.csproj" />
+
+    <ProjectReference Include="../../Shared/Domain/Shared.Domain.csproj" />
+    <ProjectReference Include="../../Shared/Aplication/Shared.Aplication.csproj" />
+    <ProjectReference Include="../../Shared/Persistence/Shared.Persistence.csproj" />
+    <ProjectReference Include="../../Shared/Api/Shared.Api.csproj" />
+  </ItemGroup>
+</Project>

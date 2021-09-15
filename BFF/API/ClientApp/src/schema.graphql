@@ -1,0 +1,478 @@
+﻿schema {
+  query: Querry
+  mutation: Mutation
+}
+
+interface IBaseError {
+  message: String
+}
+
+"The node interface is implemented by entities that have a global unique identifier."
+interface Node {
+  id: ID!
+}
+
+type BadRequest implements IBaseError {
+  message: String
+}
+
+type BaseError implements IBaseError {
+  message: String
+}
+
+type CreateWebHookPayload {
+  hook: GQL_WebHook
+  errors: [ICreateWebHookError]
+  query: Querry!
+}
+
+type GQL_User {
+  guid: ID
+  systemid: Long!
+  firstName: String
+  lastName: String
+}
+
+type GQL_WebHook implements Node {
+  id: ID!
+  systemid: Long!
+  records(first: Int after: String last: Int before: String where: GQL_WebHookRecordFilter): GQL_WebHookRecordConnection
+  guid: String
+  webHookUrl: String
+  contentType: String
+  isActive: Boolean!
+  listeningEvents: [HookEventType!]
+  lastTrigger: DateTime
+}
+
+type GQL_WebHookRecord implements Node {
+  id: ID!
+  systemid: Long!
+  webHookID: ID
+  webHookSystemID: Long!
+  webHook: GQL_WebHook
+  guid: String
+  triggerType: HookEventType!
+  result: RecordResult!
+  statusCode: Int!
+  responseBody: String
+  requestBody: String
+  requestHeaders: String
+  exception: String
+  timestamp: DateTime!
+}
+
+"A connection to a list of items."
+type GQL_WebHookRecordConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [GQL_WebHookRecordEdge!]
+  "A flattened list of the nodes."
+  nodes: [GQL_WebHookRecord]
+  totalCount: Int!
+}
+
+"An edge in a connection."
+type GQL_WebHookRecordEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: GQL_WebHookRecord
+}
+
+type InternalServerError implements IBaseError {
+  message: String
+}
+
+type Mutation {
+  createWebHook(request: CreateWebHookInput): CreateWebHookPayload
+  updateWebHook(request: UpdateWebHookInput): UpdateWebHookPayload
+  updateWebHookActivState(request: UpdateWebHookActivStateInput): UpdateWebHookActivStatePayload
+  updateWebHookUri(request: UpdateWebHookUriInput): UpdateWebHookUriPayload
+  updateWebHookSecret(request: UpdateWebHookSecretInput): UpdateWebHookSecretPayload
+  updateWebHookTriggerEvents(request: UpdateWebHookTriggerEventsInput): UpdateWebHookTriggerEventsPayload
+  removeWebHook(request: RemoveWebHookInput): RemoveWebHookPayload
+}
+
+"Information about pagination in a connection."
+type PageInfo {
+  "Indicates whether more edges exist following the set defined by the clients arguments."
+  hasNextPage: Boolean!
+  "Indicates whether more edges exist prior the set defined by the clients arguments."
+  hasPreviousPage: Boolean!
+  "When paginating backwards, the cursor to continue."
+  startCursor: String
+  "When paginating forwards, the cursor to continue."
+  endCursor: String
+}
+
+type Querry {
+  node(id: ID!): Node
+  webhooks(first: Int after: String last: Int before: String where: GQL_WebHookFilter): GQL_WebHookRecordConnection
+  webHookRecords(first: Int after: String last: Int before: String hook_id: ID! where: GQL_WebHookRecordFilter): GQL_WebHookRecordConnection
+  webHookEventsTriggers: [String]
+  webHookRecord(hook_record_id: ID!): GQL_WebHookRecord
+  webHookById(webhook_id: ID!): GQL_WebHook
+  webHookBySystemId(webhook_id: Long!): GQL_WebHook
+  me: GQL_User
+}
+
+type RemoveWebHookPayload {
+  removed_id: ID
+  errors: [IRemoveWebHookError]
+  query: Querry!
+}
+
+type UnAuthorised implements IBaseError {
+  message: String
+}
+
+type UpdateWebHookActivStatePayload {
+  hook: GQL_WebHook
+  errors: [IUpdateWebHookActivStateError]
+  query: Querry!
+}
+
+type UpdateWebHookPayload {
+  hook: GQL_WebHook
+  errors: [IUpdateWebHookError]
+  query: Querry!
+}
+
+type UpdateWebHookSecretPayload {
+  hook: GQL_WebHook
+  errors: [IUpdateWebHookSecretError]
+  query: Querry!
+}
+
+type UpdateWebHookTriggerEventsPayload {
+  hook: GQL_WebHook
+  errors: [IUpdateWebHookTriggerEventsError]
+  query: Querry!
+}
+
+type UpdateWebHookUriPayload {
+  hook: GQL_WebHook
+  errors: [IUpdateWebHookUriError]
+  query: Querry!
+}
+
+type UserDeactivated implements IBaseError {
+  message: String
+}
+
+type ValidationError implements IBaseError {
+  fieldName: String
+  message: String
+}
+
+type WebHookNotFound implements IBaseError {
+  message: String
+}
+
+union ICreateWebHookError = ValidationError | UnAuthorised | InternalServerError
+
+union IRemoveWebHookError = ValidationError | UnAuthorised | InternalServerError | WebHookNotFound
+
+union IUpdateWebHookActivStateError = ValidationError | UnAuthorised | InternalServerError | WebHookNotFound
+
+union IUpdateWebHookError = ValidationError | UnAuthorised | InternalServerError | WebHookNotFound
+
+union IUpdateWebHookSecretError = ValidationError | UnAuthorised | InternalServerError | WebHookNotFound
+
+union IUpdateWebHookTriggerEventsError = ValidationError | UnAuthorised | InternalServerError | WebHookNotFound
+
+union IUpdateWebHookUriError = ValidationError | UnAuthorised | InternalServerError | WebHookNotFound
+
+input CreateWebHookInput {
+  webHookUrl: String
+  secret: String
+  isActive: Boolean!
+  hookEvents: [HookEventType!]
+}
+
+input GQL_WebHookFilter {
+  AND: [GQL_WebHookFilter!]
+  OR: [GQL_WebHookFilter!]
+  iD: Long
+  iD_not: Long
+  iD_in: [Long!]
+  iD_not_in: [Long!]
+  iD_gt: Long
+  iD_not_gt: Long
+  iD_gte: Long
+  iD_not_gte: Long
+  iD_lt: Long
+  iD_not_lt: Long
+  iD_lte: Long
+  iD_not_lte: Long
+  guid: String
+  guid_not: String
+  guid_contains: String
+  guid_not_contains: String
+  guid_starts_with: String
+  guid_not_starts_with: String
+  guid_ends_with: String
+  guid_not_ends_with: String
+  guid_in: [String]
+  guid_not_in: [String]
+  webHookUrl: String
+  webHookUrl_not: String
+  webHookUrl_contains: String
+  webHookUrl_not_contains: String
+  webHookUrl_starts_with: String
+  webHookUrl_not_starts_with: String
+  webHookUrl_ends_with: String
+  webHookUrl_not_ends_with: String
+  webHookUrl_in: [String]
+  webHookUrl_not_in: [String]
+  contentType: String
+  contentType_not: String
+  contentType_contains: String
+  contentType_not_contains: String
+  contentType_starts_with: String
+  contentType_not_starts_with: String
+  contentType_ends_with: String
+  contentType_not_ends_with: String
+  contentType_in: [String]
+  contentType_not_in: [String]
+  isActive: Boolean
+  isActive_not: Boolean
+  listeningEvents_some: ISingleFilterOfHookEventTypeFilter
+  listeningEvents_none: ISingleFilterOfHookEventTypeFilter
+  listeningEvents_all: ISingleFilterOfHookEventTypeFilter
+  listeningEvents_any: Boolean
+  records_some: GQL_WebHookRecordFilter
+  records_none: GQL_WebHookRecordFilter
+  records_all: GQL_WebHookRecordFilter
+  records_any: Boolean
+  lastTrigger: DateTime
+  lastTrigger_not: DateTime
+  lastTrigger_in: [DateTime]
+  lastTrigger_not_in: [DateTime]
+  lastTrigger_gt: DateTime
+  lastTrigger_not_gt: DateTime
+  lastTrigger_gte: DateTime
+  lastTrigger_not_gte: DateTime
+  lastTrigger_lt: DateTime
+  lastTrigger_not_lt: DateTime
+  lastTrigger_lte: DateTime
+  lastTrigger_not_lte: DateTime
+}
+
+input GQL_WebHookRecordFilter {
+  AND: [GQL_WebHookRecordFilter!]
+  OR: [GQL_WebHookRecordFilter!]
+  iD: Long
+  iD_not: Long
+  iD_in: [Long!]
+  iD_not_in: [Long!]
+  iD_gt: Long
+  iD_not_gt: Long
+  iD_gte: Long
+  iD_not_gte: Long
+  iD_lt: Long
+  iD_not_lt: Long
+  iD_lte: Long
+  iD_not_lte: Long
+  webHookID: Long
+  webHookID_not: Long
+  webHookID_in: [Long!]
+  webHookID_not_in: [Long!]
+  webHookID_gt: Long
+  webHookID_not_gt: Long
+  webHookID_gte: Long
+  webHookID_not_gte: Long
+  webHookID_lt: Long
+  webHookID_not_lt: Long
+  webHookID_lte: Long
+  webHookID_not_lte: Long
+  webHookSystemID: Long
+  webHookSystemID_not: Long
+  webHookSystemID_in: [Long!]
+  webHookSystemID_not_in: [Long!]
+  webHookSystemID_gt: Long
+  webHookSystemID_not_gt: Long
+  webHookSystemID_gte: Long
+  webHookSystemID_not_gte: Long
+  webHookSystemID_lt: Long
+  webHookSystemID_not_lt: Long
+  webHookSystemID_lte: Long
+  webHookSystemID_not_lte: Long
+  guid: String
+  guid_not: String
+  guid_contains: String
+  guid_not_contains: String
+  guid_starts_with: String
+  guid_not_starts_with: String
+  guid_ends_with: String
+  guid_not_ends_with: String
+  guid_in: [String]
+  guid_not_in: [String]
+  webHook: GQL_WebHookFilter
+  triggerType: HookEventType
+  triggerType_not: HookEventType
+  triggerType_in: [HookEventType!]
+  triggerType_not_in: [HookEventType!]
+  triggerType_gt: HookEventType
+  triggerType_not_gt: HookEventType
+  triggerType_gte: HookEventType
+  triggerType_not_gte: HookEventType
+  triggerType_lt: HookEventType
+  triggerType_not_lt: HookEventType
+  triggerType_lte: HookEventType
+  triggerType_not_lte: HookEventType
+  result: RecordResult
+  result_not: RecordResult
+  result_in: [RecordResult!]
+  result_not_in: [RecordResult!]
+  result_gt: RecordResult
+  result_not_gt: RecordResult
+  result_gte: RecordResult
+  result_not_gte: RecordResult
+  result_lt: RecordResult
+  result_not_lt: RecordResult
+  result_lte: RecordResult
+  result_not_lte: RecordResult
+  statusCode: Int
+  statusCode_not: Int
+  statusCode_in: [Int!]
+  statusCode_not_in: [Int!]
+  statusCode_gt: Int
+  statusCode_not_gt: Int
+  statusCode_gte: Int
+  statusCode_not_gte: Int
+  statusCode_lt: Int
+  statusCode_not_lt: Int
+  statusCode_lte: Int
+  statusCode_not_lte: Int
+  responseBody: String
+  responseBody_not: String
+  responseBody_contains: String
+  responseBody_not_contains: String
+  responseBody_starts_with: String
+  responseBody_not_starts_with: String
+  responseBody_ends_with: String
+  responseBody_not_ends_with: String
+  responseBody_in: [String]
+  responseBody_not_in: [String]
+  requestBody: String
+  requestBody_not: String
+  requestBody_contains: String
+  requestBody_not_contains: String
+  requestBody_starts_with: String
+  requestBody_not_starts_with: String
+  requestBody_ends_with: String
+  requestBody_not_ends_with: String
+  requestBody_in: [String]
+  requestBody_not_in: [String]
+  requestHeaders: String
+  requestHeaders_not: String
+  requestHeaders_contains: String
+  requestHeaders_not_contains: String
+  requestHeaders_starts_with: String
+  requestHeaders_not_starts_with: String
+  requestHeaders_ends_with: String
+  requestHeaders_not_ends_with: String
+  requestHeaders_in: [String]
+  requestHeaders_not_in: [String]
+  exception: String
+  exception_not: String
+  exception_contains: String
+  exception_not_contains: String
+  exception_starts_with: String
+  exception_not_starts_with: String
+  exception_ends_with: String
+  exception_not_ends_with: String
+  exception_in: [String]
+  exception_not_in: [String]
+  timestamp: DateTime
+  timestamp_not: DateTime
+  timestamp_in: [DateTime!]
+  timestamp_not_in: [DateTime!]
+  timestamp_gt: DateTime
+  timestamp_not_gt: DateTime
+  timestamp_gte: DateTime
+  timestamp_not_gte: DateTime
+  timestamp_lt: DateTime
+  timestamp_not_lt: DateTime
+  timestamp_lte: DateTime
+  timestamp_not_lte: DateTime
+}
+
+input ISingleFilterOfHookEventTypeFilter {
+  AND: [ISingleFilterOfHookEventTypeFilter!]
+  OR: [ISingleFilterOfHookEventTypeFilter!]
+  element: HookEventType
+  element_not: HookEventType
+  element_in: [HookEventType!]
+  element_not_in: [HookEventType!]
+  element_gt: HookEventType
+  element_not_gt: HookEventType
+  element_gte: HookEventType
+  element_not_gte: HookEventType
+  element_lt: HookEventType
+  element_not_lt: HookEventType
+  element_lte: HookEventType
+  element_not_lte: HookEventType
+}
+
+input RemoveWebHookInput {
+  webHookId: Long!
+}
+
+input UpdateWebHookActivStateInput {
+  webHookId: Long!
+  isActive: Boolean!
+}
+
+input UpdateWebHookInput {
+  webHookId: Long!
+  webHookUrl: String
+  secret: String
+  isActive: Boolean!
+  hookEvents: [HookEventType!]
+}
+
+input UpdateWebHookSecretInput {
+  webHookId: Long!
+  secret: String
+}
+
+input UpdateWebHookTriggerEventsInput {
+  webHookId: Long!
+  hookEvents: [HookEventType!]
+}
+
+input UpdateWebHookUriInput {
+  webHookId: Long!
+  webHookUrl: String
+}
+
+enum HookEventType {
+  RESOURCE
+}
+
+enum RecordResult {
+  UNDEFINED
+  OK
+  PARAMETER_ERROR
+  HTTP_ERROR
+  DATA_QUERY_ERROR
+}
+
+"The `@defer` directive may be provided for fragment spreads and inline fragments to inform the executor to delay the execution of the current fragment to indicate deprioritization of the current fragment. A query with `@defer` directive will cause the request to potentially return multiple responses, where non-deferred data is delivered in the initial response and data deferred is delivered in a subsequent response. `@include` and `@skip` take precedence over `@defer`."
+directive @defer("If this argument label has a value other than null, it will be passed on to the result of this defer directive. This label is intended to give client applications a way to identify to which fragment a deferred result belongs to." label: String "Deferred when true." if: Boolean) on FRAGMENT_SPREAD | INLINE_FRAGMENT
+
+"The `@specifiedBy` directive is used within the type system definition language to provide a URL for specifying the behavior of custom scalar definitions."
+directive @specifiedBy("The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types." url: String!) on SCALAR
+
+"The `@stream` directive may be provided for a field of `List` type so that the backend can leverage technology such as asynchronous iterators to provide a partial list in the initial response, and additional list items in subsequent responses. `@include` and `@skip` take precedence over `@stream`."
+directive @stream("If this argument label has a value other than null, it will be passed on to the result of this stream directive. This label is intended to give client applications a way to identify to which fragment a streamed result belongs to." label: String "The initial elements that shall be send down to the consumer." initialCount: Int! "Streamed when true." if: Boolean!) on FIELD
+
+"The `DateTime` scalar represents an ISO-8601 compliant date time type."
+scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")
+
+"The `Long` scalar type represents non-fractional signed whole 64-bit numeric values. Long can represent values between -(2^63) and 2^63 - 1."
+scalar Long

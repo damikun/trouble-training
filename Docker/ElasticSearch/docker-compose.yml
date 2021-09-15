@@ -1,0 +1,148 @@
+version: '3'
+services:
+  apm-server:
+    image: docker.elastic.co/apm/apm-server:7.14.0
+    hostname: apm-server
+    depends_on:
+      elasticsearch01:
+        condition: service_healthy
+      kibana:
+        condition: service_healthy
+    cap_add: ["CHOWN", "DAC_OVERRIDE", "SETGID", "SETUID"]
+    cap_drop: ["ALL"]
+    ports:
+    - 8200:8200
+    networks:
+    - elastic
+    command: >
+       apm-server -e
+         -E apm-server.rum.enabled=true
+         -E setup.kibana.host=kibana:5601
+         -E setup.template.settings.index.number_of_replicas=0
+         -E apm-server.kibana.enabled=true
+         -E apm-server.kibana.host=kibana:5601
+         -E output.elasticsearch.hosts=["elasticsearch01:9200"]
+    healthcheck:
+      interval: 10s
+      retries: 80
+      test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://localhost:8200/
+    
+  opentelemetry-collector:
+    container_name: opentelemetry-collector
+    hostname: opentelemetry-collector
+    image: otel/opentelemetry-collector:0.33.0
+    command: [ "--config=/etc/otel-collector-config.yml" ]
+    volumes:
+      - ./otel-collector-config.yml:/etc/otel-collector-config.yml
+    ports:
+      - "14250:14250"
+      - "55680:55680" 
+    depends_on:
+      elasticsearch01:
+        condition: service_healthy
+      apm-server:
+        condition: service_healthy
+    networks:
+      - elastic
+      
+  elasticsearch01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
+    hostname: elasticsearch01
+    restart: on-failure
+    container_name: es01
+    environment:
+      - node.name=es01
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es02
+      - cluster.initial_master_nodes=es01,es02
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - elastic
+    healthcheck:
+      test: curl -s http://elasticsearch01:9200 >/dev/null || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 50
+
+  elasticsearch02:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
+    hostname: elasticsearch02
+    restart: on-failure
+    container_name: es02
+    environment:
+      - node.name=es02
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es01
+      - cluster.initial_master_nodes=es01,es02
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata02:/usr/share/elasticsearch/data
+    networks:
+      - elastic
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.14.0
+    hostname: kibana
+    depends_on:
+      elasticsearch01:
+        condition: service_healthy
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch01:9200
+      ELASTICSEARCH_HOSTS: http://elasticsearch01:9200
+    ports:
+    - 5601:5601
+    networks:
+    - elastic
+    healthcheck:
+      interval: 10s
+      retries: 80
+      test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://localhost:5601/api/status
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.14.0
+    hostname: logstash
+    depends_on:
+      elasticsearch01:
+        condition: service_healthy
+    volumes:
+      # - type: bind
+      #   source: ./logstash/logstash.yml
+      #   target: /usr/share/logstash/config/logstash.yml
+      #   read_only: true
+      - type: bind
+        source: ./logstash
+        target: /usr/share/logstash/pipeline
+        read_only: true
+    ports:
+      - "5500:5500/tcp"
+      - "5500:5500/udp"
+      - 5501:5501
+    environment:
+      LS_JAVA_OPTS: "-Xmx512m -Xms512m"
+      # LS_JAVA_OPTS: "-Xmx2g -Xms2g"
+    networks:
+      - elastic
+    depends_on:
+      elasticsearch01:
+        condition: service_healthy
+
+volumes:
+  esdata01:
+  esdata02:
+
+networks:
+  elastic:
+    driver: bridge

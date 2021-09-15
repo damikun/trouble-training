@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.9" />
+    <PackageReference Include="Duende.IdentityServer" Version="5.2.2" />
+
+    <PackageReference Include="HotChocolate.AspNetCore" Version="11.3.1" />
+    <PackageReference Include="HotChocolate" Version="11.3.1" />
+    <PackageReference Include="HotChocolate.Types" Version=" 11.3.1" />
+    <PackageReference Include="HotChocolate.Data" Version=" 11.3.1" />
+    <PackageReference Include="HotChocolate.Types.Filters" Version=" 11.3.1" />
+    <PackageReference Include="HotChocolate.Types.Sorting" Version=" 11.3.1" />
+
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.9" />
+
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
+    <PackageReference Include="FluentValidation" Version="9.3.0" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="9.3.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
+    <PackageReference Include="MediatR" Version="9.0.0" />
+
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.7.19" />
+    <PackageReference Include="HangFire.Core" Version="1.7.19" />
+    <PackageReference Include="Hangfire.PostgreSql" Version="1.8.1" />
+
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.9" />
+    
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../APIServer/Domain/APIServer.Domain.csproj" />
+    <ProjectReference Include="../../APIServer/Persistence/APIServer.Persistence.csproj" />
+
+    <ProjectReference Include="../../Shared/Domain/Shared.Domain.csproj" />
+    <ProjectReference Include="../../Shared/Aplication/Shared.Aplication.csproj" />
+    <ProjectReference Include="../../Shared/Api/Shared.Api.csproj" />
+  </ItemGroup>
+</Project>

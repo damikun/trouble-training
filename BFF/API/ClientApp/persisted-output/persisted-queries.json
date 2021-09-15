@@ -1,0 +1,3 @@
+{
+  "7efb0df1701410878c28317b144766d0": "query UserProviderQuery {\n  me {\n    guid\n    firstName\n  }\n}\n"
+}
