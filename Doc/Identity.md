@@ -189,6 +189,7 @@ OpenID Connect is built on the *OAuth 2.0.* (OAuth is underlying protocol and Op
 
 `id_token` example:
 
+
 ```json
 {
 "iss": "http://server.example.com",
@@ -209,6 +210,7 @@ OpenID Connect is built on the *OAuth 2.0.* (OAuth is underlying protocol and Op
 </br>
 
 `OpenId` flow example:
+
 ![OpenId Flow](./Assets/openid_flow.png "OpenId Flow")
 
 </br>
@@ -1139,22 +1141,22 @@ Run: `dotnet watch run`
 
 Endpoint `https://localhost:5001/Account/Login`
 
-![Endpoint user login](./Assets/endpoint_login.png "Endpoint user login")
+![Endpoint user login](./Assets/endpoint_login.PNG "Endpoint user login")
 
 </br>
 
 Endpoint `https://localhost:5001/Account/Logout`
 
-![Endpoint user logout](./Assets/endpoint_logout.png "Endpoint user logout")
+![Endpoint user logout](./Assets/endpoint_logout.PNG "Endpoint user logout")
 
 </br>
 
 Endpoint `https://localhost:5001/diagnostics`
 
-![Endpoint OpenId user diagnostic and info](./Assets/endpoint_user_info_openid.png "Endpoint OpenId user diagnostic and info")
+![Endpoint OpenId user diagnostic and info](./Assets/endpoint_user_info_openid.PNG "Endpoint OpenId user diagnostic and info")
 
 </br>
 
 Endpoint `https://localhost:5001/diagnostics`
 
-![Allowed devices - revocation grands](./Assets/endpoint_revocation_grants.png "Allowed devices")
+![Allowed devices - revocation grands](./Assets/endpoint_revocation_grants.PNG "Allowed devices")
