@@ -1,4 +1,4 @@
-
+using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -12,22 +12,20 @@ namespace APIServer.Configuration {
 
 
             serviceCollection.AddAuthentication("token")
-                .AddJwtBearer("token", options =>
+            .AddJwtBearer("token", options =>
+            {
+                options.Authority = "https://localhost:5001";
+                options.MapInboundClaims = true;
+
+                options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    options.Authority = "https://localhost:5001";
-                    options.MapInboundClaims = false;
-
+                    ValidateAudience = false,
+                    ValidTypes = new[] { "at+jwt" },
                     
-
-                    options.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ValidateAudience = true,
-                        ValidTypes = new[] { "at+jwt" },
-                        
-                        NameClaimType = "name",
-                        RoleClaimType = "role"
-                    };
-                });
+                    NameClaimType = "name",
+                    RoleClaimType = "role"
+                };
+            });
 
             serviceCollection.AddAuthorization(options =>
             {
@@ -37,6 +35,8 @@ namespace APIServer.Configuration {
                 });
                 
             });
+
+            JwtSecurityTokenHandler.DefaultMapInboundClaims = true;
 
             return serviceCollection;
         }

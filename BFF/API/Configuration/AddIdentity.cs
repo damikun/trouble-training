@@ -1,6 +1,4 @@
 using System;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BFF.Configuration
@@ -40,7 +38,7 @@ namespace BFF.Configuration
                 options.ResponseType = "code";
                 options.ResponseMode = "query";
 
-                options.MapInboundClaims = false;
+                options.MapInboundClaims = true;
                 options.GetClaimsFromUserInfoEndpoint = true;
                 options.SaveTokens = true;
 

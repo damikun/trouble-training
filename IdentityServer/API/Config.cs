@@ -73,7 +73,8 @@ namespace IdentityServer.API
                     Description = "Allow the application to access API",
                     Scopes = new List<string> {"api.read", "api.write"},
                     ApiSecrets = new List<Secret> {new Secret("ScopeSecret".Sha256())}, // change me!
-                    UserClaims = new List<string> {"role"}
+                    UserClaims = new List<string> {"role","name","email","client_id"}
+                    
                 }
             };
         }
@@ -82,7 +83,7 @@ namespace IdentityServer.API
         {
             return new ApiScope[]
             {
-                new ApiScope("api", new[] { "name" }),
+                new ApiScope("api", new[] { "name","role", "email", "client_id" }),
                 
             };
         }
@@ -102,8 +103,10 @@ namespace IdentityServer.API
                     Password = "testuser", //TroubleUser123!
                     Claims = new List<Claim>
                     {
-                        new Claim(JwtClaimTypes.Email, "scott@scottbrady91.com"),
-                        new Claim(JwtClaimTypes.Role, "admin")
+                        new Claim(JwtClaimTypes.Email, "dalo@trouble.com"),
+                        new Claim(JwtClaimTypes.Role, "admin"),
+                        new Claim(JwtClaimTypes.FamilyName, "Trouble"),
+                        new Claim(JwtClaimTypes.ClientId, "5BE86359-073C-434B-AD2D-A3932222DABE")
                     }
                 }
             };

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Shared.Aplication.Interfaces;
 using Shared.Aplication.Extensions;
 using System;
+using System.Linq;
 
 namespace Shared.Aplication.Services {
 
@@ -34,16 +35,11 @@ namespace Shared.Aplication.Services {
             }
         }
 
+#nullable enable
         public Guid? UserId {
 
             get {
-
-                foreach (var item in _contextAccessor.HttpContext.User.Claims)
-                {
-                     System.Console.WriteLine(item.Value);
-                }
-                 
-
+            
                 try{
                     return _contextAccessor?.HttpContext?.User?.GetId<Guid>();
                 }catch{
@@ -51,6 +47,21 @@ namespace Shared.Aplication.Services {
                 }
             }
         }
+#nullable disable
+
+#nullable enable
+        public ClaimsIdentity? Claims {
+
+            get {
+                
+                try{
+                    return _contextAccessor?.HttpContext?.User?.Identity as ClaimsIdentity;
+                }catch{
+                    return null;
+                }
+            }
+        }
+#nullable disable
 
         public string Name {
             get {
@@ -77,6 +88,12 @@ namespace Shared.Aplication.Services {
             return TestRole(_contextAccessor, role_name);
         }
 
+        public string GetClaim(string type){
+            return _contextAccessor?.HttpContext?.User?.Claims
+            .Where(e => e.Type == "emails")
+            .Select(e => e.Value)
+            .SingleOrDefault();
+        }
 
         public static bool TestRole(IHttpContextAccessor context, string role) {
 
@@ -86,5 +103,6 @@ namespace Shared.Aplication.Services {
 
             return false;
         }
+        
     }
 }
