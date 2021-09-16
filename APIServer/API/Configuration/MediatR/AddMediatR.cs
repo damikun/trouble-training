@@ -21,6 +21,8 @@ namespace APIServer.Configuration {
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TracingBehaviour<,>));
 
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CommandPerformanceBehaviour<,>));
+
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehaviour<,>));
