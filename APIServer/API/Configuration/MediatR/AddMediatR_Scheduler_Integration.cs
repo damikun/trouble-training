@@ -3,7 +3,7 @@ using MediatR;
 
 namespace APIServer.Configuration {
     public static partial class ServiceExtension {
-        public static IServiceCollection MediatRScheduler(this IServiceCollection services) {
+        public static IServiceCollection AddMediatRSchedulerIntegration(this IServiceCollection services) {
 
             services.AddSingleton<CommandsExecutorOptions>();
             services.AddScoped<CommandsExecutor>();

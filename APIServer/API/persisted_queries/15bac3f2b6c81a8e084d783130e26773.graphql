@@ -1,0 +1,1 @@
+query SettingsHooksNewQuery {  webHookEventsTriggers}

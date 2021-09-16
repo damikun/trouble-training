@@ -7,6 +7,7 @@ using APIServer.Aplication.GraphQL.DTO;
 using APIServer.Aplication.GraphQL.DataLoaders;
 using Shared.Aplication.Interfaces;
 using APIServer.Persistence;
+using APIServer.Aplication.GraphQL.Extensions;
 
 namespace APIServer.Aplication.GraphQL.Types {
 #pragma warning disable 612, 618 
@@ -27,9 +28,10 @@ namespace APIServer.Aplication.GraphQL.Types {
             });
 
             descriptor.Field(t => t.Records)
+            .UseDbContext<ApiDbContext>()
             .Resolve(async  ctx => {
 
-                IDbContextFactory<ApiDbContext> _factory = ctx.Service<IDbContextFactory<ApiDbContext>>();
+                ApiDbContext _context = ctx.Service<ApiDbContext>();
 
                 ICurrentUser _current = ctx.Service<ICurrentUser>();
 
@@ -43,11 +45,7 @@ namespace APIServer.Aplication.GraphQL.Types {
                     return new List<GQL_WebHookRecord>().AsQueryable();
                 }
 
-                await using ApiDbContext dbContext = 
-                    _factory.CreateDbContext();
-            
-
-                return dbContext.WebHooksHistory
+                return _context.WebHooksHistory
                 .AsNoTracking()
                 .Where(e => e.WebHookID == hook_id)
                 .Select(e => new GQL_WebHookRecord() {

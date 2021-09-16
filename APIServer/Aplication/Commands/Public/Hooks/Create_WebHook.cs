@@ -46,14 +46,11 @@ namespace APIServer.Aplication.Commands.WebHooks {
 
         public CreateWebHookValidator(IDbContextFactory<ApiDbContext> factory){
             _factory = factory;
-        }
-
-        public CreateWebHookValidator() {
 
             RuleFor(e => e.WebHookUrl)
             .NotEmpty()
             .NotNull();
-
+            
             RuleFor(e => e.WebHookUrl)
             .Matches(Common.URI_REGEX)
             .WithMessage("Does not match URI expression");
@@ -70,20 +67,20 @@ namespace APIServer.Aplication.Commands.WebHooks {
             .NotNull();
         }
 
-        public async Task<bool> BeUniqueByURL(CreateWebHook request, string title, CancellationToken cancellationToken) {
+        public async Task<bool>  BeUniqueByURL(string url, CancellationToken cancellationToken) {
             
             await using ApiDbContext dbContext = 
                 _factory.CreateDbContext();
-            
-            return await dbContext.WebHooks.AnyAsync(e => e.WebHookUrl == request.WebHookUrl);
+
+            return await dbContext.WebHooks.AllAsync(e => e.WebHookUrl != url);
         }
 
-        public async Task<bool> CheckMaxAllowedHooksCount(CreateWebHook request, string title, CancellationToken cancellationToken) {
+        public async Task<bool> CheckMaxAllowedHooksCount(string url, CancellationToken cancellationToken) {
             
             await using ApiDbContext dbContext = 
                 _factory.CreateDbContext();
 
-            const long  MAX_HOOK_COUNT = 10;
+            const long  MAX_HOOK_COUNT = 3;
             
             return (await dbContext.WebHooks.CountAsync()) <= MAX_HOOK_COUNT;
         }

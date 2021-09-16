@@ -1,6 +1,8 @@
 using System;
 using APIServer.Configuration;
+using Elastic.CommonSchema;
 using Hangfire;
+using Serilog;
 using HotChocolate.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -40,8 +42,6 @@ namespace APIServer
 
             services.AddDbContext(Configuration,Environment);
 
-            services.AddScheduler(Configuration);
-
             services.AddHttpClient();
 
             services.AddHealthChecks();
@@ -55,6 +55,12 @@ namespace APIServer
             services.AddTelemerty(Configuration,Environment);
 
             services.AddScoped<ICurrentUser, CurrentUser>();
+
+            services.AddMediatR();
+
+            services.AddScheduler(Configuration);
+
+            services.AddSingleton(Serilog.Log.Logger);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

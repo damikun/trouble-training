@@ -1,0 +1,1 @@
+query SettingsHooksLogsDetailQuery(  $hook_record_id: ID!) {  webHookRecord(hook_record_id: $hook_record_id) {    id    statusCode    timestamp    triggerType    guid    result    webHook {      id      systemid      webHookUrl    }    exception    requestHeaders    requestBody    responseBody  }}

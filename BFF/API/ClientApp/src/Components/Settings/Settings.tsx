@@ -1,29 +1,26 @@
-import { Navigate, Route, Routes, useParams } from "react-router";
+import { Navigate, Route, Routes } from "react-router";
 import RouterTabList, {
   RouterTabItemType,
 } from "../../UIComponents/RouterTab/RouterTabList";
 import ViewContainer from "../../UIComponents/ViewContainer/ViewContainer";
 import clsx from "clsx";
 import SettingsFilters from "./SettingsFilters";
-import { Suspense } from "react";
+import { Suspense, useContext, useMemo, useState } from "react";
 import SettingsInfo from "./Info/SettingsInfo";
 import FourOhOne from "../Errors/FourOhOne";
 import PrivateRoute from "../../Utils/PrivateRouter";
 import ContainerSpinner from "../../UIComponents/Spinner/ContainerSpinner";
-
-// const SettingsMainQueryTag = graphql`
-//   query SettingsMainQuery($Name: String!) {
-//     hooks {
-//       ...SettingsBodyFragment_failedJobs
-//     }
-//   }
-// `;
+import SettingsHooks from "./WebHooks/SettingsHooks";
+import SettingsHooksEdit from "./WebHooks/SettingsHooksEdit";
+import SettingsHooksNew from "./WebHooks/SettingsHooksNew";
+import SettingsHooksLogs from "./WebHooks/SettingsHooksLogs";
+import React from "react";
 
 const view_WebHooks = true;
 
 export const SettingsTabs = [
   {
-    label: "Informations",
+    label: "Playground",
     path: ``,
   },
   {
@@ -33,60 +30,90 @@ export const SettingsTabs = [
   },
 ] as RouterTabItemType[];
 
-export default function Settings() {
-  const { name }: any = useParams();
+export type HooksContextType = {
+  connection_id: string;
+  setConnectionId: (connection: string) => void;
+};
 
-  // const root_data = useLazyLoadQuery<SettingsMainQuery>(
-  //   SettingsMainQueryTag,
-  //   { Name: name },
-  //   { fetchPolicy: "store-or-network" }
-  // );
+export const HooksContext = React.createContext<
+HooksContextType | undefined
+>(undefined);
+
+export const useHooksContext = () => useContext(HooksContext);
+
+export default function Settings() {
+
+  const [state, setState] = useState("");
+  
+  const ctx = useMemo(() => {
+    return {
+      connection_id: state,
+      setConnectionId: (connection: string) => setState(connection),
+    };
+  }, [state, setState]);
 
   return (
+
     <div
       className={clsx(
-        "flex flex-col md:flex-row space-x-0 md:space-x-5 xl:space-x-10",
-        "space-y-2 md:space-y-0 w-full h-full"
+        "flex h-full w-full",
+        "text-xs md:text-sm max-h-full space-y-1",
+        "p-5"
       )}
     >
-      <div className={clsx("flex w-full md:w-64 2xl:w-72 md:h-full")}>
-        <TabsSection />
-      </div>
-      <div className="flex-1">
-        <Suspense fallback={<ContainerSpinner />}>
-          <Routes>
-            <PrivateRoute
-              path={SettingsTabs[1].path}
-              authorised={true}
-              element={<SettingsInfo />}
-            />
 
-            {/* <PrivateRoute
-              path={`${SettingsTabs[3].path}/*`}
-              authorised={view_WebHooks}
-              unauthorisedComponent={<FourOhOne />}
-              element={
-                <Routes>
-                  <Route path={"Edit/:hookid"}>
-                    <SettingsHooksEdit />
-                  </Route>
-                  <Route path={"Logs/:hookid"}>
-                    <SettingsHooksLogs />
-                  </Route>
-                  <Route path={"New"}>
-                    <SettingsHooksNew />
-                  </Route>
-                  <Route path={""}>
-                    <SettingsHooks />
-                  </Route>
-                </Routes>
-              }
-            /> */}
+      <div className="flex w-full max-w-5xl mx-auto mt-14">
+      <div
+        className={clsx(
+          "flex flex-col md:flex-row space-x-0 md:space-x-5 xl:space-x-10",
+          "space-y-2 md:space-y-0 w-full h-full"
+        )}
+      >
+        <div className={clsx("flex w-full md:w-64 2xl:w-72 md:h-full")}>
+          <TabsSection />
+        </div>
+        <div className="flex-1">
+          <Suspense fallback={<ContainerSpinner />}>
+            <Routes>
+              <PrivateRoute
+                path={SettingsTabs[0].path}
+                authorised={true}
+                element={<SettingsInfo />}
+              />
 
-            <Route path={"/*"} element={<Navigate to="" />} />
-          </Routes>
-        </Suspense>
+              <PrivateRoute
+                path={`${SettingsTabs[1].path}/*`}
+                authorised={view_WebHooks}
+                unauthorisedComponent={<FourOhOne />}
+                element={
+
+                  <HooksContext.Provider value={ctx}>
+                  <Routes>
+                    <Route path={"Edit/:hookid"}>
+                      <SettingsHooksEdit />
+                    </Route>
+                    <Route path={"Logs/:hookid"}>
+                      <SettingsHooksLogs />
+                    </Route>
+                    <Route path={"New"}>
+                      <SettingsHooksNew />
+                    </Route>
+                    <Route path={"/"}>
+                      <SettingsHooks />
+                    </Route>
+                  </Routes>
+                  </HooksContext.Provider>
+                }
+              />
+
+              <Route path={"/*"} element={<Navigate to="" />} />
+            </Routes>
+          </Suspense>
+        </div>
       </div>
+
+      </div>
+      
     </div>
   );
 }

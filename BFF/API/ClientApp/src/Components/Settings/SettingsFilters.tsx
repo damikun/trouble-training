@@ -5,7 +5,7 @@ type ProjectSettingsFiltersProps = {};
 export default function ProjectSettingsFilters({}: ProjectSettingsFiltersProps) {
   return (
     <>
-      <FilterBodyContainer name={"Project settings"}>
+      <FilterBodyContainer name={"Menu"}>
         <></>
       </FilterBodyContainer>
     </>

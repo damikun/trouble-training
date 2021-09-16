@@ -35,10 +35,7 @@ namespace APIServer.Aplication.Commands.WebHooks {
 
         public UpdateWebHookSecretValidator(IDbContextFactory<ApiDbContext> factory){
             _factory = factory;
-        }
-
-        public UpdateWebHookSecretValidator() {
-
+            
             RuleFor(e => e.WebHookId)
             .NotNull()
             .GreaterThan(0);

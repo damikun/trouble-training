@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useContext, useMemo } from "react";
+import React, { Suspense, useState, useContext, useMemo, useEffect } from "react";
 import { Environment } from "react-relay";
 import { RelayEnvironmentProvider } from "react-relay/hooks";
 import ToastProvider from "../UIComponents/Toast/ToastProvider";
@@ -23,6 +23,9 @@ export const useEnvirometHandler = () => useContext(EnviromentContext);
 
 export default function Providers({ children, fallback }: Props) {
   const [envState, setEnvState] = useState(createEnvironment());
+
+  useEffect(() => {
+  }, [])
 
   const providerInit = useMemo(() => {
     return {

@@ -52,8 +52,6 @@ namespace APIServer.Aplication.Shared.Behaviours {
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next) {
 
-            _logger.Debug<AuthorizationBehaviour<TRequest, TResponse>>("Autorization handler started", this);
-
             var authorizeAttributes = request.GetType().GetCustomAttributes<AuthorizeAttribute>();
 
             if (authorizeAttributes.Any()) {
@@ -94,7 +92,8 @@ namespace APIServer.Aplication.Shared.Behaviours {
                     var authorizeAttributesWithPolicies = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Policy));
                     if (authorizeAttributesWithPolicies.Any()) {
                         foreach (var policy in authorizeAttributesWithPolicies.Select(a => a.Policy)) {
-
+                        System.Console.WriteLine("******************");
+                        System.Console.WriteLine(policy);
                             if (!_currentUserService.HasRole(policy.Trim())) {
                                 return HandleUnAuthorised($"Policy: {policy} authorization failure");
                             }
@@ -119,7 +118,7 @@ namespace APIServer.Aplication.Shared.Behaviours {
                         var current = Activity.Current;
                         current?.SetTag("otel.status_code", "ERROR");
                         current?.SetTag("otel.status_description", ex.ToString());
-                        Log.Error(ex.ToString());
+                        _logger.Error(ex.ToString());
                     }
 
                     // In case it is Mutation Response Payload = handled as payload error union

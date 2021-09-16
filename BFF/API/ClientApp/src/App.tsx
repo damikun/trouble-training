@@ -7,14 +7,23 @@ import Providers from "./Utils/Providers";
 import Layout from "./Components/Layout/Layout";
 import LayoutBody from "./Components/Layout/LayoutBody";
 import AppRoutes from "./Utils/AppRoutes";
+import { motion } from "framer-motion";
+import clsx from "clsx";
 
 function App() {
 
   const Loader = useMemo(
     () => (
-      <div className="w-full h-full">
-        <ContainerSpinner />
-      </div>
+      <motion.div
+      className={clsx("flex-1 h-full max-h-full")}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ type: "tween", duration: 0.3, delay: 0.5 }}
+      >
+        <div className="w-full h-full">
+          <ContainerSpinner />
+        </div>
+      </motion.div>
     ),
     []
   );
@@ -29,7 +38,7 @@ function App() {
       <meta name="author" content="TroubleDev, Dalibor Kundrat" />
       <meta
         name="keywords"
-        content="TroubleTrain, Dalibor Kundratm, Distributed Tracing Workshop"
+        content="TroubleTrain, Dalibor Kundrat, Distributed Tracing Workshop"
       />
     </Helmet>
 

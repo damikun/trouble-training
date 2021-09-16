@@ -50,9 +50,6 @@ namespace APIServer.Aplication.Commands.WebHooks {
 
         public UpdateWebHookValidator(IDbContextFactory<ApiDbContext> factory){
             _factory = factory;
-        }
-        
-        public UpdateWebHookValidator() {
 
             RuleFor(e => e.WebHookId)
             .NotNull()
@@ -70,28 +67,28 @@ namespace APIServer.Aplication.Commands.WebHooks {
             .NotNull();
 
             RuleFor(e => e.WebHookUrl)
-            .MustAsync(BeUniqueByURL)
-            .WithMessage("Hook endpoint allready exist");
+            .MustAsync( async (command,url,cancellation) =>  await BeUniqueByURL(url,command.WebHookId, cancellation)
+            ).WithMessage("Hook endpoint allready exist");
 
             RuleFor(e => e.WebHookId)
             .MustAsync(HookExist)
             .WithMessage("Hook was not found");
         }
 
-        public async Task<bool> HookExist(UpdateWebHook request, long id, CancellationToken cancellationToken) {
+        public async Task<bool>  BeUniqueByURL(string url,long hook_id, CancellationToken cancellationToken) {
             
             await using ApiDbContext dbContext = 
                 _factory.CreateDbContext();
-            
-            return await dbContext.WebHooks.AnyAsync(e => e.ID == request.WebHookId);
+
+            return !await dbContext.WebHooks.AnyAsync(e => e.WebHookUrl == url && e.ID != hook_id);
         }
 
-        public async Task<bool> BeUniqueByURL(UpdateWebHook request, string title, CancellationToken cancellationToken) {
+        public async Task<bool> HookExist(long hook_id, CancellationToken cancellationToken) {
             
             await using ApiDbContext dbContext = 
                 _factory.CreateDbContext();
             
-            return await dbContext.WebHooks.Where(e=>e.ID !=request.WebHookId).AnyAsync(e => e.WebHookUrl == request.WebHookUrl);
+            return (await dbContext.WebHooks.AnyAsync(e=>e.ID == hook_id));
         }
     }
 

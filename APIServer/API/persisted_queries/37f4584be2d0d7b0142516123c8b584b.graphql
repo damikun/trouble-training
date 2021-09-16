@@ -1,0 +1,1 @@
+mutation SettingsHooksEditMutation(  $request: UpdateWebHookInput) {  updateWebHook(request: $request) {    errors {      __typename      ... on IBaseError {        __isIBaseError: __typename        message      }    }    hook {      id      webHookUrl      isActive      listeningEvents    }  }}

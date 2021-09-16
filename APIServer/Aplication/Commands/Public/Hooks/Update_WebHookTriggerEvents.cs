@@ -36,9 +36,6 @@ namespace APIServer.Aplication.Commands.WebHooks {
 
         public UpdateWebHookTriggerEventsValidator(IDbContextFactory<ApiDbContext> factory){
             _factory = factory;
-        }
-
-        public UpdateWebHookTriggerEventsValidator() {
 
             RuleFor(e => e.WebHookId)
             .NotNull()

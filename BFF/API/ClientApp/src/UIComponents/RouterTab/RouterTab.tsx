@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import React from "react";
 import { useCallback, useEffect, useState } from "react";
-import { useMatch, useNavigate, useResolvedPath } from "react-router";
+import { useMatch, useResolvedPath } from "react-router";
 import { Link } from "../Link/Link";
 import { useRouterTabContext } from "./RouterTabList";
 
@@ -45,7 +45,6 @@ function RouterTab({
   flexVariant = "row",
   fillOnActiv = false,
 }: RouterTabProps) {
-  const navigate = useNavigate();
 
   const tabCtx = useRouterTabContext();
 
@@ -71,7 +70,7 @@ function RouterTab({
   );
 
   function HandleClick() {
-    setstate(true);
+    // setstate(true);
     tabCtx.setNavigating(to);
   }
 

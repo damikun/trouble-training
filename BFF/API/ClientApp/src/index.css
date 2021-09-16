@@ -12,6 +12,25 @@ code {
     monospace;
 }
 
+
+
+.scrollbarwidth {
+  scrollbar-width: none;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+
+.scrollbarhide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE and Edge */
+
+.scrollbarhide2 {
+  -ms-overflow-style: none;
+}
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

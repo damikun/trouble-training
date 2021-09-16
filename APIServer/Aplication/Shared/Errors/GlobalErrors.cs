@@ -7,7 +7,9 @@ namespace APIServer.Aplication.Shared.Errors {
         public string message { get; set; }
     }
 
-    public class UnAuthorised : BaseError {
+    public class UnAuthorised : BaseError,ICreateWebHookError,IRemoveWebHookError,IUpdateWebHookError, 
+    IUpdateWebHookActivStateError, IUpdateWebHookSecretError, IUpdateWebHookTriggerEventsError,
+    IUpdateWebHookUriError {
         public UnAuthorised() {
             this.message = "Unauthorised to process or access resource";
         }
@@ -23,7 +25,9 @@ namespace APIServer.Aplication.Shared.Errors {
         }
     }
 
-    public class InternalServerError : BaseError{
+    public class InternalServerError : BaseError,ICreateWebHookError,IRemoveWebHookError,IUpdateWebHookError, 
+    IUpdateWebHookActivStateError, IUpdateWebHookSecretError, IUpdateWebHookTriggerEventsError,
+    IUpdateWebHookUriError{
 
         public InternalServerError() {
             this.message = "Internal server error";
@@ -34,7 +38,9 @@ namespace APIServer.Aplication.Shared.Errors {
         }
     }
 
-    public class ValidationError : BaseError{
+    public class ValidationError : BaseError, ICreateWebHookError,IRemoveWebHookError,IUpdateWebHookError, 
+    IUpdateWebHookActivStateError, IUpdateWebHookSecretError, IUpdateWebHookTriggerEventsError,
+    IUpdateWebHookUriError{
         public ValidationError() {
             this.message = "Some parameter/s are invalid or null";
         }

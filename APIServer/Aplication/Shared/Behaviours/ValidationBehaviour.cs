@@ -45,15 +45,18 @@ namespace APIServer.Aplication.Shared.Behaviours {
                     activity.Start();
                     var context = new ValidationContext<TRequest>(request);
 
-                    var failures = _validators
-                        .Select(v => v.Validate(context))
-                        .SelectMany(result => result.Errors)
-                        .Where(f => f != null)
-                        .ToList();
+                    var validationResults = await Task.WhenAll(
+                        _validators.Select(v => v.ValidateAsync(context, cancellationToken)));
+
+                    var failures = validationResults
+                    .SelectMany(r => r.Errors)
+                    .Where(f => f != null)
+                    .ToList();
 
                     if (failures.Count != 0) {
                         return HandleValidationErrors(failures);
                     }
+
                 } catch (Exception ex) {
 
                     if(!ex.Data.Contains("command_failed")){
@@ -63,7 +66,7 @@ namespace APIServer.Aplication.Shared.Behaviours {
                         var current = Activity.Current;
                         current?.SetTag("otel.status_code", "ERROR");
                         current?.SetTag("otel.status_description", ex.ToString());
-                        Log.Error(ex.ToString());
+                        _logger.Error(ex.ToString());
                     }
 
                     // In case it is Mutation Response Payload = handled as payload error union

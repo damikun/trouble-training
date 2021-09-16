@@ -23,7 +23,7 @@ namespace APIServer.Aplication.Shared.Behaviours {
 
         public CommandBehaviour(
             ICurrentUser currentUserService,
-             ILogger logger) {
+            ILogger logger) {
             _currentUserService = currentUserService;
             _logger = logger;
         }
@@ -64,7 +64,7 @@ namespace APIServer.Aplication.Shared.Behaviours {
                 var current = Activity.Current;
                 current?.SetTag("otel.status_code", "ERROR");
                 current?.SetTag("otel.status_description", ex.ToString());
-                Log.Error(ex.ToString());
+                _logger.Error(ex.ToString());
 
                 // In case it is Mutation Response Payload = handled as payload error union
                 if (Common.IsSubclassOfRawGeneric(typeof(BasePayload<,>), typeof(TResponse))) {

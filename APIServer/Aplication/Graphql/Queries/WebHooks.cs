@@ -1,36 +1,37 @@
+using System;
+using MediatR;
+using System.Linq;
 using HotChocolate;
 using HotChocolate.Types;
-using Microsoft.AspNetCore.Http;
+using APIServer.Persistence;
 using System.Threading.Tasks;
 using HotChocolate.Types.Relay;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
+using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
-using MediatR;
-using System;
-using APIServer.Aplication.GraphQL.Types;
-using APIServer.Aplication.GraphQL.DTO;
 using Shared.Aplication.Interfaces;
-using APIServer.Aplication.GraphQL.DataLoaders;
-using APIServer.Persistence;
+using Microsoft.EntityFrameworkCore;
+using APIServer.Aplication.GraphQL.DTO;
+using APIServer.Aplication.GraphQL.Types;
 using APIServer.Domain.Core.Models.WebHooks;
 using APIServer.Aplication.GraphQL.Extensions;
+using APIServer.Aplication.GraphQL.DataLoaders;
 
 namespace APIServer.Aplication.GraphQL.Queries {
 
     /// <summary>
     ///  Webhook Querys
     /// </summary>
-    [ExtendObjectType(Name = "Querry")]
+    [ExtendObjectType(OperationTypeNames.Query)]
     public class WebHookQueries {
 
         /// <summary>
         /// Return collection of webhook records
         /// </summary>
+        
         [UseApiDbContextAttribute]
-        [UsePaging(typeof(WebHookRecordType))]
+        [UsePaging(typeof(WebHookType))]
         [UseFiltering]
-        public async Task<IQueryable<GQL_WebHook>> Webhooks(
+        public IQueryable<GQL_WebHook> Webhooks(
         [Service] ICurrentUser current,
         [ScopedService] ApiDbContext context) {
 
@@ -54,22 +55,20 @@ namespace APIServer.Aplication.GraphQL.Queries {
         /// <summary>
         /// Return collection of webhook records
         /// </summary>
+        [UseApiDbContextAttribute]
         [UsePaging(typeof(WebHookRecordType))]
         [UseFiltering]
         public async Task<IEnumerable<GQL_WebHookRecord>> GetWebHookRecords(
         [ID(nameof(GQL_WebHook))] long hook_id,
         [Service] IMediator mediator,
         [Service] ICurrentUser current,
-        [Service] IDbContextFactory<ApiDbContext> factory) {
+        [ScopedService] ApiDbContext context) {
 
             if (!current.Exist || hook_id <= 0) {
                 return null;
             }
 
-            await using ApiDbContext dbContext = 
-                factory.CreateDbContext();
-
-            return dbContext.WebHooksHistory
+            return context.WebHooksHistory
             .AsNoTracking()
             .Where(e => e.WebHookID == hook_id)
             .Select(e => new GQL_WebHookRecord() {

@@ -35,9 +35,6 @@ namespace APIServer.Aplication.Commands.WebHooks {
 
         public UpdateWebHookActivStateValidator(IDbContextFactory<ApiDbContext> factory){
             _factory = factory;
-        }
-
-        public UpdateWebHookActivStateValidator() {
 
             RuleFor(e => e.WebHookId)
             .NotNull()

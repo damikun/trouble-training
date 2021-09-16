@@ -32,9 +32,6 @@ namespace APIServer.Aplication.Commands.WebHooks {
 
         public RemoveWebHookValidator(IDbContextFactory<ApiDbContext> factory){
             _factory = factory;
-        }
-
-        public RemoveWebHookValidator() {
 
             RuleFor(e => e.WebHookId)
             .NotNull()
@@ -111,6 +108,8 @@ namespace APIServer.Aplication.Commands.WebHooks {
             await using ApiDbContext dbContext = 
                 _factory.CreateDbContext();
 
+            System.Console.WriteLine("----------------");
+
             WebHook wh = await dbContext.WebHooks
             .TagWith(string.Format("RemoveWebHook Command - Query Hook"))
             .Where(e => e.ID == request.WebHookId)
@@ -125,6 +124,8 @@ namespace APIServer.Aplication.Commands.WebHooks {
             dbContext.WebHooks.Remove(wh);
 
             await dbContext.SaveChangesAsync(cancellationToken);
+
+            System.Console.WriteLine("----------------");
 
             var response = RemoveWebHookPayload.Success();
 

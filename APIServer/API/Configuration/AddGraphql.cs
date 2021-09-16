@@ -34,7 +34,7 @@ namespace APIServer.Configuration {
                     .AddQueryType<Query>()
                         .AddTypeExtension<WebHookQueries>()
                         .AddTypeExtension<UserQueries>()
-                        
+                        .AddTypeExtension<SystemQueries>()
                     .AddMutationType<Mutation>()
                         .AddTypeExtension<WebHookMutations>()
 

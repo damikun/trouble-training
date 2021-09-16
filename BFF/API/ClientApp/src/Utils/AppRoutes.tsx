@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import {  Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import PrivateRoute from "./PrivateRouter";
 import FourOhFour from "../Components/Errors/FourOhFour";
 import { useUserStore } from "./UserProvider";
@@ -24,11 +24,11 @@ export default function AppRoutes() {
   } else {
     return (
       <Routes>
-        <PrivateRoute  path={"/*"} element={<Settings />} />
 
-        <Route>
-          <FourOhFour />
-        </Route>
+        <PrivateRoute  path={"/*"} element={<Settings />} />
+        
+        <PrivateRoute path="*" element={<FourOhFour />} />
+
       </Routes>
     );
   }
