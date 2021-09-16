@@ -1,9 +1,14 @@
-<h3 align="center">Full Stack Workshop (Frontend + Backend + Monitoring)</h3>
+<h3 align="center">Full Stack Workshop (Frontend + Backend + Monitoring) </h3>
+
+<br />
 
 <p align="center">
   <img width="600" src="Doc/Assets/WorkshopUI.gif" alt="Workshop UI" >
 </p>
 
+### Stack
+ - **Frontend** - [React](https://reactjs.org/), [Relay](https://relay.dev/), [Typecsript](https://www.typescriptlang.org/), [ReactRouter](https://reactrouter.com/), [TailwindCSS](https://tailwindcss.com/)
+ - **Backend** - [Netcore](https://dotnet.microsoft.com/), [Hotchocolate](https://chillicream.com/docs/hotchocolate/v10), [IdentityServer](https://duendesoftware.com/products/identityserver), [ElasticSearch](https://www.elastic.co/), [Opentelemerty](https://opentelemetry.io/), [Serilog](https://serilog.net/), [MediatR](https://github.com/jbogard/MediatR), [Hangfire](https://www.hangfire.io/), [Automapper](https://automapper.org/), [Fluentvalidation](https://fluentvalidation.net/), [Docker](https://www.docker.com/)
 
 ### Integration steps:
 Please follow this steps because of connection between each part:
