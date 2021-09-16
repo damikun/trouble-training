@@ -112,15 +112,14 @@ namespace BFF
                 .WithOptionalUserAccessToken()          
                 .AllowAnonymous();
 
-
-                endpoints.MapRemoteBffApiEndpoint(
-                    "/hookloopback",
-                    "https://localhost:5022/api/Hook/hookloopback",
-                    false)    
-                .AllowAnonymous();
-
-
                 if (env.IsDevelopment()) {
+
+                    endpoints.MapRemoteBffApiEndpoint(
+                        "/hookloopback",
+                        "https://localhost:5022/api/Hook/hookloopback",
+                        false)    
+                    .AllowAnonymous();
+
                     endpoints.MapRemoteBffApiEndpoint(
                         "/scheduler",
                         "https://localhost:5022/scheduler",
