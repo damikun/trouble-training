@@ -5,10 +5,26 @@ module.exports = {
   },
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      truncate: {
+        lines: {
+          1: "1",
+          2: "2",
+          3: "3",
+          5: "5",
+          8: "8",
+        },
+      }
+    },
   },
   variants: {
-    extend: {},
+    extend: {
+      display: ["responsive", "group-hover", "group-focus"],
+      width: ["hover", "focus", "focus-within", `group-hover`, "responsive"],
+      backgroundColor: ["focus-within"],
+      borderStyle: ["first", "last"],
+      dropShadow: ["hover", "focus"],
+    },
   },
-  plugins: [],
+  plugins:[require('tailwindcss-truncate-multiline')],
 }

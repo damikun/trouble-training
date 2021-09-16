@@ -312,7 +312,7 @@ function StatusCodeSection({ status }: StatusCodeSectionProps) {
     <div
       className={clsx(
         "px-1.5 py-0.5 flex leading-none truncate-1-lines",
-        "break-all rounded-md font-semibold text-xs w-8 text-center",
+        "break-all rounded-md font-semibold text-xs w-10 text-center justify-center",
         status_style
       )}
     >

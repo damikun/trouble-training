@@ -6,7 +6,7 @@ import ViewContainer from "../../UIComponents/ViewContainer/ViewContainer";
 import clsx from "clsx";
 import SettingsFilters from "./SettingsFilters";
 import { Suspense, useContext, useMemo, useState } from "react";
-import SettingsInfo from "./Info/SettingsInfo";
+import Welcome from "./Info/Welcome";
 import FourOhOne from "../Errors/FourOhOne";
 import PrivateRoute from "../../Utils/PrivateRouter";
 import ContainerSpinner from "../../UIComponents/Spinner/ContainerSpinner";
@@ -20,7 +20,7 @@ const view_WebHooks = true;
 
 export const SettingsTabs = [
   {
-    label: "Playground",
+    label: "Welcome",
     path: ``,
   },
   {
@@ -78,7 +78,7 @@ export default function Settings() {
               <PrivateRoute
                 path={SettingsTabs[0].path}
                 authorised={true}
-                element={<SettingsInfo />}
+                element={<Welcome />}
               />
 
               <PrivateRoute

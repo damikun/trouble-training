@@ -7,24 +7,15 @@ import Providers from "./Utils/Providers";
 import Layout from "./Components/Layout/Layout";
 import LayoutBody from "./Components/Layout/LayoutBody";
 import AppRoutes from "./Utils/AppRoutes";
-import { motion } from "framer-motion";
-import clsx from "clsx";
 import LayoutHeader from "./Components/Layout/LayautHeader"
 
 function App() {
 
   const Loader = useMemo(
     () => (
-      <motion.div
-      className={clsx("flex-1 h-full max-h-full")}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ type: "tween", duration: 0.3, delay: 0.5 }}
-      >
-        <div className="w-full h-full">
-          <ContainerSpinner />
-        </div>
-      </motion.div>
+      <div className="w-full h-full">
+        <ContainerSpinner />
+      </div>
     ),
     []
   );
