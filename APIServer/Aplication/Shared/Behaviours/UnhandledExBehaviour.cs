@@ -32,24 +32,6 @@ namespace APIServer.Aplication.Shared.Behaviours {
             var activity = Sources.DemoSource.StartActivity(
                 String.Format("UnhandledExBehaviour: Request<{0}>", typeof(TRequest).FullName), ActivityKind.Server);
 
-            if (typeof(TRequest).IsSubclassOf(typeof(CommandBase))) {
-
-                ISharedCommandBase I_base_command = request as ISharedCommandBase;
-
-                if (I_base_command.ActivityId == null
-                    && Activity.Current != null
-                    && Activity.Current.Id != null) {
-                    I_base_command.ActivityId = Activity.Current.Id;
-                }
-
-                // This chane activity parrent / children relation..
-                if (I_base_command.ActivityId != null
-                    && Activity.Current != null
-                    && Activity.Current.ParentId == null) {
-                    Activity.Current.SetParentId(I_base_command.ActivityId);
-                }
-            }
-
             try {
                 activity.Start();
 

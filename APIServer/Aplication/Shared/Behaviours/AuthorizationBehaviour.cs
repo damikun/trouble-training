@@ -92,8 +92,6 @@ namespace APIServer.Aplication.Shared.Behaviours {
                     var authorizeAttributesWithPolicies = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Policy));
                     if (authorizeAttributesWithPolicies.Any()) {
                         foreach (var policy in authorizeAttributesWithPolicies.Select(a => a.Policy)) {
-                        System.Console.WriteLine("******************");
-                        System.Console.WriteLine(policy);
                             if (!_currentUserService.HasRole(policy.Trim())) {
                                 return HandleUnAuthorised($"Policy: {policy} authorization failure");
                             }
