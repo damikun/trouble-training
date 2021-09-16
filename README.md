@@ -1,6 +1,15 @@
 <h3 align="center">Full Stack Workshop (Frontend + Backend + Monitoring) </h3>
-<p align="center" >Demo Application contains small UI where you can manage your WebHooks. Aplication contains full Frontend and Backend implementation with infrastructure and app observability and  monitoring.</p>
+
+<p align="center">
+  <img  width="900" src="Doc/Assets/stack_logos.png" alt="Workshop UI" >
+</p>
+<p align="center" > Aplication contains full Frontend and Backend implementation with infrastructure and app monitoring. There are multiple used patterns around like  <b>Mediator, BFF, Domain</b> etc.. and all is secured using <b>Identity server</b> fully supporting <b>OpenId Connect</b> and <b>OAuth2.0</b></p>
 <br />
+
+
+
+<p align="center" >Demo Application contains small UI where you can manage your WebHooks</p>
+
 
 <p align="center">
   <img width="600" src="Doc/Assets/WorkshopUI.gif" alt="Workshop UI" >

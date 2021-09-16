@@ -1,6 +1,7 @@
 {
   "name": "my-app",
   "version": "0.1.0",
+  "author": "Dalibor Kundrat",
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.2.0",
