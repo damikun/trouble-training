@@ -1,8 +1,6 @@
 using System;
 using APIServer.Configuration;
-using Elastic.CommonSchema;
 using Hangfire;
-using Serilog;
 using HotChocolate.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
