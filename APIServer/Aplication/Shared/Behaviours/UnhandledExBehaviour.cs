@@ -7,7 +7,6 @@ using Aplication.Payload;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Shared.Aplication.Interfaces;
-using Shared.Aplication.Core.Commands;
 
 namespace APIServer.Aplication.Shared.Behaviours {
 

@@ -9,7 +9,6 @@ using Shared.Aplication.Core.Commands;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-
 namespace APIServer.Aplication.Shared.Behaviours {
 
     /// <summary>
