@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Duende.Bff;
 using Microsoft.AspNetCore.HttpOverrides;
 using BFF.Configuration;
+using Duende.Bff.EntityFramework;
 using Elastic.Apm.AspNetCore;
 using Elastic.Apm.DiagnosticSource;
 
@@ -43,8 +44,11 @@ namespace BFF
                 options.AntiForgeryHeaderValue = "1";
                 options.AntiForgeryHeaderName = "X-CSRF";
                 options.ManagementBasePath = "/system";
-            })
-            .AddServerSideSessions();
+            }).AddServerSideSessions();
+            // .AddEntityFrameworkServerSideSessions(options=> 
+            // {
+            //     /// setup hire     
+            // });
 
             services.AddIdentityConfiguration();
 

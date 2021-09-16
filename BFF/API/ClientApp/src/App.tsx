@@ -9,6 +9,7 @@ import LayoutBody from "./Components/Layout/LayoutBody";
 import AppRoutes from "./Utils/AppRoutes";
 import { motion } from "framer-motion";
 import clsx from "clsx";
+import LayoutHeader from "./Components/Layout/LayautHeader"
 
 function App() {
 
@@ -46,6 +47,7 @@ function App() {
       <Providers fallback={Loader}>
         <Suspense fallback={Loader}>
           <Layout
+            header={<LayoutHeader/>}
             content={
               <LayoutBody>
                 <Suspense fallback={Loader}>

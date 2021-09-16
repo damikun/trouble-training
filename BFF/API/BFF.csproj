@@ -11,6 +11,8 @@
 
   <ItemGroup>
     <PackageReference Include="Duende.BFF" Version="1.0.0-rc.3" />
+    <PackageReference Include="Duende.BFF.EntityFramework" Version="1.0.0-rc.3" />
+    <PackageReference Include="Duende.IdentityServer.EntityFramework.Storage" Version="5.2.2" />
     <PackageReference Include="HotChocolate.Data.EntityFramework" Version="11.3.7" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.0" />
@@ -40,6 +42,14 @@
     <PackageReference Include="Serilog.Sinks.Console" Version="4.0.0" />
     <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.5.0-alpha0003" />
 
+
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.9">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Npgsql" Version="5.0.4" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.5.1" />
   </ItemGroup>
 
   <ItemGroup>

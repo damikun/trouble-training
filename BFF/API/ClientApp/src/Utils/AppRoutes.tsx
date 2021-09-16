@@ -4,6 +4,7 @@ import PrivateRoute from "./PrivateRouter";
 import FourOhFour from "../Components/Errors/FourOhFour";
 import { useUserStore } from "./UserProvider";
 import Login from "../Components/Login";
+import Logout from "../Components/Logout";
 
 const Settings = lazy(
   () =>
@@ -27,7 +28,11 @@ export default function AppRoutes() {
 
         <PrivateRoute  path={"/*"} element={<Settings />} />
         
+        <PrivateRoute  path={"/logout"} element={<Logout />} />
+
         <PrivateRoute path="*" element={<FourOhFour />} />
+
+        
 
       </Routes>
     );
