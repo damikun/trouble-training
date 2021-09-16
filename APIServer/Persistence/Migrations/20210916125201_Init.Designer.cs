@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace APIServer.Persistence.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20210913223444_Init")]
+    [Migration("20210916125201_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,6 +21,27 @@ namespace APIServer.Persistence.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
                 .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+            modelBuilder.Entity("APIServer.Domain.Core.Models.Events.DomainEvent", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<Guid?>("ActorID")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("EventType")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Events");
+                });
 
             modelBuilder.Entity("APIServer.Domain.Core.Models.WebHooks.WebHook", b =>
                 {
@@ -122,6 +143,36 @@ namespace APIServer.Persistence.Migrations
                     b.ToTable("WebHooksHistory");
                 });
 
+            modelBuilder.Entity("APIServer.Domain.Core.Models.Events.WebHookCreated", b =>
+                {
+                    b.HasBaseType("APIServer.Domain.Core.Models.Events.DomainEvent");
+
+                    b.Property<long>("WebHookId")
+                        .HasColumnType("bigint");
+
+                    b.ToTable("WebHookCreatedEvent");
+                });
+
+            modelBuilder.Entity("APIServer.Domain.Core.Models.Events.WebHookRemoved", b =>
+                {
+                    b.HasBaseType("APIServer.Domain.Core.Models.Events.DomainEvent");
+
+                    b.Property<long>("WebHookId")
+                        .HasColumnType("bigint");
+
+                    b.ToTable("WebHookRemovedEvent");
+                });
+
+            modelBuilder.Entity("APIServer.Domain.Core.Models.Events.WebHookUpdated", b =>
+                {
+                    b.HasBaseType("APIServer.Domain.Core.Models.Events.DomainEvent");
+
+                    b.Property<long>("WebHookId")
+                        .HasColumnType("bigint");
+
+                    b.ToTable("WebHookUpdatedEvent");
+                });
+
             modelBuilder.Entity("APIServer.Domain.Core.Models.WebHooks.WebHookHeader", b =>
                 {
                     b.HasOne("APIServer.Domain.Core.Models.WebHooks.WebHook", "WebHook")
@@ -142,6 +193,33 @@ namespace APIServer.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("WebHook");
+                });
+
+            modelBuilder.Entity("APIServer.Domain.Core.Models.Events.WebHookCreated", b =>
+                {
+                    b.HasOne("APIServer.Domain.Core.Models.Events.DomainEvent", null)
+                        .WithOne()
+                        .HasForeignKey("APIServer.Domain.Core.Models.Events.WebHookCreated", "ID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("APIServer.Domain.Core.Models.Events.WebHookRemoved", b =>
+                {
+                    b.HasOne("APIServer.Domain.Core.Models.Events.DomainEvent", null)
+                        .WithOne()
+                        .HasForeignKey("APIServer.Domain.Core.Models.Events.WebHookRemoved", "ID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("APIServer.Domain.Core.Models.Events.WebHookUpdated", b =>
+                {
+                    b.HasOne("APIServer.Domain.Core.Models.Events.DomainEvent", null)
+                        .WithOne()
+                        .HasForeignKey("APIServer.Domain.Core.Models.Events.WebHookUpdated", "ID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("APIServer.Domain.Core.Models.WebHooks.WebHook", b =>

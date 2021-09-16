@@ -1,7 +1,7 @@
 export const EVENT_TRIGGERS = [
   {
-    id: "RESOURCE",
-    description: "Resource created, User assign/un-assign, Status changed, Type changed, Priority changed, Commented",
+    id: "HOOK",
+    description: "Hook created, Hook removed, Hook updated, Hook enabled/disabled",
   },
   {
     id: "FILE",

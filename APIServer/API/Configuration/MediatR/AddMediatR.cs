@@ -17,6 +17,8 @@ namespace APIServer.Configuration {
 
             services.AddValidatorsFromAssembly(typeof(CreateWebHookValidator).GetTypeInfo().Assembly);
 
+            // services.AddValidatorsFromAssembly(typeof(AuthorizationValidator).GetTypeInfo().Assembly);
+
             services.AddMediatRSchedulerIntegration();
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TracingBehaviour<,>));

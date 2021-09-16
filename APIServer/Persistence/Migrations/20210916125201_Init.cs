@@ -12,6 +12,21 @@ namespace APIServer.Persistence.Migrations
                 .Annotation("Npgsql:PostgresExtension:citext", ",,");
 
             migrationBuilder.CreateTable(
+                name: "Events",
+                columns: table => new
+                {
+                    ID = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ActorID = table.Column<Guid>(type: "uuid", nullable: true),
+                    TimeStamp = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    EventType = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Events", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "WebHooks",
                 columns: table => new
                 {
@@ -27,6 +42,63 @@ namespace APIServer.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_WebHooks", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WebHookCreatedEvent",
+                columns: table => new
+                {
+                    ID = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    WebHookId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WebHookCreatedEvent", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_WebHookCreatedEvent_Events_ID",
+                        column: x => x.ID,
+                        principalTable: "Events",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WebHookRemovedEvent",
+                columns: table => new
+                {
+                    ID = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    WebHookId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WebHookRemovedEvent", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_WebHookRemovedEvent_Events_ID",
+                        column: x => x.ID,
+                        principalTable: "Events",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WebHookUpdatedEvent",
+                columns: table => new
+                {
+                    ID = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    WebHookId = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WebHookUpdatedEvent", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_WebHookUpdatedEvent_Events_ID",
+                        column: x => x.ID,
+                        principalTable: "Events",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -93,13 +165,25 @@ namespace APIServer.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "WebHookCreatedEvent");
+
+            migrationBuilder.DropTable(
                 name: "WebHookHeader");
+
+            migrationBuilder.DropTable(
+                name: "WebHookRemovedEvent");
 
             migrationBuilder.DropTable(
                 name: "WebHooksHistory");
 
             migrationBuilder.DropTable(
+                name: "WebHookUpdatedEvent");
+
+            migrationBuilder.DropTable(
                 name: "WebHooks");
+
+            migrationBuilder.DropTable(
+                name: "Events");
         }
     }
 }

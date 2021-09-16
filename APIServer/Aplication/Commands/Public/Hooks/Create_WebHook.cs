@@ -10,7 +10,11 @@ using Aplication.Shared.Attributes;
 using Microsoft.EntityFrameworkCore;
 using APIServer.Domain.Core.Models.WebHooks;
 using APIServer.Persistence;
+using System.Diagnostics;
+using APIServer.Extensions;
 using APIServer.Aplication.Shared;
+using APIServer.Aplication.Notifications.WebHooks;
+using APIServer.Aplication.Shared.Behaviours;
 
 namespace APIServer.Aplication.Commands.WebHooks {
 
@@ -87,6 +91,20 @@ namespace APIServer.Aplication.Commands.WebHooks {
     }
 
     /// <summary>
+    /// Authorization validators for CreateWebHook
+    /// </summary>
+    public class AuthorizationValidator : AuthorizationValidator<CreateWebHook> {
+
+        private readonly IDbContextFactory<ApiDbContext> _factory;
+        public AuthorizationValidator(IDbContextFactory<ApiDbContext> factory) {
+
+            _factory = factory;
+
+        }
+    }
+
+
+    /// <summary>
     /// ICreateWebHookError
     /// </summary>
     public interface ICreateWebHookError { }
@@ -106,17 +124,17 @@ namespace APIServer.Aplication.Commands.WebHooks {
     public class CreateWebHookHandler : IRequestHandler<CreateWebHook, CreateWebHookPayload> {
 
         /// <summary>
-        /// Injected <c>ApiDbContext</c>
+        /// Injected <c>IDbContextFactory<ApiDbContext></c>
         /// </summary>
         private readonly IDbContextFactory<ApiDbContext> _factory;
 
         /// <summary>
-        /// Injected <c>IMediator</c>
+        /// Injected <c>IPublisher</c>
         /// </summary>
-        private readonly IMediator _mediator;
+        private readonly APIServer.Extensions.IPublisher _publisher;
 
         /// <summary>
-        /// Injected <c>IMediator</c>
+        /// Injected <c>ICurrentUser</c>
         /// </summary>
         private readonly ICurrentUser _current;
 
@@ -125,12 +143,12 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// </summary>
         public CreateWebHookHandler(
             IDbContextFactory<ApiDbContext> factory,
-            IMediator mediator,
+            APIServer.Extensions.IPublisher publisher,
             ICurrentUser currentuser) {
 
             _factory = factory;
 
-            _mediator = mediator;
+            _publisher = publisher;
 
             _current = currentuser;
         }
@@ -154,6 +172,14 @@ namespace APIServer.Aplication.Commands.WebHooks {
                 dbContext.WebHooks.Add(hook);
 
                 await dbContext.SaveChangesAsync(cancellationToken);
+
+                try {
+
+                    await _publisher.Publish(new WebHookCreatedNotifi() {
+                        ActivityId = Activity.Current.Id
+                    }, PublishStrategy.ParallelNoWait, default(CancellationToken));
+
+                } catch { }
 
                 var response = CreateWebHookPayload.Success();
 

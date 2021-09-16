@@ -28,9 +28,8 @@ namespace APIServer.Domain.Core.Models.WebHooks {
 
     [Serializable]
     public class Hook_User_DTO {
-        public long id { get; set; }
-        public string firstName { get; set; }
-        public string lastName { get; set; }
+        public string id { get; set; }
+        public string name { get; set; }
     }
 
 }

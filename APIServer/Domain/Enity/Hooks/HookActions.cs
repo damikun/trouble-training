@@ -3,12 +3,11 @@ namespace APIServer.Domain.Core.Models.WebHooks {
 
     public enum HookResourceAction {
         undefined,
+        hook_created,
+        hook_removed,
+        hook_updated,
 
-        status_changed,
-
-        user_assigned,
-
-        resource_created
+        // Etc Etc...
     }
 
     public enum HookGrou2Action {
