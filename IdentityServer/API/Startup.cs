@@ -1,4 +1,8 @@
-﻿using IdentityServer.Configuration;
+﻿
+// Copyright (c) Dalibor Kundrat All rights reserved.
+// See LICENSE in root.
+
+using IdentityServer.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
@@ -56,7 +60,7 @@ namespace IdentityServer.API
                 ForwardedHeaders.XForwardedProto
             });
 
-            //app.UseElasticApm(Configuration, new IDiagnosticsSubscriber [0]);
+            app.UseElasticApm(Configuration, new IDiagnosticsSubscriber [0]);
 
             app.UseHealthChecks("/health");
 

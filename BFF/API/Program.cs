@@ -1,3 +1,6 @@
+// Copyright (c) Dalibor Kundrat All rights reserved.
+// See LICENSE in root.
+
 using System;
 using Serilog;
 using BFF.Configuration;

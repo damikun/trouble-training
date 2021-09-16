@@ -1,3 +1,7 @@
+
+// Copyright (c) Dalibor Kundrat All rights reserved.
+// See LICENSE in root.
+
 using System;
 using System.Diagnostics;
 using APIServer.Aplication.Shared.Errors;

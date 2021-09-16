@@ -1,3 +1,6 @@
+// Copyright (c) Dalibor Kundrat All rights reserved.
+// See LICENSE in root.
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
@@ -75,7 +78,7 @@ namespace BFF
                 app.UseHsts();
             }
 
-            //app.UseElasticApm(Configuration, new IDiagnosticsSubscriber [0]);
+            app.UseElasticApm(Configuration, new IDiagnosticsSubscriber [0]);
 
             app.UseHealthChecks("/health");
 

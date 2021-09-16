@@ -1,3 +1,6 @@
+// Copyright (c) Dalibor Kundrat All rights reserved.
+// See LICENSE in root.
+
 using System;
 using APIServer.Configuration;
 using Hangfire;

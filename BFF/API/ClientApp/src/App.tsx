@@ -1,3 +1,6 @@
+// Copyright (c) Dalibor Kundrat All rights reserved.
+// See LICENSE in root.
+
 import React, { Suspense, useMemo } from 'react';
 import './App.css';
 import { Helmet } from 'react-helmet';
