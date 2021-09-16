@@ -66,6 +66,7 @@ namespace MediatR {
             string fullTypeName = mediatorObject.GetType().FullName;
             string data = JsonConvert.SerializeObject(mediatorObject, new JsonSerializerSettings {
                 Formatting = Formatting.None,
+                TypeNameHandling = TypeNameHandling.All
             });
 
             return new MediatorSerializedObject(fullTypeName, data, description);

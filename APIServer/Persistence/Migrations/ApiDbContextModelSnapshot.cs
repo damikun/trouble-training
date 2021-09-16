@@ -69,6 +69,16 @@ namespace APIServer.Persistence.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("WebHooks");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1L,
+                            ContentType = "application/json",
+                            HookEvents = new[] { 0 },
+                            IsActive = true,
+                            WebHookUrl = "https://localhost:5015/hookloopback"
+                        });
                 });
 
             modelBuilder.Entity("APIServer.Domain.Core.Models.WebHooks.WebHookHeader", b =>

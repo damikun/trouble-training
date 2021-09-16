@@ -29,6 +29,14 @@ namespace APIServer.Persistence {
 
             modelBuilder.Entity<WebHookUpdated>().ToTable("WebHookUpdatedEvent");
 
+            modelBuilder.Entity<WebHook>().HasData(
+                new WebHook() { 
+                    ID = 1,
+                    WebHookUrl = "https://localhost:5015/hookloopback",
+                    IsActive = true,
+                    ContentType = "application/json",
+                    HookEvents=new HookEventType[]{HookEventType.hook}
+                });
 
             base.OnModelCreating(modelBuilder);
         }

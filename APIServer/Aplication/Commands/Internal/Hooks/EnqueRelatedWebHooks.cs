@@ -68,22 +68,22 @@ namespace APIServer.Aplication.Commands.Internall.Hooks  {
             .Where(e => e.HookEvents.Contains(HookEventType.hook))
             .ToListAsync(cancellationToken);
 
-            try {
+            // try {
                 if (hooks != null) {
                     foreach (var hook_item in hooks) {
                         if (hook_item.IsActive && hook_item.ID > 0) {
 
-                            try {
+                    
                                 _mediator.Enqueue(new ProcessWebHook() {
                                     HookId = hook_item.ID,
                                     Event = request.Event,
                                     EventType = request.EventType
                                 });
-                            }catch{}
+                     
                         }
                     }
                 }
-            } catch { }
+            // } catch { }
 
 
             return Unit.Value;

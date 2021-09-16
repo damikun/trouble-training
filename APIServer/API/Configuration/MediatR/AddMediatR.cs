@@ -5,6 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using APIServer.Extensions;
 using APIServer.Aplication.Shared.Behaviours;
 using APIServer.Aplication.Commands.WebHooks;
+using  APIServer.Aplication.Commands.Internall.Hooks;
+using APIServer.Domain.Core.Models.Events;
+using APIServer.Aplication.WebHooks;
 
 namespace APIServer.Configuration {
     public static partial class ServiceExtension {
@@ -16,6 +19,11 @@ namespace APIServer.Configuration {
             services.AddTransient<APIServer.Extensions.IPublisher, APIServer.Extensions.Publisher>();
 
             services.AddValidatorsFromAssembly(typeof(CreateWebHookValidator).GetTypeInfo().Assembly);
+
+            services.AddTransient<IRequestHandler<EnqueSaveEvent<WebHookCreated>, Unit>, EnqueSaveEventHandler<WebHookCreated>>();
+            //IRequestHandler
+            //EnqueSaveEvent
+            //Hook_HookCreated
 
             // services.AddValidatorsFromAssembly(typeof(AuthorizationValidator).GetTypeInfo().Assembly);
 

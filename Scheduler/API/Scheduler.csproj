@@ -39,11 +39,20 @@
 
     <PackageReference Include="Npgsql" Version="5.0.4" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.5.1" />
+
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
+    <PackageReference Include="FluentValidation" Version="10.3.3" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.3" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
+    <PackageReference Include="MediatR" Version="9.0.0" />
+
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="../../Scheduler/Domain/Scheduler.Domain.csproj" />
     <ProjectReference Include="../../APIServer/Apliaction/APIServer.Aplication.csproj" />
+    <ProjectReference Include="../../APIServer/API/APIServer.csproj" />
 
     <ProjectReference Include="../../Shared/API/Shared.API.csproj" />
     <ProjectReference Include="../../Shared/Aplication/Shared.Aplication.csproj" />

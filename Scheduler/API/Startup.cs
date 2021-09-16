@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Scheduler.Domain;
 using Shared.Configuration;
 using Hangfire.PostgreSql;
+using APIServer.Configuration;
 
 namespace Scheduler
 {
@@ -38,7 +39,17 @@ namespace Scheduler
                 options.WorkerCount = 2;
             });
 
+            services.AddMediatR();
+
+            services.AddHttpClient();
+
             services.AddHealthChecks();
+
+            services.AddDbContext(Configuration,Environment);
+
+            services.AddHttpContextAccessor();
+
+            services.AddSingleton(Serilog.Log.Logger);
 
             services.AddTelemerty(Configuration,Environment, Sources.DemoSource.Name);
         }

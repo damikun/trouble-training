@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace APIServer.Persistence.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20210916125201_Init")]
+    [Migration("20210916152629_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -71,6 +71,16 @@ namespace APIServer.Persistence.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("WebHooks");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1L,
+                            ContentType = "application/json",
+                            HookEvents = new[] { 0 },
+                            IsActive = true,
+                            WebHookUrl = "https://localhost:5015/hookloopback"
+                        });
                 });
 
             modelBuilder.Entity("APIServer.Domain.Core.Models.WebHooks.WebHookHeader", b =>

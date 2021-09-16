@@ -92,7 +92,7 @@ namespace APIServer
 
             app.UseHangfireServer();
 
-            app.UseHangfireDashboard();
+            app.UseHangfireDashboard("/scheduler");
 
             app.UseEndpoints(endpoints =>
             {

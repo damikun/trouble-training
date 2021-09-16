@@ -33,6 +33,7 @@ namespace APIServer.Aplication.Shared.Behaviours {
             _currentUserService = currentUserService;
             _logger = logger;
             _env = env;
+            _timer = new Stopwatch();
         }
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next) {

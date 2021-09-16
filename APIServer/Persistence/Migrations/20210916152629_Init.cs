@@ -151,6 +151,11 @@ namespace APIServer.Persistence.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "WebHooks",
+                columns: new[] { "ID", "ContentType", "HookEvents", "IsActive", "LastTrigger", "Secret", "WebHookUrl" },
+                values: new object[] { 1L, "application/json", new[] { 0 }, true, null, null, "https://localhost:5015/hookloopback" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_WebHookHeader_WebHookID",
                 table: "WebHookHeader",
