@@ -60,7 +60,7 @@ namespace IdentityServer.API
                 ForwardedHeaders.XForwardedProto
             });
 
-            app.UseElasticApm(Configuration, new IDiagnosticsSubscriber [0]);
+            //app.UseElasticApm(Configuration, new IDiagnosticsSubscriber [0]);
 
             app.UseHealthChecks("/health");
 
