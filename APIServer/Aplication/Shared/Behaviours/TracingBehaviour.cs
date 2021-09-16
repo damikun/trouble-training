@@ -8,7 +8,6 @@ using System.Diagnostics;
 using Aplication.Payload;
 using Shared.Aplication.Interfaces;
 using Shared.Aplication.Core.Commands;
-using APIServer.Aplication.Shared.Errors;
 
 namespace APIServer.Aplication.Shared.Behaviours {
 
@@ -57,23 +56,12 @@ namespace APIServer.Aplication.Shared.Behaviours {
                 return await next();
 
             } catch (Exception ex) {
-                if(!ex.Data.Contains("command_failed")){
-                    
-                    ex.Data.Add("command_failed",true);
 
-                    var current = Activity.Current;
-                    current?.SetTag("otel.status_code", "ERROR");
-                    current?.SetTag("otel.status_description", ex.ToString());
-                    Log.Error(ex.ToString());
-                }
+                Common.CheckAndSetOtelExceptionError(ex,_logger);
 
                 // In case it is Mutation Response Payload = handled as payload error union
                 if (Common.IsSubclassOfRawGeneric(typeof(BasePayload<,>), typeof(TResponse))) {
-                    IBasePayload payload = ((IBasePayload)Activator.CreateInstance<TResponse>());
-
-                    payload.AddError(new InternalServerError(ex.Message));
-
-                    return (TResponse)payload;
+                    return Common.HandleBaseCommandException<TResponse>(ex);
                 } else {
                     throw;
                 }

@@ -19,13 +19,13 @@ namespace APIServer.Configuration {
 
             services.AddMediatRSchedulerIntegration();
 
-            // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TracingBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TracingBehaviour<,>));
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
 
-            // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehaviour<,>));
 
-            // services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CommandBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExBehaviour<,>));
 
             return services;
         }

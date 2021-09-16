@@ -8,20 +8,19 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Shared.Aplication.Interfaces;
 using Shared.Aplication.Core.Commands;
-using APIServer.Aplication.Shared.Errors;
 
 namespace APIServer.Aplication.Shared.Behaviours {
 
     /// <summary>
-    /// CommandBehaviour for MediatR pipeline
+    /// UnhandledExBehaviour for MediatR pipeline
     /// </summary>
     /// <typeparam name="TRequest"></typeparam>
     /// <typeparam name="TResponse"></typeparam>
-    public class CommandBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> {
+    public class UnhandledExBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> {
         private readonly ICurrentUser _currentUserService;
         private readonly ILogger _logger;
 
-        public CommandBehaviour(
+        public UnhandledExBehaviour(
             ICurrentUser currentUserService,
             ILogger logger) {
             _currentUserService = currentUserService;
@@ -31,7 +30,7 @@ namespace APIServer.Aplication.Shared.Behaviours {
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next) {
 
             var activity = Sources.DemoSource.StartActivity(
-                String.Format("CommandBehaviour: Request<{0}>", typeof(TRequest).FullName), ActivityKind.Server);
+                String.Format("UnhandledExBehaviour: Request<{0}>", typeof(TRequest).FullName), ActivityKind.Server);
 
             if (typeof(TRequest).IsSubclassOf(typeof(CommandBase))) {
 
@@ -60,19 +59,12 @@ namespace APIServer.Aplication.Shared.Behaviours {
             } catch (Exception ex) {
 
                 ex.Data.Add("command_failed",true);
-
-                var current = Activity.Current;
-                current?.SetTag("otel.status_code", "ERROR");
-                current?.SetTag("otel.status_description", ex.ToString());
-                _logger.Error(ex.ToString());
+                
+                Common.SetOtelError(ex?.ToString(),_logger);
 
                 // In case it is Mutation Response Payload = handled as payload error union
                 if (Common.IsSubclassOfRawGeneric(typeof(BasePayload<,>), typeof(TResponse))) {
-                    IBasePayload payload = ((IBasePayload)Activator.CreateInstance<TResponse>());
-
-                    payload.AddError(new InternalServerError(ex.Message));
-
-                    return (TResponse)payload;
+                    return Common.HandleBaseCommandException<TResponse>(ex);
                 } else {
                     throw ex;
                 }
