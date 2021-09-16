@@ -3,17 +3,15 @@ using System;
 using IdentityServer.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Persistence.Migrations
+namespace Persistence.Migrations.AppPersistedGrantDb
 {
     [DbContext(typeof(AppPersistedGrantDbContext))]
-    [Migration("20210912000301_Init_AppPersistedGrantDbContext")]
-    partial class Init_AppPersistedGrantDbContext
+    partial class AppPersistedGrantDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

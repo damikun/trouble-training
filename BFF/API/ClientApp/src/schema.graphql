@@ -30,6 +30,7 @@ type GQL_User implements Node {
   id: ID!
   systemid: Long!
   name: String
+  sessionId: String!
   email: String
 }
 
@@ -471,7 +472,7 @@ input UpdateWebHookUriInput {
 }
 
 enum HookEventType {
-  RESOURCE
+  HOOK
   FILE
   NOTE
   PROJECT

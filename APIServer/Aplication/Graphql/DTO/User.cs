@@ -15,8 +15,14 @@ namespace APIServer.Aplication.GraphQL.DTO {
         ///  Name
         /// </summary>
         public string Name { get; set; }
+        
+     #nullable enable
+        /// <summary>
+        ///  Name
+        /// </summary>
+        public string SessionId { get; set; }
 
-        #nullable enable
+   
         /// <summary>
         ///  Email
         /// </summary>

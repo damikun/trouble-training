@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Persistence.Migrations.AppConfigurationDb
+namespace Persistence.Migrations
 {
     [DbContext(typeof(AppConfigurationDbContext))]
-    [Migration("20210912003452_Init_AppConfigurationDbContext")]
-    partial class Init_AppConfigurationDbContext
+    [Migration("20210916171002_Init_ConfigurationDbContext")]
+    partial class Init_ConfigurationDbContext
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

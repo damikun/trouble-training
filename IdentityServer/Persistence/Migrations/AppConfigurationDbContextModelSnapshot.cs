@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Persistence.Migrations.AppConfigurationDb
+namespace Persistence.Migrations
 {
     [DbContext(typeof(AppConfigurationDbContext))]
     partial class AppConfigurationDbContextModelSnapshot : ModelSnapshot

@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Persistence.Migrations.AppConfigurationDb
+namespace Persistence.Migrations
 {
-    public partial class Init_AppConfigurationDbContext : Migration
+    public partial class Init_ConfigurationDbContext : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

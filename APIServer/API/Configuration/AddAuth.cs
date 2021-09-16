@@ -23,7 +23,7 @@ namespace APIServer.Configuration {
                     ValidTypes = new[] { "at+jwt" },
                     
                     NameClaimType = "name",
-                    RoleClaimType = "role"
+                    RoleClaimType = "role" 
                 };
             });
 

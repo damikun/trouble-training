@@ -4,7 +4,7 @@
 /* @relayHash 9ccb0e4526d127832528260c5e9d0d3a */
 
 import { ConcreteRequest } from "relay-runtime";
-export type HookEventType = "FILE" | "MILESTONE" | "NOTE" | "PROJECT" | "RESOURCE" | "%future added value";
+export type HookEventType = "FILE" | "HOOK" | "MILESTONE" | "NOTE" | "PROJECT" | "%future added value";
 export type RecordResult = "DATA_QUERY_ERROR" | "HTTP_ERROR" | "OK" | "PARAMETER_ERROR" | "UNDEFINED" | "%future added value";
 export type SettingsHooksLogsDetailQueryVariables = {
     hook_record_id: string;

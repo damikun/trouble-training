@@ -14,7 +14,7 @@ export const GQL_ENDPOINT = "graphql";
 
 export const LOGIN_ENDPOINT = `${BASE_SERVER_URL}/system/login`;
 
-export const LOGOUT_ENDPOINT = `${BASE_SERVER_URL}/system/logout?returnUrl=/loggedout`;
+export const LOGOUT_ENDPOINT = `${BASE_SERVER_URL}/system/logout`;
 
 /*-----------------------------------------------------------------------*/
 

@@ -8,6 +8,7 @@ export const UserProviderQueryTag = graphql`
     me {
       id
       name
+      sessionId
     }
   }
 `;
@@ -16,6 +17,7 @@ export type usertype = {
     readonly me: {
       readonly id: string | null;
       readonly name: string | null;
+      readonly sessionId: string | null;
   } | null;
 } | null;
 
@@ -40,7 +42,6 @@ export default function UserProvider({ children }: UserProviderProps) {
     {},
     { fetchPolicy: "store-or-network" }
   );
-
   const userStoreInitCtx = useMemo(() => {
     return {
       user: preloaded_user_data,

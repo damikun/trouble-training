@@ -4,7 +4,7 @@
 /* @relayHash cbe23f395b0ad9670ed9cf6bd7cb9609 */
 
 import { ConcreteRequest } from "relay-runtime";
-export type HookEventType = "FILE" | "MILESTONE" | "NOTE" | "PROJECT" | "RESOURCE" | "%future added value";
+export type HookEventType = "FILE" | "HOOK" | "MILESTONE" | "NOTE" | "PROJECT" | "%future added value";
 export type CreateWebHookInput = {
     webHookUrl?: string | null;
     secret?: string | null;

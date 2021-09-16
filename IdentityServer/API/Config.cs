@@ -73,7 +73,13 @@ namespace IdentityServer.API
                     Description = "Allow the application to access API",
                     Scopes = new List<string> {"api.read", "api.write"},
                     ApiSecrets = new List<Secret> {new Secret("ScopeSecret".Sha256())}, // change me!
-                    UserClaims = new List<string> {"role","name","email","client_id"}
+                    UserClaims = new List<string> {
+                        JwtClaimTypes.Name,
+                        JwtClaimTypes.Role,
+                        JwtClaimTypes.Email,
+                        JwtClaimTypes.ClientId,
+                        JwtClaimTypes.SessionId
+                        }
                     
                 }
             };
@@ -83,8 +89,13 @@ namespace IdentityServer.API
         {
             return new ApiScope[]
             {
-                new ApiScope("api", new[] { "name","role", "email", "client_id" }),
-                
+                new ApiScope("api", new[] { 
+                    JwtClaimTypes.Name,
+                    JwtClaimTypes.Role,
+                    JwtClaimTypes.Email,
+                    JwtClaimTypes.ClientId,
+                    JwtClaimTypes.SessionId
+                    }),
             };
         }
     }

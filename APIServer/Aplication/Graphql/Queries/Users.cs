@@ -23,7 +23,8 @@ namespace APIServer.Aplication.GraphQL.Queries {
             return new GQL_User(){
                 Guid = _current.UserId !=null?_current.UserId.Value.ToString():"",
                 Name = _current.GetClaim("name"),
-                Email = _current.GetClaim("email")
+                Email = _current.GetClaim("email"),
+                SessionId = _current.GetClaim("sid"),
             };
         }
     }

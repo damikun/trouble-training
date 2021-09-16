@@ -4,7 +4,7 @@
 
 import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
-export type HookEventType = "FILE" | "MILESTONE" | "NOTE" | "PROJECT" | "RESOURCE" | "%future added value";
+export type HookEventType = "FILE" | "HOOK" | "MILESTONE" | "NOTE" | "PROJECT" | "%future added value";
 export type RecordResult = "DATA_QUERY_ERROR" | "HTTP_ERROR" | "OK" | "PARAMETER_ERROR" | "UNDEFINED" | "%future added value";
 export type SettingsHooksLogsItemFragment = {
     readonly id: string;
