@@ -5,7 +5,7 @@ using APIServer.Aplication.Commands.WebHooks;
 namespace APIServer.Aplication.GraphQL.Types {
     public class RemoveWebHookPayloadType : ObjectType<RemoveWebHookPayload> {
         protected override void Configure(IObjectTypeDescriptor<RemoveWebHookPayload> descriptor) {
-            descriptor.Field(e => e.removed_id).Type<IdType>().Resolver(ctx => {
+            descriptor.Field(e => e.removed_id).Type<IdType>().Resolve(ctx => {
 
                 IIdSerializer serializer = ctx.Service<IIdSerializer>();
 

@@ -6,7 +6,7 @@ using APIServer.Aplication.GraphQL.DTO;
 namespace APIServer.Aplication.GraphQL.Types {
     public class UpdateWebHookPayloadPayloadType : ObjectType<UpdateWebHookPayload> {
         protected override void Configure(IObjectTypeDescriptor<UpdateWebHookPayload> descriptor) {
-            descriptor.Field(e => e.hook).Type<WebHookType>().Resolver(context => {
+            descriptor.Field(e => e.hook).Type<WebHookType>().Resolve(context => {
                 WebHook e = context.Parent<UpdateWebHookPayload>().hook;
 
                 if (e == null) {

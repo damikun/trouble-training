@@ -7,7 +7,7 @@ namespace APIServer.Aplication.GraphQL.Types {
     public class BadRequestType : ObjectType<BadRequest> {
         protected override void Configure(IObjectTypeDescriptor<BadRequest> descriptor) {
 
-            descriptor.Interface<BaseErrorInterfaceType>();
+            descriptor.Implements<BaseErrorInterfaceType>();
         }
     }
 

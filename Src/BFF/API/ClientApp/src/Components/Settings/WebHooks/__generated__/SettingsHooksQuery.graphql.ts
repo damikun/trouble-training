@@ -73,7 +73,7 @@ const node: ConcreteRequest = {
       {
         "alias": null,
         "args": null,
-        "concreteType": "GQL_WebHookConnection",
+        "concreteType": "WebhooksConnection",
         "kind": "LinkedField",
         "name": "webhooks",
         "plural": false,
@@ -120,7 +120,7 @@ const node: ConcreteRequest = {
           {
             "alias": null,
             "args": null,
-            "concreteType": "GQL_WebHookEdge",
+            "concreteType": "WebhooksEdge",
             "kind": "LinkedField",
             "name": "edges",
             "plural": true,

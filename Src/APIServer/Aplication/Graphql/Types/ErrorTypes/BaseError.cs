@@ -8,7 +8,7 @@ namespace APIServer.Aplication.GraphQL.Types {
     public class BaseErrorType : ObjectType<BaseError> {
         protected override void Configure(IObjectTypeDescriptor<BaseError> descriptor) {
 
-            descriptor.Interface<BaseErrorInterfaceType>();
+            descriptor.Implements<BaseErrorInterfaceType>();
         }
     }
 

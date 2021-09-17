@@ -87,7 +87,7 @@ return {
           "variableName": "hookid"
         }
       ],
-      "concreteType": "GQL_WebHookRecordConnection",
+      "concreteType": "WebHookRecordsConnection",
       "kind": "LinkedField",
       "name": "__SettingsHooksLogsConnection_webHookRecords_connection",
       "plural": false,
@@ -134,7 +134,7 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "GQL_WebHookRecordEdge",
+          "concreteType": "WebHookRecordsEdge",
           "kind": "LinkedField",
           "name": "edges",
           "plural": true,

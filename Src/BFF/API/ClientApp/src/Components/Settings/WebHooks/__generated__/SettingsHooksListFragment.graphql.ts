@@ -75,7 +75,7 @@ return {
     {
       "alias": "webhooks",
       "args": null,
-      "concreteType": "GQL_WebHookConnection",
+      "concreteType": "WebhooksConnection",
       "kind": "LinkedField",
       "name": "__SettingsHooksListConnection_webhooks_connection",
       "plural": false,
@@ -122,7 +122,7 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "GQL_WebHookEdge",
+          "concreteType": "WebhooksEdge",
           "kind": "LinkedField",
           "name": "edges",
           "plural": true,

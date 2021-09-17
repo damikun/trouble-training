@@ -2,7 +2,7 @@ using System;
 using MediatR;
 using System.Linq;
 using HotChocolate;
-using HotChocolate.Types;
+using HotChocolate.Data;
 using APIServer.Persistence;
 using System.Threading.Tasks;
 using HotChocolate.Types.Relay;
@@ -15,6 +15,7 @@ using APIServer.Aplication.GraphQL.Types;
 using APIServer.Domain.Core.Models.WebHooks;
 using APIServer.Aplication.GraphQL.Extensions;
 using APIServer.Aplication.GraphQL.DataLoaders;
+using HotChocolate.Types;
 
 namespace APIServer.Aplication.GraphQL.Queries {
 

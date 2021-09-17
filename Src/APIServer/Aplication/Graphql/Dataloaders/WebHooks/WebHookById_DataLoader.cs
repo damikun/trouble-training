@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using HotChocolate.DataLoader;
 using GreenDonut;
 using Shared.Aplication.Interfaces;
 using APIServer.Persistence;

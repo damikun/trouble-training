@@ -37,32 +37,13 @@ type GQL_User implements Node {
 type GQL_WebHook implements Node {
   id: ID!
   systemid: Long!
-  records(first: Int after: String last: Int before: String where: GQL_WebHookRecordFilter): GQL_WebHookRecordConnection
+  records("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: GQL_WebHookRecordFilterInput): RecordsConnection
   guid: String
   webHookUrl: String
   contentType: String
   isActive: Boolean!
   listeningEvents: [HookEventType!]
   lastTrigger: DateTime
-}
-
-"A connection to a list of items."
-type GQL_WebHookConnection {
-  "Information to aid in pagination."
-  pageInfo: PageInfo!
-  "A list of edges."
-  edges: [GQL_WebHookEdge!]
-  "A flattened list of the nodes."
-  nodes: [GQL_WebHook]
-  totalCount: Int!
-}
-
-"An edge in a connection."
-type GQL_WebHookEdge {
-  "A cursor for use in pagination."
-  cursor: String!
-  "The item at the end of the edge."
-  node: GQL_WebHook
 }
 
 type GQL_WebHookRecord implements Node {
@@ -80,25 +61,6 @@ type GQL_WebHookRecord implements Node {
   requestHeaders: String
   exception: String
   timestamp: DateTime!
-}
-
-"A connection to a list of items."
-type GQL_WebHookRecordConnection {
-  "Information to aid in pagination."
-  pageInfo: PageInfo!
-  "A list of edges."
-  edges: [GQL_WebHookRecordEdge!]
-  "A flattened list of the nodes."
-  nodes: [GQL_WebHookRecord]
-  totalCount: Int!
-}
-
-"An edge in a connection."
-type GQL_WebHookRecordEdge {
-  "A cursor for use in pagination."
-  cursor: String!
-  "The item at the end of the edge."
-  node: GQL_WebHookRecord
 }
 
 type InternalServerError implements IBaseError {
@@ -128,15 +90,37 @@ type PageInfo {
 }
 
 type Query {
-  node(id: ID!): Node
-  webhooks(first: Int after: String last: Int before: String where: GQL_WebHookFilter): GQL_WebHookConnection
-  webHookRecords(hook_id: ID! first: Int after: String last: Int before: String where: GQL_WebHookRecordFilter): GQL_WebHookRecordConnection
+  "Fetches an object given its ID."
+  node("ID of the object." id: ID!): Node
+  "Lookup nodes by a list of IDs."
+  nodes("The list of node IDs." ids: [ID!]!): [Node]!
+  webhooks("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: GQL_WebHookFilterInput): WebhooksConnection
+  webHookRecords(hook_id: ID! "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: GQL_WebHookRecordFilterInput): WebHookRecordsConnection
   webHookEventsTriggers: [String]
   webHookRecord(hook_record_id: ID!): GQL_WebHookRecord
   webHookById(webhook_id: ID!): GQL_WebHook
   webHookBySystemId(webhook_id: Long!): GQL_WebHook
   me: GQL_User
   serverDateTime: DateTime!
+}
+
+"A connection to a list of items."
+type RecordsConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [RecordsEdge!]
+  "A flattened list of the nodes."
+  nodes: [GQL_WebHookRecord]
+  totalCount: Int!
+}
+
+"An edge in a connection."
+type RecordsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: GQL_WebHookRecord
 }
 
 type RemoveWebHookPayload {
@@ -192,6 +176,44 @@ type WebHookNotFound implements IBaseError {
   message: String
 }
 
+"A connection to a list of items."
+type WebHookRecordsConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [WebHookRecordsEdge!]
+  "A flattened list of the nodes."
+  nodes: [GQL_WebHookRecord]
+  totalCount: Int!
+}
+
+"An edge in a connection."
+type WebHookRecordsEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: GQL_WebHookRecord
+}
+
+"A connection to a list of items."
+type WebhooksConnection {
+  "Information to aid in pagination."
+  pageInfo: PageInfo!
+  "A list of edges."
+  edges: [WebhooksEdge!]
+  "A flattened list of the nodes."
+  nodes: [GQL_WebHook]
+  totalCount: Int!
+}
+
+"An edge in a connection."
+type WebhooksEdge {
+  "A cursor for use in pagination."
+  cursor: String!
+  "The item at the end of the edge."
+  node: GQL_WebHook
+}
+
 union ICreateWebHookError = ValidationError | UnAuthorised | InternalServerError
 
 union IRemoveWebHookError = ValidationError | UnAuthorised | InternalServerError | WebHookNotFound
@@ -206,6 +228,71 @@ union IUpdateWebHookTriggerEventsError = ValidationError | UnAuthorised | Intern
 
 union IUpdateWebHookUriError = ValidationError | UnAuthorised | InternalServerError | WebHookNotFound
 
+input BooleanOperationFilterInput {
+  eq: Boolean
+  neq: Boolean
+}
+
+input ComparableDateTimeOperationFilterInput {
+  eq: DateTime
+  neq: DateTime
+  in: [DateTime!]
+  nin: [DateTime!]
+  gt: DateTime
+  ngt: DateTime
+  gte: DateTime
+  ngte: DateTime
+  lt: DateTime
+  nlt: DateTime
+  lte: DateTime
+  nlte: DateTime
+}
+
+input ComparableInt32OperationFilterInput {
+  eq: Int
+  neq: Int
+  in: [Int!]
+  nin: [Int!]
+  gt: Int
+  ngt: Int
+  gte: Int
+  ngte: Int
+  lt: Int
+  nlt: Int
+  lte: Int
+  nlte: Int
+}
+
+input ComparableInt64OperationFilterInput {
+  eq: Long
+  neq: Long
+  in: [Long!]
+  nin: [Long!]
+  gt: Long
+  ngt: Long
+  gte: Long
+  ngte: Long
+  lt: Long
+  nlt: Long
+  lte: Long
+  nlte: Long
+}
+
+input ComparableNullableOfDateTimeOperationFilterInput {
+  eq: DateTime
+  neq: DateTime
+  in: [DateTime]
+  nin: [DateTime]
+  gt: DateTime
+  ngt: DateTime
+  gte: DateTime
+  ngte: DateTime
+  lt: DateTime
+  nlt: DateTime
+  lte: DateTime
+  nlte: DateTime
+}
+
 input CreateWebHookInput {
   webHookUrl: String
   secret: String
@@ -213,234 +300,82 @@ input CreateWebHookInput {
   hookEvents: [HookEventType!]
 }
 
-input GQL_WebHookFilter {
-  AND: [GQL_WebHookFilter!]
-  OR: [GQL_WebHookFilter!]
-  iD: Long
-  iD_not: Long
-  iD_in: [Long!]
-  iD_not_in: [Long!]
-  iD_gt: Long
-  iD_not_gt: Long
-  iD_gte: Long
-  iD_not_gte: Long
-  iD_lt: Long
-  iD_not_lt: Long
-  iD_lte: Long
-  iD_not_lte: Long
-  guid: String
-  guid_not: String
-  guid_contains: String
-  guid_not_contains: String
-  guid_starts_with: String
-  guid_not_starts_with: String
-  guid_ends_with: String
-  guid_not_ends_with: String
-  guid_in: [String]
-  guid_not_in: [String]
-  webHookUrl: String
-  webHookUrl_not: String
-  webHookUrl_contains: String
-  webHookUrl_not_contains: String
-  webHookUrl_starts_with: String
-  webHookUrl_not_starts_with: String
-  webHookUrl_ends_with: String
-  webHookUrl_not_ends_with: String
-  webHookUrl_in: [String]
-  webHookUrl_not_in: [String]
-  contentType: String
-  contentType_not: String
-  contentType_contains: String
-  contentType_not_contains: String
-  contentType_starts_with: String
-  contentType_not_starts_with: String
-  contentType_ends_with: String
-  contentType_not_ends_with: String
-  contentType_in: [String]
-  contentType_not_in: [String]
-  isActive: Boolean
-  isActive_not: Boolean
-  listeningEvents_some: ISingleFilterOfHookEventTypeFilter
-  listeningEvents_none: ISingleFilterOfHookEventTypeFilter
-  listeningEvents_all: ISingleFilterOfHookEventTypeFilter
-  listeningEvents_any: Boolean
-  records_some: GQL_WebHookRecordFilter
-  records_none: GQL_WebHookRecordFilter
-  records_all: GQL_WebHookRecordFilter
-  records_any: Boolean
-  lastTrigger: DateTime
-  lastTrigger_not: DateTime
-  lastTrigger_in: [DateTime]
-  lastTrigger_not_in: [DateTime]
-  lastTrigger_gt: DateTime
-  lastTrigger_not_gt: DateTime
-  lastTrigger_gte: DateTime
-  lastTrigger_not_gte: DateTime
-  lastTrigger_lt: DateTime
-  lastTrigger_not_lt: DateTime
-  lastTrigger_lte: DateTime
-  lastTrigger_not_lte: DateTime
+input GQL_WebHookFilterInput {
+  and: [GQL_WebHookFilterInput!]
+  or: [GQL_WebHookFilterInput!]
+  iD: ComparableInt64OperationFilterInput
+  guid: StringOperationFilterInput
+  webHookUrl: StringOperationFilterInput
+  contentType: StringOperationFilterInput
+  isActive: BooleanOperationFilterInput
+  listeningEvents: ListHookEventTypeOperationFilterInput
+  records: ListFilterInputTypeOfGQL_WebHookRecordFilterInput
+  lastTrigger: ComparableNullableOfDateTimeOperationFilterInput
 }
 
-input GQL_WebHookRecordFilter {
-  AND: [GQL_WebHookRecordFilter!]
-  OR: [GQL_WebHookRecordFilter!]
-  iD: Long
-  iD_not: Long
-  iD_in: [Long!]
-  iD_not_in: [Long!]
-  iD_gt: Long
-  iD_not_gt: Long
-  iD_gte: Long
-  iD_not_gte: Long
-  iD_lt: Long
-  iD_not_lt: Long
-  iD_lte: Long
-  iD_not_lte: Long
-  webHookID: Long
-  webHookID_not: Long
-  webHookID_in: [Long!]
-  webHookID_not_in: [Long!]
-  webHookID_gt: Long
-  webHookID_not_gt: Long
-  webHookID_gte: Long
-  webHookID_not_gte: Long
-  webHookID_lt: Long
-  webHookID_not_lt: Long
-  webHookID_lte: Long
-  webHookID_not_lte: Long
-  webHookSystemID: Long
-  webHookSystemID_not: Long
-  webHookSystemID_in: [Long!]
-  webHookSystemID_not_in: [Long!]
-  webHookSystemID_gt: Long
-  webHookSystemID_not_gt: Long
-  webHookSystemID_gte: Long
-  webHookSystemID_not_gte: Long
-  webHookSystemID_lt: Long
-  webHookSystemID_not_lt: Long
-  webHookSystemID_lte: Long
-  webHookSystemID_not_lte: Long
-  guid: String
-  guid_not: String
-  guid_contains: String
-  guid_not_contains: String
-  guid_starts_with: String
-  guid_not_starts_with: String
-  guid_ends_with: String
-  guid_not_ends_with: String
-  guid_in: [String]
-  guid_not_in: [String]
-  webHook: GQL_WebHookFilter
-  triggerType: HookEventType
-  triggerType_not: HookEventType
-  triggerType_in: [HookEventType!]
-  triggerType_not_in: [HookEventType!]
-  triggerType_gt: HookEventType
-  triggerType_not_gt: HookEventType
-  triggerType_gte: HookEventType
-  triggerType_not_gte: HookEventType
-  triggerType_lt: HookEventType
-  triggerType_not_lt: HookEventType
-  triggerType_lte: HookEventType
-  triggerType_not_lte: HookEventType
-  result: RecordResult
-  result_not: RecordResult
-  result_in: [RecordResult!]
-  result_not_in: [RecordResult!]
-  result_gt: RecordResult
-  result_not_gt: RecordResult
-  result_gte: RecordResult
-  result_not_gte: RecordResult
-  result_lt: RecordResult
-  result_not_lt: RecordResult
-  result_lte: RecordResult
-  result_not_lte: RecordResult
-  statusCode: Int
-  statusCode_not: Int
-  statusCode_in: [Int!]
-  statusCode_not_in: [Int!]
-  statusCode_gt: Int
-  statusCode_not_gt: Int
-  statusCode_gte: Int
-  statusCode_not_gte: Int
-  statusCode_lt: Int
-  statusCode_not_lt: Int
-  statusCode_lte: Int
-  statusCode_not_lte: Int
-  responseBody: String
-  responseBody_not: String
-  responseBody_contains: String
-  responseBody_not_contains: String
-  responseBody_starts_with: String
-  responseBody_not_starts_with: String
-  responseBody_ends_with: String
-  responseBody_not_ends_with: String
-  responseBody_in: [String]
-  responseBody_not_in: [String]
-  requestBody: String
-  requestBody_not: String
-  requestBody_contains: String
-  requestBody_not_contains: String
-  requestBody_starts_with: String
-  requestBody_not_starts_with: String
-  requestBody_ends_with: String
-  requestBody_not_ends_with: String
-  requestBody_in: [String]
-  requestBody_not_in: [String]
-  requestHeaders: String
-  requestHeaders_not: String
-  requestHeaders_contains: String
-  requestHeaders_not_contains: String
-  requestHeaders_starts_with: String
-  requestHeaders_not_starts_with: String
-  requestHeaders_ends_with: String
-  requestHeaders_not_ends_with: String
-  requestHeaders_in: [String]
-  requestHeaders_not_in: [String]
-  exception: String
-  exception_not: String
-  exception_contains: String
-  exception_not_contains: String
-  exception_starts_with: String
-  exception_not_starts_with: String
-  exception_ends_with: String
-  exception_not_ends_with: String
-  exception_in: [String]
-  exception_not_in: [String]
-  timestamp: DateTime
-  timestamp_not: DateTime
-  timestamp_in: [DateTime!]
-  timestamp_not_in: [DateTime!]
-  timestamp_gt: DateTime
-  timestamp_not_gt: DateTime
-  timestamp_gte: DateTime
-  timestamp_not_gte: DateTime
-  timestamp_lt: DateTime
-  timestamp_not_lt: DateTime
-  timestamp_lte: DateTime
-  timestamp_not_lte: DateTime
+input GQL_WebHookRecordFilterInput {
+  and: [GQL_WebHookRecordFilterInput!]
+  or: [GQL_WebHookRecordFilterInput!]
+  iD: ComparableInt64OperationFilterInput
+  webHookID: ComparableInt64OperationFilterInput
+  webHookSystemID: ComparableInt64OperationFilterInput
+  guid: StringOperationFilterInput
+  webHook: GQL_WebHookFilterInput
+  triggerType: HookEventTypeOperationFilterInput
+  result: RecordResultOperationFilterInput
+  statusCode: ComparableInt32OperationFilterInput
+  responseBody: StringOperationFilterInput
+  requestBody: StringOperationFilterInput
+  requestHeaders: StringOperationFilterInput
+  exception: StringOperationFilterInput
+  timestamp: ComparableDateTimeOperationFilterInput
 }
 
-input ISingleFilterOfHookEventTypeFilter {
-  AND: [ISingleFilterOfHookEventTypeFilter!]
-  OR: [ISingleFilterOfHookEventTypeFilter!]
-  element: HookEventType
-  element_not: HookEventType
-  element_in: [HookEventType!]
-  element_not_in: [HookEventType!]
-  element_gt: HookEventType
-  element_not_gt: HookEventType
-  element_gte: HookEventType
-  element_not_gte: HookEventType
-  element_lt: HookEventType
-  element_not_lt: HookEventType
-  element_lte: HookEventType
-  element_not_lte: HookEventType
+input HookEventTypeOperationFilterInput {
+  eq: HookEventType
+  neq: HookEventType
+  in: [HookEventType!]
+  nin: [HookEventType!]
+}
+
+input ListFilterInputTypeOfGQL_WebHookRecordFilterInput {
+  all: GQL_WebHookRecordFilterInput
+  none: GQL_WebHookRecordFilterInput
+  some: GQL_WebHookRecordFilterInput
+  any: Boolean
+}
+
+input ListHookEventTypeOperationFilterInput {
+  all: HookEventTypeOperationFilterInput
+  none: HookEventTypeOperationFilterInput
+  some: HookEventTypeOperationFilterInput
+  any: Boolean
+}
+
+input RecordResultOperationFilterInput {
+  eq: RecordResult
+  neq: RecordResult
+  in: [RecordResult!]
+  nin: [RecordResult!]
 }
 
 input RemoveWebHookInput {
   webHookId: Long!
+}
+
+input StringOperationFilterInput {
+  and: [StringOperationFilterInput!]
+  or: [StringOperationFilterInput!]
+  eq: String
+  neq: String
+  contains: String
+  ncontains: String
+  in: [String]
+  nin: [String]
+  startsWith: String
+  nstartsWith: String
+  endsWith: String
+  nendsWith: String
 }
 
 input UpdateWebHookActivStateInput {
@@ -494,7 +429,7 @@ directive @defer("If this argument label has a value other than null, it will be
 directive @specifiedBy("The specifiedBy URL points to a human-readable specification. This field will only read a result for scalar types." url: String!) on SCALAR
 
 "The `@stream` directive may be provided for a field of `List` type so that the backend can leverage technology such as asynchronous iterators to provide a partial list in the initial response, and additional list items in subsequent responses. `@include` and `@skip` take precedence over `@stream`."
-directive @stream("If this argument label has a value other than null, it will be passed on to the result of this stream directive. This label is intended to give client applications a way to identify to which fragment a streamed result belongs to." label: String "The initial elements that shall be send down to the consumer." initialCount: Int! "Streamed when true." if: Boolean!) on FIELD
+directive @stream("If this argument label has a value other than null, it will be passed on to the result of this stream directive. This label is intended to give client applications a way to identify to which fragment a streamed result belongs to." label: String "The initial elements that shall be send down to the consumer." initialCount: Int! "Streamed when true." if: Boolean) on FIELD
 
 "The `DateTime` scalar represents an ISO-8601 compliant date time type."
 scalar DateTime @specifiedBy(url: "https:\/\/www.graphql-scalars.com\/date-time")

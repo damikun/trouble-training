@@ -2,13 +2,14 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using HotChocolate;
 using HotChocolate.Types;
-using HotChocolate.Types.Relay;
 using HotChocolate.Types.Pagination;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using APIServer.Aplication.GraphQL.Queries;
 using APIServer.Aplication.GraphQL.Mutation;
 using APIServer.Aplication.GraphQL.Types;
+using Aplication.GraphQL.DataLoaders;
+using APIServer.Aplication.GraphQL.DataLoaders;
 
 namespace APIServer.Configuration {
     public static partial class ServiceExtension {
@@ -27,9 +28,12 @@ namespace APIServer.Configuration {
                          requestExecutorOptions.IncludeExceptionDetails = !env.IsProduction();
 
                     })
-                    .EnableRelaySupport(new RelayOptions() {
-                        AddQueryFieldToMutationPayloads = true
-                    })
+
+                    .AddGlobalObjectIdentification()
+                    .AddQueryFieldToMutationPayloads()
+
+                    .AddFiltering()
+                    .AddSorting()
 
                     .AddQueryType<Query>()
                         .AddTypeExtension<WebHookQueries>()
@@ -67,11 +71,14 @@ namespace APIServer.Configuration {
                     .AddType<CreateWebHookPayloadType>()
                     .AddType<CreateWebHookErrorUnion>()
 
+                    .AddDataLoader<UserByIdDataLoader>()
+                    .AddDataLoader<WebHookByIdDataLoader>()
+                    .AddDataLoader<WebHookRecordByIdDataLoader>()
+
                     .UsePersistedQueryPipeline()
                     .UseReadPersistedQuery()
                     .AddReadOnlyFileSystemQueryStorage("./persisted_queries");
 
-            // .AddInMemoryQueryStorage();
 
             return serviceCollection;
         }

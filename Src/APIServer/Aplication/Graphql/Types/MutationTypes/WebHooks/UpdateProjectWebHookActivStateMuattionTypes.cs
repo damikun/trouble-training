@@ -6,7 +6,7 @@ using HotChocolate.Types;
 namespace APIServer.Aplication.GraphQL.Types {
     public class UpdateWebHookActivStatePayloadType : ObjectType<UpdateWebHookActivStatePayload> {
         protected override void Configure(IObjectTypeDescriptor<UpdateWebHookActivStatePayload> descriptor) {
-            descriptor.Field(e => e.hook).Type<WebHookType>().Resolver(context => {
+            descriptor.Field(e => e.hook).Type<WebHookType>().Resolve(context => {
                 WebHook e = context.Parent<UpdateWebHookActivStatePayload>().hook;
 
                 if (e == null) {

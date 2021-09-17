@@ -129,7 +129,7 @@ return {
       {
         "alias": null,
         "args": (v3/*: any*/),
-        "concreteType": "GQL_WebHookRecordConnection",
+        "concreteType": "WebHookRecordsConnection",
         "kind": "LinkedField",
         "name": "webHookRecords",
         "plural": false,
@@ -176,7 +176,7 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "GQL_WebHookRecordEdge",
+            "concreteType": "WebHookRecordsEdge",
             "kind": "LinkedField",
             "name": "edges",
             "plural": true,

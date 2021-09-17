@@ -6,7 +6,7 @@ using APIServer.Domain.Core.Models.WebHooks;
 namespace APIServer.Aplication.GraphQL.Types {
     public class UpdateWebHookUriPayloadType : ObjectType<UpdateWebHookUriPayload> {
         protected override void Configure(IObjectTypeDescriptor<UpdateWebHookUriPayload> descriptor) {
-            descriptor.Field(e => e.hook).Type<WebHookType>().Resolver(context => {
+            descriptor.Field(e => e.hook).Type<WebHookType>().Resolve(context => {
                 WebHook e = context.Parent<UpdateWebHookUriPayload>().hook;
 
                 if (e == null) {
@@ -16,7 +16,6 @@ namespace APIServer.Aplication.GraphQL.Types {
                 return new GQL_WebHook {
                     ID = e.ID,
                     WebHookUrl = e.WebHookUrl,
-                    // Secret = e.Secret,
                     ContentType = e.ContentType,
                     IsActive = e.IsActive,
                     LastTrigger = e.LastTrigger,
