@@ -1,5 +1,5 @@
 import { createPath, State, To } from "history";
-import React, { unstable_useTransition, useEffect } from "react";
+import React, { useTransition, useEffect } from "react";
 import {
   useHref,
   useLocation,
@@ -35,13 +35,11 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
     let location = useLocation();
     let path = useResolvedPath(to);
 
-    const [startTransition, isPending] = unstable_useTransition({
-      busyDelayMs: transitionTime,
-    });
+    const [isPending,startTransition] = useTransition();
 
     useEffect(() => {
       onTransitionStateChange && onTransitionStateChange(isPending);
-    }, [isPending]);
+    }, [isPending,onTransitionStateChange]);
 
     function handleClick(event: React.MouseEvent<HTMLAnchorElement>) {
       isPending && event.preventDefault();

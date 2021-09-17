@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import React, { unstable_useTransition, useCallback, useState } from "react";
+import React, { useTransition, useCallback, useState } from "react";
 import { useLazyLoadQuery, useMutation } from "react-relay/hooks";
 import { useParams } from "react-router-dom";
 import { graphql } from "babel-plugin-relay/macro";
@@ -82,7 +82,7 @@ function SettingsHooksEdit() {
 
   const [secretEditing, setSecretEditing] = useState(false);
 
-  const [startTransition] = unstable_useTransition();
+  const [_,startTransition] = useTransition();
 
   const handleTriggerChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {

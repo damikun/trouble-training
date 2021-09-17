@@ -1,6 +1,5 @@
 import React, {
-  //@ts-ignore
-  unstable_useTransition,
+  useTransition,
   useCallback,
   useMemo,
 } from "react";
@@ -170,9 +169,7 @@ function StayledButton({
     [rounding]
   );
 
-  const [startTransition, isPending] = unstable_useTransition({
-    busyDelayMs: transitionTime,
-  });
+  const [isPending,startTransition] = useTransition();
 
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

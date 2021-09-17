@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { unstable_useTransition, useCallback, useEffect } from "react";
+import { useTransition, useCallback, useEffect } from "react";
 import { useFragment, useLazyLoadQuery, useMutation, usePaginationFragment } from "react-relay/hooks";
 import { graphql } from "babel-plugin-relay/macro";
 import { SettingsHooksQuery } from "./__generated__/SettingsHooksQuery.graphql";
@@ -34,9 +34,7 @@ function SettingsHooks() {
 
   const navigate = useNavigate();
 
-  const [startTransition, isInFlight] = unstable_useTransition({
-    busyDelayMs: 5000,
-  });
+  const [isInFlight, startTransition] = useTransition();
 
   const hanldeCreateNewNavigate = useCallback(() => {
     !isInFlight &&
@@ -224,9 +222,7 @@ function SettingsHooksItem({ dataRef }: SettingsHooksItemProps) {
       });
   }, [toast, commitRemove, entity,removeInFlight,HooksCtx?.connection_id ]);
 
-  const [startTransition] = unstable_useTransition({
-    busyDelayMs: 2000,
-  });
+  const [_,startTransition] = useTransition();
 
   const handleEdit = useCallback(() => {
     startTransition(() => {

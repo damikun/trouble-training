@@ -1,4 +1,4 @@
-import { unstable_useTransition, useCallback } from "react";
+import { useTransition, useCallback } from "react";
 import Container from "../../UIComponents/Container/Container";
 import { ReactComponent as NoAuth } from "../../Images/NoAuth.svg";
 import StayledButton from "../../UIComponents/Buttons/StayledButton";
@@ -8,9 +8,7 @@ import clsx from "clsx";
 export default function FourOhOne() {
   const history = useNavigate();
 
-  const [startTransition, isPending] = unstable_useTransition({
-    busyDelayMs: 5000,
-  });
+  const [isPending, startTransition] = useTransition();
 
   const handleRedirectHome = useCallback(() => {
     startTransition(() => {

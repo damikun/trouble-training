@@ -1,9 +1,7 @@
 import clsx from "clsx";
 //@ts-ignore
-import React, { Suspense } from "react";
+import React  from "react";
 import ErrorBoundary from "../ErrorBoundery/ErrorBoundary";
-//@ts-ignore
-import ContainerSpinner from "../Spinner/ContainerSpinner";
 
 export type ViewContainerProps = {
   filters?: React.ReactNode;
@@ -27,7 +25,6 @@ export default function ViewContainer({
   content,
   header,
   errorfallback,
-  fallback,
   className,
   bgcolor,
   rounding = true,

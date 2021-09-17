@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import React, { unstable_useTransition, useCallback, useState } from "react";
+import React, { useTransition, useCallback, useState } from "react";
 import { useLazyLoadQuery, useMutation } from "react-relay/hooks";
 import { graphql } from "babel-plugin-relay/macro";
 import UniversalFormInputSection from "../../../UIComponents/Inputs/UniversalFormInputSection.tsx";
@@ -58,7 +58,7 @@ function SettingsHooksNew() {
 
   const navigate = useNavigate();
 
-  const [startTransition] = unstable_useTransition({ busyDelayMs: 5000 });
+  const [_,startTransition] = useTransition();
 
   const handleTriggerChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -1,4 +1,4 @@
-import React, { unstable_useTransition, useCallback, useState } from "react";
+import React, { useTransition, useCallback, useState } from "react";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import UserPromt from "../DeletePromt/UserPromt";
 import Modal from "../Modal/Modal";
@@ -65,9 +65,7 @@ export default function StayledPromtButton({
 }: StayledPromtButtonProps) {
   const Var = VARIANTS[variant] || VARIANTS.primaryblue;
 
-  const [startTransition, isPending] = unstable_useTransition({
-    busyDelayMs: 300,
-  });
+  const [isPending, startTransition] = useTransition();
 
   const [userPrompVisible, setuserPrompVisible] = useState(false);
 

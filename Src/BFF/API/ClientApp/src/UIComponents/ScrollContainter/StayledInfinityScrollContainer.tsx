@@ -2,7 +2,7 @@ import clsx from "clsx";
 import React, {
   createRef,
   useMemo,
-  unstable_SuspenseList as SuspenseList,
+  SuspenseList as SuspenseList,
 } from "react";
 import IsLoading from "../IsLoading";
 import NoRecords from "../NoRecords";

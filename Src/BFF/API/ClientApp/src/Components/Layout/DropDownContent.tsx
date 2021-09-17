@@ -1,4 +1,4 @@
-import { unstable_useTransition, useCallback } from "react";
+import { useTransition, useCallback } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import NameInitials from "../../Utils/NameInitials";
 import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
@@ -77,9 +77,7 @@ type MenuItemProps = {
 function MenuItem({ icon, name, to }: MenuItemProps) {
   const history = useNavigate();
 
-  const [startTransition] = unstable_useTransition({
-    busyDelayMs: 10000,
-  });
+  const [_,startTransition] = useTransition();
 
   const handleNavigate = useCallback(() => {
     startTransition(() => {
