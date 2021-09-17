@@ -50,13 +50,25 @@ Please follow these steps if you want to understand it because of the connection
 
 ### Quick setup
 
+- [Quick setup](#quick-setup)
+  - [Instal Net SDK](#instal-net-sdk)
+  - [Download docker](#download-docker)
+  - [Docker images](#docker-images)
+  - [Setup Database](#setup-database)
+  - [Migrations](#migrations)
+  - [Run Frontned and Backend](#run-frontned-and-backend)
+  - [Run Elastic and Beats](#run-elastic-and-beats)
+
+
 To run this stack locally, you need to ensure the following:
-1) Make sure you have NET SDK installed. 
-2) You need to install Docker. Most of the stack runs in a Docker container.
-3) You need to run all prepared `docker-compose` files to populate all images for the monitoring platform.
-4) You need to set up PostgreSQL databases (Create any DB server). 
-5) You need to migrate all DBs (each project has its own migration folder).
-6) Run the NetCore project from the terminal or back it up to Docker.
+- Make sure you have NET SDK installed. 
+- You need to install Docker. Most of the stack runs in a Docker container.
+- You need to run all prepared `docker-compose` files to populate all images for the monitoring platform.
+- You need to set up PostgreSQL databases (Create any DB server). 
+- You need to migrate all DBs (each project has its own migration folder).
+- Run the NetCore project from the terminal or back it up to Docker.
+
+</br>
 
 ##### Instal Net SDK
 
@@ -68,10 +80,13 @@ PS C:\Users\dakupc> dotnet --list-sdks
 5.0.100 [C:\Program Files\dotnet\sdk]
 5.0.201 [C:\Program Files\dotnet\sdk]
 ```
+</br>
 
 ##### Download docker
 
 Based on your system download and [install docker](https://docs.docker.com/engine/install/)
+
+</br>
 
 ##### Docker images
 
@@ -83,11 +98,12 @@ In folder `/Docker` you can find prepared images for:
 
 In each folder you will find `docker-compose.yml` and you need to run `docker-compose up` command from your terminal. The setup was tested on WSL Docer Desktop.
 
+</br>
 ##### Setup Database
 
 Make sure PostgreSQL is running. The following main and related databases need to be configured:
 
-**APIServer Database**
+*APIServer Database*
 ```sh
 Host: localhost
 DatabaseName: ApiDB
@@ -96,7 +112,7 @@ Username: postgres
 PasswordL postgres
 ```
 
-**IdentityServer Database**
+*IdentityServer Database*
 ```sh
 Host: localhost
 DatabaseName: IdentityDB
@@ -105,7 +121,7 @@ Username: postgres
 PasswordL postgres
 ```
 
-**Scheduler Database**
+*Scheduler Database*
 ```sh
 Host: localhost
 DatabaseName: Scheduler
@@ -126,6 +142,9 @@ Preconfigured connection strings:
   "Opentelemetry": "http://localhost:55680"
 },
 ```
+
+Run the database its required by next step!
+</br>
 
 ##### Migrations
 
@@ -161,6 +180,7 @@ Go to dirrectory: `IdentityServer/Persistence` and run following commands:
  dotnet ef database update --context AppPersistedGrantDbContext
  dotnet ef database update --context AppIdnetityDbContext
 ```
+</br>
 
 ##### Run Frontned and Backend
 
@@ -195,5 +215,12 @@ Go to dirrectory: `BFF/API` and run:
 
 **BFF** runs on: `https://localhost:5015`
 
+</br>
 
-Have a fun :)
+##### Run Elastic and Beats
+
+Start the elasticsearch container group and then beats. Please stick to this order to avoid exception logging due to a missing connection. You can also put everything into a Docker image and wait until the previous section is complete.
+
+
+
+To run all containers, please make sure you have enough RAM and a good computer - this is not for kids :P Have fun :)
