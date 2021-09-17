@@ -5,14 +5,18 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { RelayEnvironmentProvider } from "react-relay/hooks";
 import { createEnvironment } from './Utils/Environment';
-
-
+import ErrorBoundary from './UIComponents/ErrorBoundery/ErrorBoundary';
+import GlobalBounderyErrorHandler from './Components/Errors/GlobalBounderyErrorHandler';
 
 ReactDOM.render(
   <React.StrictMode>
     <RelayEnvironmentProvider environment={createEnvironment()}>
       <Suspense fallback={null}>
-        <App />
+        <ErrorBoundary
+            fallback={<GlobalBounderyErrorHandler /> }
+          >
+          <App />
+        </ErrorBoundary>
       </Suspense>
     </RelayEnvironmentProvider>
   </React.StrictMode>,

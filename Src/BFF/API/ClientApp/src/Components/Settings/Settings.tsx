@@ -15,6 +15,8 @@ import SettingsHooksEdit from "./WebHooks/SettingsHooksEdit";
 import SettingsHooksNew from "./WebHooks/SettingsHooksNew";
 import SettingsHooksLogs from "./WebHooks/SettingsHooksLogs";
 import React from "react";
+import ErrorBoundary from "../../UIComponents/ErrorBoundery/ErrorBoundary";
+import GlobalBounderyErrorHandler from "../Errors/GlobalBounderyErrorHandler";
 
 const view_WebHooks = true;
 
@@ -65,50 +67,54 @@ export default function Settings() {
       <div className="flex w-full max-w-5xl mx-auto mt-14">
       <div
         className={clsx(
-          "flex flex-col md:flex-row space-x-0 md:space-x-5 xl:space-x-10",
-          "space-y-2 md:space-y-0 w-full h-full"
+          "flex flex-col md:flex-row space-x-0 md:space-x-5",
+          "space-y-2 md:space-y-0 w-full h-full xl:space-x-10"
         )}
       >
         <div className={clsx("flex w-full md:w-64 2xl:w-72 md:h-full")}>
           <TabsSection />
         </div>
         <div className="flex-1">
-          <Suspense fallback={<ContainerSpinner />}>
-            <Routes>
-              <PrivateRoute
-                path={SettingsTabs[0].path}
-                authorised={true}
-                element={<Welcome />}
-              />
+        <ErrorBoundary
+          fallback={<GlobalBounderyErrorHandler /> }
+        >
+            <Suspense fallback={<ContainerSpinner />}>
+              <Routes>
+                <PrivateRoute
+                  path={SettingsTabs[0].path}
+                  authorised={true}
+                  element={<Welcome />}
+                />
 
-              <PrivateRoute
-                path={`${SettingsTabs[1].path}/*`}
-                authorised={view_WebHooks}
-                unauthorisedComponent={<FourOhOne />}
-                element={
+                <PrivateRoute
+                  path={`${SettingsTabs[1].path}/*`}
+                  authorised={view_WebHooks}
+                  unauthorisedComponent={<FourOhOne />}
+                  element={
 
-                  <HooksContext.Provider value={ctx}>
-                  <Routes>
-                    <Route path={"Edit/:hookid"}>
-                      <SettingsHooksEdit />
-                    </Route>
-                    <Route path={"Logs/:hookid"}>
-                      <SettingsHooksLogs />
-                    </Route>
-                    <Route path={"New"}>
-                      <SettingsHooksNew />
-                    </Route>
-                    <Route path={"/"}>
-                      <SettingsHooks />
-                    </Route>
-                  </Routes>
-                  </HooksContext.Provider>
-                }
-              />
+                    <HooksContext.Provider value={ctx}>
+                      <Routes>
+                        <Route path={"Edit/:hookid"}>
+                          <SettingsHooksEdit />
+                        </Route>
+                        <Route path={"Logs/:hookid"}>
+                          <SettingsHooksLogs />
+                        </Route>
+                        <Route path={"New"}>
+                          <SettingsHooksNew />
+                        </Route>
+                        <Route path={"/"}>
+                          <SettingsHooks />
+                        </Route>
+                      </Routes>
+                    </HooksContext.Provider>
+                  }
+                />
 
-              <Route path={"/*"} element={<Navigate to="" />} />
-            </Routes>
-          </Suspense>
+                <Route path={"/*"} element={<Navigate to="" />} />
+              </Routes>
+            </Suspense>
+          </ErrorBoundary>
         </div>
       </div>
 

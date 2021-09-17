@@ -28,12 +28,12 @@ function App() {
       <title>Trouble Train - Demo</title>
       <meta
         name="description"
-        content="Trouble train demo - workshop for full stack app"
+        content="Trouble training demo - workshop for full stack app"
       />
-      <meta name="author" content="TroubleDev, Dalibor Kundrat" />
+      <meta name="author" content="TroubleDev" />
       <meta
         name="keywords"
-        content="TroubleTrain, Dalibor Kundrat, Distributed Tracing Workshop"
+        content="TroubleTrain, Distributed Tracing Workshop"
       />
     </Helmet>
 
