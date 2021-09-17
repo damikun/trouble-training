@@ -1,7 +1,7 @@
 ## Logging
 
 
-App uses `Serilog` library to hadne structured logging. It provides various exporters (sinks) to forward all logs to remote distributed logging storage.
+App uses **Serilog** library to hadne structured logging. It provides various exporters (sinks) to forward all logs to remote distributed logging storage.
 
 Important to understand:
  - Do not invest your time in writing logging library from scratch
@@ -37,7 +37,7 @@ Important to understand:
 
 ### Setup
 
-In `Program.cs` the `CreateDefaultBuilder` function initialize the default `.NetCore` logging. It use `ILogger` or `ILogger<T>` and writes output to `Console`.
+In `Program.cs`, the function `CreateDefaultBuilder` initializes the default `.NetCore` logging. It uses `ILogger` or `ILogger<T>` and writes the output to `Console`.
 
 ```c#
 // Program.cs
@@ -48,9 +48,9 @@ public static IHostBuilder CreateHostBuilder(string[] args) =>
     });
 ```
 
-This demo uses [`Serilog`](https://serilog.net/) which overwrite default configuration and is used on top of `.NetCore` one.
+This demo uses ['Serilog'](https://serilog.net/), which overrides the default configuration and is used in addition to the `.NetCore` configuration.
 
-In `Program.cs` function `ConfigureLogging(...)`is called to define the Serilog configuration.
+In `Programme.cs` the function `ConfigureLogging(...)` is called to define the Serilog configuration.
 
 ```c#
 using System;
@@ -106,13 +106,13 @@ public static IConfigurationRoot  GetLogConfigurationFromJson(){
 
 ```
 Details:
-- `.Enrich.FromLogContext()` - used to dynamically add and remove properties from the ambient "execution context". For example, all messages written during a transaction might carry the id of that transaction
-- `.Enrich.WithExceptionDetails()` - adds additional structured properties from exceptions
-- `.Enrich.WithMachineName()` - adds machine name to logs
-- `.Enrich.WithSpan()` - include current tracing spanId to logs
-- `.Enrich.WithProperty("Environment", environment)` - Include current enviromnet info. (prod / dev / etc...)
-- `.ReadFrom.Configuration(configuration)` - Source of Logging configuration (see next section)
-- `.Enrich.With(services.GetService<UserIdEnricher>());` - Is custom enricher to put UserId to all log events if exist. See end section to understand more.
+- `.Enrich.FromLogContext()` - used to dynamically add and remove properties from the surrounding "execution context". For example, all messages written during a transaction could carry the ID of that transaction
+- `.Enrich.WithExceptionDetails()` - adds additional structured properties of exceptions
+- `.Enrich.WithMachineName()` - adds the machine name to the logs
+- `.Enrich.WithSpan()` - adds the current tracing SpanId to the logs
+- `.Enrich.WithProperty("Environment", environment)` - adds current environment information. (prod / dev / etc...)
+- `.ReadFrom.Configuration(configuration)` - Source of logging configuration (see next section).
+- `.Enrich.With(services.GetService());` - Is a custom extension that adds a UserId to all logging events, if any. Read the last section to learn more.
 
 The last section conditionaly setup logging based on current enviroment. 
 
@@ -125,18 +125,17 @@ if (hostEnvironment.IsDevelopment()) {
     logCfg = logCfg.WriteTo.Elasticsearch(ConfigureElasticSink(configuration, environment));
 }
 ```
-In `dev.` enviroment logging to `console` is in most of cases enaught. It is not recomended in `prod.` since it can slow down the server (writting to `system.io`) and is not efficient. Another thing is that some production deployments cannot write to `system.io`.
+In the `dev.` environment, logging to the `console` is often needed. In the production environment, this is not recommended as it can slow down the server (writing to `system.io`) and is not efficient. Another point is that some production environments cannot write to `system.io`.
 
-You can extend Configuration and add custom writer for example to write logs to file:
-    `.WriteTo.File("logs/myapp.txt", rollingInterval: RollingInterval.Day)`
+You can extend the configuration and add a custom writer to write logs to a file, for example: `.WriteTo.File("logs/myapp.txt", rollingInterval: RollingInterval.Day)`
 
-Serilog provides various sinks for writing log events to storage. You can find all available sinks in this [link](https://github.com/serilog/serilog/wiki/Provided-Sinks).
+Serilog provides several sinks for writing log events to memory. You can find all available sinks in this [link](https://github.com/serilog/serilog/wiki/Provided-Sinks).
 
 In this Demo the `Serilog.Sinks.Elasticsearch` and `Serilog.Sinks.MSSqlServer` are used for demonstration.
 
 ### Log Level Configuration
 
-App by default takes log level configuration from `appsettings.json` or `appsettings.{enviroment}.json` if exist. That is `.NetCore` default Logging setup. We need to overide default configuration by `Serilog one as on example:
+By default, the app takes the log level configuration from `appsettings.json` or `appsettings.{enviroment}.json` if available. This is the `.NetCore` default configuration for logging. We need to override the default configuration with `Serilog`, as in this example:
 
 ```Json
   "Serilog": {
@@ -154,12 +153,13 @@ App by default takes log level configuration from `appsettings.json` or `appsett
     }
   }
 ```
-
+> &#10240;
 > **Info**: Json configuration file support reload in runtime.
+> &#10240;
 
-You can anytime extend `json` configuration section. More information are available under oficial docs.
+You can always expand the configuration section `json`. For more information, see the official documents.
 
-Extended example (not in demo)
+Extended example (not in the demo)
 
 ```json
 {
@@ -195,16 +195,16 @@ Extended example (not in demo)
 
 Logging levels allow us to put a log message into one of several buckets, sorted by urgency.
 
-- `Verbose` -	is the noisiest level, rarely (if ever) enabled for a production app.
-- `Debug` - is used for internal system events that are not necessarily observable from the outside, but useful when determining how something happened.
-- `Information` - info. events describe things happening in the system that correspond to its responsibilities and functions. Generally these are the observable actions the system can perform.
-- `Warning` -	When service is degraded, endangered, or may be behaving outside of its expected parameters. Something bad happened, but the application still has the chance to heal itself or the issue can wait a day or two to be fixed.
-- `Error` -	When functionality is unavailable or expectations broken, an Error event is used. Users are being affected without having a way to work around the issue.
-- `Fatal` -	The most critical level, Fatal events demand immediate attention.
+- `Verbose` - is the noisiest level, rarely (if ever) activated for a production application.
+- `Debug` - used for internal system events that are not necessarily observable from the outside, but are useful for figuring out how something happened.
+- `Information` - info events describe things that happen in the system and match its responsibilities and functions. In general, these are the observable actions that the system can perform.
+- `Warning` - When a service is impaired, compromised, or possibly behaving outside of expected parameters. Something bad has happened, but the application still has a chance to heal itself or the problem may wait a day or two to be fixed.
+- `Error` - When features are unavailable or expectations are not met, an error event is used. Users are affected with no way to work around the problem.
+- `Fatal` - The most critical level: fatal events require immediate attention.
 
-> As example between `Warning` and `Error` can be when system failed to connect to an external resource but will try again automatically. It might ultimately result in an ERROR log message when the retry-mechanism also fails.
+ An example between `Warning` and `Error` would be when the system failed to connect to an external resource, but automatically retries. If the retry also fails, this can result in a ERROR log message.
 
- `Warning`,  `Error`, `Fatal` are levels that should be active in production systems by default.
+ `Warning`, `Error` and `Severe` are levels that should be active by default in production systems.
 
 ### Log example
 
@@ -246,7 +246,7 @@ You can read more about Formating under this article. [Customized JSON formattin
 
 ### Custom Enricher
 
-Custom Enrichers allows us to add, remove or modify the properties attached to event log. In demo we need to add `CurrentUserId` to logs to be able filter logs by `userId`.
+Custom Enrichers allows us to add, remove or modify the properties associated with the event log. In the demo, we need to add 'CurrentUserId' to the logs to be able to filter the logs by `userId`.
 
 ```c#
 // Backend/API/ServiceExtensions/UserIdEnricher.cs
@@ -262,12 +262,10 @@ class UserIdEnricher : ILogEventEnricher{
             return;
 
         // Expect that Name == UserId as string
-        var userId = _httpContextAccessor.HttpContext.User.Identity.Name;
+        var userId = _contextAccessor?.HttpContext?.User?.GetId<Guid>();
         
-        if(int.TryParse(userId,out int parsed_user_id)){
-            var userNameProperty = factory.CreateProperty("UserId",  parsed_user_id);
-            logEvent.AddPropertyIfAbsent(userNameProperty);
-        }
+        var userNameProperty = factory.CreateProperty("UserId",  userId);
+        logEvent.AddPropertyIfAbsent(userNameProperty);
     }
 }
 ```
@@ -300,10 +298,9 @@ As example, If we want to log just specific `UserId` (Specific Enrich property v
 
 ### Colorised Console output
 
-Default serilog console output can be BW and it depends on operating system console (teromina) default color setup. In case you wanna colorize it follow this setps:
+The default output of the Serilog console can be BW and depends on the default color setting of the operating system console (teromina). If you want to color it, follow these instructions:
 
-1) The `Serilog.Sinks.Console` package must be installed
-2) Right teheme must be set and also force to set this settings on redirected output.
+1) The package `Serilog.Sinks.Console` must be installed. 2) The correct theme must be set and you must also enforce these settings for the redirected output.
 
 ```
 logCfg = logCfg.WriteTo.Console(
@@ -333,9 +330,11 @@ Or from `AppSettings`
 
 ### Move configuration to `appSettings.json`
 
-- It is possible to move part or entire logging configuration to `appSettings.json`. You need to understand that equal settings gets override one bt each other depending on call order.
+- It is possible to move some or all of the logging configuration to the `appSettings.json` file. You must be aware that the same settings will overwrite each other depending on the calling order.
 
+> &#10240;
 > **Info**: Be carefull of duplicit definition as `WriteTo.Console` in code and in `appSettings` the logs will be written to console twice. Keep only one way to define output!
+> &#10240;
 
 ```c#
 // ConfigureLogging(...)

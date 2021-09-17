@@ -2,21 +2,23 @@
 
 <img src="./Assets/opentelemetry-logo.png" alt="OpenTelemtry logo" width="150"/>
 
- Is a collection of tools, APIs, and SDKs. Used to collect telemetry data from distributed systems in order to troubleshoot, debug and understand software's performance and behavior.
+Is a collection of tools, APIs and SDKs. Used to collect telemetry data from distributed systems to troubleshoot, debug, and understand software performance and behavior.
 
 **So what that means?**
 
-Many modern applications are Microservice-based. It is basically an interconnected mesh of services and understanding system performance from multiple sources becomes far more challenging. A single call in an app can invoke dozen of events. 
+Many modern applications are microservice based. These are essentially an interconnected network of services, so understanding system performance from multiple sources is a major challenge. A single call in an application can trigger dozens of events. 
 
-How can developers and engineers isolate a problem when something goes wrong or a request is running slow? Teams have struggled with the best way to generate, collect, and analyze telemetry data.
+How can developers and engineers isolate a problem when something goes wrong or a request runs slowly? Teams have wrestled with the best way to generate, collect, and analyze telemetry data.
 
-Thats why *Open Telemetry* comes in as new standard and from 2021 *OpenTelemetry* has reached a key milestone the [OpenTelemetry Tracing Specification](https://github.com/\open-telemetry/opentelemetry-specification/blob/main/specification/overview.md) version 1.0.
+That's why *Open Telemetry* exists as a new standard, and as of 2021, *OpenTelemetry* has reached a major milestone, the [OpenTelemetry Tracing Specification](https://github.com/\open-telemetry/opentelemetry-specification/blob/main/specification/overview.md) version 1.0.
 
-> **Opentelemetry** is stadardised way how to understand the whole chain of events and complex interaction between microservices.
+> &#10240;
+>**Opentelemetry** is a standardised way to understand the entire chain of events and the complex interaction between microservices.
+> &#10240;
 
 **Flow**
 
-The client instrumented app sends trace data over one of several available transports to collector which process and persist trace data to storage. 
+The application instrumented by the client sends trace data via one of the various available transports to the collector, which processes the trace data and stores it in memory.
 
 <p align="center">
   <img alt="Opentelemetry flow" src="./Assets/opentelemetry_flow.PNG">
@@ -28,19 +30,19 @@ The client instrumented app sends trace data over one of several available trans
 
     ![OpenTelemtry Languages](./Assets/opentelemetry_languages.PNG "OpenTelemtry Languages")
 
-- `Collectors` - offers a vendor-agnostic implementation on how to receive, process and export telemetry data.
+- `Collectors` - provides a vendor-independent implementation for receiving, processing and exporting telemetry data.
 
 - `OTLP protocol`  specification describes the encoding, transport, and delivery mechanism of telemetry data. [You can read more](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/protocol/otlp.md).
 ## Distributed trace
 
-A distributed trace is a set of events, triggered as a result of a single logical operation (*request = CreateUser*), consolidated across various components of an application.
+A distributed trace is a series of events raised as a result of a single logical operation (*Request = CreateUser*) and consolidated across different components of an application.
 
 **Tracing signal**
 
-`Traces` in OpenTelemetry are defined implicitly by their `Spans` (building blocks). This can be projected as interconnected async graph usualy based on time axis. (*right on picture*). 
+`Traces` in OpenTelemetry are implicitly defined by their `spans` (building blocks). These can be projected as contiguous asynchronous diagrams, usually based on the time axis. (*right image*). 
 
-- A `Span` may be linked to zero or more other `Spans`.
-- Links can point to `Spans` inside a single `Trace` or across different `Traces`.
+- A `Span` can be connected to zero or more other `Spans`.
+- Links can point to `spans` within a single `trace` or across different `traces`.
 
 <p align="center">
   <img alt="Span flow" src="././Assets/trace_flow.png">
@@ -48,14 +50,14 @@ A distributed trace is a set of events, triggered as a result of a single logica
 
 **Spans**
 
-A span is the building block of a `trace` and represents a piece of the workflow in the distributed system. (*WriteToDB, SendNotification, HandleCommand*)
+A span is the building block of a `trace` and represents part of the workflow in the distributed system. (*WriteToDB, SendNotification, HandleCommand*)
 
 A span represents an operation within a transaction and encapsulates:
  - An operation name
- - A start and finish timestamp
+ - A timestamp for start and end
  - A list of key-value pairs. (Custom Attributes)
- - Parent's Span identifier.
- - SpanContext information required to reference a Span
+ - The span identifier of the parent.
+ - SpanContext information required to reference a span.
 
 - `Span name` concisely identifies the work represented by the Span. Example: `get_account/{accountId}`
 
@@ -86,13 +88,13 @@ SpanKind describes the relationship between the Span, its parents, and its child
 
 **LifeCicle**
 
-Generally, the lifecycle of a span can be interpreted as following:
-1) A request is received by a service. The span context is extracted from the request headers, if it exists.
-2) New span is created as a child of the extracted span context; if none exists, a new root span is created.
-3) The service handles the request. Additional attributes and events are added to the span
-4) New spans may be created to represent work being done by sub-components of the service.
-5) When the service makes a remote call to another service, the current span context is serialized and forwarded to the next service
-6) The work being done by the service completes, successfully or not
+In general, the life cycle of a span can be interpreted as follows:
+1) A request is received from a service. The span context is extracted from the request headers, if it exists.
+2) A new span is created as a child of the extracted span context; if none exists, a new root span is created.
+3) The service processes the request. Additional attributes and events are added to the scope. 
+4) New areas can be created to represent the work of subcomponents of the service.
+5) When the service makes a remote call to another service, the current span context is serialized and forwarded to the next service.
+6) The work performed by the service is completed, successful or not
 
 ### Logs vs Telemtry
 
@@ -101,18 +103,18 @@ Generally, the lifecycle of a span can be interpreted as following:
 
 *"Hey isnt logging enaught ?"*
 
-Well, logging is a important and helps you diagnose concrete errors but does not provide you full request experience. What you want is basically use Logs with Telemetry data to gain full experience.
+Now, logging is important and helps you diagnose specific errors, but it does not give you the full experience of queries. What you want is basically to use logs with telemetry data to get the full experience.
 
-The telemetry tryes to answer questions as:
+Telemetry data tries to answer questions like:
  - How are users really engaging with the app?
- - How long do users spend in each app session, between sessions?
- - What is slowest part in request?
- - Etc..
+ - How much time do users spend in each app session and between sessions?
+ - What is the slowest part of a request?
+ - Etc.
 
 **So what is common process to determin problem?**
-First you have to look in Tracing Graph and identifie the problem. From request flow we will see the slowest part or where the issue appear in time. Which operations was success and which fails. We collect `SpanIds` and `TraceId` that we are interested in and search for contextual logs to get more details what was realy happening. This is why we use Traces and Logs to determin full app experience.
+First, you need to look in Tracing Graph and identify the problem. Based on the request flow, we can see the slowest part or where the problem occurs in time. Which operations were successful and which failed. We collect `SpanIds` and `TraceId` we are interested in and look for contextual logs to get more details about what really happened. For this reason, we use traces and logs to determine the overall application experience.
 
-For `OpenTelemetry` to be successful in logging space they trying to support existing legacy of logs and logging libraries to works nicely together.
+In order for `OpenTelemetry` to be successful in the logging space, the company is trying to support existing logs and logging libraries so that they work well together.
 
 Separate-collection             |  Unified-collection
 :-------------------------:|:-------------------------:
@@ -148,9 +150,9 @@ Separate-collection             |  Unified-collection
 
 **What is instrumentation**
 
-The term *instrumentation* is used by multiple languages to encapsulate tracing, debugging etc..
+The term *instrumentation* is used by several languages to encapsulate tracing, debugging, etc.
 
-- By definition it refers to an ability to monitor or measure the level of a app performance and to diagnose errors.
+- By definition, it refers to the ability to monitor or measure the performance of an application and diagnose errors.
 
 With `NetCore` you have several ways to measure and collect traces.
 
@@ -166,15 +168,15 @@ With `NetCore` you have several ways to measure and collect traces.
 
 You can read more about nativ `Opntelemerty` support under officail [Microsoft Release Note](https://devblogs.microsoft.com/dotnet/opentelemetry-net-reaches-v1-0/)
 
-All other SDK options gives you +- equal functionality. The lib API naming can be ofcourse different but that is implementation thing.
+All other SDK options give you +- the same functionality. The naming of the library API may be different, of course, but that's a matter of implementation.
 
-> Most of SDKs are at the moment in migration proces to fully support Opentelemetry standard and can be in time deprecated since native standard support is all what you need.
+>Most SDKs are currently in a migration process to fully support the Opentelemetry standard and may be deprecated over time, as native standard support is all you need.
 
-In case your app and infrastructure supports `opentelemety` its also easy for you to integrate your exports to cloud monitoring, since All big Cloud providers (Azure, Google, AWS) supports `opentelemty` as standard telemety input.
+If your application and infrastructure supports `Opentelemetry`, you can also easily integrate your exports with cloud monitoring as all major cloud providers (Azure, Google, AWS) support `Opentelemetry` as a standard telemetry input.
 
 ### Setup
 
-In `Program.cs` function `services.AddTelemerty(...)`is called to configure OpenTelemetry functionality. The method is part of global partial class `ServiceExtension` and help us to spread the configuration to separate files. 
+In `Program.cs` function `services.AddTelemerty(...)`is cWalled to configure OpenTelemetry functionality. The method is part of global partial class `ServiceExtension` and help us to spread the configuration to separate files. 
 
 ```c#
  public static partial class ServiceExtension {
@@ -235,7 +237,7 @@ In `Program.cs` function `services.AddTelemerty(...)`is called to configure Open
 ```
 
 - `builder.AddSource(Sources.DemoSource.Name)` Register one (Global) `ActivitySource` used throughout the application. It requires to import the `System.Diagnostics` namespace to use it.
-    > You can create also multiple sub *Sources* as `demo.subname`. Sources are defined in `Domain` project udner `SourcesExtensions` and can be inported to any project in domain (Aplication/Persistence/API). Each microservices out of monolit shoud define own Source.
+    > You can create also multiple sub *Sources* as `demo.subname`. Sources are defined in `Domain` project and can be inported to any project in domain (Aplication,Persistence or API). Each microservices out of monolit shoud define own Source.
 
     ```c#
     // Src/Backend/Domain/Sources/TraceSource.cs
@@ -306,7 +308,7 @@ In folder `./Src/Docker/Jaeger` is `docker-compose.yml` containing jaeger all-in
 
 **Deployment strategy**
 
-Isn’t it kind of weird when we want to trace the large distributed service but send the metrics into only one “monolith” docker service (all-in-one solution)?
+Isn`t it a bit strange if we want to track a large distributed service, but only send the metrics to a "monolithic" Docker service (all-in-one solution)?
 
 > **In production enviroment you wanna choose scalable jaeger deployment!**
 
