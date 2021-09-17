@@ -130,13 +130,13 @@ namespace APIServer.Aplication.Notifications.WebHooks {
 
             try {
                 _mediator.Enqueue(new EnqueueRelatedWebHooks() {
-                    Event =  new Hook_HookCreated(
+                    Event =  new Hook_HookUpdated(
                                 HookResourceAction.hook_updated,
                                 new Hook_User_DTO() {
                                     id = ev?.ActorID?.ToString(),
                                     name = _currentuser.Name,
                                 },
-                                new Hook_HookCreatedPayload() {}
+                                new Hook_HookUpdatedPayload() {}
                             ),
                     EventType = HookEventType.hook,
                 });

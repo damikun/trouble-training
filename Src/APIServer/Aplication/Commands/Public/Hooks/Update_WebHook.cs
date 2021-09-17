@@ -12,6 +12,9 @@ using APIServer.Aplication.Shared;
 using APIServer.Persistence;
 using Shared.Aplication.Interfaces;
 using APIServer.Aplication.Shared.Errors;
+using APIServer.Aplication.Notifications.WebHooks;
+using APIServer.Extensions;
+using System.Diagnostics;
 
 namespace APIServer.Aplication.Commands.WebHooks {
 
@@ -75,7 +78,7 @@ namespace APIServer.Aplication.Commands.WebHooks {
             .WithMessage("Hook was not found");
         }
 
-        public async Task<bool>  BeUniqueByURL(string url,long hook_id, CancellationToken cancellationToken) {
+        public async Task<bool> BeUniqueByURL(string url,long hook_id, CancellationToken cancellationToken) {
             
             await using ApiDbContext dbContext = 
                 _factory.CreateDbContext();
@@ -117,9 +120,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
         private readonly IDbContextFactory<ApiDbContext> _factory;
 
         /// <summary>
-        /// Injected <c>IMediator</c>
+        /// Injected <c>IPublisher</c>
         /// </summary>
-        private readonly IMediator _mediator;
+        private readonly APIServer.Extensions.IPublisher _publisher;
 
         /// <summary>
         /// Injected <c>IMediator</c>
@@ -131,18 +134,18 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// </summary>
         public UpdateWebHookHandler(
             IDbContextFactory<ApiDbContext> factory,
-            IMediator mediator,
+            APIServer.Extensions.IPublisher publisher,
             ICurrentUser currentuser) {
 
             _factory = factory;
 
-            _mediator = mediator;
+            _publisher = publisher;
 
             _current = currentuser;
         }
 
         /// <summary>
-        /// Command handler for <c>UpdateUserGroup</c>
+        /// Command handler for <c>UpdateWebHook</c>
         /// </summary>
         public async Task<UpdateWebHookPayload> Handle(UpdateWebHook request, CancellationToken cancellationToken) {
 
@@ -170,6 +173,14 @@ namespace APIServer.Aplication.Commands.WebHooks {
 
             await dbContext.SaveChangesAsync(cancellationToken);
 
+            try {
+
+                await _publisher.Publish(new WebHookUpdatedNotifi() {
+                    ActivityId = Activity.Current.Id
+                }, PublishStrategy.ParallelNoWait, default(CancellationToken));
+
+            } catch { }
+            
             var response = UpdateWebHookPayload.Success();
 
             response.hook = wh;

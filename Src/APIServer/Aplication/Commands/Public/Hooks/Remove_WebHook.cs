@@ -10,6 +10,9 @@ using APIServer.Persistence;
 using APIServer.Domain.Core.Models.WebHooks;
 using Shared.Aplication.Interfaces;
 using APIServer.Aplication.Shared.Errors;
+using APIServer.Aplication.Notifications.WebHooks;
+using APIServer.Extensions;
+using System.Diagnostics;
 
 namespace APIServer.Aplication.Commands.WebHooks {
 
@@ -76,9 +79,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
         private readonly IDbContextFactory<ApiDbContext> _factory;
 
         /// <summary>
-        /// Injected <c>IMediator</c>
+        /// Injected <c>IPublisher</c>
         /// </summary>
-        private readonly IMediator _mediator;
+        private readonly APIServer.Extensions.IPublisher _publisher;
 
         /// <summary>
         /// Injected <c>IMediator</c>
@@ -90,12 +93,12 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// </summary>
         public RemoveWebHookHandler(
             IDbContextFactory<ApiDbContext> factory,
-            IMediator mediator,
+            APIServer.Extensions.IPublisher publisher,
             ICurrentUser currentuser) {
 
             _factory = factory;
 
-            _mediator = mediator;
+             _publisher = publisher;
 
             _current = currentuser;
         }
@@ -122,6 +125,14 @@ namespace APIServer.Aplication.Commands.WebHooks {
             dbContext.WebHooks.Remove(wh);
 
             await dbContext.SaveChangesAsync(cancellationToken);
+
+            try {
+
+                await _publisher.Publish(new WebHookRemovedNotifi() {
+                    ActivityId = Activity.Current.Id
+                }, PublishStrategy.ParallelNoWait, default(CancellationToken));
+
+            } catch { }
 
             var response = RemoveWebHookPayload.Success();
 

@@ -21,12 +21,11 @@ namespace APIServer.Configuration {
             services.AddValidatorsFromAssembly(typeof(CreateWebHookValidator).GetTypeInfo().Assembly);
 
             services.AddTransient<IRequestHandler<EnqueSaveEvent<WebHookCreated>, Unit>, EnqueSaveEventHandler<WebHookCreated>>();
-            //IRequestHandler
-            //EnqueSaveEvent
-            //Hook_HookCreated
 
-            // services.AddValidatorsFromAssembly(typeof(AuthorizationValidator).GetTypeInfo().Assembly);
+            services.AddTransient<IRequestHandler<EnqueSaveEvent<WebHookUpdated>, Unit>, EnqueSaveEventHandler<WebHookUpdated>>();
 
+            services.AddTransient<IRequestHandler<EnqueSaveEvent<WebHookRemoved>, Unit>, EnqueSaveEventHandler<WebHookRemoved>>();
+            
             services.AddMediatRSchedulerIntegration();
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TracingBehaviour<,>));
