@@ -7,7 +7,6 @@
 <br />
 
 
-
 <p align="center" >Demo Application contains small UI, where you can manage your WebHooks</p>
 
 
@@ -19,6 +18,12 @@
  - **Frontend**  - [React](https://reactjs.org/), [Relay](https://relay.dev/), [Typecsript](https://www.typescriptlang.org/), [ReactRouter](https://reactrouter.com/), [TailwindCSS](https://tailwindcss.com/)
  - **Backend** - [Netcore](https://dotnet.microsoft.com/), [Hotchocolate](https://chillicream.com), [IdentityServer](https://duendesoftware.com/products/identityserver), [ElasticSearch](https://www.elastic.co/), [Opentelemerty](https://opentelemetry.io/), [Serilog](https://serilog.net/), [MediatR](https://github.com/jbogard/MediatR), [Hangfire](https://www.hangfire.io/), [Automapper](https://automapper.org/), [Fluentvalidation](https://fluentvalidation.net/), [Docker](https://www.docker.com/), [Entity Framework](https://docs.microsoft.com/cs-cz/ef/)
 
+### Project structure
+- [APIServer](https://github.com/damikun/trouble-training/tree/main/Src/APIServer) - Is protected GraphQL API
+- [BFF](https://github.com/damikun/trouble-training/tree/main/Src/BFF) - Is Backend for Frontend pattern
+  - [Frontend React](https://github.com/damikun/trouble-training/tree/main/Src/BFF/API/ClientApp) - This also contains Frontend React app served using static files
+- [IdentityServer](https://github.com/damikun/trouble-training/tree/main/Src/IdentityServer) - Idetity server service for providing `OpenId Connect` and `OAuth2.0`
+
 ### Integration steps:
 Please follow these steps if you want to understand it because of the connection between the parts:
 
@@ -26,7 +31,6 @@ Please follow these steps if you want to understand it because of the connection
 2) [Configure telemetry](Doc/OpenTelemetry.md) - I`ll show you how to properly set up Opentelemetry and Elastic APM.
 3) [Configure idenity](Doc/Identity.md) - You`ll learn how to use the BFF pattern to secure your application.
 4) [Configure monitoring](Doc/ElasticSearch.md) - You will learn how to monitor the entire app stack (this depends on parts 1 and 2).
-
 
 <br />
 <p align="center">
