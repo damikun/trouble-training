@@ -1,5 +1,6 @@
 ## Logging
 
+
 App uses `Serilog` library to hadne structured logging. It provides various exporters (sinks) to forward all logs to remote distributed logging storage.
 
 Important to understand:
