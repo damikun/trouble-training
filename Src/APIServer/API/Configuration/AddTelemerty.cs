@@ -5,6 +5,7 @@ using OpenTelemetry.Trace;
 using OpenTelemetry.Resources;
 using System;
 using APIServer.Domain;
+using Microsoft.AspNetCore.Http;
 
 namespace APIServer.Configuration {
     public static partial class ServiceExtension {
@@ -26,15 +27,34 @@ namespace APIServer.Configuration {
 
                 builder.AddAspNetCoreInstrumentation(opts => {
                     opts.RecordException = true;
+                    opts.Enrich = async (activity, eventName, rawObject) =>
+                    {
+                        if (eventName.Equals("OnStartActivity"))
+                        {
+                            if (rawObject is HttpRequest {Path: {Value: "/graphql"}})
+                            {
+                                // Do something
+                                // Request is send as document id ! 
+                            }
+                        }
+                    };
+                    // opts.Filter = (httpContext) =>
+                    // {
+                    //     // only collect telemetry about HTTP GET requests
+                    //     // return httpContext.Request.Method.Equals("GET");
+                    //     // return httpContext.Request.Path.Value != "/graphql";
+                    // };
                 });
 
                 builder.AddElasticsearchClientInstrumentation();
 
                 builder.AddSqlClientInstrumentation();
 
-                builder.AddHttpClientInstrumentation(opts => opts.RecordException = true);
+                builder.AddHttpClientInstrumentation(
+                    opts => opts.RecordException = true);
 
-                builder.AddEntityFrameworkCoreInstrumentation(e => e.SetDbStatementForText = true);
+                builder.AddEntityFrameworkCoreInstrumentation(
+                    e => e.SetDbStatementForText = true);
 
                 builder.AddOtlpExporter(options => {
                     options.Endpoint = new Uri("http://localhost:55680"); // Export to collector

@@ -4,7 +4,14 @@
   <img  width="900" src="Doc/Assets/stack_logos.png" alt="Workshop stack tools logos" >
 </p>
 <p align="center" > The application contains a full frontend and backend implementation with infrastructure and app monitoring. There are several patterns used such as. <b>Mediator, BFF, Domain</b> etc.. and everything is secured with <b>Identity server</b> fully supporting <b>OpenId Connect</b> and <b>OAuth2.0</b></p>
-<br />
+
+<h5 align="center" >
+  <a href="https://github.com/damikun/trouble-training/blob/main/Doc/Logging.md" >Configure Logging</a></br>
+  <a href="https://github.com/damikun/trouble-training/blob/main/Doc/OpenTelemetry.md">Configure Tracing</a></br>
+  <a href="https://github.com/damikun/trouble-training/blob/main/Doc/Identity.md">Configure Identity</a></br>
+  <a href="https://github.com/damikun/trouble-training/blob/main/Doc/ElasticSearch.md">Configure Monitoring</a></br>
+</h5>
+
 
 
 <p align="center" >Demo Application contains small UI, where you can manage your WebHooks</p>
@@ -15,16 +22,19 @@
 </p>
 
 ### Stack
+
  - **Frontend**  - [React](https://reactjs.org/), [Relay](https://relay.dev/), [Typecsript](https://www.typescriptlang.org/), [ReactRouter](https://reactrouter.com/), [TailwindCSS](https://tailwindcss.com/)
  - **Backend** - [Netcore](https://dotnet.microsoft.com/), [Hotchocolate](https://chillicream.com), [IdentityServer](https://duendesoftware.com/products/identityserver), [ElasticSearch](https://www.elastic.co/), [Opentelemerty](https://opentelemetry.io/), [Serilog](https://serilog.net/), [MediatR](https://github.com/jbogard/MediatR), [Hangfire](https://www.hangfire.io/), [Automapper](https://automapper.org/), [Fluentvalidation](https://fluentvalidation.net/), [Docker](https://www.docker.com/), [Entity Framework](https://docs.microsoft.com/cs-cz/ef/)
 
 ### Project structure
+
 - [APIServer](https://github.com/damikun/trouble-training/tree/main/Src/APIServer) - Is protected GraphQL API
 - [BFF](https://github.com/damikun/trouble-training/tree/main/Src/BFF) - Is Backend for Frontend pattern
   - [Frontend React](https://github.com/damikun/trouble-training/tree/main/Src/BFF/API/ClientApp) - This also contains Frontend React app served using static files
 - [IdentityServer](https://github.com/damikun/trouble-training/tree/main/Src/IdentityServer) - Idetity server service for providing `OpenId Connect` and `OAuth2.0`
 
 ### Integration steps:
+
 Please follow these steps if you want to understand it because of the connection between the parts:
 
 1) [Configure logging](Doc/Logging.md) - I`ll show you how to set up a proper distributed logging solution for .Net
@@ -76,7 +86,7 @@ To run this stack locally, you need to ensure the following:
 
 ##### Instal Net SDK
 
-Make sure you [have installed](https://dotnet.microsoft.com/download) Net 5.0 SDK. You can verify installed SDK version by running: `dotnet --list-sdks` in your terminal.
+[Make sure you have](https://dotnet.microsoft.com/download) Net 5.0 SDK installed. You can cheque the SDK version by running: `dotnet --list-sdks` in your terminal.
 
 ```sh
 #Example output on Windows
@@ -94,18 +104,18 @@ Based on your system download and [install docker](https://docs.docker.com/engin
 
 ##### Docker images
 
-In folder `/Docker` you can find prepared images for:
-- `Elasticsearch` - Elastic, Kibana, OtelCollector, APMserver, Logstash
+In the `/Docker` folder you will find prepared images for:
+- `Elasticsearch` - Elastic, Kibana, OtelCollector, APMserver, Logstash.
 - `Beats` - FileBeat, HeartBeat, MetricBeat, PacketBeat
 - `PostgresSQL` - Database
 
-
-In each folder you will find `docker-compose.yml` and you need to run `docker-compose up` command from your terminal. The setup was tested on WSL Docer Desktop.
+In each folder you will find `docker-compose.yml` and you need to run the command `docker-compose up` in your terminal. The setup has been tested on WSL Docer Desktop.
 
 </br>
+
 ##### Setup Database
 
-Make sure PostgreSQL is running. The following main and related databases need to be configured:
+Make sure that PostgreSQL is running. The following empty databases need to be manualy created:
 
 *APIServer Database*
 ```sh
@@ -158,7 +168,7 @@ Make sure you have installed [Entity Framework Core tools](https://docs.microsof
 dotnet tool install --global dotnet-ef
 ```
 
-If you run  `dotnet ef` in terminal yoy shoud get:
+If you run  `dotnet ef` in terminal you shoud get:
 
 ```
                      _/\__       
@@ -188,7 +198,7 @@ Go to dirrectory: `IdentityServer/Persistence` and run following commands:
 
 ##### Run Frontned and Backend
 
-Since all migrations, databases and infrastructures are prepared, you can start each  project from the respective directory. You can also put each application in a docker container and launch it from there. This is entirely up to you.
+Since all migrations, databases and infrastructures are prepared, you can start each project from its directory. You can also put each application in a docker container and launch it from there. This is entirely up to you.
 
 > &#10240;
 > **NOTE:** Make sure you trust developer certificates: `dotnet dev-certs https --trust`. This is only for development needs make sure you properly setup certificate in production!
@@ -205,6 +215,8 @@ Go to dirrectory: `IdentityServer/API` and run:
 Go to dirrectory: `BFF/API` and run:
 1) `dotnet restore`
 2) `dotnet watch run`
+
+</br>
 
 > &#10240;
 >**NOTE:** Restoring and running will take some time, especially for BFF, since the frontend is fully recompiled and served by the BFF backend using static files.
@@ -225,6 +237,19 @@ Go to dirrectory: `BFF/API` and run:
 
 Start the elasticsearch container group and then beats. Please stick to this order to avoid exception logging due to a missing connection. You can also put everything into a Docker image and wait until the previous section is complete.
 
+In case you have problem to start elastic due to memory issues adjust `max_map_count`
 
+
+```sh
+#For Linux
+sysctl -w vm.max_map_count=262144 
+echo "vm.max_map_count=262144" >> /etc/sysctl.conf
+```
+
+```sh
+#For Windows WSL
+wsl -d docker-desktop
+sysctl -w vm.max_map_count=262144
+```
 
 To run all containers, please make sure you have enough RAM and a good computer - this is not for kids :P Have fun :)

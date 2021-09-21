@@ -344,20 +344,20 @@ Recommended BFF pattern to secure SPA frontends:
 
 NetCore host application has builded in support for [Authentication and Authorization]((https://docs.microsoft.com/en-us/aspnet/core/security/?view=aspnetcore-5.0).). You can setup bacis Token, Cookie and Session Auth withou big afford and much to know about it.
 
-To succesfully implement Identity and Authorization server includes BFF you need to use some external libraries that provides you identity server implementation (dont try to build by yourself). This external implementations usually use parts from microsoft auth base to keep code interface generic.
+To successfully implement an Identity Server covered by BFF, it is better to use some libraries that provide you with these integrations (do not try to build them yourself). These external implementations usually use parts of the Microsoft Auth base to keep the code flexible and connect to the existing code base.
 
 > &#10240;
->**There is no reason to study and spend time to implement custom auth** between this layers and is recomendted to use som maintained library.
+>**There is no reason to study and spend time to implement custom auth** between this layers and is recomendted to use some maintained library.
 > &#10240;
 
-One of this librarys available with full identity and auth handling is [*IndentityServer*](duendesoftware).
+One of this libs available with full identity and auth handling is [*IndentityServer*](duendesoftware).
 
 ### Duende IndentityServer
 
 ![Duende logo](./Assets/duende_logo.png "Duende logo")
 
 
-**Duende identity server** is framework which implements `OpenId Connect` and `OAuth2` protocols under the `.NetCore` enviroment. It also provides aditional tooling as BFF pattern integration or UI interface or aditional auth plugins.
+**Duende identity server** is framework which implements `OpenId Connect` and `OAuth2` protocols under the `.NetCore` enviroment. It also provides aditional tooling as BFF pattern integration or softly prepared UI interface that you can rewrite to your needs.
 
 
 > &#10240;
@@ -373,15 +373,19 @@ This is identity flow architecture for this demo:
 
 **IdentityServer** will help you to define how your clinets *(Web,Mobile,External)* access the protected APIs and how user identity *(Name,Email,Profileinfo)* is managed, stored and accesed in centalised way for all internal and external services that needs to comunicate and use your system.
 
+> &#10240;
+>**Note** The Identity Server is not primarily designed for user management, but can be connected to the ASPNet User Store.
+> &#10240;
+
 IdentityServer helps you to:
-- Extend NetCore identity 
+- Integrate witn NetCore user identity
 - Integrate IdentityServer `OpenId` and `Oauth` to NetCore App
 - Issue tokens
 - Secure WebAPIs and protect your resources
 - Store identity data to Entity Framework (EF Integration)
 - Provide tooling for BFF pattern 
 - Secure Frontend comunication over revers proxy
-- Manage identiy users/clients/resources
+- Manage identiy clients/resources
 etc...
 
 You can read more under official documentation:
@@ -1210,3 +1214,119 @@ Endpoint `https://localhost:5001/diagnostics`
 Endpoint `https://localhost:5001/diagnostics`
 
 ![Allowed devices - revocation grands](./Assets/endpoint_revocation_grants.PNG "Allowed devices")
+
+#### Login and Logout integration to UI
+
+Frontend App in this demo was built with React and uses the POST fetch function to call the BFF, which makes a request to the GraphQL server. This is the standard flow for communication between client and API. GraphQL API is accessible to anonymous users. If you are not authorised, a concrete error will be returned for the data you requested, but in some cases it will simply return `null`. This is up to the backend SW engineer on how he implemented this error and auth handling.
+
+To perform loging and logout from clinet this works bit differently. BFF maps special endpoint for this and expose it on this urls:
+
+- `https://your_app_url:port/system/login`
+- `https://your_app_url:port/system/logout`
+
+##### Login
+
+At the top level of the frontend query, you normally request the user data as a `me` query. This is called when the app is first rendered.
+
+```tsx
+// UserProvider.tsx
+query UserProviderQuery {
+    me {
+        id
+        name
+        sessionId
+    }
+}
+```
+
+This function returns the user data or `null` if the user is not authenticated, and you can use this to redirect the user to the correct component in your routing.
+
+```tsx
+
+if (!userStore?.user?.me) {
+    return (
+      <Routes>
+        <Route path="/*" element={<Login/>} />
+      </Routes>
+    );
+  } else {
+    return (
+      <Routes>
+        <PrivateRoute  path={"/*"} element={<Settings />} />
+        // Another routes
+      </Routes>
+    );
+  }
+
+```
+
+Then your `<Login/>` component can navigate you to the BFF endpoint, which is called: `https://your_app_url:port/system/login`. This navigation must happenend out of React router!
+
+```tsx
+// This is the simole login redirect
+export default function Login() {
+
+      useEffect(() => {
+        window.location.href = LOGIN_ENDPOINT;
+      }, [])
+
+      return <></>
+  }
+```
+
+After the app encounters this BFF, the request is automatically forwarded to the IdentityServer with all the contextual data of the request. You perform the login and the server redirects you back to the post-login URL of the app.
+
+#### Logout
+
+When it comes to logging out, it's a little more complicated. The user usually clicks on an Logout button, which in turn redirects to a `<Logout/>` component:
+
+```tsx
+// example logout 
+export default function Logout() {
+
+  const store = useUserStore();
+    
+      useEffect(() => {
+        if(store?.user?.me?.sessionId){
+          window.location.href = `${LOGOUT_ENDPOINT}?sid=${store?.user?.me?.sessionId}`;
+        }else{
+          window.location.href = LOGOUT_ENDPOINT;
+        }
+
+      }, [])
+
+      return <></>
+  }
+}
+```
+</br>
+
+As you can see in the code, this request needs to provide `sid`, which stands for SessionId. 
+
+```
+`${LOGOUT_ENDPOINT}?sid=${store?.user?.me?.sessionId}
+```
+The question is how to get this information? You can see it btw in the secured cookie, but you can not read the secured cookie, so those are some of your options:
+
+- Use a custom cookie sessionid middelware and manually write that data into the context.
+- You can call the user endpoint (of the idnetity server) from the frontend and get the data from there.
+- You can put the data in jwt token claims and provide it in a graphql schema for querying.
+
+This demo uses the sessionId provided by the GraphQL server from the token claim. So each token contains this `sid` value and these tokens are only used on the backend side behind the proxy.
+
+If you do not provide the correct `sid` identity, the server will respond with an exception:
+
+```sh
+Exception: Invalid Session Id
+Duende.Bff.DefaultLogoutService.ProcessRequestAsync(HttpContext context) in DefaultLogoutService.cs, line 49
+
+Stack Query Cookies Headers Routing
+Exception: Invalid Session Id
+Duende.Bff.DefaultLogoutService.ProcessRequestAsync(HttpContext context) in DefaultLogoutService.cs
+Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+Duende.Bff.Endpoints.BffMiddleware.Invoke(HttpContext context) in BffMiddleware.cs
+Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+Microsoft.AspNetCore.Builder.Extensions.MapWhenMiddleware.Invoke(HttpContext context)
+Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+```

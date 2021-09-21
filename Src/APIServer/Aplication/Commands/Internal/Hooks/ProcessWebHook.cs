@@ -138,7 +138,7 @@ namespace APIServer.Aplication.Commands.Internall.Hooks {
                             record.Result = RecordResult.http_error;
                             record.Exception = ex.ToString();
 
-                            throw ex;
+                            //throw ex;
                         }
                     } else {
                         record.Result = RecordResult.parameter_error;

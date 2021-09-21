@@ -1,7 +1,7 @@
 module.exports = {
   purge: {
-    enabled: false,
-    content: ["./**/*.cshtml", "./**/*.html", "./**/*.razor"],
+    enabled: true,
+    content: ["./**/*.cshtml","../**/*.cshtml", "../**/*.html","./**/*.html", "./**/*.razor"],
     options: {
       keyframes: true,
     }

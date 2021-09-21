@@ -15,14 +15,6 @@ using Elastic.CommonSchema.Serilog ;
 namespace APIServer.Configuration {
     public static partial class ServiceExtension {
 
-        // public static IServiceCollection AddLogging(
-        //     this IServiceCollection serviceCollection) {
-
-        //     serviceCollection.AddTransient<UserIdEnricher>();
-
-        //     return serviceCollection;
-        // }
-
             public static void ConfigureLogging(IHost host){
 
             var logCfg = new LoggerConfiguration();

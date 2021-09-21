@@ -131,7 +131,7 @@ namespace BFF
                         "/scheduler",
                         "https://localhost:5022/scheduler",
                         csrf_protection_enabled)
-                    .WithOptionalUserAccessToken()      
+                    .WithOptionalUserAccessToken()  
                     .AllowAnonymous();
                 }
             

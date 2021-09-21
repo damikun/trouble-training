@@ -21,14 +21,16 @@ That's why *Open Telemetry* exists as a new standard, and as of 2021, *OpenTelem
 The application instrumented by the client sends trace data via one of the various available transports to the collector, which processes the trace data and stores it in memory.
 
 <p align="center">
-  <img alt="Opentelemetry flow" src="./Assets/opentelemetry_flow.PNG">
+  <img alt="Opentelemetry flow" src="./Assets/opentelemetry_flow.png">
 </p>
 
 **OpenTelemetry components**
 
 - `APIs and SDKs` per programming language for generating and emitting traces  (SDK for `Java`,`.Net`,`C++`,`Golang`,`Python`,`Javascript`,`PHP`,`Ruby` etc...)
 
-    ![OpenTelemtry Languages](./Assets/opentelemetry_languages.PNG "OpenTelemtry Languages")
+<p align="center">
+  <img alt="OpenTelemtry Languages" src="./Assets/opentelemetry_languages.PNG">
+</p>
 
 - `Collectors` - provides a vendor-independent implementation for receiving, processing and exporting telemetry data.
 
@@ -196,15 +198,42 @@ In `Program.cs` function `services.AddTelemerty(...)`is cWalled to configure Ope
                     //  })
                   .AddService(Environment.ApplicationName));
 
-                builder.AddAspNetCoreInstrumentation(opts => {
+                  builder.AddAspNetCoreInstrumentation(opts => {
                     opts.RecordException = true;
+                    opts.Enrich = async (activity, eventName, rawObject) =>
+                    {
+                        if (eventName.Equals("OnStartActivity"))
+                        {
+                            if (rawObject is HttpRequest {Path: {Value: "/graphql"}})
+                            {
+                                // Do something
+                                // Request is send as document id ! 
+                            }
+                        }
+                    };
+                    // opts.Filter = (httpContext) =>
+                    // {
+                    //     // only collect telemetry about HTTP GET requests
+                    //     // return httpContext.Request.Path.Value == "/graphql";
+                    // };
                 });
 
                 builder.AddElasticsearchClientInstrumentation();
 
                 builder.AddSqlClientInstrumentation();
 
-                builder.AddHttpClientInstrumentation(opts => opts.RecordException = true);
+                builder.AddHttpClientInstrumentation(
+                    opts => opts.RecordException = true);
+
+                builder.AddEntityFrameworkCoreInstrumentation(
+                    e => e.SetDbStatementForText = true);
+
+                builder.AddOtlpExporter(options => {
+                    options.Endpoint = new Uri("http://localhost:55680"); // Export to collector
+                    // options.Endpoint = new Uri("http://localhost:8200"); // Export dirrectly to APM
+                    // options.BatchExportProcessorOptions = new OpenTelemetry.BatchExportProcessorOptions<Activity>() {
+                    // };                
+                });
 
                 if (Uri.TryCreate(Configuration.GetConnectionString("Jaeger"), UriKind.Absolute, out var uri)) {
                     builder.AddJaegerExporter(opts => {
@@ -275,7 +304,7 @@ builder.SetResourceBuilder(ResourceBuilder
         })
     .AddService(Environment.ApplicationName));
 ```
-![Trace Attributes - Jaeger UI](./Assets/trace_info.png "Trace Attributes - Jaeger UI")
+![Trace Attributes - Jaeger UI](./Assets/trace_info.PNG "Trace Attributes - Jaeger UI")
 
 ## Jaeger
 
@@ -303,6 +332,10 @@ If you wanna use Jaeger without `Opentelemetry SDK` You can [explore its SDK](ht
     - memory storage
 
 ### Docker Install
+
+> **NOTE:** Jaeger is not used in the demo, but it is a popular tool for quick trace analysis. In this demo, Elastic Stack is used to analyze metrics, logs, and trces and summarize and display them at UI.
+
+You can use Jaeger when you start distributed tracing.
 
 In folder `./Src/Docker/Jaeger` is `docker-compose.yml` containing jaeger all-in-one image. By running `docker-compose up` you can setup dev. Image.
 

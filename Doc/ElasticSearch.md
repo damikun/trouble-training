@@ -428,7 +428,6 @@ In this example, the following containers are created under the `Elastic` networ
     >**Linux:**
     >```
     >sysctl -w vm.max_map_count=262144 
-    >// For the persistence 
     >echo "vm.max_map_count=262144" >> /etc/sysctl.conf
     >```
     >

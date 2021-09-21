@@ -50,7 +50,7 @@ public static IHostBuilder CreateHostBuilder(string[] args) =>
 
 This demo uses ['Serilog'](https://serilog.net/), which overrides the default configuration and is used in addition to the `.NetCore` configuration.
 
-In `Programme.cs` the function `ConfigureLogging(...)` is called to define the Serilog configuration.
+In `Program.cs` the function `ConfigureLogging(...)` is called to define the Serilog configuration.
 
 ```c#
 using System;
@@ -70,26 +70,39 @@ using Microsoft.Extensions.DependencyInjection;
 
     using (var scope = host.Services.CreateScope()) {
 
-        var hostEnvironment = scope.ServiceProvider.GetRequiredService<IWebHostEnvironment>();
+        var services = scope.ServiceProvider;
+
+        var hostEnvironment =   scope
+                                .ServiceProvider
+                                .GetRequiredService<IWebHostEnvironment>();
+        
+        var configuration = GetLogConfigurationFromJson();
 
         logCfg = logCfg
             .Enrich.FromLogContext()
             .Enrich.WithExceptionDetails()
             .Enrich.WithMachineName()
             .Enrich.WithSpan()
-            .Enrich.With(services.GetService<UserIdEnricher>());
-            .Enrich.WithProperty("Environment", hostEnvironment.EnvironmentName)
-            .ReadFrom.Configuration(GetLogConfigurationFromJson());
-            
+            .Enrich.WithElasticApmCorrelationInfo()
+            .Enrich.WithProperty(
+                "Environment",
+                  hostEnvironment.EnvironmentName)
+            .ReadFrom.Configuration(configuration);
+
         try {
 
             if (hostEnvironment.IsDevelopment()) {
-                logCfg = logCfg.WriteTo.Console(theme:AnsiConsoleTheme.Code);
-            } else {
-                logCfg = logCfg.WriteTo.Elasticsearch(ConfigureElasticSink(GetLogConfigurationFromJson(), environment));
+                logCfg = logCfg.WriteTo.Console(
+                    theme: AnsiConsoleTheme.Code,
+                    outputTemplate: "[{ElasticApmTraceId} {ElasticApmTransactionId} {Message:lj} {NewLine}{Exception}",
+                    applyThemeToRedirectedOutput: true);
             }
 
-        } catch (Exception ex) { }
+            logCfg = logCfg.WriteTo.Elasticsearch(
+                ConfigureElasticSink(configuration, hostEnvironment.EnvironmentName));
+
+                                    
+        } catch { }
     }
 
     Log.Logger = logCfg.CreateLogger();
@@ -148,10 +161,12 @@ By default, the app takes the log level configuration from `appsettings.json` or
         "Microsoft": "Information",
         "System": "Information",
         "Microsoft.Hosting.Lifetime": "Information",
-        "Microsoft.EntityFrameworkCore": "Information"
+        "Microsoft.EntityFrameworkCore": "Information",
+        "Elastic.Apm": "Debug",
+        "Microsoft.AspNetCore.Authentication": "Information"
       }
     }
-  }
+  },
 ```
 > &#10240;
 > **Info**: Json configuration file support reload in runtime.
