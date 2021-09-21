@@ -15,7 +15,7 @@ namespace BFF.Configuration {
     }
 
     public static class TracingExtensions {
-        public async static Task<HttpRequest> HandleTraingActivityRename(HttpRequest req){
+        public async static Task<HttpRequest> HandleTracingActivityRename(HttpRequest req){
             req.EnableBuffering();
 
             try{

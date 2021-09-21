@@ -36,7 +36,7 @@ namespace BFF.Configuration {
                             {
                                 var req = rawObject as HttpRequest;
 
-                                await TracingExtensions.HandleTraingActivityRename(req);    
+                                await TracingExtensions.HandleTracingActivityRename(req);    
                             }
                         }
                     };
