@@ -51,22 +51,9 @@ namespace BFF
                 configuration.RootPath = "ClientApp/build";
             });
 
-            // Add BFF services to DI - also add server-side session management
-            services.AddBff(options =>
-            {
-                options.ForwardedHeaders = new HashSet<string>(){"Correlation-Context","traceparent","tracestate","Request-Id"};
-                options.AntiForgeryHeaderValue = "1";
-                options.AntiForgeryHeaderName = "X-CSRF";
-                options.ManagementBasePath = "/system";
-            }).AddServerSideSessions();
-            // .AddEntityFrameworkServerSideSessions(options=> 
-            // {
-            //     /// setup hire     
-            // });
+            services.AddBff();
 
             services.AddIdentityConfiguration();
-
-            services.AddSingleton<IHttpMessageInvokerFactory, CustomHttpMessageInvokerFactory>();
 
             services.AddHealthChecks();
         
