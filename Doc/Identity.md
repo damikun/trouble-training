@@ -49,6 +49,9 @@
                 - [BFF](#bff)
                 - [APIServer](#apiserver)
         - [Idnetity server UI interface:](#idnetity-server-ui-interface)
+- [Login and Logout integration to UI](#login-and-logout-integration-to-ui)
+    - [Login](#login)
+    - [Logout](#logout)
 
 ## Identity and security overview
 
@@ -1215,7 +1218,7 @@ Endpoint `https://localhost:5001/diagnostics`
 
 ![Allowed devices - revocation grands](./Assets/endpoint_revocation_grants.PNG "Allowed devices")
 
-#### Login and Logout integration to UI
+## Login and Logout integration to UI
 
 Frontend App in this demo was built with React and uses the POST fetch function to call the BFF, which makes a request to the GraphQL server. This is the standard flow for communication between client and API. GraphQL API is accessible to anonymous users. If you are not authorised, a concrete error will be returned for the data you requested, but in some cases it will simply return `null`. This is up to the backend SW engineer on how he implemented this error and auth handling.
 
@@ -1224,7 +1227,7 @@ To perform loging and logout from clinet this works bit differently. BFF maps sp
 - `https://your_app_url:port/system/login`
 - `https://your_app_url:port/system/logout`
 
-##### Login
+### Login
 
 At the top level of the frontend query, you normally request the user data as a `me` query. This is called when the app is first rendered.
 
@@ -1276,7 +1279,7 @@ export default function Login() {
 
 After the app encounters this BFF, the request is automatically forwarded to the IdentityServer with all the contextual data of the request. You perform the login and the server redirects you back to the post-login URL of the app.
 
-#### Logout
+### Logout
 
 When it comes to logging out, it's a little more complicated. The user usually clicks on an Logout button, which in turn redirects to a `<Logout/>` component:
 
