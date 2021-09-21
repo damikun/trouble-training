@@ -39,7 +39,7 @@ Please follow these steps if you want to understand it because of the connection
 
 1) [Configure logging](Doc/Logging.md) - I`ll show you how to set up a proper distributed logging solution for .Net
 2) [Configure telemetry](Doc/OpenTelemetry.md) - I`ll show you how to properly set up Opentelemetry and Elastic APM.
-3) [Configure idenity](Doc/Identity.md) - You`ll learn how to use the BFF pattern to secure your application.
+3) [Configure identity](Doc/Identity.md) - You`ll learn how to use the BFF pattern to secure your application.
 4) [Configure monitoring](Doc/ElasticSearch.md) - You will learn how to monitor the entire app stack (this depends on parts 1 and 2).
 
 <br />
