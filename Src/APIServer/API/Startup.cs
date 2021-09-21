@@ -75,6 +75,17 @@ namespace APIServer
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost,
             });
 
+            app.Use(async (context, next) =>
+            {
+                System.Console.WriteLine("Headers");
+                foreach (var item in context.Request.Headers)
+                {
+                    System.Console.WriteLine("{0}: {1}",item.Key, item.Value);
+                }
+                // Call the next delegate/middleware in the pipeline
+                await next();
+            });
+
             app.UseEnsureApiContextCreated(serviceProvider,scopeFactory);
 
             if (env.IsDevelopment()) {

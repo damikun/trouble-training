@@ -8,14 +8,24 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Duende.Bff;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.HttpOverrides;
 using BFF.Configuration;
 using Duende.Bff.EntityFramework;
 using Elastic.Apm.AspNetCore;
 using Elastic.Apm.DiagnosticSource;
+using System.Diagnostics;
+using BFF.Domain;
+using System;
+using System.Net.Http;
+using System.Collections.Concurrent;
+using System.Net;
+using System.Threading;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace BFF
-{
+{    
     public class Startup
     {
         public Startup(IConfiguration configuration, IWebHostEnvironment enviroment)
@@ -44,6 +54,7 @@ namespace BFF
             // Add BFF services to DI - also add server-side session management
             services.AddBff(options =>
             {
+                options.ForwardedHeaders = new HashSet<string>(){"Correlation-Context","traceparent","tracestate","Request-Id"};
                 options.AntiForgeryHeaderValue = "1";
                 options.AntiForgeryHeaderName = "X-CSRF";
                 options.ManagementBasePath = "/system";
@@ -55,8 +66,10 @@ namespace BFF
 
             services.AddIdentityConfiguration();
 
-            services.AddHealthChecks();
+            services.AddSingleton<IHttpMessageInvokerFactory, CustomHttpMessageInvokerFactory>();
 
+            services.AddHealthChecks();
+        
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;

@@ -12,10 +12,7 @@
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/ElasticSearch.md">Configure Monitoring</a></br>
 </h5>
 
-
-
 <p align="center" >Demo Application contains small UI, where you can manage your WebHooks</p>
-
 
 <p align="center">
   <img width="600" src="Doc/Assets/WorkshopUI.gif" alt="Workshop UI example" >
