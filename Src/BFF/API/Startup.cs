@@ -8,21 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Duende.Bff;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.HttpOverrides;
 using BFF.Configuration;
-using Duende.Bff.EntityFramework;
-using Elastic.Apm.AspNetCore;
-using Elastic.Apm.DiagnosticSource;
-using System.Diagnostics;
-using BFF.Domain;
-using System;
-using System.Net.Http;
-using System.Collections.Concurrent;
-using System.Net;
-using System.Threading;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
 
 namespace BFF
 {    
@@ -46,8 +33,7 @@ namespace BFF
             services.AddControllersWithViews();
 
             // In production, the React files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
+            services.AddSpaStaticFiles(configuration => {
                 configuration.RootPath = "ClientApp/build";
             });
 
@@ -57,8 +43,7 @@ namespace BFF
 
             services.AddHealthChecks();
         
-            services.Configure<ForwardedHeadersOptions>(options =>
-            {
+            services.Configure<ForwardedHeadersOptions>(options => {
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
             });
 
@@ -74,7 +59,6 @@ namespace BFF
             }
             else {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -107,11 +91,11 @@ namespace BFF
                 endpoints.MapBffManagementEndpoints();   // login, logout, user, backchannel logout...
 
                 bool csrf_protection_enabled =  !env.IsDevelopment();
+
                 // proxy endpoint for cross-site APIs
                 // all calls to /api/* will be forwarded to the remote API
                 // user or client access token will be attached in API call
                 // user access token will be managed automatically using the refresh token
-                
                 endpoints.MapRemoteBffApiEndpoint(
                     "/graphql",
                     "https://localhost:5022/graphql",
