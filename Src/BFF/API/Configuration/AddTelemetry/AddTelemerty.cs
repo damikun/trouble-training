@@ -5,6 +5,7 @@ using OpenTelemetry.Trace;
 using OpenTelemetry.Resources;
 using System;
 using BFF.Domain;
+using Microsoft.AspNetCore.Http;
 
 namespace BFF.Configuration {
     public static partial class ServiceExtension {
@@ -26,6 +27,19 @@ namespace BFF.Configuration {
 
                 builder.AddAspNetCoreInstrumentation(opts => {
                     opts.RecordException = true;
+                    opts.Enrich = async (activity, eventName, rawObject) =>
+                    {
+
+                        if (eventName.Equals("OnStartActivity"))
+                        {
+                            if (rawObject is HttpRequest {Path: {Value: "/graphql"}})
+                            {
+                                var req = rawObject as HttpRequest;
+
+                                await TracingExtensions.HandleTraingActivityRename(req);    
+                            }
+                        }
+                    };
                 });
 
                 builder.AddElasticsearchClientInstrumentation();
@@ -59,5 +73,8 @@ namespace BFF.Configuration {
 
             return serviceCollection;
         }
+
+
+        
     }
 }

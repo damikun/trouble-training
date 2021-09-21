@@ -33,8 +33,7 @@ namespace APIServer.Configuration {
                         {
                             if (rawObject is HttpRequest {Path: {Value: "/graphql"}})
                             {
-                                // Do something
-                                // Request is send as document id ! 
+                                // Do something else
                             }
                         }
                     };
