@@ -46,7 +46,6 @@ namespace BFF
             services.Configure<ForwardedHeadersOptions>(options => {
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
             });
-
             
             services.AddTelemerty(Configuration,Environment);
         }
@@ -83,6 +82,7 @@ namespace BFF
             app.UseAuthorization(); // adds authorization for local and remote API endpoints
 
             app.UseEndpoints(endpoints => {
+
                 // local APIs
                 endpoints.MapControllers()
                     .RequireAuthorization()
@@ -101,6 +101,12 @@ namespace BFF
                     "https://localhost:5022/graphql",
                     csrf_protection_enabled)
                 .WithOptionalUserAccessToken()          
+                .AllowAnonymous();
+
+                endpoints.MapRemoteBffApiEndpoint(
+                    "/traces",
+                    "http://localhost:55690/v1/traces",
+                    csrf_protection_enabled)      
                 .AllowAnonymous();
 
                 if (env.IsDevelopment()) {

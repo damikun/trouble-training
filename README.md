@@ -49,11 +49,13 @@ Please follow these steps if you want to understand it because of the connection
 </p>
 
 
-**Monitoring example**
+**Frontend to Backend distributed tracing example**
+
+On this monitoring graphical visualization, you can see entire request sended from Client Frontend (Creating a webhook)
 
 <p align="center">
 
-<img src="Doc/Assets/elastic_apm_example.png" alt="Apm distributed tracing" >
+<img src="Doc/Assets/CreateWebHook_Output.png" alt="Elastic Frontend to backend distributed tracing" >
 
 </p>
 

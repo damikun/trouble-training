@@ -4,6 +4,7 @@ import { RelayEnvironmentProvider } from "react-relay/hooks";
 import ToastProvider from "../UIComponents/Toast/ToastProvider";
 import { createEnvironment } from "./Environment";
 import UserProvider from "./UserProvider";
+import TraceProvider from "./TraceProvider"
 
 type Props = {
   children: React.ReactNode;
@@ -43,9 +44,11 @@ export default function Providers({ children, fallback }: Props) {
           state && (
             <RelayEnvironmentProvider environment={state?.env}>
               <Suspense fallback={fallback ? fallback : null}>
-                <UserProvider>
-                    <ToastProvider>{children}</ToastProvider>
-                </UserProvider>
+                <TraceProvider>
+                  <UserProvider>
+                      <ToastProvider>{children}</ToastProvider>
+                  </UserProvider>
+                </TraceProvider>
               </Suspense>
             </RelayEnvironmentProvider>
           )

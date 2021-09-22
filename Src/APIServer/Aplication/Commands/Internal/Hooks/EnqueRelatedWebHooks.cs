@@ -8,13 +8,14 @@ using APIServer.Domain.Core.Models.WebHooks;
 using APIServer.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Shared.Aplication.Core.Commands;
 
 namespace APIServer.Aplication.Commands.Internall.Hooks  {
 
     /// <summary>
     /// Command for processing WebHook event
     /// </summary>
-    public class EnqueueRelatedWebHooks : MediatR.IRequest {
+    public class EnqueueRelatedWebHooks : CommandBase {
         public HookEventType EventType { get; set; }
         public object Event { get; set; }
     }

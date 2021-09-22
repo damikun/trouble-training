@@ -9,13 +9,14 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using APIServer.Domain.Core.Models.WebHooks;
 using APIServer.Persistence;
+using Shared.Aplication.Core.Commands;
 
 namespace APIServer.Aplication.Commands.Internall.Hooks {
 
     /// <summary>
     /// Command for processing WebHook event
     /// </summary>
-    public class ProcessWebHook : MediatR.IRequest {
+    public class ProcessWebHook : CommandBase {
         public long HookId { get; set; }
         public dynamic Event { get; set; }
         public HookEventType EventType { get; set; }

@@ -1,5 +1,7 @@
 {
-  "dependencies": {},
+  "dependencies": {
+    "@opentelemetry/instrumentation-fetch": "^0.25.0"
+  },
   "scripts": {
     "css:build": "npx tailwind build ./wwwroot/css/site.css -o ./wwwroot/css/output.css"
   },
