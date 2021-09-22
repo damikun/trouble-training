@@ -498,6 +498,10 @@ With this configuration, our frontend instruments only the outbound fetches need
 
 **This is an example of a trace that was sent from the frontend to the collector**
 
+<p align="center">
+  <img alt="Trace from browser network view" src="./Assets/browser_network_trace.PNG">
+</p>
+
 ```
 {
     "resourceSpans": [
