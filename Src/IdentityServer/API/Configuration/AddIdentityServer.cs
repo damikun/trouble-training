@@ -44,7 +44,8 @@ namespace IdentityServer.Configuration
             // clients, resources
             identityServerBuilder.AddConfigurationStore<AppConfigurationDbContext>(options =>
                 options.ConfigureDbContext = builder =>
-                    builder.UseNpgsql(Configuration["ConnectionStrings:AppIdnetityDbContext"]));
+                    builder.UseNpgsql(Configuration["ConnectionStrings:AppIdnetityDbContext"]))
+                    .AddInMemoryCaching();
 
             identityServerBuilder.AddAspNetIdentity<ApplicationUser>();
             // serviceCollection.AddScoped<UserManager<ApplicationUser>, UserManager<ApplicationUser>>();
