@@ -30,7 +30,7 @@
     "history": "5.0.0",
     "js-cookie": "^3.0.1",
     "postcss": "^7",
-    "react": "0.0.0-experimental-bc9bb87c2-20210917",
+    "react": "0.14.0",
     "react-dom": "0.0.0-experimental-bc9bb87c2-20210917",
     "react-helmet": "^6.1.0",
     "react-indiana-drag-scroll": "2.0.1",
