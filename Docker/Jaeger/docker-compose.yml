@@ -8,5 +8,6 @@ services:
     networks:
       - jaeger-example
 
+      
 networks:
   jaeger-example:
