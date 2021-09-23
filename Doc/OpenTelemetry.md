@@ -723,6 +723,7 @@ In folder `./Src/Docker/Jaeger` is `docker-compose.yml` containing jaeger all-in
 
 Isn`t it a bit strange if we want to track a large distributed service, but only send the metrics to a "monolithic" Docker service (all-in-one solution)?
 
+
 > **In production enviroment you wanna choose scalable jaeger deployment!**
 
 For deployin `Jaeger` in production please [follow official documentation](https://www.jaegertracing.io/docs/1.24/deployment/).

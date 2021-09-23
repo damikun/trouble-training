@@ -37,6 +37,7 @@ Important to understand:
 
 ### Setup
 
+
 In `Program.cs`, the function `CreateDefaultBuilder` initializes the default `.NetCore` logging. It uses `ILogger` or `ILogger<T>` and writes the output to `Console`.
 
 ```c#
