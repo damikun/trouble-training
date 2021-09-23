@@ -7,20 +7,6 @@ services:
       - "16686:16686"
     networks:
       - jaeger-example
-  hotrod:
-    image: jaegertracing/example-hotrod:latest
-    ports: 
-      - "8080:8080"
-    command: ["all"]
-    environment:
-      - JAEGER_AGENT_HOST=jaeger
-      # Note: if your application is using Node.js Jaeger Client, you need port 6832,
-      #       unless issue https://github.com/jaegertracing/jaeger/issues/1596 is resolved.
-      - JAEGER_AGENT_PORT=6831
-    networks:
-      - jaeger-example
-    depends_on:
-      - jaeger
 
 networks:
   jaeger-example:

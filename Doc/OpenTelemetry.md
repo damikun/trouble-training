@@ -39,13 +39,15 @@ That's why *Open Telemetry* exists as a new standard, and as of 2021, *OpenTelem
 
 **This is what you wil get at the end**
 
-This real example from this demo that includes frontend to backend tracking and monitoring. You can see all operations in time, with the option to see every detail and logs for all spans.
+This real example from this demo that includes frontend to backend tracing and monitoring. You can see all operations in time, with the option to see every detail and logs for all spans.
 
 <p align="center">
 
 <img src="./Assets/CreateWebHook_Output.png" alt="Elastic Frontend to backend distributed tracing" >
 
 </p>
+
+
 
 ### OpenTelemetry components
 
@@ -157,8 +159,9 @@ In general, the life cycle of a span can be interpreted as follows:
 
 ## Logs vs Telemtry
 
-`Logs` - Is a timestamped text/structured record.
-`Traces` - Track the progression of a single request, called a trace, as it is handled by services that make up an application.
+`Log` - Is a timestamped text/structured record.
+
+`Trace` - Track the progression of a single request, called a trace, as it is handled by services that make up an application.
 
 *"Hey isnt logging enaught ?"*
 
