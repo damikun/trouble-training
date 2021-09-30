@@ -1561,4 +1561,88 @@ This library should help you with:
 - caching abstraction for access tokens 
 - token lifetime automation for HttpClient
 
+**How does it works?**. The library registers `HttpClinet` and wraps it with a custom handler that check if `access_token` exists. If the token has not yet been requested, the library calls the token endpoint and requests the new `access_token`. The returned token is used to process the request and the token is stored in the `InMemoryCache` and managed by the IdentityModel abstraction.
 
+When a new request is triggered, IdentityModel knows if the token has expired or returned an unauthorised response if the token has been removed (revocate). If so, it requests a new token from the token endpoint.
+
+This way, you do not have to write the entire flow yourself. But you need to configure it exactly and understand the IdentityModel API.
+
+**API hit with requesting the token (first request)**
+
+![API hit with requesting the token](./Assets/device_client_credentials_api_hit_token_request.png "API hit with requesting the token")
+
+**API hit with cache token managment**
+
+![API hit with managed allready requeted token](./Assets/device_client_credentials_api_hit.png "API hit with managed allready requeted token")
+
+##### Setup Token managment
+
+The most basic setup may be done by extension method:
+
+```c#
+public static partial class ServiceExtension {
+
+    // This is your API base addres (You probably wanna move this under Configuration)
+    private const string BaseAPIAddress = "https://localhost:5022/api/";
+
+    public static IServiceCollection AddTokenManagment(this IServiceCollection services) {
+
+
+        services.AddClientAccessTokenManagement(options =>
+        {
+            options.Clients.Add("identityserver", new ClientCredentialsTokenRequest
+            {
+                Address = "https://localhost:5001/connect/token",
+                ClientId = "device",
+                ClientSecret = "secret",
+                Scope = "api"
+            });
+
+        });
+
+        services.AddClientAccessTokenHttpClient("test_auth_client", configureClient: client =>
+        {
+            client.BaseAddress = new Uri(BaseAPIAddress);
+        });
+
+        return services;
+    }
+}
+
+```
+
+Then you can request concrete clinet from your code using `HttpClientFactory`
+
+```c#
+public async Task<Trigger_AuthorisedPayload> Handle(Trigger_Authorised request, CancellationToken cancellationToken) {
+
+    var client = _clientFactory.CreateClient("test_auth_client");
+
+    var client_response = await client.GetAsync("TestAuth/TestClientCredentials", cancellationToken);
+
+    if(client_response.IsSuccessStatusCode ){
+        var response = Trigger_AuthorisedPayload.Success();
+        return response;
+    }else{
+        var response = Trigger_AuthorisedPayload.Error(new InternalServerError(
+            string.Format("Failed to process api call status code: {0}",client_response.StatusCode)));
+        
+        return response;
+    }
+}
+```
+
+The demo contains an example of `client-credential-flow` under the directory `src/Device`.
+
+This project contains a separate application with a test front-end where you can press keys and call the API with/without valid `access_token` and token management.
+
+To run this demo, make sure all other applications are running!
+
+- `/src/APIServer/API/` then run `dotnet watch run`
+- `/src/BFF/API/` then run `dotnet watch run`
+- `/src/IdentityServer/API/` then run `dotnet watch run`
+- `/src/Device/API/` then run `dotnet watch run`
+
+</br>
+
+![Test UI to simulate client credential flow](./Assets/device_test_ui.png "Test UI to simulate client credential flow")

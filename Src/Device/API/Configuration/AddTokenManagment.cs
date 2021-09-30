@@ -5,6 +5,7 @@ using System;
 namespace Device.Configuration {
     public static partial class ServiceExtension {
 
+        // This is your API base addres (You probably wanna move this under Configuration)
         private const string BaseAPIAddress = "https://localhost:5022/api/";
 
         public static IServiceCollection AddTokenManagment(this IServiceCollection services) {
@@ -21,13 +22,6 @@ namespace Device.Configuration {
                 });
 
             });
-            //.ConfigureBackchannelHttpClient()
-            // .AddTransientHttpErrorPolicy(policy => policy.WaitAndRetryAsync(new[]
-            // {
-            //     TimeSpan.FromSeconds(1),
-            //     TimeSpan.FromSeconds(2),
-            //     TimeSpan.FromSeconds(3)
-            // }));
 
             services.AddClientAccessTokenHttpClient("test_auth_client", configureClient: client =>
             {

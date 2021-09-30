@@ -13,15 +13,17 @@ const collectorOptions = {
     headers: {
     "Content-Type": "application/json", 
     'Access-Control-Allow-Headers': '*',
+    'Access-Control-Allow-Origin':'*',
+    mode: 'cors',
     'X-CSRF': '1',
-  },
+  },  
     concurrencyLimit: 10,
   };
 
 // Trace provider (Main aplication trace)
 const provider = new WebTracerProvider({
   resource: new Resource({
-    "service.name": "Frontend",
+    "service.name": "Device Frontend",
   }
   )});
 

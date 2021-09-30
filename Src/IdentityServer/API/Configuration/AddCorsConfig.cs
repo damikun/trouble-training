@@ -18,7 +18,8 @@ namespace IdentityServer.Configuration
                 allowed_origins = new string[]{ 
                     "https://localhost:5001",
                     "https://localhost:5015",
-                    "https://localhost:5021"
+                    "https://localhost:5021",
+                    "https://localhost:5070"
                 };
             }else{
                  // Add your production origins hire
