@@ -10,6 +10,7 @@ using APIServer.Aplication.GraphQL.Mutation;
 using APIServer.Aplication.GraphQL.Types;
 using Aplication.GraphQL.DataLoaders;
 using APIServer.Aplication.GraphQL.DataLoaders;
+using SharedCore.Aplication.GraphQL.Types;
 
 namespace APIServer.Configuration {
     public static partial class ServiceExtension {
@@ -78,8 +79,7 @@ namespace APIServer.Configuration {
                     .UsePersistedQueryPipeline()
                     .UseReadPersistedQuery()
                     .AddReadOnlyFileSystemQueryStorage("./persisted_queries");
-
-
+                    
             return serviceCollection;
         }
     }

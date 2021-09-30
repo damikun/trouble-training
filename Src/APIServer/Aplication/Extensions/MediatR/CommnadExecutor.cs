@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using APIServer.Domain;
 using Serilog;
-using Shared.Aplication.Core.Commands;
+using SharedCore.Aplication.Core.Commands;
 
 namespace MediatR {
 

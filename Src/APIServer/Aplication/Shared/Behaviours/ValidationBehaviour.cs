@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Collections.Generic;
 using FluentValidation;
-using Aplication.Payload;
 using Serilog;
 using FluentValidation.Results;
 using System.Diagnostics;
-using Shared.Aplication.Interfaces;
+using SharedCore.Aplication.Interfaces;
 using APIServer.Domain;
 using APIServer.Aplication.Shared.Errors;
+using Aplication.Payload;
 
 namespace APIServer.Aplication.Shared.Behaviours {
 
@@ -59,10 +59,10 @@ namespace APIServer.Aplication.Shared.Behaviours {
 
                 } catch (Exception ex) {
 
-                    Common.CheckAndSetOtelExceptionError(ex,_logger);
+                    SharedCore.Aplication.Shared.Common.CheckAndSetOtelExceptionError(ex,_logger);
 
                     // In case it is Mutation Response Payload = handled as payload error union
-                    if (Common.IsSubclassOfRawGeneric(typeof(BasePayload<,>), typeof(TResponse))) {
+                    if (SharedCore.Aplication.Shared.Common.IsSubclassOfRawGeneric(typeof(BasePayload<,>), typeof(TResponse))) {
                         return Common.HandleBaseCommandException<TResponse>(ex);
                     } else {
                         throw;
@@ -81,7 +81,7 @@ namespace APIServer.Aplication.Shared.Behaviours {
         private static TResponse HandleValidationErrors(List<ValidationFailure> error_obj) {
 
             // In case it is Mutation Response Payload = handled as payload error union
-            if (Common.IsSubclassOfRawGeneric(typeof(BasePayload<,>), typeof(TResponse))) {
+            if (SharedCore.Aplication.Shared.Common.IsSubclassOfRawGeneric(typeof(BasePayload<,>), typeof(TResponse))) {
                 IBasePayload payload = ((IBasePayload)Activator.CreateInstance<TResponse>());
 
                 foreach (var item in error_obj) {
@@ -96,11 +96,11 @@ namespace APIServer.Aplication.Shared.Behaviours {
 
                     var first_item = error_obj.First();
                     if (first_item != null) {
-                        throw new APIServer.Aplication.Shared.Exceptions.ValidationException(string.Format("Field: {0} - {1}", first_item.PropertyName, first_item.ErrorMessage));
+                        throw new SharedCore.Aplication.Shared.Exceptions.ValidationException(string.Format("Field: {0} - {1}", first_item.PropertyName, first_item.ErrorMessage));
                     }
 
                 }
-                throw new APIServer.Aplication.Shared.Exceptions.ValidationException("Validation error appear");
+                throw new SharedCore.Aplication.Shared.Exceptions.ValidationException("Validation error appear");
 
             }
         }

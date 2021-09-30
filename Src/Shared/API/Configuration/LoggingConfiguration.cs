@@ -12,7 +12,7 @@ using System.Reflection;
 using Elastic.Apm.SerilogEnricher;
 using Elastic.CommonSchema.Serilog ;
 
-namespace Shared.Configuration {
+namespace SharedCore.Configuration {
     public static partial class ServiceExtension {
 
             public static void ConfigureLogging(IHost host){

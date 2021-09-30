@@ -2,9 +2,9 @@ using System.Security.Claims;
 using System.ComponentModel;
 using System;
 
-namespace Shared.Aplication.Extensions {
+namespace SharedCore.Aplication.Extensions {
 
-    public static class Extensions {
+    public static partial class Extensions {
         public static TId GetId<TId>(this ClaimsPrincipal principal)
         {
             if (principal == null || principal.Identity == null || 

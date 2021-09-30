@@ -25,7 +25,7 @@ function App() {
   return (
     <>
     <Helmet>
-      <title>Trouble Train - Demo</title>
+      <title>Trouble Training - Demo</title>
       <meta
         name="description"
         content="Trouble training demo - workshop for full stack app"
@@ -33,7 +33,7 @@ function App() {
       <meta name="author" content="TroubleDev" />
       <meta
         name="keywords"
-        content="TroubleTrain, Distributed Tracing Workshop"
+        content="TroubleTraining, Distributed Tracing Workshop"
       />
     </Helmet>
 

@@ -2,10 +2,12 @@ using System;
 using System.Diagnostics;
 using MediatR;
 
-namespace Shared.Aplication.Core.Commands {
+namespace SharedCore.Aplication.Core.Commands {
 
     public abstract class CommandCore {
+        #nullable enable
         public string? ActivityId { get; set; } = Activity.Current != null ? Activity.Current.Id : null;
+        #nullable disable
         public DateTime TimeStamp { get; set; } = DateTime.Now;
 
         //Flags
@@ -25,8 +27,9 @@ namespace Shared.Aplication.Core.Commands {
     public interface ICommandBase : IRequest, ISharedCommandBase { }
 
     public interface ISharedCommandBase {
+        #nullable enable
         string? ActivityId { get; set; }
-
+        #nullable disable
         //Flags
         CommandFlags Flags { get; set; }
     }

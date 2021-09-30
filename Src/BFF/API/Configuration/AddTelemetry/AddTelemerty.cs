@@ -6,6 +6,7 @@ using OpenTelemetry.Resources;
 using System;
 using BFF.Domain;
 using Microsoft.AspNetCore.Http;
+using SharedCore.Aplication.Extensions;
 
 namespace BFF.Configuration {
     public static partial class ServiceExtension {
@@ -36,7 +37,7 @@ namespace BFF.Configuration {
                             {
                                 var req = rawObject as HttpRequest;
 
-                                await TracingExtensions.HandleTracingActivityRename(req);    
+                                await Extensions.HandleTracingActivityRename(req);    
                             }
                         }
                     };
@@ -73,8 +74,5 @@ namespace BFF.Configuration {
 
             return serviceCollection;
         }
-
-
-        
     }
 }

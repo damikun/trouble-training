@@ -2,11 +2,9 @@ using MediatR;
 using System.Linq;
 using System.Threading;
 using FluentValidation;
-using Aplication.Payload;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Shared.Aplication.Interfaces;
-using Aplication.Shared.Attributes;
+using SharedCore.Aplication.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using APIServer.Domain.Core.Models.WebHooks;
 using APIServer.Persistence;
@@ -15,6 +13,8 @@ using APIServer.Extensions;
 using APIServer.Aplication.Shared;
 using APIServer.Aplication.Notifications.WebHooks;
 using APIServer.Aplication.Shared.Behaviours;
+using SharedCore.Aplication.Shared.Attributes;
+using Aplication.Payload;
 
 namespace APIServer.Aplication.Commands.WebHooks {
 

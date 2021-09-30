@@ -6,7 +6,7 @@ using HotChocolate.Resolvers;
 using HotChocolate.Types.Relay;
 using APIServer.Aplication.GraphQL.DTO;
 using APIServer.Aplication.GraphQL.DataLoaders;
-using Shared.Aplication.Interfaces;
+using SharedCore.Aplication.Interfaces;
 
 namespace APIServer.Aplication.GraphQL.Types {
 #pragma warning disable 612, 618 

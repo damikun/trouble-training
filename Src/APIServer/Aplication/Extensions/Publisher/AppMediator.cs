@@ -1,7 +1,7 @@
 using APIServer.Domain;
 using MediatR;
-using Shared.Aplication.Core.Commands;
-using Shared.Aplication.Interfaces;
+using SharedCore.Aplication.Core.Commands;
+using SharedCore.Aplication.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

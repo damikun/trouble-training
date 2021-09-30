@@ -2,7 +2,7 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 using System;
-using Shared.Aplication.Core.Commands;
+using SharedCore.Aplication.Core.Commands;
 using Microsoft.EntityFrameworkCore;
 using APIServer.Persistence;
 

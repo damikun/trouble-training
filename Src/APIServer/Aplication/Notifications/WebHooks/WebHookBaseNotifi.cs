@@ -1,7 +1,7 @@
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
-using Shared.Aplication.Interfaces;
+using SharedCore.Aplication.Interfaces;
 
 namespace APIServer.Aplication.Notifications.WebHooks {
 

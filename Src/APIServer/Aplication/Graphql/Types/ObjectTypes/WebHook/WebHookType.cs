@@ -5,7 +5,7 @@ using HotChocolate.Resolvers;
 using Microsoft.EntityFrameworkCore;
 using APIServer.Aplication.GraphQL.DTO;
 using APIServer.Aplication.GraphQL.DataLoaders;
-using Shared.Aplication.Interfaces;
+using SharedCore.Aplication.Interfaces;
 using APIServer.Persistence;
 using APIServer.Aplication.GraphQL.Extensions;
 

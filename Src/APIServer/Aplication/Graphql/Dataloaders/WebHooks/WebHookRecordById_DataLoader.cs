@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using GreenDonut;
 using APIServer.Persistence;
 using APIServer.Aplication.GraphQL.DTO;
-using Shared.Aplication.Interfaces;
+using SharedCore.Aplication.Interfaces;
 
 namespace APIServer.Aplication.GraphQL.DataLoaders {
 

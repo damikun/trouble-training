@@ -1,10 +1,10 @@
 using MediatR;
 using System.Threading;
 using FluentValidation;
-using Aplication.Payload;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using APIServer.Persistence;
+using Aplication.Payload;
 
 namespace APIServer.Aplication.Commands.WebHooks {
 

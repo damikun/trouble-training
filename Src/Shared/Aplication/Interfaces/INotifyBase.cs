@@ -1,7 +1,7 @@
 using MediatR;
 using System;
 
-namespace Shared.Aplication.Interfaces {
+namespace SharedCore.Aplication.Interfaces {
 
     /// <summary>Base Notification</summary>
     public interface INotificationBase : INotification {

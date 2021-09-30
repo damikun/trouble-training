@@ -3,10 +3,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Shared.Aplication.Interfaces;
-using Shared.Domain.Models;
+using SharedCore.Aplication.Interfaces;
+using SharedCore.Domain.Models;
 
-namespace Shared.Persistence {
+namespace SharedCore.Persistence {
 
     public class AuditEntitiesSaveInterceptor : SaveChangesInterceptor {
         private readonly ICurrentUser _currentUserService;

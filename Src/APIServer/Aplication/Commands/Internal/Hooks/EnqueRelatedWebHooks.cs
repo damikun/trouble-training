@@ -8,7 +8,7 @@ using APIServer.Domain.Core.Models.WebHooks;
 using APIServer.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Shared.Aplication.Core.Commands;
+using SharedCore.Aplication.Core.Commands;
 
 namespace APIServer.Aplication.Commands.Internall.Hooks  {
 

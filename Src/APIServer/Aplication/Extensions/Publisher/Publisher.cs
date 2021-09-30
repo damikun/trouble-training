@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Shared.Aplication.Core.Commands;
+using SharedCore.Aplication.Core.Commands;
 
 namespace APIServer.Extensions {
     public class Publisher : IPublisher {

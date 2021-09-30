@@ -1,6 +1,7 @@
 
 using APIServer.Aplication.Shared.Errors;
 using HotChocolate.Types;
+using SharedCore.Aplication.GraphQL.Types;
 
 namespace APIServer.Aplication.GraphQL.Types {
 

@@ -12,11 +12,12 @@ namespace BFF.Configuration
             // Add BFF services to DI - also add server-side session management
             serviceCollection.AddBff(options =>
             {
-                options.ForwardedHeaders = new HashSet<string>(){
-                    "Correlation-Context",
-                    "traceparent",
-                    "tracestate",
-                    "Request-Id"};
+                options.ForwardedHeaders = new HashSet<string>() {
+                    CustomProxyHttpMessageInvoker.CorrelationContextHeaderName,
+                    CustomProxyHttpMessageInvoker.TraceParentHeaderName,
+                    CustomProxyHttpMessageInvoker.TraceStateHeaderName,
+                    CustomProxyHttpMessageInvoker.RequestIdHeaderName
+                };
                 options.AntiForgeryHeaderValue = "1";
                 options.AntiForgeryHeaderName = "X-CSRF";
                 options.ManagementBasePath = "/system";

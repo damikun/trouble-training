@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using HotChocolate.Types.Relay;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
-using Shared.Aplication.Interfaces;
+using SharedCore.Aplication.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using APIServer.Aplication.GraphQL.DTO;
 using APIServer.Aplication.GraphQL.Types;

@@ -3,9 +3,9 @@ using MediatR;
 using Serilog;
 using System.Threading;
 using System.Threading.Tasks;
-using Shared.Aplication.Interfaces;
+using SharedCore.Aplication.Interfaces;
 using System.Diagnostics;
-using Shared.Aplication.Core.Commands;
+using SharedCore.Aplication.Core.Commands;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 

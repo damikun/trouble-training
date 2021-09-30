@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using GreenDonut;
-using Shared.Aplication.Interfaces;
+using SharedCore.Aplication.Interfaces;
 using APIServer.Persistence;
 using APIServer.Aplication.GraphQL.DTO;
 

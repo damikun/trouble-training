@@ -1,6 +1,6 @@
 using System;
 using Aplication.Interfaces;
-using Shared.Aplication.Interfaces;
+using SharedCore.Aplication.Interfaces;
 
 namespace APIServer.Aplication.Notifications {
 

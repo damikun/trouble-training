@@ -5,9 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using APIServer.Domain;
 using System.Diagnostics;
+using SharedCore.Aplication.Interfaces;
+using SharedCore.Aplication.Core.Commands;
 using Aplication.Payload;
-using Shared.Aplication.Interfaces;
-using Shared.Aplication.Core.Commands;
 
 namespace APIServer.Aplication.Shared.Behaviours {
 
@@ -57,10 +57,10 @@ namespace APIServer.Aplication.Shared.Behaviours {
 
             } catch (Exception ex) {
 
-                Common.CheckAndSetOtelExceptionError(ex,_logger);
+                SharedCore.Aplication.Shared.Common.CheckAndSetOtelExceptionError(ex,_logger);
 
                 // In case it is Mutation Response Payload = handled as payload error union
-                if (Common.IsSubclassOfRawGeneric(typeof(BasePayload<,>), typeof(TResponse))) {
+                if (SharedCore.Aplication.Shared.Common.IsSubclassOfRawGeneric(typeof(BasePayload<,>), typeof(TResponse))) {
                     return Common.HandleBaseCommandException<TResponse>(ex);
                 } else {
                     throw;

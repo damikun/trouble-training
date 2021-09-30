@@ -1,7 +1,7 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using Shared.Aplication.Core.Commands;
+using SharedCore.Aplication.Core.Commands;
 
 namespace APIServer.Extensions {
 

@@ -1,13 +1,9 @@
 using APIServer.Aplication.Commands.WebHooks;
-using APIServer.Aplication.Interfaces;
+using SharedCore.Aplication.GraphQL.Errors;
 
 namespace APIServer.Aplication.Shared.Errors {
 
-    public class BaseError : IBaseError {
-        public string message { get; set; }
-    }
-
-    public class UnAuthorised : BaseError,ICreateWebHookError,IRemoveWebHookError,IUpdateWebHookError, 
+    public class UnAuthorised : BaseError, ICreateWebHookError,IRemoveWebHookError,IUpdateWebHookError, 
     IUpdateWebHookActivStateError, IUpdateWebHookSecretError, IUpdateWebHookTriggerEventsError,
     IUpdateWebHookUriError {
         public UnAuthorised() {

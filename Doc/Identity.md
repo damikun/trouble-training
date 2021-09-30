@@ -224,13 +224,14 @@ If you wanna lear nore about OAuth you can watch folowing talks:
 
 ##### Token exchange flows
 
-There are several ways how can be `grant token` passed to client. Option depens on what kind of client is requesting acces and how much is this client trusted.
-
+There are several ways how can be `grant` exchanged. Option depens on what kind of client is requesting access and how much is this client trusted.
+s
 - Authorization Code Flow
 - Authorization Code Flow with PKCE
 - Implicit Flow
+- Client credentials Flow
 
-![Oauth grant flow](./Assets/oauth_grant_flowchart.png "Oauth grant flow")
+![Oauth grant flow](./Assets/oauth_grant_flowchart.png "Oauth grant flow") Image from [Okta](developer.okta.com)
 
 #### OpenID Connect
 
@@ -268,18 +269,56 @@ OpenID Connect is built on the *OAuth 2.0.* (OAuth is underlying protocol and Op
 
 </br>
 
-There are multiple flows how to obtain token in `OpenId`. You can read more about [under this article](https://darutk.medium.com/diagrams-of-all-the-openid-connect-flows-6968e3990660).
+There are several flows that can be used with `OpenId`. You can read more about them [under this article](https://darutk.medium.com/diagrams-of-all-the-openid-connect-flows-6968e3990660).
 
-Each `OpenId` server by specification provides multiple endpoints to interact with it:
+Each `OpenId` server by specification provides multiple endpoints to interact with.
 
-- `/authorize` - Interact with the resource owner and obtain an authorization grant
-- `/token`- Obtain an access and/or ID token by presenting an authorization grant (code) or refresh token
-- `/revoke` - Revoke an access or refresh token.
-- `/logout` - End the session associated with the given ID token
-- `/userinfo` - Return claims about the authenticated end user.
-- `/keys` -Return public keys used to sign responses.
-- `/.well-known/oauth-authorization-server`	Return OAuth 2.0 metadata related to the specified authorization server.
-- `/.well-known/openid-configuration`	Return OpenID Connect metadata related to the specified authorization server.
+All endpoints URLs can be explored with the **global discovery endpoint**. Often referred to as *disco*. It is available under the path: `/.well-known/openid-configuration` and returns JSON *OpenID Connect* metadata related to the specified authorization server.
+
+Example *disco* response:
+
+```json
+  {
+   "issuer":"https://localhost:5001",
+   "jwks_uri":"https://localhost:5001/.well-known/openid-configuration/jwks",
+   "authorization_endpoint":"https://localhost:5001/connect/authorize",
+   "token_endpoint":"https://localhost:5001/connect/token",
+   "userinfo_endpoint":"https://localhost:5001/connect/userinfo",
+   "end_session_endpoint":"https://localhost:5001/connect/endsession",
+   "check_session_iframe":"https://localhost:5001/connect/checksession",
+   "revocation_endpoint":"https://localhost:5001/connect/revocation",
+   "introspection_endpoint":"https://localhost:5001/connect/introspect",
+   "device_authorization_endpoint":"https://localhost:5001/connect/deviceauthorization",
+   "frontchannel_logout_supported":true,
+   "frontchannel_logout_session_supported":true,
+   "backchannel_logout_supported":true,
+   "backchannel_logout_session_supported":true,
+   "scopes_supported":["profile","openid","email","role", "offline_access" //etc..],
+   "claims_supported":["name","family_name","profile","email", etc..],
+   "grant_types_supported":["authorization_code","client_credentials", "refresh_token", //etc..],
+   "response_types_supported":["code","token", "id_token","id_token token" //etc..],
+   "response_modes_supported":["form_post","query","fragment"],
+   "token_endpoint_auth_methods_supported":["client_secret_basic","client_secret_post" ],
+   "id_token_signing_alg_values_supported":["RS256"],
+   "subject_types_supported":["public" ],
+   "code_challenge_methods_supported":["plain","S256"],
+   "request_parameter_supported":true,
+   "request_object_signing_alg_values_supported":["RS256","RS384" //etc..],
+   "authorization_response_iss_parameter_supported":true
+}
+```
+
+Most important OpenId Endpoints:
+
+- `/authorization_endpoint` - Interact with the resource owner and obtain an authorization grant
+- `/token_endpoint`- Obtain an access and/or ID token by presenting an authorization grant (code) or refresh token
+- `/revocation_endpoint` - Revoke an access or refresh token.
+- `/end_session_endpoint` - End the session associated with the given ID token
+- `/userinfo_endpoint` - Return claims about the authenticated end user.
+
+> &#10240;
+> **NOTE:** All of these values in the discovery endpoint refer to the current server configuration. You can adjust or  enable/disable certain options in your code during idnetityserver configuration.
+> &#10240;
 
 ### Backend for Frontend pattern (BFF)
 
@@ -362,12 +401,27 @@ One of this libs available with full identity and auth handling is [*IndentitySe
 
 **Duende identity server** is framework which implements `OpenId Connect` and `OAuth2` protocols under the `.NetCore` enviroment. It also provides aditional tooling as BFF pattern integration or softly prepared UI interface that you can rewrite to your needs.
 
-
 > &#10240;
->Duende identity server is licensed version of previous *IdentityServer v4* that was by authors moved under new company *Duende* with [corresponding licensing](https://duendesoftware.com/products/isv).
+>Duende identity server is licensed version of previous `IdentityServer v4` that was by authors moved under new company *Duende* with [corresponding licensing](https://duendesoftware.com/products/isv) now, often referred as `IdentityServer v5`.
 >
 >**It is not free** for production **only for development and testing**!
 > &#10240;
+
+If you are a commercial entity, you should probably pay for security. Also, there is an official commitment from Microsoft to keep Duende Identityserver as part of the official templates for .Net6, since it is still open source and the framework does a good job. [.Net6 Authentication Servers](https://devblogs.microsoft.com/aspnet/asp-net-core-6-and-authentication-servers/)
+
+If you want to understand specific reasons why a license should be granted, you can [read this article](https://leastprivilege.com/2020/10/01/the-future-of-identityserver/).
+
+#### Alternatives
+
+I think it's fair to say that there is at least one alternative for the .Net environment:
+
+[Openiddict](https://github.com/openiddict/openiddict-core) is a low-level library that can help you process OpenId and Oauth requests. You can use it to create your own Identity Server, but unlike duende Identityservr, it will not give you a running solution. 
+
+> &#10240;
+> **NOTE:** OpenIddict is not a solution but a framework that requires writing custom code
+> &#10240;
+
+#### Demo architecture
 
 This is identity flow architecture for this demo:
 
@@ -396,6 +450,8 @@ You can read more under official documentation:
 - [Old IdnetityServer v4 documentation](https://identityserver4.readthedocs.io/en/latest/)
 
 </br>
+
+
 
 ### Demo Microservices overview
 
@@ -497,7 +553,7 @@ This packages are required to perform identity on API microservice. Other packag
 
         app.UseRouting(); 
         
-        app.UseIdentityServer();
+        app.UseIdentityServer(); // Enable handling of OpenId Connect and OAuth.
 
         app.UseAuthentication();
 
@@ -525,9 +581,8 @@ We must use UseCors before the UseMvc call then only the CORS middleware will ex
 > &#10240;
 
 `./Src/IdentityServer/API/Configuration/AddCorsConfig.cs`
-<pre style="max-height: 400px; overflow-y:scroll !important">
-<code>
- 
+
+```c#
 public static partial class ServiceExtension {
     public static IServiceCollection AddCorsConfiguration(
     this IServiceCollection serviceCollection,
@@ -570,7 +625,7 @@ public static partial class ServiceExtension {
 
             return new DefaultCorsPolicyService(logger) 
             {
-                    AllowedOrigins = allowed_origins
+                AllowedOrigins = allowed_origins
                 //AllowAll = true
             };
         });
@@ -579,16 +634,14 @@ public static partial class ServiceExtension {
 
     }
 }
-</code>
-</pre>
+```
 
 </br>
 
 ###### AddAppIdentityDbContext
 
 `./Src/IdentityServer/API/Configuration/AddDbContext.cs`
-<pre style="max-height: 400px; overflow-y:scroll !important">
-<code>
+```c#
 
 public static IServiceCollection AddAppIdentityDbContext(
     this IServiceCollection serviceCollection,
@@ -596,7 +649,7 @@ public static IServiceCollection AddAppIdentityDbContext(
 
     serviceCollection.AddDbContext<AppIdnetityDbContext>(option => {
 
-        option.UseNpgsql(Configuration["ConnectionStrings:AppDBConnection"], opt => {
+        option.UseNpgsql(Configuration["ConnectionStrings:AppIdnetityDbContext"], opt => {
             opt.EnableRetryOnFailure();
         });
 
@@ -611,55 +664,53 @@ public static IServiceCollection AddAppIdentityDbContext(
     return serviceCollection;
 
 }
-</code>
-</pre>
+```
+
 </br>
 
 ###### AddIdentityServer
 
  `./Src/IdentityServer/API/Configuration/AddIdentityServer.cs`
-<pre style="max-height: 400px; overflow-y:scroll !important">
-<code>
-
+```c#
  public static IServiceCollection AddIdentityServer(
     this IServiceCollection serviceCollection,
     IConfiguration Configuration,
     IWebHostEnvironment Environment) {
 
-    // app user 
-    serviceCollection.AddIdentity<ApplicationUser, IdentityRole>(options => {
-        options.Password.RequireDigit = false;
-        options.Password.RequiredLength = 6;
-        options.Password.RequireNonAlphanumeric = false;
-        options.Password.RequireUppercase = false;
-        options.Password.RequireLowercase = false;
-    }).AddEntityFrameworkStores<AppIdnetityDbContext>()
-    .AddDefaultTokenProviders();
+        // app user 
+        serviceCollection.AddIdentity<ApplicationUser, IdentityRole>(options => {
+            options.Password.RequireDigit = false;
+            options.Password.RequiredLength = 6;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireUppercase = false;
+            options.Password.RequireLowercase = false;
+        }).AddEntityFrameworkStores<AppIdnetityDbContext>()
+        .AddDefaultTokenProviders();
 
-    var identityServerBuilder = serviceCollection.AddIdentityServer(options => options.KeyManagement.Enabled = true);
-    
-    if (Environment.IsDevelopment()) {
-        identityServerBuilder.AddDeveloperSigningCredential();
-    }
+        var identityServerBuilder = serviceCollection.AddIdentityServer(options => options.KeyManagement.Enabled = true);
+        
+        if (Environment.IsDevelopment()) {
+            identityServerBuilder.AddDeveloperSigningCredential();
+        }
 
-    // codes, tokens, consents
-    identityServerBuilder.AddOperationalStore<AppPersistedGrantDbContext>(options =>
-        options.ConfigureDbContext = builder =>
-            builder.UseNpgsql(Configuration["ConnectionStrings:AppDBConnection"]));
-            
-    // clients, resources
-    identityServerBuilder.AddConfigurationStore<AppConfigurationDbContext>(options =>
-        options.ConfigureDbContext = builder =>
-            builder.UseNpgsql(Configuration["ConnectionStrings:AppDBConnection"]));
+        // codes, tokens, consents
+        identityServerBuilder.AddOperationalStore<AppPersistedGrantDbContext>(options =>
+            options.ConfigureDbContext = builder =>
+                builder.UseNpgsql(Configuration["ConnectionStrings:AppIdnetityDbContext"]));
+                
+        // clients, resources
+        identityServerBuilder.AddConfigurationStore<AppConfigurationDbContext>(options =>
+            options.ConfigureDbContext = builder =>
+                builder.UseNpgsql(Configuration["ConnectionStrings:AppIdnetityDbContext"]))
+                .AddInMemoryCaching();
 
-    identityServerBuilder.AddAspNetIdentity<ApplicationUser>();
-    // serviceCollection.AddScoped<UserManager<ApplicationUser>, UserManager<ApplicationUser>>();
-    
-    return serviceCollection;
+        identityServerBuilder.AddAspNetIdentity<ApplicationUser>();
+        
+        return serviceCollection;
     }
 }
-</code>
-</pre>
+```
+
 ###### Data Stores
 IdentityServer requires to define data stores. This stores can be presised in Database or just loaded in-memory from hardcoded configuration.
 
@@ -682,8 +733,9 @@ This Demo use EntityFramework implementation of:
 To read more about StoreConfiguration please fllow offical documentation: [Using EntityFramework Core for configuration and operational data](https://docs.duendesoftware.com/identityserver/v5/quickstarts/4_ef/)
 
 Configuration store presist:
- - Clients - Applications that can request tokens from your IdentityServer.
- ```
+ - Clients - Applications that can request tokens from your IdentityServerusing.
+
+ ```c#
     new Client
     {
         ClientId = "spa",
@@ -693,10 +745,14 @@ Configuration store presist:
 
         RedirectUris = { "https://localhost:5015/signin-oidc" },
         
-        FrontChannelLogoutUri = "https://localhost:5002/signout-oidc",
         BackChannelLogoutUri = "https://localhost:5015/bff/backchannel",
         
         PostLogoutRedirectUris = { "https://localhost:5015/signout-callback-oidc" },
+
+        AllowedCorsOrigins = new List<string>
+        {
+            "http://localhost:3000", "http://localhost:5001",
+        },
 
         AllowOfflineAccess = true,
         AllowedScopes = { "openid", "profile", "api" }
@@ -704,10 +760,10 @@ Configuration store presist:
  ```
 
 ###### User object:
-With *NetCore* whe normally use its Identity to define `User` object. This is part of `Microsoft Identity`. IdentityServer extends this and build aditional layers around and is able to manage `User` related tasks as emit claims into tokens.
+With *NetCore* whe normally use its Identity to define `User` object. This is part of `Microsoft Identity`. IdentityServer extends this and build aditional layers around and is able to use `User` to emit claims into tokens.
 
 class `ApplicationUser` can than contains any aditional user data.
-```
+```c#
 serviceCollection.AddIdentity<ApplicationUser, IdentityRole>(options => {
     // options cfg.
     }).AddEntityFrameworkStores<AppIdnetityDbContext>()
@@ -715,6 +771,9 @@ serviceCollection.AddIdentity<ApplicationUser, IdentityRole>(options => {
 
 serviceCollection.AddIdentityServer().AddAspNetIdentity<ApplicationUser>();
 ```
+
+Idnetyty servers do not provide user management by default. Some implementations extend these services to handle this under the protected API endpoint, others use a separate service to manage this and keep the idnetity server to only issue tokens and access.
+
 </br>
 
 ##### Dummy initial data
@@ -726,7 +785,7 @@ All dummy test data are available uder class `Src/IdentityServer/API/Config.cs`.
 > &#10240;
 
 Identity resources example:
-```
+```c#
 return new[] {
     new IdentityResources.OpenId(),
     new IdentityResources.Profile(),
@@ -740,27 +799,41 @@ return new[] {
 ```
 
 Api resource example:
-```
+```c#
 new[]
 {
-    new ApiResource{
+    new ApiResource
+    {
         Name = "api",
         DisplayName = "API #1",
         Description = "Allow the application to access API",
         Scopes = new List<string> {"api.read", "api.write"},
         ApiSecrets = new List<Secret> {new Secret("ScopeSecret".Sha256())}, // change me!
-        UserClaims = new List<string> {"role"}
+        UserClaims = new List<string> {
+            JwtClaimTypes.Name,
+            JwtClaimTypes.Role,
+            JwtClaimTypes.Email,
+            JwtClaimTypes.ClientId,
+            JwtClaimTypes.SessionId
+        }
+        
     }
 };
 ```
 
 Api scope example:
-```
+```c#
 new ApiScope[]{
-    new ApiScope("api", new[] { "name" }),
-    
+    new ApiScope("api", new[] { 
+        JwtClaimTypes.Name,
+        JwtClaimTypes.Role,
+        JwtClaimTypes.Email,
+        JwtClaimTypes.ClientId,
+        JwtClaimTypes.SessionId
+        }),
 };
 ```
+
 </br>
 
 ##### Setup migrations
@@ -785,7 +858,7 @@ Also make sure your database exist. Demo use separate database under main server
 
 Connestion string shoud be awailable under `appsettings.json`
 
-```  
+```c#
 "ConnectionStrings": {
   "AppDBConnection": "Host=localhost;Port=6543;Database=IndetityDB;Username=postgres;Password=postgres",
 }
@@ -801,7 +874,7 @@ Migrations for demo are pre-created and sits in folder: `Src/IdentityServer/Pers
 
 They was created using following command:
 
-```
+```sh
 dotnet ef migrations add Init_ConfigurationDbContext -c AppConfigurationDbContext
 dotnet ef migrations add Init_PersistedGrantDbContext -c AppPersistedGrantDbContext
 dotnet ef migrations add Init_PersistedGrantDbContext -c AppIdnetityDbContext
@@ -812,7 +885,7 @@ dotnet ef migrations add Init_PersistedGrantDbContext -c AppIdnetityDbContext
 To fill your empty database with new migrations please follow this steps:
 
 Go to dirrectory: `Src/IdentityServer/Persistence` and run following commands:
-```
+```sh
  dotnet ef database update --context AppConfigurationDbContext
  dotnet ef database update --context AppPersistedGrantDbContext
  dotnet ef database update --context AppIdnetityDbContext
@@ -823,13 +896,74 @@ Go to dirrectory: `Src/IdentityServer/Persistence` and run following commands:
 
 Navigae to `Src/IdentityServer/API` and run `dotnet watch run` ensure the database and elasticsearch are running. (if not proper exception will be thrown that connection is not established).
 
-Demo identityServer runs on `https://localhost:5001`
+This demo identityServer runs on `https://localhost:5001`
 
-You can display openid configuration detail under url:
+You can view the openid configuration at ***discovery endpoint url**. As a result, you get a JSON listing of the OpenID/OAuth endpoints, the scopes and claims supported, the public keys used to sign the tokens, and other details
 
 `https://localhost:5001/.well-known/openid-configuration`
 
 ```json
+  {
+   "issuer":"https://localhost:5001",
+   "jwks_uri":"https://localhost:5001/.well-known/openid-configuration/jwks",
+   "authorization_endpoint":"https://localhost:5001/connect/authorize",
+   "token_endpoint":"https://localhost:5001/connect/token",
+   "userinfo_endpoint":"https://localhost:5001/connect/userinfo",
+   "end_session_endpoint":"https://localhost:5001/connect/endsession",
+   "check_session_iframe":"https://localhost:5001/connect/checksession",
+   "revocation_endpoint":"https://localhost:5001/connect/revocation",
+   "introspection_endpoint":"https://localhost:5001/connect/introspect",
+   "device_authorization_endpoint":"https://localhost:5001/connect/deviceauthorization",
+   "frontchannel_logout_supported":true,
+   "frontchannel_logout_session_supported":true,
+   "backchannel_logout_supported":true,
+   "backchannel_logout_session_supported":true,
+   "scopes_supported":[
+      "profile",
+      "openid",
+      "email",
+      "role",
+      "api",
+      "offline_access"
+   ],
+   "claims_supported":[
+      "zoneinfo",
+      "updated_at",
+      "locale",
+      "name",
+      "family_name",
+      "given_name",
+      "middle_name",
+      "nickname",
+      "preferred_username",
+      "profile",
+      "picture",
+      "website",
+      "gender",
+      "birthdate",
+      "sub",
+      "email",
+      "email_verified",
+      "role",
+      "sid",
+      "client_id"
+   ],
+   "grant_types_supported":[
+      "authorization_code",
+      "client_credentials",
+      "refresh_token",
+      "implicit",
+      "password",
+      "urn:ietf:params:oauth:grant-type:device_code"
+   ],
+   "response_types_supported":[
+      "code",
+      "token",
+      "id_token",
+      "id_token token",
+      "code id_token",
+      "code token",
+      "code id_token token"
    ],
    "response_modes_supported":[
       "form_post",
@@ -899,19 +1033,23 @@ public void ConfigureServices(IServiceCollection services){
     services.AddControllersWithViews();
 
     // In production, the React files will be served from this directory
-    services.AddSpaStaticFiles(configuration =>
-    {
+    services.AddSpaStaticFiles(configuration => {
         configuration.RootPath = "ClientApp/build";
     });
 
     // Add BFF services to DI - also add server-side session management
-    services.AddBff(options =>
+    serviceCollection.AddBff(options =>
     {
+        options.ForwardedHeaders = new HashSet<string>() {
+            CustomProxyHttpMessageInvoker.CorrelationContextHeaderName,
+            CustomProxyHttpMessageInvoker.TraceParentHeaderName,
+            CustomProxyHttpMessageInvoker.TraceStateHeaderName,
+            CustomProxyHttpMessageInvoker.RequestIdHeaderName
+        };
         options.AntiForgeryHeaderValue = "1";
         options.AntiForgeryHeaderName = "X-CSRF";
         options.ManagementBasePath = "/system";
-    })
-    .AddServerSideSessions();
+    }).AddServerSideSessions();
 
     services.AddIdentityConfiguration();
 
@@ -993,9 +1131,7 @@ This method define that authentication mechanism for frontend will use cookie wi
 > &#10240;
 
 `./Src/APIServer/API/Configuration/AddIdentityConfiguration.cs`
-<pre style="max-height: 400px; overflow-y:scroll !important">
-<code>
- 
+```c# 
  public static partial class ServiceExtension {
     public static IServiceCollection AddIdentityConfiguration(
     this IServiceCollection serviceCollection) {
@@ -1046,8 +1182,7 @@ This method define that authentication mechanism for frontend will use cookie wi
         return serviceCollection;
     }
 }
-</code>
-</pre>
+```
 
 </br>
 
@@ -1058,7 +1193,7 @@ This method define that authentication mechanism for frontend will use cookie wi
 
 Example fetch function from Frontend React app to BFF
 
-```
+```json
 return fetch(`${BASE_SERVER_URL}/${GQL_ENDPOINT}`, {
     credentials: "include",
     method: "POST",
@@ -1087,7 +1222,7 @@ return fetch(`${BASE_SERVER_URL}/${GQL_ENDPOINT}`, {
 
 **ManagementBasePath** defines frontend endpoints used to comunicate with identityserver. Frontend client use this to perform identity tasks as Login or logout as example: `https://frontendurl/system/login` or  `https://frontendurl/system/logout` etc..
 
-```
+```c#
 services.AddBff(options =>
 {
     options.AntiForgeryHeaderValue = "1";
@@ -1193,7 +1328,7 @@ Run: `dotnet watch run`
 
 </br>
 
-#### Idnetity server UI interface:
+#### Idnetity server UI interface
 
 
 Endpoint `https://localhost:5001/Account/Login`
@@ -1333,3 +1468,97 @@ Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext 
 Microsoft.AspNetCore.Builder.Extensions.MapWhenMiddleware.Invoke(HttpContext context)
 Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
 ```
+</br>
+
+## Authentication machine-to-machine using Client Credentials flow
+
+Client Credentials flow is the simplest and most direct form of authentication. It is recommended for server-side machine-to-machine communication where no users are involved and `acces_token` can be stored securely.
+
+For example, we can think of a client as a machine. The client makes the first call with the correct  `ClientId` and `Secret`. This is the minimum needed to get an `access_token` directly fromthe IdentityServer. 
+
+![Client credential flow](./Assets/credential_flow.png "Client credential flow")
+
+This flow is also often used by the application itself to avoid calls between services, the creation of a specific user to authenticate. So it can be interpreted as a deamon or Internall Agent.
+
+**Flow step:**
+
+1) The client (App) which wanna access makes a call to the token server and request `access_token` with its `clientId` and `Secret`.
+    - The token server validates the `clientId` and `Secret`.
+2) The token server returns an `access_token` with optional details about the scopes and expiryTime
+3) The client (APP) passes the `access_token` it has just obtained in an Authorization header when making a request for the protected resource.
+    - The API picks up the `access_token` passed in the Header and validates it.
+4) If the validation is success, the API allows the request to access its resource, else returns a 401 UnAuthorized response.
+
+> &#10240;
+> **NOTE:** This flow require that `access_tokens` are stored safe and in this case `machine` prottects it well. 
+> &#10240;
+
+Identity server `Client credential flow` client definition:
+
+```c#
+new Client
+{
+    ClientId = "machine",
+
+    ClientSecrets = { new Secret("secret".Sha256())},
+
+    ClientName = "Some machine or server using clinet credentials",
+
+    AllowedGrantTypes = GrantTypes.ClientCredentials,
+
+    AllowedScopes = { "api" }
+}
+```
+
+> &#10240;
+> **NOTE:** The client credentials flow never has a user context, so you can not request OpenID scopes.
+> &#10240;
+
+### Using IdentityModel 
+
+To interact with *IdetityServer* from custom clients and applications, you can use the [IdentityModel](https://github.com/IdentityModel/IdentityModel) lib. It is maintained by the same authors as duende *IdentityServer* and helps you interact with *OpenId Connect* and *Oauth* endpoints.
+
+#### Most common
+
+This are minimal APIs to help you:
+
+##### Handle Discovery endpoint
+
+`GetDiscoveryDocumentAsync(...)` helps you process requests to the identity server discovery endpoint, where the server publishes its metadata.
+
+```c#
+    var client = new HttpClient();
+    string authority = "https://localhost:5001/"
+    var disco = await client.GetDiscoveryDocumentAsync(authority);
+    if (disco.IsError){
+         /* Handle error */ 
+        System.Console.WriteLine(disco.Error);
+    }
+```
+
+##### Handle Token endpoint
+
+`RequestClientCredentialsTokenAsync(...)` helps you request tokens from the token endpoint of a concrete server.
+
+```c#
+var client = new HttpClient();
+var response = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+{
+    Address = "https://localhost:5001/connect/token",
+
+    ClientId = "client",
+    ClientSecret = "secret",
+    Scope = "api1"
+});
+```
+
+#### IdentityModel for workers and web
+
+The above APIs can help with direct interaction with *IdentityServer*. They are low-level and not very comprehensive and if you are developing an application, you will need to control the whole process as checking if the `access_token` has not expired etc..
+
+This library should help you with:
+- automatic renew of expired access tokens
+- caching abstraction for access tokens 
+- token lifetime automation for HttpClient
+
+

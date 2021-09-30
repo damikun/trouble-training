@@ -9,7 +9,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using APIServer.Domain.Core.Models.WebHooks;
 using APIServer.Persistence;
-using Shared.Aplication.Core.Commands;
+using SharedCore.Aplication.Core.Commands;
 
 namespace APIServer.Aplication.Commands.Internall.Hooks {
 

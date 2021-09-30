@@ -3,7 +3,7 @@ using HotChocolate.Types;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using APIServer.Aplication.GraphQL.DTO;
-using Shared.Aplication.Interfaces;
+using SharedCore.Aplication.Interfaces;
 
 namespace APIServer.Aplication.GraphQL.Queries {
     

@@ -5,9 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using APIServer.Extensions;
 using APIServer.Aplication.Shared.Behaviours;
 using APIServer.Aplication.Commands.WebHooks;
-using  APIServer.Aplication.Commands.Internall.Hooks;
+using APIServer.Aplication.Commands.Internall.Hooks;
 using APIServer.Domain.Core.Models.Events;
-using APIServer.Aplication.WebHooks;
 
 namespace APIServer.Configuration {
     public static partial class ServiceExtension {

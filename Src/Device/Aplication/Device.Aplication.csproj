@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.9" />
+
+    <PackageReference Include="HotChocolate.AspNetCore" Version="12.0.0" />
+    <PackageReference Include="HotChocolate" Version="12.0.0" />
+    <PackageReference Include="HotChocolate.Data" Version=" 12.0.0" />
+
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.9" />
+
+    <PackageReference Include="FluentValidation" Version="10.3.3" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.3" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
+    <PackageReference Include="MediatR" Version="9.0.0" />
+    
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../Device/Domain/Device.Domain.csproj" />
+
+    <ProjectReference Include="../../Shared/Domain/Shared.Domain.csproj" />
+    <ProjectReference Include="../../Shared/Aplication/Shared.Aplication.csproj" />
+    <ProjectReference Include="../../Shared/Api/Shared.Api.csproj" />
+  </ItemGroup>
+</Project>

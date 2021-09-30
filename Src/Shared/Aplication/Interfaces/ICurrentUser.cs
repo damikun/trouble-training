@@ -1,7 +1,7 @@
 using System;
 using System.Security.Claims;
 
-namespace Shared.Aplication.Interfaces {
+namespace SharedCore.Aplication.Interfaces {
 
     /// <summary>
     /// Current user provider

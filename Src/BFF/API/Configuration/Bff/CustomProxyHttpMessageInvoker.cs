@@ -10,10 +10,10 @@ namespace BFF.Configuration {
 
     public class CustomProxyHttpMessageInvoker : HttpMessageInvoker{
             
-        private const string RequestIdHeaderName = "Request-Id";
-        private const string CorrelationContextHeaderName = "Correlation-Context";
-        private const string TraceParentHeaderName = "traceparent";
-        private const string TraceStateHeaderName = "tracestate";
+        public const string RequestIdHeaderName = "Request-Id";
+        public const string CorrelationContextHeaderName = "Correlation-Context";
+        public const string TraceParentHeaderName = "traceparent";
+        public const string TraceStateHeaderName = "tracestate";
 
         public CustomProxyHttpMessageInvoker(HttpMessageHandler handler):base(handler){
 

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Serilog;
 using System.Net.Http;
 using System.Diagnostics;
-using Shared.Aplication.Interfaces;
+using SharedCore.Aplication.Interfaces;
 using APIServer.Domain.Core.Models.Events;
 using APIServer.Aplication.Commands.Internall.Hooks;
 using APIServer.Aplication.WebHooks;

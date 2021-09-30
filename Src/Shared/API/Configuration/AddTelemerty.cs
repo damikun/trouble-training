@@ -5,7 +5,7 @@ using OpenTelemetry.Trace;
 using OpenTelemetry.Resources;
 using System;
 
-namespace Shared.Configuration {
+namespace SharedCore.Configuration {
     public static partial class ServiceExtension {
 
         public static IServiceCollection AddTelemerty(

@@ -14,22 +14,14 @@ namespace IdentityServer.API
             {
                 new Client
                 {
-                    ClientId = "oauthClient",
-                    ClientName = "Example client application using client credentials",
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    ClientSecrets = new List<Secret> {new Secret("SuperSecretPassword".Sha256())}, // change me!
-                    AllowedScopes = new List<string> {"api"}
-                },
-                new Client
-                {
                     ClientId = "spa",
+
                     ClientSecrets = { new Secret("secret".Sha256()) },
                     
                     AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
 
                     RedirectUris = { "https://localhost:5015/signin-oidc" },
                     
-                    //FrontChannelLogoutUri = "https://localhost:5002/signout-oidc",
                     BackChannelLogoutUri = "https://localhost:5015/bff/backchannel",
                     
                     PostLogoutRedirectUris = { "https://localhost:5015/signout-callback-oidc" },
@@ -40,7 +32,20 @@ namespace IdentityServer.API
                     },
 
                     AllowOfflineAccess = true,
+
                     AllowedScopes = { "openid", "profile", "api" }
+                },
+                new Client
+                {
+                    ClientId = "device",
+
+                    ClientSecrets = { new Secret("secret".Sha256())},
+
+                    ClientName = "Some machine or server using clinet credentials",
+
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+
+                    AllowedScopes = { "api" },
                 }
             };
         }
@@ -111,7 +116,7 @@ namespace IdentityServer.API
                 {
                     SubjectId = "5BE86359-073C-434B-AD2D-A3932222DABE",
                     Username = "testuser",
-                    Password = "testuser", //TroubleUser123!
+                    Password = "testuser",
                     Claims = new List<Claim>
                     {
                         new Claim(JwtClaimTypes.Email, "dalo@trouble.com"),
@@ -123,4 +128,5 @@ namespace IdentityServer.API
             };
         }
     }
+
 }

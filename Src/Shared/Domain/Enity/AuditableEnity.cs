@@ -1,6 +1,6 @@
 using System;
 
-namespace Shared.Domain.Models {
+namespace SharedCore.Domain.Models {
     
     public abstract class AuditableEntity
     {

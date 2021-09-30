@@ -3,10 +3,10 @@ using MediatR;
 using Serilog;
 using System.Threading;
 using APIServer.Domain;
-using Aplication.Payload;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Shared.Aplication.Interfaces;
+using SharedCore.Aplication.Interfaces;
+using Aplication.Payload;
 
 namespace APIServer.Aplication.Shared.Behaviours {
 
@@ -41,10 +41,10 @@ namespace APIServer.Aplication.Shared.Behaviours {
 
                 ex.Data.Add("command_failed",true);
                 
-                Common.SetOtelError(ex?.ToString(),_logger);
+                SharedCore.Aplication.Shared.Common.SetOtelError(ex?.ToString(),_logger);
 
                 // In case it is Mutation Response Payload = handled as payload error union
-                if (Common.IsSubclassOfRawGeneric(typeof(BasePayload<,>), typeof(TResponse))) {
+                if (SharedCore.Aplication.Shared.Common.IsSubclassOfRawGeneric(typeof(BasePayload<,>), typeof(TResponse))) {
                     return Common.HandleBaseCommandException<TResponse>(ex);
                 } else {
                     throw ex;

@@ -9,12 +9,12 @@ using FluentValidation;
 using Serilog;
 using FluentValidation.Results;
 using System.Diagnostics;
-using Shared.Aplication.Interfaces;
+using SharedCore.Aplication.Interfaces;
 using APIServer.Domain;
 using APIServer.Aplication.Shared.Errors;
+using SharedCore.Aplication.Shared.Attributes;
+using SharedCore.Aplication.Shared.Exceptions;
 using Aplication.Payload;
-using Aplication.Shared.Attributes;
-using APIServer.Aplication.Shared.Exceptions;
 
 namespace APIServer.Aplication.Shared.Behaviours {
 
@@ -109,10 +109,10 @@ namespace APIServer.Aplication.Shared.Behaviours {
                         }
                     }
                 } catch (Exception ex) {
-                    Common.CheckAndSetOtelExceptionError(ex,_logger);
+                    SharedCore.Aplication.Shared.Common.CheckAndSetOtelExceptionError(ex,_logger);
 
                     // In case it is Mutation Response Payload = handled as payload error union
-                    if (Common.IsSubclassOfRawGeneric(typeof(BasePayload<,>), typeof(TResponse))) {
+                    if (SharedCore.Aplication.Shared.Common.IsSubclassOfRawGeneric(typeof(BasePayload<,>), typeof(TResponse))) {
                         return Common.HandleBaseCommandException<TResponse>(ex);
                     } else {
                         throw ex;
@@ -130,7 +130,7 @@ namespace APIServer.Aplication.Shared.Behaviours {
         private static TResponse HandleUnAuthorised(object error_obj) {
 
             // In case it is Mutation Response Payload = handled as payload error union
-            if (Common.IsSubclassOfRawGeneric(typeof(BasePayload<,>), typeof(TResponse))) {
+            if (SharedCore.Aplication.Shared.Common.IsSubclassOfRawGeneric(typeof(BasePayload<,>), typeof(TResponse))) {
                 IBasePayload payload = ((IBasePayload)Activator.CreateInstance<TResponse>());
 
                 if (error_obj is ValidationFailure[]) {

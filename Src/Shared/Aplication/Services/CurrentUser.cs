@@ -1,12 +1,12 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Shared.Aplication.Interfaces;
-using Shared.Aplication.Extensions;
+using SharedCore.Aplication.Interfaces;
+using SharedCore.Aplication.Extensions;
 using System;
 using System.Linq;
 
-namespace Shared.Aplication.Services {
+namespace SharedCore.Aplication.Services {
 
     /// <summary>DI object of current user ID Resolver</summary>
     public class CurrentUser : ICurrentUser {

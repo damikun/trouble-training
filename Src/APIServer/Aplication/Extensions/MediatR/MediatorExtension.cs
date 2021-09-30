@@ -1,5 +1,5 @@
 using APIServer.Domain;
-using Shared.Aplication.Core.Commands;
+using SharedCore.Aplication.Core.Commands;
 using System;
 using System.Diagnostics;
 

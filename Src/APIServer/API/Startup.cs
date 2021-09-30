@@ -12,8 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Shared.Aplication.Interfaces;
-using Shared.Aplication.Services;
+using SharedCore.Aplication.Interfaces;
+using SharedCore.Aplication.Services;
 
 namespace APIServer
 {

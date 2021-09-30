@@ -54,6 +54,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../../BFF/Domain/BFF.Domain.csproj" />
+    <ProjectReference Include="../../Shared/Aplication/Shared.Aplication.csproj" />
   </ItemGroup>
 
 
