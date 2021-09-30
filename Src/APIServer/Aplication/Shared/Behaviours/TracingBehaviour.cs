@@ -7,7 +7,7 @@ using APIServer.Domain;
 using System.Diagnostics;
 using SharedCore.Aplication.Interfaces;
 using SharedCore.Aplication.Core.Commands;
-using Aplication.Payload;
+using SharedCore.Aplication.Payload;
 
 namespace APIServer.Aplication.Shared.Behaviours {
 

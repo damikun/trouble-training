@@ -14,7 +14,7 @@ using SharedCore.Aplication.Shared.Attributes;
 using Device.Domain;
 using Device.Aplication.Shared.Errors;
 using SharedCore.Aplication.Shared.Exceptions;
-using Device.Aplication.Shared.Payload;
+using SharedCore.Aplication.Payload;
 
 namespace Device.Aplication.Shared.Behaviours {
 

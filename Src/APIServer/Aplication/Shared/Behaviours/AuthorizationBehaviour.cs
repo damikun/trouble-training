@@ -14,7 +14,7 @@ using APIServer.Domain;
 using APIServer.Aplication.Shared.Errors;
 using SharedCore.Aplication.Shared.Attributes;
 using SharedCore.Aplication.Shared.Exceptions;
-using Aplication.Payload;
+using SharedCore.Aplication.Payload;
 
 namespace APIServer.Aplication.Shared.Behaviours {
 

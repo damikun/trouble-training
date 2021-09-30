@@ -4,7 +4,7 @@
 
 using System;
 using Device.Aplication.Shared.Errors;
-using Device.Aplication.Shared.Payload;
+using SharedCore.Aplication.Payload;
 
 namespace Device.Aplication.Shared { 
 

@@ -11,7 +11,7 @@ using System.Diagnostics;
 using SharedCore.Aplication.Interfaces;
 using APIServer.Domain;
 using APIServer.Aplication.Shared.Errors;
-using Aplication.Payload;
+using SharedCore.Aplication.Payload;
 
 namespace APIServer.Aplication.Shared.Behaviours {
 

@@ -10,7 +10,7 @@ using APIServer.Persistence;
 using APIServer.Domain.Core.Models.WebHooks;
 using SharedCore.Aplication.Interfaces;
 using APIServer.Aplication.Shared.Errors;
-using Aplication.Payload;
+using SharedCore.Aplication.Payload;
 
 namespace APIServer.Aplication.Commands.WebHooks {
 

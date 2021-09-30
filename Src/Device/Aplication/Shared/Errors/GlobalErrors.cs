@@ -1,13 +1,9 @@
 using Device.Aplication.Commands.Test;
-using Device.Aplication.Interfaces;
+using SharedCore.Aplication.GraphQL.Errors;
 
 namespace Device.Aplication.Shared.Errors {
 
-    public class BaseError : IBaseError {
-        public string message { get; set; }
-    }
-
-    public class UnAuthorised : BaseError, IHit_Endpoint_AuthorisedError {
+    public class UnAuthorised : BaseError, ITrigger_AuthorisedError, ITrigger_UnAuthorisedError {
         public UnAuthorised() {
             this.message = "Unauthorised to process or access resource";
         }
@@ -23,7 +19,7 @@ namespace Device.Aplication.Shared.Errors {
         }
     }
 
-    public class InternalServerError : BaseError, IHit_Endpoint_AuthorisedError {
+    public class InternalServerError : BaseError, ITrigger_AuthorisedError, ITrigger_UnAuthorisedError {
 
         public InternalServerError() {
             this.message = "Internal server error";
@@ -34,7 +30,7 @@ namespace Device.Aplication.Shared.Errors {
         }
     }
 
-    public class ValidationError : BaseError, IHit_Endpoint_AuthorisedError {
+    public class ValidationError : BaseError, ITrigger_AuthorisedError, ITrigger_UnAuthorisedError {
         public ValidationError() {
             this.message = "Some parameter/s are invalid or null";
         }

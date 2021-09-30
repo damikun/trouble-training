@@ -27,9 +27,9 @@ function fetchQuery(
 
     body: JSON.stringify({
       id: operation.id, // NOTE: pass md5 hash to the server
-      // query: operation.text, // this is now obsolete because text is null
+      query: operation.text, // this is now obsolete because text is null
       variables,
-      // operationName: operation.name,
+      operationName: operation.name,
     }),
   })
     .then((response) => {

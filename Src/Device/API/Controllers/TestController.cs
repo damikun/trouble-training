@@ -27,7 +27,7 @@ namespace Device.Controllers {
         [HttpPost]
         public async Task<IActionResult> Test() {
 
-            await _mediator.Send(new Hit_Endpoint_Authorised());
+            await _mediator.Send(new Trigger_Authorised());
          
             return Ok();
 

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using HotChocolate;
 
-namespace Aplication.Payload  {
+namespace SharedCore.Aplication.Payload  {
 
     public interface IBasePayload {
 

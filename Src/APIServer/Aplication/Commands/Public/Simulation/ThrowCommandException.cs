@@ -4,7 +4,7 @@ using FluentValidation;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using APIServer.Persistence;
-using Aplication.Payload;
+using SharedCore.Aplication.Payload;
 
 namespace APIServer.Aplication.Commands.WebHooks {
 

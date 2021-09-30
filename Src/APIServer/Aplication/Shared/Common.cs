@@ -4,7 +4,7 @@
 
 using System;
 using APIServer.Aplication.Shared.Errors;
-using Aplication.Payload;
+using SharedCore.Aplication.Payload;
 
 namespace APIServer.Aplication.Shared {
 

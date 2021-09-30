@@ -11,6 +11,7 @@ using Device.Configuration;
 using Microsoft.OpenApi.Models;
 using SharedCore.Aplication.Interfaces;
 using SharedCore.Aplication.Services;
+using HotChocolate.AspNetCore;
 
 namespace Device
 {    
@@ -48,6 +49,8 @@ namespace Device
             services.AddMediatR();
 
             services.AddHealthChecks();
+            
+            services.AddGraphql(Environment);
 
             services.AddTokenManagment();
             
@@ -90,7 +93,12 @@ namespace Device
                 // local APIs
                 endpoints.MapControllers();
 
-                
+                endpoints.MapGraphQL()
+                .WithOptions(new GraphQLServerOptions {
+                    EnableSchemaRequests = env.IsDevelopment(),
+                    Tool = { Enable = env.IsDevelopment() },
+                });
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");

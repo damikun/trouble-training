@@ -14,7 +14,7 @@ using APIServer.Aplication.Shared;
 using APIServer.Aplication.Notifications.WebHooks;
 using APIServer.Aplication.Shared.Behaviours;
 using SharedCore.Aplication.Shared.Attributes;
-using Aplication.Payload;
+using SharedCore.Aplication.Payload;
 
 namespace APIServer.Aplication.Commands.WebHooks {
 

@@ -12,7 +12,7 @@ using APIServer.Aplication.Shared.Errors;
 using APIServer.Aplication.Notifications.WebHooks;
 using APIServer.Extensions;
 using System.Diagnostics;
-using Aplication.Payload;
+using SharedCore.Aplication.Payload;
 
 namespace APIServer.Aplication.Commands.WebHooks {
 

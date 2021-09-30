@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace APIServer.Controllers {
 
-    [AllowAnonymous]
+    [Authorize]
     public class TestAuthController : BaseController {
 
         private readonly ILogger<HookController> _logger;

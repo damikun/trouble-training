@@ -9,9 +9,9 @@ namespace Device.Configuration {
     public static partial class ServiceExtension {
         public static IServiceCollection AddMediatR(this IServiceCollection services) {
 
-            services.AddMediatR(typeof(Hit_Endpoint_Authorised).GetTypeInfo().Assembly);
+            services.AddMediatR(typeof(Trigger_Authorised).GetTypeInfo().Assembly);
 
-            services.AddValidatorsFromAssembly(typeof(Hit_Endpoint_AuthorisedValidator).GetTypeInfo().Assembly);
+            services.AddValidatorsFromAssembly(typeof(Trigger_AuthorisedValidator).GetTypeInfo().Assembly);
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TracingBehaviour<,>));
 

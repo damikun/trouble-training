@@ -7,7 +7,7 @@ using System.Diagnostics;
 using SharedCore.Aplication.Interfaces;
 using SharedCore.Aplication.Core.Commands;
 using Device.Domain;
-using Device.Aplication.Shared.Payload;
+using SharedCore.Aplication.Payload;
 
 namespace Device.Aplication.Shared.Behaviours {
 
