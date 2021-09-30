@@ -29,6 +29,7 @@
 - [BFF](https://github.com/damikun/trouble-training/tree/main/Src/BFF) - Is Backend for Frontend pattern
   - [Frontend React](https://github.com/damikun/trouble-training/tree/main/Src/BFF/API/ClientApp) - This also contains Frontend React app served using static files
 - [IdentityServer](https://github.com/damikun/trouble-training/tree/main/Src/IdentityServer) - Idetity server service for providing `OpenId Connect` and `OAuth2.0`
+- [Device](https://github.com/damikun/trouble-training/blob/main/Doc/Identity.md#authentication-machine-to-machine-using-client-credentials-flow) - Machine-to-machine comunucation using clinet credentials for external apps/devices
 
 ### Integration steps:
 

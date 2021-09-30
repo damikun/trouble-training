@@ -22,6 +22,8 @@
         - [BBF cookies termination and token isolation](#bbf-cookies-termination-and-token-isolation)
 - [Implementing indentity in .NetCore](#implementing-indentity-in-netcore)
     - [Duende IndentityServer](#duende-indentityserver)
+        - [Alternatives](#alternatives)
+        - [Demo architecture](#demo-architecture)
     - [Demo Microservices overview](#demo-microservices-overview)
         - [IdentityServer project configuration](#identityserver-project-configuration)
             - [Nuget Packages:](#nuget-packages)
@@ -48,10 +50,18 @@
                 - [Idnetityserver](#idnetityserver)
                 - [BFF](#bff)
                 - [APIServer](#apiserver)
-        - [Idnetity server UI interface:](#idnetity-server-ui-interface)
+        - [Idnetity server UI interface](#idnetity-server-ui-interface)
 - [Login and Logout integration to UI](#login-and-logout-integration-to-ui)
     - [Login](#login)
     - [Logout](#logout)
+- [Authentication machine-to-machine using Client Credentials flow](#authentication-machine-to-machine-using-client-credentials-flow)
+    - [Using IdentityModel](#using-identitymodel)
+        - [Most common](#most-common)
+            - [Handle Discovery endpoint](#handle-discovery-endpoint)
+            - [Handle Token endpoint](#handle-token-endpoint)
+        - [IdentityModel for workers and web](#identitymodel-for-workers-and-web)
+            - [Setup Token managment](#setup-token-managment)
+
 
 ## Identity and security overview
 
