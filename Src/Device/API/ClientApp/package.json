@@ -51,7 +51,6 @@
   },
   "scripts": {
     "relaycompile": "relay-compiler",
-    "relaycompilepresisted": "relay-compiler --persist-output persisted-output/persisted-queries.json && node converter.js persisted-output/persisted-queries.json ../../../APIServer/API/persisted_queries",
     "startwatch": "npm run watch:css && craco start start",
     "start": "craco start",
     "build": "craco build",
