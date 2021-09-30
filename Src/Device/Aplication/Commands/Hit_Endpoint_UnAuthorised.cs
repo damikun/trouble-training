@@ -2,7 +2,6 @@ using MediatR;
 using System.Threading;
 using FluentValidation;
 using System.Threading.Tasks;
-using SharedCore.Aplication.Interfaces;
 using Device.Aplication.Shared.Payload;
 
 namespace Device.Aplication.Commands.Test {
@@ -37,18 +36,9 @@ namespace Device.Aplication.Commands.Test {
     public class Hit_Endpoint_UnAuthorisedHandler : IRequestHandler<Hit_Endpoint_UnAuthorised, Hit_Endpoint_UnAuthorisedPayload> {
 
         /// <summary>
-        /// Injected <c>ICurrentUser</c>
-        /// </summary>
-        private readonly ICurrentUser _current;
-
-        /// <summary>
         /// Main constructor
         /// </summary>
-        public Hit_Endpoint_UnAuthorisedHandler(
-            ICurrentUser currentuser) {
-
-            _current = currentuser;
-        }
+        public Hit_Endpoint_UnAuthorisedHandler() {}
 
         /// <summary>
         /// Command handler for <c>Hit_Endpoint_UnAuthorised</c>

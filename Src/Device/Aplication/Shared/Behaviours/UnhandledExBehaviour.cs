@@ -38,7 +38,6 @@ namespace Device.Aplication.Shared.Behaviours {
                 return await next();
 
             } catch (Exception ex) {
-
                 ex.Data.Add("command_failed",true);
                 
                 SharedCore.Aplication.Shared.Common.SetOtelError(ex?.ToString(),_logger);

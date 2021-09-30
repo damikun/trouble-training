@@ -1,3 +1,4 @@
+using Device.Aplication.Commands.Test;
 using Device.Aplication.Interfaces;
 
 namespace Device.Aplication.Shared.Errors {
@@ -6,7 +7,7 @@ namespace Device.Aplication.Shared.Errors {
         public string message { get; set; }
     }
 
-    public class UnAuthorised : BaseError {
+    public class UnAuthorised : BaseError, IHit_Endpoint_AuthorisedError {
         public UnAuthorised() {
             this.message = "Unauthorised to process or access resource";
         }
@@ -22,7 +23,7 @@ namespace Device.Aplication.Shared.Errors {
         }
     }
 
-    public class InternalServerError : BaseError {
+    public class InternalServerError : BaseError, IHit_Endpoint_AuthorisedError {
 
         public InternalServerError() {
             this.message = "Internal server error";
@@ -33,7 +34,7 @@ namespace Device.Aplication.Shared.Errors {
         }
     }
 
-    public class ValidationError : BaseError {
+    public class ValidationError : BaseError, IHit_Endpoint_AuthorisedError {
         public ValidationError() {
             this.message = "Some parameter/s are invalid or null";
         }

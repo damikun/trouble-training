@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Device.Aplication.Shared.Behaviours;
 using Device.Aplication.Commands.Test;
 
-namespace APIServer.Configuration {
+namespace Device.Configuration {
     public static partial class ServiceExtension {
         public static IServiceCollection AddMediatR(this IServiceCollection services) {
 
