@@ -1,4 +1,5 @@
 
+
 # Table of contents
 
 - [Identity and security overview](#identity-and-security-overview)
@@ -24,20 +25,15 @@
         - [Alternatives](#alternatives)
         - [Demo architecture](#demo-architecture)
     - [Demo Microservices overview](#demo-microservices-overview)
-    - [IdentityServer project configuration](#identityserver-project-configuration)
-        - [Nuget Packages:](#nuget-packages)
-        - [ConfigureServices](#configureservices)
-            - [AddCorsConfiguration](#addcorsconfiguration)
-            - [AddAppIdentityDbContext](#addappidentitydbcontext)
-            - [AddIdentityServer](#addidentityserver)
-            - [Data Stores](#data-stores)
-            - [User object:](#user-object)
-        - [Initial data](#initial-data)
-            - [Configure Clients](#configure-clients)
-            - [Configure resources](#configure-resources)
-                - [Identity resources](#identity-resources)
-                - [Api resources](#api-resources)
-                - [Api scopes](#api-scopes)
+        - [IdentityServer project configuration](#identityserver-project-configuration)
+            - [Nuget Packages:](#nuget-packages)
+            - [ConfigureServices](#configureservices)
+                - [AddCorsConfiguration](#addcorsconfiguration)
+                - [AddAppIdentityDbContext](#addappidentitydbcontext)
+                - [AddIdentityServer](#addidentityserver)
+                - [Data Stores](#data-stores)
+                - [User object:](#user-object)
+            - [Dummy initial data](#dummy-initial-data)
             - [Setup migrations](#setup-migrations)
                 - [Creating migrations](#creating-migrations)
                 - [Apply existing migrations](#apply-existing-migrations)
@@ -54,7 +50,7 @@
                 - [Idnetityserver](#idnetityserver)
                 - [BFF](#bff)
                 - [APIServer](#apiserver)
-    - [Idnetity server UI interface](#idnetity-server-ui-interface)
+        - [Idnetity server UI interface](#idnetity-server-ui-interface)
 - [Login and Logout integration to UI](#login-and-logout-integration-to-ui)
     - [Login](#login)
     - [Logout](#logout)
@@ -482,7 +478,7 @@ Architecture contains 3 separate `.net` projects:
 
 </br>
 
-### IdentityServer project configuration
+#### IdentityServer project configuration
 </br>
 
 ![Identity server and BFF microservices - IndetityServer Configuration](./Assets/identity_server_microservices_IdnetityServer_configuration.png "Identity server and BFF microservices - IndetityServer Configuration")
@@ -495,7 +491,7 @@ Besic configuration as logging or Telemetry are part of previous tutorials and t
 
 </br>
 
-#### Nuget Packages:
+##### Nuget Packages:
 
 This packages are required to perform identity on API microservice. Other packages are hidden and not displayed in this list.
 
@@ -522,7 +518,7 @@ This packages are required to perform identity on API microservice. Other packag
 
 </br>
 
-#### ConfigureServices
+##### ConfigureServices
 `Startup.cs` contains following content:
 
 ```c#
@@ -582,7 +578,7 @@ This packages are required to perform identity on API microservice. Other packag
 
 </br>
 
-##### AddCorsConfiguration
+###### AddCorsConfiguration
 
 CORS is Cross Origin Resource Sharing. It is a W3C standard that allows a server to make cross-domain calls from the specified domains. Demo apply this requirements and define `allowed_origins ` array and does not allow reading data from another origins.
 
@@ -652,7 +648,7 @@ public static partial class ServiceExtension {
 
 </br>
 
-##### AddAppIdentityDbContext
+###### AddAppIdentityDbContext
 
 `./Src/IdentityServer/API/Configuration/AddDbContext.cs`
 ```c#
@@ -682,7 +678,7 @@ public static IServiceCollection AddAppIdentityDbContext(
 
 </br>
 
-##### AddIdentityServer
+###### AddIdentityServer
 
  `./Src/IdentityServer/API/Configuration/AddIdentityServer.cs`
 ```c#
@@ -724,10 +720,8 @@ public static IServiceCollection AddAppIdentityDbContext(
     }
 }
 ```
-</br>
 
-##### Data Stores
-
+###### Data Stores
 IdentityServer requires to define data stores. This stores can be presised in Database or just loaded in-memory from hardcoded configuration.
 
 ```c#
@@ -738,8 +732,7 @@ identityServerBuilder.AddOperationalStore(options =>
         
 identityServerBuilder.AddConfigurationStore(options =>
     options.ConfigureDbContext = builder =>
-        builder.UseNpgsql(Configuration["ConnectionStrings:AppDBConnection"]))
-        .AddInMemoryCaching();;
+        builder.UseNpgsql(Configuration["ConnectionStrings:AppDBConnection"]));
 
 ```
 
@@ -749,61 +742,8 @@ This Demo use EntityFramework implementation of:
 
 To read more about StoreConfiguration please fllow offical documentation: [Using EntityFramework Core for configuration and operational data](https://docs.duendesoftware.com/identityserver/v5/quickstarts/4_ef/)
 
-> &#10240;
-> **NOTE:** Use `AddInMemoryCaching()` for the **Configuration Data Store** to cache the default settings and prevent loading static data from the database on every `access_token` request.
->
->By static data, I mean the `claims` and the `system configuration data`, which usually does not change often during runtime. To better understand what happens without caching, look at this first request, where the server tries to provide a new token, but also loads the entire configuration from DB.
->
-> **Example of Configuration data store hit:**
->
->![Identity server hit configuration data store](./Assets/idnetity_server_hit_configuration_store.png "Identity server hit configuration data store")
->
-> I have also asked the authors of *IdentityServer* why this happens and if it is not a problem of perf. This is the simple answer I received:
->
-> Response:
->>*In short, the high number of DB requests (which is bad) is what you get when you design an abstraction around the store of config data (which is good), and have well factored services in the multi-layered DI system (which is also good). The solution to that is to enable the caching which amortizes the high number of DB requests for the initial load of the config data.*
-> &#10240;
->
-> As result use `AddInMemoryCaching()` to prevent this scenarions!
-> &#10240;
-
-##### User data store:
-
-With *NetCore* whe normally use its Identity to define `User` object. This is part of `Microsoft Identity`. IdentityServer extends this and build aditional layers around and is able to use `User` to emit claims into tokens.
-
-class `ApplicationUser` can than contains any aditional user data.
-```c#
-serviceCollection.AddIdentity<ApplicationUser, IdentityRole>(options => {
-    // options config...
-    }).AddEntityFrameworkStores<AppIdnetityDbContext>()
-    .AddDefaultTokenProviders();
-
-serviceCollection.AddIdentityServer().AddAspNetIdentity<ApplicationUser>();
-```
-
-Idnetyty servers do not provide user management by default. Some implementations extend these services to handle this under the protected API endpoint, others use a separate service to manage this and keep the idnetity server to only issue tokens and access.
-
-</br>
-
-#### Initial data
-
-All dummy test data are available uder class `Src/IdentityServer/API/Config.cs`. This data are on initial startup loaded and written to database. After that only data from DB are used.
-
-Since this is initially configured via code, it is often referred as *code configuration*. You can predefine the basic settings and set up specific `scopes` and `resources` using custom management UI.
-
-> &#10240;
->**NOTE:** This are the test data in real app you probably wanna create custom interface with UI to manage all this users by yourself.
-> &#10240;
-
-The configuration consists of 2 parts:
-- Clients
-- Resources
-
-##### Configure Clients
-
- - Clients - `OpenId` or `OAuth` Application Client that can request tokens from your IdentityServer:
-
- This is our Frontend SPA React app client configuration:
+Configuration store presist:
+ - Clients - Applications that can request tokens from your IdentityServerusing.
 
  ```c#
     new Client
@@ -829,129 +769,69 @@ The configuration consists of 2 parts:
     }
  ```
 
-##### Configure resources
+###### User object:
+With *NetCore* whe normally use its Identity to define `User` object. This is part of `Microsoft Identity`. IdentityServer extends this and build aditional layers around and is able to use `User` to emit claims into tokens.
 
-The resource configuration consists of 3 parts:
-- Identity resources
-- Api resources
-- Api scopes
-
-So what is the difference between these 3 configuration options. It's one of the hardest thoughts to remember, but also one of the most important, since it's your configuration and everything is built on it!
-
-###### Identity resources
-
-This represents details of the user such as `Name`, `UserId`, `Email`, `Role`, etc. Using the configuration example below, you can see that each record represents a group of user claims, where a group can contain one or more user claims.
-
-This is related to `OpenId Connect` and this specification has introduced some standardised scopes as `new IdentityResources.OpenId()` or `new IdentityResources.Profile()` that can be easily imported as a prepared function call.
-
-The identity resources correspond to the `identity_token` and the scopes you defined are included in it. So if you want to add another scopes to this token, you should define it at this point.
-
-Config example of Identity resources:
-
+class `ApplicationUser` can than contains any aditional user data.
 ```c#
- public static IEnumerable<IdentityResource> GetIdentityResources() {
-    return new[] {
-        new IdentityResources.OpenId(),
-        new IdentityResources.Profile(),
-        new IdentityResources.Email(),
-        new IdentityResource
-        {
-            Name = "role",
-            UserClaims = new List<string> {"role"}
-        }
-    };
-}
+serviceCollection.AddIdentity<ApplicationUser, IdentityRole>(options => {
+    // options cfg.
+    }).AddEntityFrameworkStores<AppIdnetityDbContext>()
+    .AddDefaultTokenProviders();
+
+serviceCollection.AddIdentityServer().AddAspNetIdentity<ApplicationUser>();
 ```
-The client application then asks for specific scopes during the authentication process.
+
+Idnetyty servers do not provide user management by default. Some implementations extend these services to handle this under the protected API endpoint, others use a separate service to manage this and keep the idnetity server to only issue tokens and access.
+
+</br>
+
+##### Dummy initial data
+
+All dummy test data are available uder class `Src/IdentityServer/API/Config.cs`. This data are on initial startup loaded and written to database. After that only data from DB are used.
 
 > &#10240;
-> **NOTE:** The `id_token` is size-optimized (by default) and contains only the required information in its payload, all others must be additionally requested from `userinfo_endpoint`.
->
-> `AlwaysIncludeUserClaimsInIdToken = true` force to include all defined scopes by default in `id_token`.
+>**NOTE:** This are the test data in real app you probably wanna create custom interface with UI to manage all this users by yourself.
 > &#10240;
 
-So in case we wanna add role to `idToken` and use that from clinet as requested scope you need to:
-
-1) define an IdentityResource that grants access to the role claim.
-    ```c#
+Identity resources example:
+```c#
+return new[] {
+    new IdentityResources.OpenId(),
+    new IdentityResources.Profile(),
+    new IdentityResources.Email(),
     new IdentityResource
     {
         Name = "role",
-        UserClaims = new List<string> {"role"} // <-- THIS
+        UserClaims = new List<string> {"role"}
     }
-    ```
-2) Include that new IdentityResource in the client's AllowedScopes
-    ```c#
-    new Client
-    {
-        ClientId = "spa",
-        AllowedScopes = { "openid", "profile", "role" } // <-- THIS
-        //etc...
-    }
-    ```
-3) Have the client request your new IdentityResource as a scope.
-    ```c#
-    .AddOpenIdConnect("oidc", options =>
-    {
-        options.Authority = "https://localhost:5001";
-        
-        options.ClientId = "spa";
-        options.ClientSecret = "secret";
-        options.ResponseType = "code";
-        options.ResponseMode = "query";
-
-        options.MapInboundClaims = true;
-        options.GetClaimsFromUserInfoEndpoint = true;
-        options.SaveTokens = true;
-
-        options.Scope.Clear();
-        options.Scope.Add("openid");
-        options.Scope.Add("profile");
-        options.Scope.Add("role"); // <-- THIS
-        //etc..
-    });
-    ```
-
-###### Api resources
-
-This represents resources as *web api*
-
-The api resources correspond to the `access_token` and the scopes you defined are included in it. So if you want to add more scopes to this token, you should define them here.
-
-Config example of Api resources:
-
-```c#
-public static IEnumerable<ApiResource> GetApiResources()
-{
-    return new[]
-    {
-        new ApiResource
-        {
-            Name = "api",
-            DisplayName = "API #1",
-            Description = "Allow the application to access API",
-            Scopes = new List<string> {"api.read", "api.write"},
-            ApiSecrets = new List<Secret> {new Secret("ScopeSecret".Sha256())}, // change me!
-            UserClaims = new List<string> {
-                JwtClaimTypes.Name,
-                JwtClaimTypes.Role,
-                JwtClaimTypes.Email,
-                JwtClaimTypes.ClientId,
-                JwtClaimTypes.SessionId
-                }
-            
-        }
-    };
-}
+};
 ```
 
-From the client (Oauth client) point of view, these defined `scopes` are available in the `access_token` and sent with the request to the protected API and used by the Auth Middelware on the API side to validate and copy the scopes as the user's claims in the current HttpContext.
+Api resource example:
+```c#
+new[]
+{
+    new ApiResource
+    {
+        Name = "api",
+        DisplayName = "API #1",
+        Description = "Allow the application to access API",
+        Scopes = new List<string> {"api.read", "api.write"},
+        ApiSecrets = new List<Secret> {new Secret("ScopeSecret".Sha256())}, // change me!
+        UserClaims = new List<string> {
+            JwtClaimTypes.Name,
+            JwtClaimTypes.Role,
+            JwtClaimTypes.Email,
+            JwtClaimTypes.ClientId,
+            JwtClaimTypes.SessionId
+        }
+        
+    }
+};
+```
 
-###### Api scopes
-
-Scopes are only for authorizing clients!
-
-Config example of Api scopes:
+Api scope example:
 ```c#
 new ApiScope[]{
     new ApiScope("api", new[] { 
@@ -960,7 +840,7 @@ new ApiScope[]{
         JwtClaimTypes.Email,
         JwtClaimTypes.ClientId,
         JwtClaimTypes.SessionId
-    }),
+        }),
 };
 ```
 
@@ -1458,7 +1338,7 @@ Run: `dotnet watch run`
 
 </br>
 
-### Idnetity server UI interface
+#### Idnetity server UI interface
 
 
 Endpoint `https://localhost:5001/Account/Login`
