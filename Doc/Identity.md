@@ -37,10 +37,10 @@
                 - [Identity resources](#identity-resources)
                 - [Api resources](#api-resources)
                 - [Api scopes](#api-scopes)
-            - [Setup migrations](#setup-migrations)
-                - [Creating migrations](#creating-migrations)
-                - [Apply existing migrations](#apply-existing-migrations)
-            - [Running identiyserver project](#running-identiyserver-project)
+        - [Setup migrations](#setup-migrations)
+            - [Creating migrations](#creating-migrations)
+            - [Apply existing migrations](#apply-existing-migrations)
+        - [Running identiyserver project](#running-identiyserver-project)
     - [BFF project configuration](#bff-project-configuration)
         - [Nuget Packages:](#nuget-packages)
         - [ConfigureServices](#configureservices)
@@ -964,7 +964,7 @@ new ApiScope[]{
 
 </br>
 
-##### Setup migrations
+#### Setup migrations
 
 To proces migrations ensure you have installed `dotnet-tools`:
 
@@ -996,7 +996,7 @@ PostgreSQL adding another database:
 
 ![PostgreSQL database identity setup](./Assets/db_setup_identity.png "PostgreSQL database identity setup")
 
-###### Creating migrations
+##### Creating migrations
 
 Migrations for demo are pre-created and sits in folder: `Src/IdentityServer/Persistence/Migrations`
 
@@ -1008,7 +1008,7 @@ dotnet ef migrations add Init_PersistedGrantDbContext -c AppPersistedGrantDbCont
 dotnet ef migrations add Init_PersistedGrantDbContext -c AppIdnetityDbContext
 ```
 
-###### Apply existing migrations
+##### Apply existing migrations
 
 To fill your empty database with new migrations please follow this steps:
 
@@ -1020,7 +1020,7 @@ Go to dirrectory: `Src/IdentityServer/Persistence` and run following commands:
 ```
 </br>
 
-##### Running identiyserver project
+#### Running identiyserver project
 
 Navigae to `Src/IdentityServer/API` and run `dotnet watch run` ensure the database and elasticsearch are running. (if not proper exception will be thrown that connection is not established).
 
