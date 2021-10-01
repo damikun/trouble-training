@@ -1,6 +1,5 @@
 
 # Table of contents
-
 - [Identity and security overview](#identity-and-security-overview)
     - [Authenticatioton vs Authorization](#authenticatioton-vs-authorization)
     - [Tokens vs Cookie and Sessions](#tokens-vs-cookie-and-sessions)
@@ -31,7 +30,7 @@
             - [AddAppIdentityDbContext](#addappidentitydbcontext)
             - [AddIdentityServer](#addidentityserver)
             - [Data Stores](#data-stores)
-            - [User object:](#user-object)
+            - [User data store:](#user-data-store)
         - [Initial data](#initial-data)
             - [Configure Clients](#configure-clients)
             - [Configure resources](#configure-resources)
@@ -42,18 +41,18 @@
                 - [Creating migrations](#creating-migrations)
                 - [Apply existing migrations](#apply-existing-migrations)
             - [Running identiyserver project](#running-identiyserver-project)
-        - [BFF project configuration](#bff-project-configuration)
-            - [Nuget Packages:](#nuget-packages)
-            - [ConfigureServices](#configureservices)
-                - [AddIdentityConfiguration](#addidentityconfiguration)
-                - [AddBff configuration](#addbff-configuration)
-        - [API project configuration](#api-project-configuration)
-            - [Nuget Packages:](#nuget-packages)
-            - [ConfigureServices](#configureservices)
+    - [BFF project configuration](#bff-project-configuration)
+        - [Nuget Packages:](#nuget-packages)
+        - [ConfigureServices](#configureservices)
+            - [AddIdentityConfiguration](#addidentityconfiguration)
+            - [AddBff configuration](#addbff-configuration)
+    - [API project configuration](#api-project-configuration)
+        - [Nuget Packages:](#nuget-packages)
+        - [ConfigureServices](#configureservices)
     - [Running microservices](#running-microservices)
-                - [Idnetityserver](#idnetityserver)
-                - [BFF](#bff)
-                - [APIServer](#apiserver)
+        - [Idnetityserver](#idnetityserver)
+        - [BFF](#bff)
+        - [APIServer](#apiserver)
     - [Idnetity server UI interface](#idnetity-server-ui-interface)
 - [Login and Logout integration to UI](#login-and-logout-integration-to-ui)
     - [Login](#login)
@@ -65,7 +64,6 @@
             - [Handle Token endpoint](#handle-token-endpoint)
         - [IdentityModel for workers and web](#identitymodel-for-workers-and-web)
             - [Setup Token managment](#setup-token-managment)
-
 
 ## Identity and security overview
 
@@ -1135,11 +1133,11 @@ You can view the openid configuration at ***discovery endpoint url**. As a resul
 
 </br>
 
-#### BFF project configuration
+### BFF project configuration
 
 ![Identity server and BFF microservices - BFF Configuration](./Assets/identity_server_microservices_IdnetityServer_configuration_bffservice.png "Identity server and BFF microservices - BFF Configuration")
 
-##### Nuget Packages:
+#### Nuget Packages:
 
 This packages are required to perform identity on API microservice. Other packages are hidden and not displayed in this list.
 
@@ -1154,7 +1152,7 @@ This packages are required to perform identity on API microservice. Other packag
 
 </br>
 
-##### ConfigureServices
+#### ConfigureServices
 `Startup.cs` contains following content:
 
 ```c#
@@ -1252,7 +1250,7 @@ public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 </br>
 
 
-###### AddIdentityConfiguration
+##### AddIdentityConfiguration
 
 This method define that authentication mechanism for frontend will use cookie with with `OpenId Connect` also defining all its parameters.
 
@@ -1316,7 +1314,7 @@ This method define that authentication mechanism for frontend will use cookie wi
 
 </br>
 
-###### AddBff configuration
+##### AddBff configuration
 </br>
 
 **Cross-Site Request Forgery (CSRF)** is protection mechanism that BFF require to include from called in header. This means your frontend app must set this values with all request. The value or Header name cam be adjusted as on example:
@@ -1363,12 +1361,12 @@ services.AddBff(options =>
 ```
 </br>
 
-#### API project configuration
+### API project configuration
 
 ![Identity server and BFF microservices - API Configuration](./Assets/identity_server_microservices_IdnetityServer_configuration_apiservice.png "Identity server and BFF microservices - API Configuration")
 </br>
 
-##### Nuget Packages:
+#### Nuget Packages:
 
 This packages are required to perform identity on API microservice. Other packages are hidden and not displayed in this list.
 
@@ -1378,7 +1376,7 @@ This packages are required to perform identity on API microservice. Other packag
 
 </br>
 
-##### ConfigureServices
+#### ConfigureServices
 
 There is no much from API protected  project to be configured. This API is protecteed using JWT token. `Startup.cs` require to add following configuration to API project.
 
