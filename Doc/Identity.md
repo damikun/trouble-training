@@ -830,9 +830,11 @@ The configuration consists of 2 parts:
 ##### Configure resources
 
 The resource configuration consists of 3 parts:
+
 - Identity resources
-- Api resources
 - Api scopes
+- Api resources
+
 
 So what is the difference between these 3 configuration options. It's one of the hardest thoughts to remember, but also one of the most important, since it's your configuration and everything is built on it!
 
@@ -860,7 +862,7 @@ Config example of Identity resources:
     };
 }
 ```
-The client application then asks for specific scopes during the authentication process.
+The client application then asks for specific identity scopes during the authentication process.
 
 > &#10240;
 > **NOTE:** The `id_token` is size-optimized (by default) and contains only the required information in its payload, all others must be additionally requested from `userinfo_endpoint`.
@@ -910,11 +912,33 @@ So in case we wanna add role to `idToken` and use that from clinet as requested 
     });
     ```
 
+###### Api scopes
+
+Scopes are the what clients ask to access. Scopes are for authorizing clients only. A scope can be associated with one or more ApiResources if it is shared. 
+
+These are some options:
+- One scope covering multiple physically APIs ("MainScope").
+- One scope per physical API ("PaymentScope", "OrderScope").
+- Multiple scopes per physical API (e.g. one for reading and one for writing, or perhaps one for normal users and one for admin users.
+
+Config example of main api scope:
+```c#
+new ApiScope[]{
+    new ApiScope("api", new[] { 
+        JwtClaimTypes.Name,
+        JwtClaimTypes.Role,
+        JwtClaimTypes.Email,
+        JwtClaimTypes.ClientId,
+        JwtClaimTypes.SessionId
+    }),
+};
+```
+
 ###### Api resources
 
-This represents resources as *web api*
+This represents a physical or logical API (namespace) that groups one or more scopes. These ApiResources are an extension of IdentityServer, as OAuth defines everything around scopes.
 
-The api resources correspond to the `access_token` and the scopes you defined are included in it. So if you want to add more scopes to this token, you should define them here.
+When a user sends a request with requested Scopes (not ApiResource), IdentityService detects which ApiResources the user wants to access (from the requested Scopes).
 
 Config example of Api resources:
 
@@ -941,25 +965,6 @@ public static IEnumerable<ApiResource> GetApiResources()
         }
     };
 }
-```
-
-From the client (Oauth client) point of view, these defined `scopes` are available in the `access_token` and sent with the request to the protected API and used by the Auth Middelware on the API side to validate and copy the scopes as the user's claims in the current HttpContext.
-
-###### Api scopes
-
-Scopes are only for authorizing clients!
-
-Config example of Api scopes:
-```c#
-new ApiScope[]{
-    new ApiScope("api", new[] { 
-        JwtClaimTypes.Name,
-        JwtClaimTypes.Role,
-        JwtClaimTypes.Email,
-        JwtClaimTypes.ClientId,
-        JwtClaimTypes.SessionId
-    }),
-};
 ```
 
 </br>
