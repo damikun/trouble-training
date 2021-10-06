@@ -10,6 +10,7 @@
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/OpenTelemetry.md">Configure Tracing</a></br>
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/Identity.md">Configure Identity</a></br>
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/ElasticSearch.md">Configure Monitoring</a></br>
+  <a href="https://github.com/damikun/trouble-training/blob/main/Doc/GraphQL-MutationErrors.md">Handle GraphQL Errors</a></br>
 </h5>
 
 <p align="center" >Demo Application contains small UI, where you can manage your WebHooks</p>

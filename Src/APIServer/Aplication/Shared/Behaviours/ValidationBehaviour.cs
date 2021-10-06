@@ -16,7 +16,7 @@ using SharedCore.Aplication.Payload;
 namespace APIServer.Aplication.Shared.Behaviours {
 
     /// <summary>
-    /// Authorization behaviour for MediatR pipeline
+    /// Validation behaviour for MediatR pipeline
     /// </summary>
     /// <typeparam name="TRequest"></typeparam>
     /// <typeparam name="TResponse"></typeparam>
@@ -46,7 +46,8 @@ namespace APIServer.Aplication.Shared.Behaviours {
                     var context = new ValidationContext<TRequest>(request);
 
                     var validationResults = await Task.WhenAll(
-                        _validators.Select(v => v.ValidateAsync(context, cancellationToken)));
+                        _validators.Where(v => !(v is IAuthorizationValidator))
+                        .Select(v => v.ValidateAsync(context, cancellationToken)));
 
                     var failures = validationResults
                     .SelectMany(r => r.Errors)
@@ -96,7 +97,8 @@ namespace APIServer.Aplication.Shared.Behaviours {
 
                     var first_item = error_obj.First();
                     if (first_item != null) {
-                        throw new SharedCore.Aplication.Shared.Exceptions.ValidationException(string.Format("Field: {0} - {1}", first_item.PropertyName, first_item.ErrorMessage));
+                        throw new SharedCore.Aplication.Shared.Exceptions.ValidationException(
+                            string.Format("Field: {0} - {1}", first_item.PropertyName, first_item.ErrorMessage));
                     }
 
                 }

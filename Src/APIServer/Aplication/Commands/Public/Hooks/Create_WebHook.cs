@@ -21,7 +21,8 @@ namespace APIServer.Aplication.Commands.WebHooks {
     /// <summary>
     /// Command for creating webhook
     /// </summary>
-    [Authorize]
+    [Authorize] // <-- Activate Auth check for command
+    // [Authorize(FieldPolicy = true)] <-- Uncommend to activate Field Auth check for command
     public class CreateWebHook : IRequest<CreateWebHookPayload> {
 
         public CreateWebHook() {
@@ -93,13 +94,14 @@ namespace APIServer.Aplication.Commands.WebHooks {
     /// <summary>
     /// Authorization validators for CreateWebHook
     /// </summary>
-    public class AuthorizationValidator : AuthorizationValidator<CreateWebHook> {
+    public class CreateWebHookAuthorizationValidator : AuthorizationValidator<CreateWebHook> {
 
         private readonly IDbContextFactory<ApiDbContext> _factory;
-        public AuthorizationValidator(IDbContextFactory<ApiDbContext> factory) {
+        public CreateWebHookAuthorizationValidator(IDbContextFactory<ApiDbContext> factory) {
 
             _factory = factory;
 
+            // Add Field authorization cehcks.. (use  [Authorize(FieldPolicy = true)] to activate)
         }
     }
 

@@ -69,7 +69,7 @@ namespace APIServer.Aplication.GraphQL.Types {
 
         }
 
-        private class ProjectResolvers {
+        private class WebHookResolvers {
 
 
         }
