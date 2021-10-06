@@ -217,8 +217,9 @@ Go to dirrectory: `IdentityServer/API` and run:
 Go to dirrectory: `BFF/API` and run:
 1) `dotnet restore`
 2) `cd` to `BFF/API/ClientApp` and run `yarn install` or `npm install` (Need to install `node_modules`)
-3) `dotnet watch run` from `Device/API`
+3) `dotnet watch run` from `BFF/API`
 
+(only if you are gonna test Device)
 Go to dirrectory: `Device/API` and run:
 1) `dotnet restore`
 2) `cd` to `Device/API/ClientApp` and run `yarn install` or `npm install` (Need to install `node_modules`)
