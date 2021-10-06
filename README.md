@@ -10,7 +10,7 @@
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/OpenTelemetry.md">Configure Tracing</a></br>
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/Identity.md">Configure Identity</a></br>
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/ElasticSearch.md">Configure Monitoring</a></br>
-  <a href="https://github.com/damikun/trouble-training/blob/main/Doc/GraphQL-MutationErrors.md">Handle GraphQL Errors</a></br>
+  <a href="https://github.com/damikun/trouble-training/blob/main/Doc/GraphQL%20-%20MutationErrors.md">Handle GraphQL Errors</a></br>
 </h5>
 
 <p align="center" >Demo Application contains small UI, where you can manage your WebHooks</p>
@@ -40,6 +40,7 @@ Please follow these steps if you want to understand it because of the connection
 2) [Configure telemetry](Doc/OpenTelemetry.md) - I`ll show you how to properly set up Opentelemetry and Elastic APM.
 3) [Configure identity](Doc/Identity.md) - You`ll learn how to use the BFF pattern to secure your application.
 4) [Configure monitoring](Doc/ElasticSearch.md) - You will learn how to monitor the entire app stack (this depends on parts 1 and 2).
+5) [Handle GraphQL Mutation errors](https://github.com/damikun/trouble-training/blob/main/Doc/GraphQL%20-%20MutationErrors.md) - You will learn how to integrate *6a* Union with Interface pattern.
 
 <br />
 <p align="center">
