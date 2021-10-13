@@ -66,7 +66,10 @@ On this monitoring graphical visualization, you can see entire request sended fr
 
 ## Setup projects and env.
 
-You can use [step-by-step instalation video](https://www.youtube.com/watch?v=3LBqZiW_Hvo) which use this steps:
+<p align="center">
+<h3>You can use [step-by-step instalation video](https://www.youtube.com/watch?v=3LBqZiW_Hvo) which use this steps: </h3>
+</p>
+
 
   - [Instal Net SDK](#instal-net-sdk)
   - [Download docker](#download-docker)
