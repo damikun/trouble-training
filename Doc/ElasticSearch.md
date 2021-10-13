@@ -1406,7 +1406,7 @@ packetbeat.protocols:
   send_all_headers: true
 
 - type: pgsql
-  ports: [6543]
+  ports: [5432]
 
 - type: icmp
   enabled: true

@@ -10,7 +10,7 @@ namespace APIServer.Persistence {
 
            var builder = new DbContextOptionsBuilder<ApiDbContext>();
 
-            builder.UseNpgsql("Host=localhost;Port=6543;Database=ApiDB;Username=postgres;Password=postgres");
+            builder.UseNpgsql("Host=localhost;Port=5432;Database=APIServer;Username=postgres;Password=postgres");
             return new ApiDbContext(builder.Options);
         }
     }

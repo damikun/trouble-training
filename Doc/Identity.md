@@ -980,7 +980,7 @@ dotnet tool install --global dotnet-ef
 Also make sure your database exist. Demo use separate database under main server called `IdenityDB` with this parameters:
 
 - Hostname: `localhost`
-- Port: `6543`
+- Port: `5432`
 - Database: `IdentityDB`
 - Username: `postgres`
 - Password: `postgres`
@@ -993,7 +993,7 @@ Connestion string shoud be awailable under `appsettings.json`
 
 ```c#
 "ConnectionStrings": {
-  "AppDBConnection": "Host=localhost;Port=6543;Database=IndetityDB;Username=postgres;Password=postgres",
+  "AppDBConnection": "Host=localhost;Port=5432;Database=IndetityDB;Username=postgres;Password=postgres",
 }
 ```
 

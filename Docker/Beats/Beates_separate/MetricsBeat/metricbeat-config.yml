@@ -69,7 +69,7 @@ metricbeat.modules:
 #   hosts: ["http://localhost:5601"]
 
 # - module: postgresql
-#   hosts: ["postgres://localhost:6543?sslmode=disable"]
+#   hosts: ["postgres://localhost:5432?sslmode=disable"]
 #   metricsets:
 #     - database
 #     - bgwriter

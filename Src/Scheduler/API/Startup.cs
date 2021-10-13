@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Scheduler.Domain;
-using Shared.Configuration;
+using SharedCore.Configuration;
 using Hangfire.PostgreSql;
 using APIServer.Configuration;
 

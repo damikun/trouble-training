@@ -40,7 +40,7 @@ namespace IdentityServer.Persistence {
     public static class IDesignTimeDbContextFactoryExtensions {
         public static string GetDatabaseConnectionString(){
             
-            return "Host=localhost;Port=6543;Database=IdentityDB;Username=postgres;Password=postgres";
+            return "Host=localhost;Port=5432;Database=IdentityDB;Username=postgres;Password=postgres";
         }
     }
 

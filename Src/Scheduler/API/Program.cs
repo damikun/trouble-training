@@ -2,7 +2,7 @@ using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using Shared.Configuration;
+using SharedCore.Configuration;
 
 namespace Scheduler
 {

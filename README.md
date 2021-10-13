@@ -1,4 +1,4 @@
-<h3 align="center">Full Stack Workshop (Frontend + Backend + Monitoring) </h3>
+<h2 align="center">Full Stack Workshop (Frontend + Backend + Monitoring) </h2>
 
 <p align="center">
   <img  width="900" src="Doc/Assets/stack_logos.png" alt="Workshop stack tools logos" >
@@ -19,12 +19,12 @@
   <img width="600" src="Doc/Assets/WorkshopUI.gif" alt="Workshop UI example" >
 </p>
 
-### Stack
+## Stack
 
  - **Frontend**  - [React](https://reactjs.org/), [Relay](https://relay.dev/), [Typecsript](https://www.typescriptlang.org/), [ReactRouter](https://reactrouter.com/), [TailwindCSS](https://tailwindcss.com/)
  - **Backend** - [Netcore](https://dotnet.microsoft.com/), [Hotchocolate](https://chillicream.com), [IdentityServer](https://duendesoftware.com/products/identityserver), [ElasticSearch](https://www.elastic.co/), [Opentelemerty](https://opentelemetry.io/), [Serilog](https://serilog.net/), [MediatR](https://github.com/jbogard/MediatR), [Hangfire](https://www.hangfire.io/), [Automapper](https://automapper.org/), [Fluentvalidation](https://fluentvalidation.net/), [Docker](https://www.docker.com/), [Entity Framework](https://docs.microsoft.com/cs-cz/ef/)
 
-### Project structure
+## Project structure
 
 - [APIServer](https://github.com/damikun/trouble-training/tree/main/Src/APIServer) - Is protected GraphQL API
 - [BFF](https://github.com/damikun/trouble-training/tree/main/Src/BFF) - Is Backend for Frontend pattern
@@ -32,7 +32,7 @@
 - [IdentityServer](https://github.com/damikun/trouble-training/tree/main/Src/IdentityServer) - Idetity server service for providing `OpenId Connect` and `OAuth2.0`
 - [Device](https://github.com/damikun/trouble-training/blob/main/Doc/Identity.md#authentication-machine-to-machine-using-client-credentials-flow) - Machine-to-machine comunucation using clinet credentials for external apps/devices
 
-### Integration steps:
+## Integration steps:
 
 Please follow these steps if you want to understand it because of the connection between the parts:
 
@@ -64,20 +64,21 @@ On this monitoring graphical visualization, you can see entire request sended fr
 
 <br />
 
-### Quick setup
+## Setup projects and env.
 
-- [Quick setup](#quick-setup)
   - [Instal Net SDK](#instal-net-sdk)
   - [Download docker](#download-docker)
-  - [Docker images](#docker-images)
+  - [Compose docker images](#compose-docker-images)
   - [Setup Database](#setup-database)
   - [Migrations](#migrations)
   - [Run Frontned and Backend](#run-frontned-and-backend)
   - [Run Elastic and Beats](#run-elastic-and-beats)
 
 
-To run this stack locally, you need to ensure the following:
+To run this stack locally, you need to ensure thfollowing:
 - Make sure you have NET SDK installed. 
+- Make sure you have NodeJs installed.
+- Make sure you have one of package managers `npm` or `yarn`
 - You need to install Docker. Most of the stack runs in a Docker container.
 - You need to run all prepared `docker-compose` files to populate all images for the monitoring platform.
 - You need to set up PostgreSQL databases (Create any DB server). 
@@ -86,7 +87,7 @@ To run this stack locally, you need to ensure the following:
 
 </br>
 
-##### Instal Net SDK
+### Instal Net SDK
 
 [Make sure you have](https://dotnet.microsoft.com/download) Net 5.0 SDK installed. You can cheque the SDK version by running: `dotnet --list-sdks` in your terminal.
 
@@ -98,32 +99,74 @@ PS C:\Users\dakupc> dotnet --list-sdks
 ```
 </br>
 
-##### Download docker
+### Download docker
 
 Based on your system download and [install docker](https://docs.docker.com/engine/install/)
 
 </br>
 
-##### Docker images
+### Compose docker images
+
+Set this configurtaion settings (for localhost) from your `cmd`:
+
+```sh
+#For Linux
+sysctl -w vm.max_map_count=262144 
+echo "vm.max_map_count=262144" >> /etc/sysctl.conf
+```
+
+```sh
+#For Windows WSL
+wsl -d docker-desktop
+sysctl -w vm.max_map_count=262144
+```
+
+**Continue with images:**
 
 In the `/Docker` folder you will find prepared images for:
-- `Elasticsearch` - Elastic, Kibana, OtelCollector, APMserver, Logstash.
-- `Beats` - FileBeat, HeartBeat, MetricBeat, PacketBeat
-- `PostgresSQL` - Database
+- **Elasticsearch** - Elastic, Kibana, OtelCollector, APMserver, Logstash.
+  - Shell `cd` to `Docker/ElasticSearch` and run `docker-compose up`
+- **PostgresSQL** - Database
+  - Shell `cd` to `Docker/PostgresSql` and run `docker-compose up`
+- **Beats** - (Optional)  FileBeat, HeartBeat, MetricBeat, PacketBeat (⚠️ Skip this in case you dont have enaught RAM)
+  - Shell `cd` to `Docker/Beats` and run `docker-compose up`
 
-In each folder you will find `docker-compose.yml` and you need to run the command `docker-compose up` in your terminal. The setup has been tested on WSL Docer Desktop.
+In each folder you will find `docker-compose.yml` and you need to run the command `docker-compose up` in your terminal. The setup has been tested on WSL Docker Desktop.
+
+> **Note:** Folder `/Docker` also contains other images for aditional lessons. (For this demo ignor it)
 
 </br>
 
-##### Setup Database
+### Restoring all projects
+
+Go to dirrectory: `APIServer/API` and run `dotnet restore`
+
+Go to dirrectory: `IdentityServer/API` and run `dotnet restore`
+
+Go to dirrectory: `BFF/API` and run:
+1) `dotnet restore`
+2) `cd` to `BFF/API/ClientApp` and run `yarn install` or `npm install` (Need to 
+
+Go to dirrectory: `Device/API` and run:
+1) `dotnet restore`
+2) `cd` to `Device/API/ClientApp` and run `yarn install` or `npm install` (Need to install `node_modules`)
+
+> &#10240;
+>**NOTE:** Restoring will take some time, especially for BFF, since the frontend is fully recompiled and served by the BFF backend using static files.
+> &#10240;
+
+
+### Setup Database
+
+To manage your existing database you can use [PgAdmin](https://www.pgadmin.org/download/). This tool helps you to create and manage databases under postgresql server.
 
 Make sure that PostgreSQL is running. The following empty databases need to be manualy created:
 
 *APIServer Database*
 ```sh
 Host: localhost
-DatabaseName: ApiDB
-Port: 6543
+DatabaseName: APIServer
+Port: 5432
 Username: postgres
 PasswordL postgres
 ```
@@ -132,7 +175,7 @@ PasswordL postgres
 ```sh
 Host: localhost
 DatabaseName: IdentityDB
-Port: 6543
+Port: 5432
 Username: postgres
 PasswordL postgres
 ```
@@ -141,7 +184,7 @@ PasswordL postgres
 ```sh
 Host: localhost
 DatabaseName: Scheduler
-Port: 6543
+Port: 5432
 Username: postgres
 PasswordL postgres
 ```
@@ -150,19 +193,18 @@ Preconfigured connection strings:
 
 ```json
 "ConnectionStrings": {
-  "HangfireConnection": "Host=localhost;Port=6543;Database=Scheduler;Username=postgres;Password=postgres",
-  "ApiDbContext": "Host=localhost;Port=6543;Database=ApiDB;Username=postgres;Password=postgres",
-  "AppIdnetityDbContext": "Host=localhost;Port=6543;Database=IdentityDB;Username=postgres;Password=postgres",
-  "AppIdnetityDbContext": "Host=localhost;Port=6543;Database=IdentityDB;Username=postgres;Password=postgres",
+  "HangfireConnection": "Host=localhost;Port=5432;Database=Scheduler;Username=postgres;Password=postgres",
+  "ApiDbContext": "Host=localhost;Port=5432;Database=APIServer;Username=postgres;Password=postgres",
+  "AppIdnetityDbContext": "Host=localhost;Port=5432;Database=IdentityDB;Username=postgres;Password=postgres",
+  "AppIdnetityDbContext": "Host=localhost;Port=5432;Database=IdentityDB;Username=postgres;Password=postgres",
   "Elasticsearch": "http://admin:admin@localhost:9200",
   "Opentelemetry": "http://localhost:55680"
 },
 ```
 
-Run the database its required by next step!
 </br>
 
-##### Migrations
+### Migrations
 
 Make sure you have installed [Entity Framework Core tools](https://docs.microsoft.com/en-us/ef/core/cli/dotnet) to perform any necessary migrations.
 
@@ -183,6 +225,7 @@ If you run  `dotnet ef` in terminal you shoud get:
 Entity Framework Core .NET Command-line Tools 5.0.9
 ```
 
+> **NOTE:** Make sure PostgreSQL is running for next steps!
 
 Go to dirrectory: `APIServer/Persistence` and run following commands:
 
@@ -190,7 +233,7 @@ Go to dirrectory: `APIServer/Persistence` and run following commands:
  dotnet ef database update
 ```
 
-Go to dirrectory: `IdentityServer/Persistence` and run following commands:
+Go to dirrectory: `Src/IdentityServer/Persistence` and run following commands:
 ```
  dotnet ef database update --context AppConfigurationDbContext
  dotnet ef database update --context AppPersistedGrantDbContext
@@ -198,7 +241,7 @@ Go to dirrectory: `IdentityServer/Persistence` and run following commands:
 ```
 </br>
 
-##### Run Frontned and Backend
+### Run Frontned and Backend
 
 Since all migrations, databases and infrastructures are prepared, you can start each project from its directory. You can also put each application in a docker container and launch it from there. This is entirely up to you.
 
@@ -206,30 +249,16 @@ Since all migrations, databases and infrastructures are prepared, you can start 
 > **NOTE:** Make sure you trust developer certificates: `dotnet dev-certs https --trust`. This is only for development needs make sure you properly setup certificate in production!
 > &#10240;
 
-Go to dirrectory: `APIServer/API` and run:
-1) `dotnet restore`
-2) `dotnet watch run`
+Install Tailwind CLI from cmd: `npx tailwindcss-cli@latest init`
 
-Go to dirrectory: `IdentityServer/API` and run:
-1) `dotnet restore`
-2) `dotnet watch run`
+Go to dirrectory: `APIServer/API` and run `dotnet watch run`
 
-Go to dirrectory: `BFF/API` and run:
-1) `dotnet restore`
-2) `cd` to `BFF/API/ClientApp` and run `yarn install` or `npm install` (Need to install `node_modules`)
-3) `dotnet watch run` from `BFF/API`
+Go to dirrectory: `IdentityServer/API` and run `dotnet watch run`
+
+Go to dirrectory: `BFF/API` and run `dotnet watch run`
 
 (only if you are gonna test Device)
-Go to dirrectory: `Device/API` and run:
-1) `dotnet restore`
-2) `cd` to `Device/API/ClientApp` and run `yarn install` or `npm install` (Need to install `node_modules`)
-3) `dotnet watch run` from `Device/API`
-
-</br>
-
-> &#10240;
->**NOTE:** Restoring and running will take some time, especially for BFF, since the frontend is fully recompiled and served by the BFF backend using static files.
-> &#10240;
+Go to dirrectory: `Device/API` and run `dotnet watch run`
 
 </br>
 
@@ -242,9 +271,11 @@ Go to dirrectory: `Device/API` and run:
 
 </br>
 
-##### Run Elastic and Beats
+### Run Elastic and Beats
 
 Start the elasticsearch container group and then beats. Please stick to this order to avoid exception logging due to a missing connection. You can also put everything into a Docker image and wait until the previous section is complete.
+
+> **Note:** Running beats for demo is optional. This require additional RAM and CPU allocation..
 
 In case you have problem to start elastic due to memory issues adjust `max_map_count`
 

@@ -97,6 +97,9 @@ TestResult.xml
 [Rr]eleasePS/
 dlldata.c
 
+#Yarn lock files
+yarn.lock
+
 # DNX
 project.lock.json
 artifacts/
