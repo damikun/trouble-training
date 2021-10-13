@@ -66,6 +66,8 @@ On this monitoring graphical visualization, you can see entire request sended fr
 
 ## Setup projects and env.
 
+You can use [step-by-step instalation video](https://www.youtube.com/watch?v=3LBqZiW_Hvo) which use this steps:
+
   - [Instal Net SDK](#instal-net-sdk)
   - [Download docker](#download-docker)
   - [Compose docker images](#compose-docker-images)
@@ -74,6 +76,7 @@ On this monitoring graphical visualization, you can see entire request sended fr
   - [Migrations](#migrations)
   - [Run Frontned and Backend](#run-frontned-and-backend)
   - [Run Elastic and Beats](#run-elastic-and-beats)
+
 
 
 To run this stack locally, you need to ensure thfollowing:
