@@ -69,6 +69,7 @@ On this monitoring graphical visualization, you can see entire request sended fr
   - [Instal Net SDK](#instal-net-sdk)
   - [Download docker](#download-docker)
   - [Compose docker images](#compose-docker-images)
+  - [Restoring all projects](#restoring-all-projects)
   - [Setup Database](#setup-database)
   - [Migrations](#migrations)
   - [Run Frontned and Backend](#run-frontned-and-backend)
@@ -145,16 +146,17 @@ Go to dirrectory: `IdentityServer/API` and run `dotnet restore`
 
 Go to dirrectory: `BFF/API` and run:
 1) `dotnet restore`
-2) `cd` to `BFF/API/ClientApp` and run `yarn install` or `npm install` (Need to 
+2) `cd` to `BFF/API/ClientApp` and run `yarn install` or `npm install` (Needed to install `node_modules`)
 
 Go to dirrectory: `Device/API` and run:
 1) `dotnet restore`
-2) `cd` to `Device/API/ClientApp` and run `yarn install` or `npm install` (Need to install `node_modules`)
+2) `cd` to `Device/API/ClientApp` and run `yarn install` or `npm install` (Needed to install `node_modules`)
 
 > &#10240;
 >**NOTE:** Restoring will take some time, especially for BFF, since the frontend is fully recompiled and served by the BFF backend using static files.
 > &#10240;
 
+</br>
 
 ### Setup Database
 
