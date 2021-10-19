@@ -8,6 +8,7 @@ namespace APIServer.Persistence {
 
         public class ApiDbContext : DbContext {
             public DbSet<WebHook> WebHooks { get; set; }
+            
             public DbSet<WebHookRecord> WebHooksHistory { get; set; }
 
             public DbSet<DomainEvent> Events { get; set; }

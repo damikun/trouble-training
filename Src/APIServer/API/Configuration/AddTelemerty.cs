@@ -56,7 +56,7 @@ namespace APIServer.Configuration {
                     e => e.SetDbStatementForText = true);
 
                 builder.AddOtlpExporter(options => {
-                    options.Endpoint = new Uri("http://localhost:55680"); // Export to collector
+                    options.Endpoint = new Uri(Configuration["ConnectionStrings:OtelCollector"]); // Export to collector
                     // options.Endpoint = new Uri("http://localhost:8200"); // Export dirrectly to APM
                     // options.BatchExportProcessorOptions = new OpenTelemetry.BatchExportProcessorOptions<Activity>() {
                     // };                

@@ -25,8 +25,10 @@ namespace APIServer.Domain.Core.Models.WebHooks {
         /// <summary>
         /// Webhook secret
         /// </summary>
+        #nullable enable
         public string? Secret { get; set; }
-
+        #nullable disable
+        
         /// <summary>
         /// Content Type
         /// </summary>

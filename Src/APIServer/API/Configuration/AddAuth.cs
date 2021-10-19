@@ -14,7 +14,7 @@ namespace APIServer.Configuration {
             serviceCollection.AddAuthentication("token")
             .AddJwtBearer("token", options =>
             {
-                options.Authority = "https://localhost:5001";
+                options.Authority = Configuration["ConnectionStrings:AuthorityServer"];
                 options.MapInboundClaims = true;
 
                 options.TokenValidationParameters = new TokenValidationParameters()

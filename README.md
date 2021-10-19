@@ -6,6 +6,7 @@
 <p align="center" > The application contains a full frontend and backend implementation with infrastructure and app monitoring. There are several patterns used such as. <b>Mediator, BFF, Domain</b> etc.. and everything is secured with <b>Identity server</b> fully supporting <b>OpenId Connect</b> and <b>OAuth2.0</b></p>
 
 <h5 align="center" >
+  <a href="https://github.com/damikun/trouble-training/blob/main/Doc/WebHookBackend.md" >Basic WebHook backend setup</a></br>
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/Logging.md" >Configure Logging</a></br>
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/OpenTelemetry.md">Configure Tracing</a></br>
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/Identity.md">Configure Identity</a></br>
@@ -36,11 +37,12 @@
 
 Please follow these steps if you want to understand it because of the connection between the parts:
 
-1) [Configure logging](Doc/Logging.md) - I`ll show you how to set up a proper distributed logging solution for .Net
-2) [Configure telemetry](Doc/OpenTelemetry.md) - I`ll show you how to properly set up Opentelemetry and Elastic APM.
-3) [Configure identity](Doc/Identity.md) - You`ll learn how to use the BFF pattern to secure your application.
-4) [Configure monitoring](Doc/ElasticSearch.md) - You will learn how to monitor the entire app stack (this depends on parts 1 and 2).
-5) [Handle GraphQL Mutation errors](https://github.com/damikun/trouble-training/blob/main/Doc/GraphQL%20-%20MutationErrors.md) - You will learn how to integrate *6a* Union with Interface pattern.
+1) [WebHook backend](Doc/WebHookBackend.md) - I`ll show you how to create basic WebHook integration under .NetCore Backend for this demo.
+2) [Configure logging](Doc/Logging.md) - I`ll show you how to set up a proper distributed logging solution for .Net
+3) [Configure telemetry](Doc/OpenTelemetry.md) - I`ll show you how to properly set up Opentelemetry and Elastic APM.
+4) [Configure identity](Doc/Identity.md) - You`ll learn how to use the BFF pattern to secure your application.
+5) [Configure monitoring](Doc/ElasticSearch.md) - You will learn how to monitor the entire app stack (this depends on parts 1 and 2).
+6) [Handle GraphQL Mutation errors](https://github.com/damikun/trouble-training/blob/main/Doc/GraphQL%20-%20MutationErrors.md) - You will learn how to integrate *6a* Union with Interface pattern.
 
 <br />
 <p align="center">
