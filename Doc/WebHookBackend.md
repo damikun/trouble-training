@@ -27,7 +27,7 @@ This pattern is used by most large companies and I will use [Github](https://doc
 ## ED diagram
 
 The ED diagram (Entity Relationship Model) shows the basic WebHook database tables and the relationships between them. This is what we need to build in our database
-![Webhook ED diagram](./Assets/webhook_database_er_diagram.png "Webhook ED diagram")
+![Webhook ED diagram](./Assets/webhook_database_er_diagram.PNG "Webhook ED diagram")
 
 **On the left** you see the *System Event Model*, which is used to store information such as WebHook Created/Updated or Deleted. This represents some system audit (tracking) logs for monitoring webhook history in the application.
 
