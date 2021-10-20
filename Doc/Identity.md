@@ -1,113 +1,114 @@
 
 # Table of contents
-- [Identity and security overview](#identity-and-security-overview)
-    - [Authenticatioton vs Authorization](#authenticatioton-vs-authorization)
+- [Table of contents](#table-of-contents)
+  - [Identity and security overview](#identity-and-security-overview)
+    - [Authentication vs Authorization](#authentication-vs-authorization)
     - [Tokens vs Cookie and Sessions](#tokens-vs-cookie-and-sessions)
-        - [Cookies](#cookies)
-            - [What is origin?](#what-is-origin)
-            - [Another cookie definitions:](#another-cookie-definitions)
-        - [Sessions](#sessions)
-        - [Tokens](#tokens)
-            - [JWT Tokens](#jwt-tokens)
+      - [Cookies](#cookies)
+        - [What is origin?](#what-is-origin)
+        - [Another cookie definitions:](#another-cookie-definitions)
+      - [Sessions](#sessions)
+      - [Tokens](#tokens)
+        - [JWT Tokens](#jwt-tokens)
     - [Identity protocols](#identity-protocols)
-        - [OAuth](#oauth)
-            - [Token exchange flows](#token-exchange-flows)
-        - [OpenID Connect](#openid-connect)
+      - [OAuth](#oauth)
+        - [Token exchange flows](#token-exchange-flows)
+      - [OpenID Connect](#openid-connect)
     - [Backend for Frontend pattern (BFF)](#backend-for-frontend-pattern-bff)
-        - [Security reasons](#security-reasons)
-        - [Architectural reasons](#architectural-reasons)
-            - [BFF vs API gatway](#bff-vs-api-gatway)
-        - [BBF cookies termination and token isolation](#bbf-cookies-termination-and-token-isolation)
-- [Implementing indentity in .NetCore](#implementing-indentity-in-netcore)
+      - [Security reasons](#security-reasons)
+      - [Architectural reasons](#architectural-reasons)
+        - [BFF vs API gateway](#bff-vs-api-gateway)
+      - [BBF cookies termination and token isolation](#bbf-cookies-termination-and-token-isolation)
+  - [Implementing indentity in .NetCore](#implementing-indentity-in-netcore)
     - [Duende IndentityServer](#duende-indentityserver)
-        - [Alternatives](#alternatives)
-        - [Demo architecture](#demo-architecture)
+      - [Alternatives](#alternatives)
+      - [Demo architecture](#demo-architecture)
     - [Demo Microservices overview](#demo-microservices-overview)
     - [IdentityServer project configuration](#identityserver-project-configuration)
-        - [Nuget Packages:](#nuget-packages)
-        - [ConfigureServices](#configureservices)
-            - [AddCorsConfiguration](#addcorsconfiguration)
-            - [AddAppIdentityDbContext](#addappidentitydbcontext)
-            - [AddIdentityServer](#addidentityserver)
-            - [Data Stores](#data-stores)
-            - [User data store:](#user-data-store)
-        - [Initial data](#initial-data)
-            - [Configure Clients](#configure-clients)
-            - [Configure resources](#configure-resources)
-                - [Identity resources](#identity-resources)
-                - [Api resources](#api-resources)
-                - [Api scopes](#api-scopes)
-        - [Setup migrations](#setup-migrations)
-            - [Creating migrations](#creating-migrations)
-            - [Apply existing migrations](#apply-existing-migrations)
-        - [Running identiyserver project](#running-identiyserver-project)
+      - [Nuget Packages:](#nuget-packages)
+      - [ConfigureServices](#configureservices)
+        - [AddCorsConfiguration](#addcorsconfiguration)
+        - [AddAppIdentityDbContext](#addappidentitydbcontext)
+        - [AddIdentityServer](#addidentityserver)
+        - [Data Stores](#data-stores)
+        - [User data store:](#user-data-store)
+      - [Initial data](#initial-data)
+        - [Configure Clients](#configure-clients)
+        - [Configure resources](#configure-resources)
+          - [Identity resources](#identity-resources)
+          - [Api scopes](#api-scopes)
+          - [Api resources](#api-resources)
+      - [Setup migrations](#setup-migrations)
+        - [Creating migrations](#creating-migrations)
+        - [Apply existing migrations](#apply-existing-migrations)
+      - [Running identiyserver project](#running-identiyserver-project)
     - [BFF project configuration](#bff-project-configuration)
-        - [Nuget Packages:](#nuget-packages)
-        - [ConfigureServices](#configureservices)
-            - [AddIdentityConfiguration](#addidentityconfiguration)
-            - [AddBff configuration](#addbff-configuration)
+      - [Nuget Packages:](#nuget-packages-1)
+      - [ConfigureServices](#configureservices-1)
+        - [AddIdentityConfiguration](#addidentityconfiguration)
+        - [AddBff configuration](#addbff-configuration)
     - [API project configuration](#api-project-configuration)
-        - [Nuget Packages:](#nuget-packages)
-        - [ConfigureServices](#configureservices)
+      - [Nuget Packages:](#nuget-packages-2)
+      - [ConfigureServices](#configureservices-2)
     - [Running microservices](#running-microservices)
-        - [Idnetityserver](#idnetityserver)
-        - [BFF](#bff)
-        - [APIServer](#apiserver)
+          - [Idnetityserver](#idnetityserver)
+          - [BFF](#bff)
+          - [APIServer](#apiserver)
     - [Idnetity server UI interface](#idnetity-server-ui-interface)
-- [Login and Logout integration to UI](#login-and-logout-integration-to-ui)
+  - [Login and Logout integration to UI](#login-and-logout-integration-to-ui)
     - [Login](#login)
     - [Logout](#logout)
-- [Authentication machine-to-machine using Client Credentials flow](#authentication-machine-to-machine-using-client-credentials-flow)
+  - [Authentication machine-to-machine using Client Credentials flow](#authentication-machine-to-machine-using-client-credentials-flow)
     - [Using IdentityModel](#using-identitymodel)
-        - [Most common](#most-common)
-            - [Handle Discovery endpoint](#handle-discovery-endpoint)
-            - [Handle Token endpoint](#handle-token-endpoint)
-        - [IdentityModel for workers and web](#identitymodel-for-workers-and-web)
-            - [Setup Token managment](#setup-token-managment)
+      - [Most common](#most-common)
+        - [Handle Discovery endpoint](#handle-discovery-endpoint)
+        - [Handle Token endpoint](#handle-token-endpoint)
+      - [IdentityModel for workers and web](#identitymodel-for-workers-and-web)
+        - [Setup Token managment](#setup-token-managment)
 
 ## Identity and security overview
 
 ![Idnetity server with BFF flow](./Assets/identity_server_sketch_flow.png "Idnetity server with BFF flow")
 
-When it comes to security. There are many tutorials out there and also notes and comments why use and dont use each approach. It is hard to understand all different options and security issues they have. 
+When it comes to security. There is a lot of guidance and also advice and commentary on why you should or should not use each approach. It's hard to understand all the different options and security issues they have.
 
-Also you have different clinets (Mobile/Web/App) and each presents different security requiremns for managing, storing and processing data as tokens, cookies or sessions.
+You also have different clients (mobile/web/app) and each has different security requirements for managing, storing and processing data in the form of tokens, cookies or sessions.
 
-At the end your App can scale and not all options are able to be deployed as multy instances nodes without aditional changes in app and infrastructure.
+At the end, your app may scale and not all options can be deployed as multiple instance nodes without additional changes to the app and infrastructure.
 
-This means you realy need to make decesions at the beginning and ask question like: *what are your clinets?* and *what are your requirements?* and *what can be in future added to system?* and *how it is possible to handle with selected approach?* etc.. etc..
+This means that you really need to make decisions at the beginning and ask questions like: *What are your customers?* and *What are your requirements?* and *What can be added to the system in the future?* and *How is it possible to deal with the chosen approach?* etc. etc..
 
-### Authenticatioton vs Authorization
+### Authentication vs Authorization
 
- - `Authenticatioton` - Process of verifying who a user is (identity)
- - `Authorization` -  Process of verifying what user have access to (permissions check to access the specific resource)
+- `Authentication` - process of verifying who a user is (identity).
+- `Authorization` - process of checking what a user has access to (checking permissions to access a particular resource).
 
 ### Tokens vs Cookie and Sessions
 
-Tokens,Cookies and Sessions can be interpreted as resources or tools that are used by various protocols/standards/patterns (OAuth,OpenID, BFF) to handle identity related tasks.
+Tokens, cookies and sessions can be interpreted as resources or tools used by various protocols/standards/patterns (OAuth, OpenID, BFF) to perform identity-related tasks.
 
-It is important to understand basic because at the end they are used in combination regarding to enviroment, used clients and security level.
+It is important to understand the basics as they end up being used in combination with the environment, clients used and security level.
 
-At the end you can wrap JWT token inside Cookie and use that with session data for `Authorization` and `Authenticatioton`.
+In the end, you can wrap the JWT token in a cookie and use it with session data for `authorization` and `authentication`.
 
 
 #### Cookies
 
-Cookies can be interpreted as small blocks of data created by server written once to response and always being automaicaly resended with aditional request by Web-Browser until thier lifetime expire.
+Cookies can be understood as small blocks of data created by the server that are written once in the response and automatically resent with each subsequent request from the web browser until their lifetime expires.
 
-They can be used for Authentication/Authorization or for tracking and marketing reasons. And many more...
+They can be used for authentication/authorization or tracking and marketing purposes. And much more...
 
 *IndentityServer cookies example:*
 ![IdnetityServer Cookies in web browsers](./Assets/cookies_webBrowser.png "IdnetityServer Cookies in web browsers")
 
-There are 3 main cookies properties:
-- `HttpOnly` - An http-only cookie cannot be accessed by client-side APIs, such as JavaScript. Browser will not allow you to acces this cookie from frontend code.
-- `Secure` A secure cookie can only be transmitted over an encrypted connection HTTPS.
-- `SameSite` 3 option values `Strict`, `Lax` or `None` this tells browser to what domain and oringing can be cookie sended.
+There are 3 main properties of cookies:
+- `HttpOnly` - An http-only cookie cannot be accessed by client-side APIs, such as JavaScript. The browser will not allow you to access this cookie from the front-end code.
+- `Secure` A secure cookie can only be transferred over an encrypted HTTPS connection.
+- `SameSite` 3 option values `Strict`, `Lax` or `None` - this tells the browser which domain and address the cookie can be sent to.
 
 ##### What is origin?
 
-Origin is usually ip and port or domain name and subdomain name.
+The origin is usually ip and port or domain name and subdomain name.
 
 ```
 // This are different origins since subdomain are different
@@ -120,34 +121,33 @@ https://localhost:7001
 ```
  
 ##### Another cookie definitions:
-- `Session cookie` - Created only for browser session (in-memory) and is deleted/lost after close.
-- `Third-party cookie` - Normally, a cookie's domain attribute will match the domain that is shown in the web browser's address bar. as `first-party cookie`. The `Third-party cookie` does not match current domain and are used as  `Tracking cookie` to track user activity.
+- `Session cookies` - Created only for the browser session (in memory) and deleted/lost after closing.
+- `Third-party cookies` - Usually the domain attribute of a cookies matches the domain displayed in the address bar of the web browser. as `first-party cookies`. The `third-party cookies` does not match the current domain and is used as `tracking cookies` to track user activity.
 
 #### Sessions
 
-Session is used to temporarily store the information on the server to be used across multiple pages of the website. It is commonly connected with cookie which is used to identify the session stored on server but does not contain data.
+Session is used to temporarily store information on the server for use across multiple pages of the site. It is usually associated with a cookie that is used to identify the session stored on the server, but does not contain any data.
 
 ![Session diagram](./Assets/session_diagram.png "Session diagram")
 
 
 #### Tokens
 
-Tokens are pieces of data  that allow application systems to perform the authorization and authentication process. Usualy they are encoded as base64 strings.
+Tokens are data elements that allow application systems to perform the authorization and authentication process. They are usually encoded as base64 strings.
 
-There are multiple types of tokens:
-- `access token` - Wraps user claims and sign it by secreat. it use JWT Tokens.
-- `refresh token` - Are used to *"Refresh"* and obtain new `access token` after its lifetime expire
-- `id token` - json encoded data about user profile info
+There are several types of tokens:
+- `access token` - Includes user claims and signs them with a secret. It uses JWT tokens.
+- `refresh token` - Used to *"refresh "* and get a new 'access token' after its lifetime expires.
+- `id token` - JSON encoded data about user profile information
 - etc, etc...
-
+- 
 ##### JWT Tokens
 
-JSON Web Token is an open standard that defines way how to securely transmit information between parties as a JSON object. 
+JSON Web Token is an open standard that defines how information can be securely transferred between parties as a JSON object. 
 
-They are used for `Authorization` and `Information Exchange` because they provide security sign proof that information wrapped inside are valid and was written by trusted source.
+They are used for `authorization` and `information exchange` as they provide a security proof that the information wrapped in them is valid and written by a trusted source.
 
-You can easily write any data inside token, sign that data and than use it by clients to access the server resources. Server can validate if token was signed and is still valid. 
-
+You can easily write arbitrary data to tokens, sign that data, and then have clients use it to access server resources. The server can verify that the token was signed and is still valid.
 
 **Basic JWT token flow example:**
 
@@ -178,7 +178,7 @@ You can easily write any data inside token, sign that data and than use it by cl
     "admin": true
     }
     ```
-- `Signature` - Encoded header, the encoded payload, a secret and siged by algorithm specified in the header.
+- `Signature` - Encrypted header, the encrypted payload, a secret and signed by an algorithm specified in the header.
     </br>
     ```js
     HMACSHA256(
@@ -187,11 +187,11 @@ You can easily write any data inside token, sign that data and than use it by cl
     secret
     ```
 
-    You can read more anitiona linfo about JWT tokens under [official documentation](https://jwt.io/introduction).
+     More additional info about JWT tokens can be found at [official documentation](https://jwt.io/introduction).
 
     </br>
-    
-    The most common used token for `Authorizing` acces to APIs is `Bearer` token.
+ 
+    The most commonly used token for authorizing access to APIs is the `Bearer` token.
 
     </br>
 
@@ -199,59 +199,58 @@ You can easily write any data inside token, sign that data and than use it by cl
 
 ### Identity protocols
 
-There are multiple protocols/specifications available that allows you to manage your identity or authorization process.
+There are several protocols/specifications available to manage your identity or authorization process.
 
-This was needed to standardize authentication and autorization between services and clients. This allows us to use different global idetity/auth providers Like Facebook, Google (externally/intenally) and also standardied way how the flow is implemented.
+This was necessary to standardize authentication and authorization between services and clients. So we can use different global identity/authentication providers like Facebook, Google (external/internal) and also standardize the way the process is implemented.
 
 ![Oauth and OpenId logo](./Assets/openid_oauth_logo.jpg "Oauth and OpenId logo")
 
+This demo focuses on the most commonly used protocols `OAuth` and `OpenID Connect`.
 
-This demo focuse on the most used `OAuth` and `OpenID Connect` protocols.
+Both protocols use a JWT token by default to encrypt and sign sensitive data, or to verify that the request was sent from a trusted source. It is also possible to use cookies on the front end and let the back end do the session and token authorization for you.
 
-Both protocols uses by default JWT token to encript and sign some sensitiv data or validate that request was sended from trusted source. It is allso possible to use cookies on front and let backend to handle session and token autorization for you.
-
-You can also watch and learn differents from this talks:
+You can also watch and learn from various talks:
 - [OAuth 2.0 and OpenID Connect - [Nate Barbettini]](https://www.youtube.com/watch?v=996OiexHze0)
 - [Introduction to OAuth 2.0 and OpenID Connect - [Philippe De Ryck]](https://www.youtube.com/watch?v=GyCL8AJUhww)
 
 #### OAuth
-Is used primarly to authorize acces of som App to specific resource. This is done without providing your pasword to external sides.
+Primarily used to authorize an app's access to a specific resource. This is done without having to share your password with external sites.
 
-![Oauth slack grant promt example](./Assets/oAuth_slack_promt_example.png "Oauth slack grant promt example")
+![Oauth slack grant prompt example](./Assets/oAuth_slack_promt_example.png "Oauth slack grant promt example")
 
-If you’ve ever signed up to a new application and agreed to let it automatically access your contacts, calendar etc.. then you’ve used *OAuth 2.0*. This protocol does not provide information about endpoint user just provide token to access specific resources. You can read more about [OAuth under this Docs.](https://auth0.com/docs/authorization/protocols/protocol-oauth2) 
+If you have ever signed in to a new app and agreed to access your contacts, calendar, etc., you have used *OAuth 2.0*. This protocol does not provide any information about the user's endpoint, just a token to access certain resources. You can read more about [OAuth at this document](https://auth0.com/docs/authorization/protocols/protocol-oauth2).
 
 ![Oauth is authorization not authentication](./Assets/oauth_is_authorization.png "Oauth is authorization not authentication")
 
 
-OAuth generally provides clients a *"secure delegated access"* to specific resource. Imagine you are google user and some app wanna access your calendar data. This is displayed in this example:
+OAuth generally provides clients with *"secure delegated access "* to certain resources. Imagine you are a Google user and an app wants to access your calendar data. This can be an example of a flow:
 
 `OAuth` flow example:
+
 ![Oauth flow explain](./Assets/oauth_flow_explain.png "Oauth flow explain")
 
-In above example app as Slack, Jira etc.. will just get authorization to get acces to specific resource (in example calendar) but not to user itself so profile data as username, email are not transferend and keeps protected.
+In the above example, an application like Slack, Jira, etc. only gets permission to access a specific resource (e.g. the calendar), but not the user itself, so profile data like username and email are not transferred and remain protected.
 
-If you wanna lear nore about OAuth you can watch folowing talks:
+If you want to learn more about OAuth, you can watch the following presentations:
 - [Introduction to OAuth 2.0 Flow - [Philippe De Ryck]](https://youtu.be/GyCL8AJUhww?t=655)
 
 ##### Token exchange flows
 
-There are several ways how can be `grant` exchanged. Option depens on what kind of client is requesting access and how much is this client trusted.
-s
-- Authorization Code Flow
-- Authorization Code Flow with PKCE
+There are several ways in which `grant` can be substituted. The choice depends on what kind of client is requesting access and how much that client is trusted.
+
+- Authorization code flow
+- Flow of authorization code with PKCE
 - Implicit Flow
-- Client credentials Flow
+- Client credentials flow
 
 ![Oauth grant flow](./Assets/oauth_grant_flowchart.png "Oauth grant flow") Image from [Okta](developer.okta.com)
 
 #### OpenID Connect
 
-OpenID is a protocol used for for decentralized authentication
+OpenID is a protocol for decentralized authentication
+A login used by multiple internal/external applications. If you used your Google or Facebook etc. to log in to an external web or app, then you used *`OpenID Connect`*.
 
-One login used by multiple internal/external applications. If you’ve used your Google or Facebook etc. to sign-in to exteranl web or app, then you’ve used *OpenID Connect`*.
-
-OpenID Connect is built on the *OAuth 2.0.* (OAuth is underlying protocol and OpenId is identity layer on it) and additionaly it uses jwt token called `id_token` which encapsulates the identity claims in JSON format. You can find more info about OpenId [under this specification](https://openid.net/connect/).
+OpenID Connect is based on *OAuth 2.0.* (OAuth is the underlying protocol and OpenId is the identity layer built on top of it) and also uses a JWT token called `id_token` which encapsulates identity claims in JSON format. For more information about OpenId, see [under this specification](https://openid.net/connect/).
 
 `id_token` example:
 
@@ -285,7 +284,7 @@ There are several flows that can be used with `OpenId`. You can read more about 
 
 Each `OpenId` server by specification provides multiple endpoints to interact with.
 
-All endpoints URLs can be explored with the **global discovery endpoint**. Often referred to as *disco*. It is available under the path: `/.well-known/openid-configuration` and returns JSON *OpenID Connect* metadata related to the specified authorization server.
+The URLs of all endpoints can be explored using the **global discovery endpoint**. Often referred to as *disco*. It is available under the path: `/.well-known/openid-configuration` and returns JSON *OpenID Connect* metadata related to the specified authorization server.
 
 Example *disco* response:
 
@@ -334,14 +333,14 @@ Most important OpenId Endpoints:
 
 ### Backend for Frontend pattern (BFF)
 
-BBF is backend consumed by specific frontend aplication.
+BBF is a backend used by a particular front-end application.
 
-Since endpoint APIs can have multiple clients with different requirements BFF can provide client specific backend mediator and behave as proxy to forward, and merge multiple request to various services APIs.
+Since endpoint APIs may have multiple clients with different requests, BFF can provide a client-specific backend mediator and act as a proxy that forwards and merges multiple requests to different service APIs.
 
 ![Backend for frontend - BFF example](./Assets/BFF_example.png "Backend for frontend - BFF example")
 
 > &#10240;
->Ok we have cookies, tokens and sessions. We used them by various authentication/authorization protocols (OpenId, OAuth etc..) **and what the hack is BFF good for**?
+>Ok, we have cookies, tokens, and sessions. We use them for various authentication/authorization protocols (OpenId, OAuth, etc.) **and what the hack BFF is good for.**?
 >
 > Answer is:
 >- Security reasons
@@ -350,39 +349,39 @@ Since endpoint APIs can have multiple clients with different requirements BFF ca
 
 #### Security reasons
 
-In recent years it has been common to implement OpenID Connect for SPAs in Javascript (React, Angular, Vue...) and this is no longer recommended:
+In recent years, it was common to implement OpenID Connect for SPAs in Javascript (React, Angular, Vue...), and this is no longer recommended:
 - Using access tokens in the browser has more security risks than using secure cookies.
-- An SPA is a public client and it cannot hold a secret because, such a secret would be part of the JavaScript and can be accessible to anyone inspecting the source code.
-- Recent browser changes in preventig tracking may result in dropping `third party cookies`
-- It is not possible to store something in the browser safely over a long time because it can be stole by various attacks.
+- A SPA is a public client and cannot keep a secret, as such a secret would be part of the JavaScript and could be accessible to anyone inspecting the source code.
+- Recent browser changes to prevent tracking may result in 'third-party cookies' being dropped.
+- It is not possible to store something securely in the browser for a long period of time, as it can be stolen by various attacks.
 
-Due to the mentioned issues outlined above, the best security recommendation for an SPA is to **avoid keeping tokens in the browser** and creates lightweight backend to help with this process called Backend for Frontend pattern (BFF).
+Due to the above issues, the best security recommendation for SPA is to **avoid storing tokens in the browser** and create a lightweight backend to help with this process, called Backend for Frontend pattern (BFF).
 
-By this you can keep using `acces_tokens` to authorize access to all your APIs but keep clients for example depending on type (browser, mobile) to use cookies or tokens how they needs from security reasons.
+This way, you can still use `acces_tokens` to authorize access to all your APIs, but clients can use cookies or tokens, for example, depending on the type (browser, mobile device), as required for security reasons.
 
 BFF can be:
-- `stateful` - keeps tokens in a storage and use session to manage that.
-- `stateless` - stores the tokens in encrypted HTTP-only, same-site cookies
+- `statefull` - stores tokens in memory and uses a session to manage them.
+- `stateless` - stores the tokens in encrypted HTTP-only, same-page cookies.
 
 #### Architectural reasons
 
-When you desin your application you have various options how to acces APIs from clients (Web/Mobile/External).
+When you design your application, you have several options on how to access APIs from clients (web/mobile/external).
 
-1) A single API gateway providing a single API for all clients
-2) A single API gateway provides an API for each kind of client
-3) A per-client API gateway providing each client with an API. **This is the BFF pattern**
+1) A single API gateway that provides a single API for all clients 
+2) A single API gateway that provides an API for each type of client
+3) A per-client API gateway that provides an API to each client.
 
-##### BFF vs API gatway
+##### BFF vs API gateway
 
-While an `API Gateway` **is a single entri point** into to the system for all clients, a `BFF` is only responsible for a **single type of client**.
+While an `API Gateway` **is a single entry point** into to the system for all clients, a `BFF` is only responsible for a **single type of client**.
 
 ![Backend for frontend vs API gateway](./Assets/BFF_vs_api_gateway.png "Backend for frontend vs API gateway")
 
 #### BBF cookies termination and token isolation
 
-So as was mentiond in text the most important is:
-- Avoid keeping tokens in the browser. (“No tokens in the browser” Policy)
-- Storing tokens on the server-side and using encrypted/signed HTTP-only cookies 
+As mentioned in the text, the most important thing:
+- Avoid storing tokens in the browser. (**No tokens in the browser** policy).
+- Store tokens on the server side and use encrypted/signed HTTP-only cookies.
 </br>
 
 Recommended BFF pattern to secure SPA frontends:
