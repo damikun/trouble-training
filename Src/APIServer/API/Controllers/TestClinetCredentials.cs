@@ -22,6 +22,5 @@ namespace APIServer.Controllers {
             return Ok("All good man :)");
 
         }
-
     }
 }

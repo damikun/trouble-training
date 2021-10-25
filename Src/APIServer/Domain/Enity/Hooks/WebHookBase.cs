@@ -21,7 +21,9 @@ namespace APIServer.Domain.Core.Models.WebHooks {
         }
         public U payload { get; set; }
 
+        #nullable enable
         public Hook_User_DTO? actor { get; set; } = new Hook_User_DTO();
+        #nullable disable
 
         public DateTime timeStamp { get; set; } = DateTime.Now;
     }

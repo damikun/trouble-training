@@ -13,6 +13,8 @@ using APIServer.Aplication.Notifications.WebHooks;
 using APIServer.Extensions;
 using System.Diagnostics;
 using SharedCore.Aplication.Payload;
+using MediatR.Pipeline;
+using SharedCore.Aplication.Core.Commands;
 
 namespace APIServer.Aplication.Commands.WebHooks {
 
@@ -20,11 +22,14 @@ namespace APIServer.Aplication.Commands.WebHooks {
     /// Command for removing hook
     /// </summary>
     [Authorize]
-    public class RemoveWebHook : IRequest<RemoveWebHookPayload> {
+    public class RemoveWebHook : CommandBase<RemoveWebHookPayload> {
 
         /// <summary>WebHook Id </summary>
         public long WebHookId { get; set; }
     }
+
+    //---------------------------------------
+    //---------------------------------------
 
     /// <summary>
     /// RemoveWebHook Validator
@@ -45,7 +50,10 @@ namespace APIServer.Aplication.Commands.WebHooks {
             .WithMessage("Hook was not found");
         }
 
-        public async Task<bool> HookExist(RemoveWebHook request, long id, CancellationToken cancellationToken) {
+        public async Task<bool> HookExist(
+            RemoveWebHook request,
+            long id,
+            CancellationToken cancellationToken) {
             
             await using ApiDbContext dbContext = 
                 _factory.CreateDbContext();
@@ -53,6 +61,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
             return await dbContext.WebHooks.AnyAsync(e => e.ID == request.WebHookId);
         }
     }
+
+    //---------------------------------------
+    //---------------------------------------
 
     /// <summary>
     /// IRemoveWebHookError
@@ -69,6 +80,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// </summary>
         public long removed_id { get; set; }
     }
+
+    //---------------------------------------
+    //---------------------------------------
 
     /// <summary>Handler for <c>RemoveWebHook</c> command </summary>
     public class RemoveWebHookHandler : IRequestHandler<RemoveWebHook, RemoveWebHookPayload> {
@@ -106,7 +120,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// <summary>
         /// Command handler for <c>RemoveWebHook</c>
         /// </summary>
-        public async Task<RemoveWebHookPayload> Handle(RemoveWebHook request, CancellationToken cancellationToken) {
+        public async Task<RemoveWebHookPayload> Handle(
+            RemoveWebHook request,
+            CancellationToken cancellationToken) {
             
             await using ApiDbContext dbContext = 
                 _factory.CreateDbContext();
@@ -126,19 +142,45 @@ namespace APIServer.Aplication.Commands.WebHooks {
 
             await dbContext.SaveChangesAsync(cancellationToken);
 
-            try {
-
-                await _publisher.Publish(new WebHookRemovedNotifi() {
-                    ActivityId = Activity.Current.Id
-                }, PublishStrategy.ParallelNoWait, default(CancellationToken));
-
-            } catch { }
-
             var response = RemoveWebHookPayload.Success();
 
             response.removed_id = removed_id;
 
             return response;
+        }
+    }
+
+    //---------------------------------------
+    //---------------------------------------
+
+    public class RemoveWebHookPostProcessor: IRequestPostProcessor<RemoveWebHook,RemoveWebHookPayload>
+    {
+        /// <summary>
+        /// Injected <c>IPublisher</c>
+        /// </summary>
+        private readonly APIServer.Extensions.IPublisher _publisher;
+
+        public RemoveWebHookPostProcessor(APIServer.Extensions.IPublisher publisher)
+        {
+            _publisher = publisher;
+        }
+
+        public async Task Process(
+            RemoveWebHook request,
+            RemoveWebHookPayload response,
+            CancellationToken cancellationToken)
+        {
+            if(response != null && !response.HasError()){
+                try {
+
+                    // You can extend and add any custom fields to Notification!
+
+                    await _publisher.Publish(new WebHookRemovedNotifi() {
+                        ActivityId = Activity.Current.Id
+                    }, PublishStrategy.ParallelNoWait, default(CancellationToken));
+
+                } catch { }
+            }
         }
     }
 }

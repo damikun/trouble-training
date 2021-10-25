@@ -15,43 +15,61 @@ namespace Device.Aplication.Shared.Behaviours {
     /// </summary>
     /// <typeparam name="TRequest"></typeparam>
     /// <typeparam name="TResponse"></typeparam>
-    public class UnhandledExBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> {
+    public class UnhandledExBehaviour<TRequest, TResponse> 
+    : IPipelineBehavior<TRequest, TResponse> {
         private readonly ICurrentUser _currentUserService;
         private readonly ILogger _logger;
+        private readonly ITelemetry _telemetry;
 
         public UnhandledExBehaviour(
             ICurrentUser currentUserService,
-            ILogger logger) {
+            ILogger logger,
+            ITelemetry telemetry) {
             _currentUserService = currentUserService;
             _logger = logger;
+            _telemetry = telemetry;
         }
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next) {
+        public async Task<TResponse> Handle(
+            TRequest request,
+            CancellationToken cancellationToken,
+            RequestHandlerDelegate<TResponse> next
+        ) {
 
             var activity = Sources.DemoSource.StartActivity(
-                String.Format("UnhandledExBehaviour: Request<{0}>", typeof(TRequest).FullName), ActivityKind.Server);
+                String.Format(
+                    "UnhandledExBehaviour: Request<{0}>",
+                     typeof(TRequest).FullName),
+                      ActivityKind.Server
+            );
 
             try {
-                activity.Start();
+                activity?.Start();
 
                 // Continue in pipe
                 return await next();
 
             } catch (Exception ex) {
-                ex.Data.Add("command_failed",true);
-                
-                SharedCore.Aplication.Shared.Common.SetOtelError(ex?.ToString(),_logger);
+
+                _telemetry.SetOtelError(ex);
 
                 // In case it is Mutation Response Payload = handled as payload error union
-                if ( SharedCore.Aplication.Shared.Common.IsSubclassOfRawGeneric(typeof(BasePayload<,>), typeof(TResponse))) {
-                    return Device.Aplication.Shared.Common.HandleBaseCommandException<TResponse>(ex);
+                // By default all unexpected errors becomes InternalServerError
+                if (SharedCore.Aplication.Shared.Common.IsSubclassOfRawGeneric(
+                    typeof(BasePayload<,>),
+                    typeof(TResponse))
+                ) {
+                    return Common.HandleBaseCommandException<TResponse>(ex);
                 } else {
+
+                    ex.Data.Add("command_failed",true); 
+
                     throw;
                 }
 
             } finally {
-                activity.Stop();
-                activity.Dispose();
+                activity?.Stop();
+                activity?.Dispose();
             }
         }
     }

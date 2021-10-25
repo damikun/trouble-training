@@ -15,6 +15,8 @@ using APIServer.Aplication.Notifications.WebHooks;
 using APIServer.Extensions;
 using System.Diagnostics;
 using SharedCore.Aplication.Payload;
+using MediatR.Pipeline;
+using SharedCore.Aplication.Core.Commands;
 
 namespace APIServer.Aplication.Commands.WebHooks {
 
@@ -22,7 +24,7 @@ namespace APIServer.Aplication.Commands.WebHooks {
     /// Command for updating webhook
     /// </summary>
     [Authorize]
-    public class UpdateWebHook : IRequest<UpdateWebHookPayload> {
+    public class UpdateWebHook : CommandBase<UpdateWebHookPayload> {
 
         public UpdateWebHook() {
             this.HookEvents = new HashSet<HookEventType>();
@@ -35,7 +37,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
         public string WebHookUrl { get; set; }
 
         /// <summary> Secret </summary>
+        #nullable enable
         public string? Secret { get; set; }
+        #nullable disable
 
         /// <summary> IsActive </summary>
         public bool IsActive { get; set; }
@@ -43,6 +47,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// <summary> HookEvents </summary>
         public HashSet<HookEventType> HookEvents { get; set; }
     }
+
+    //---------------------------------------
+    //---------------------------------------
 
     /// <summary>
     /// UpdateWebHook Validator
@@ -70,7 +77,8 @@ namespace APIServer.Aplication.Commands.WebHooks {
             .NotNull();
 
             RuleFor(e => e.WebHookUrl)
-            .MustAsync( async (command,url,cancellation) =>  await BeUniqueByURL(url,command.WebHookId, cancellation)
+            .MustAsync( async (command,url,cancellation) =>  await BeUniqueByURL(
+                url,command.WebHookId, cancellation)
             ).WithMessage("Hook endpoint allready exist");
 
             RuleFor(e => e.WebHookId)
@@ -78,7 +86,10 @@ namespace APIServer.Aplication.Commands.WebHooks {
             .WithMessage("Hook was not found");
         }
 
-        public async Task<bool> BeUniqueByURL(string url,long hook_id, CancellationToken cancellationToken) {
+        public async Task<bool> BeUniqueByURL(
+            string url,
+            long hook_id,
+            CancellationToken cancellationToken) {
             
             await using ApiDbContext dbContext = 
                 _factory.CreateDbContext();
@@ -95,6 +106,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
         }
     }
 
+    //---------------------------------------
+    //---------------------------------------
+
     /// <summary>
     /// IUpdateWebHookError
     /// </summary>
@@ -110,6 +124,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// </summary>
         public WebHook hook { get; set; }
     }
+
+    //---------------------------------------
+    //---------------------------------------
 
     /// <summary>Handler for <c>UpdateWebHook</c> command </summary>
     public class UpdateWebHookHandler : IRequestHandler<UpdateWebHook, UpdateWebHookPayload> {
@@ -147,7 +164,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// <summary>
         /// Command handler for <c>UpdateWebHook</c>
         /// </summary>
-        public async Task<UpdateWebHookPayload> Handle(UpdateWebHook request, CancellationToken cancellationToken) {
+        public async Task<UpdateWebHookPayload> Handle(
+            UpdateWebHook request,
+            CancellationToken cancellationToken) {
 
             await using ApiDbContext dbContext = 
                 _factory.CreateDbContext();
@@ -169,23 +188,50 @@ namespace APIServer.Aplication.Commands.WebHooks {
 
             wh.Secret = request.Secret;
             wh.IsActive = request.IsActive;
-            wh.HookEvents = request.HookEvents != null ? request.HookEvents.Distinct().ToArray() : new HookEventType[0];
+            wh.HookEvents = request.HookEvents != null ? 
+                request.HookEvents.Distinct().ToArray() : new HookEventType[0];
 
             await dbContext.SaveChangesAsync(cancellationToken);
-
-            try {
-
-                await _publisher.Publish(new WebHookUpdatedNotifi() {
-                    ActivityId = Activity.Current.Id
-                }, PublishStrategy.ParallelNoWait, default(CancellationToken));
-
-            } catch { }
             
             var response = UpdateWebHookPayload.Success();
 
             response.hook = wh;
 
             return response;
+        }
+    }
+
+    //---------------------------------------
+    //---------------------------------------
+    
+    public class UpdateWebHookPostProcessor: IRequestPostProcessor<UpdateWebHook,UpdateWebHookPayload>
+    {
+        /// <summary>
+        /// Injected <c>IPublisher</c>
+        /// </summary>
+        private readonly APIServer.Extensions.IPublisher _publisher;
+
+        public UpdateWebHookPostProcessor(APIServer.Extensions.IPublisher publisher)
+        {
+            _publisher = publisher;
+        }
+
+        public async Task Process(
+            UpdateWebHook request,
+            UpdateWebHookPayload response,
+            CancellationToken cancellationToken)
+        {
+            if(response != null && !response.HasError()){
+                try {
+
+                    // You can extend and add any custom fields to Notification!
+
+                    await _publisher.Publish(new WebHookUpdatedNotifi() {
+                        ActivityId = Activity.Current.Id
+                    }, PublishStrategy.ParallelNoWait, default(CancellationToken));
+
+                } catch { }
+            }
         }
     }
 }

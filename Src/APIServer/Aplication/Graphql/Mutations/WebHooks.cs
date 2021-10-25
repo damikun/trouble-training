@@ -23,7 +23,9 @@ namespace APIServer.Aplication.GraphQL.Mutation {
             public string WebHookUrl { get; set; }
 
             /// <summary> Secret </summary>
+            #nullable enable
             public string? Secret { get; set; }
+            #nullable disable
 
             /// <summary> IsActive </summary>
             public bool IsActive { get; set; }
@@ -62,7 +64,10 @@ namespace APIServer.Aplication.GraphQL.Mutation {
             public string WebHookUrl { get; set; }
 
             /// <summary> Secret </summary>
+
+            #nullable enable
             public string? Secret { get; set; }
+            #nullable disable
 
             /// <summary> IsActive </summary>
             public bool IsActive { get; set; }

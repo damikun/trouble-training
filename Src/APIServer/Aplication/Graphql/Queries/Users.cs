@@ -20,6 +20,8 @@ namespace APIServer.Aplication.GraphQL.Queries {
                 return null;
             }
 
+            await Task.CompletedTask;
+
             return new GQL_User(){
                 Guid = _current.UserId !=null?_current.UserId.Value.ToString():"",
                 Name = _current.GetClaim("name"),

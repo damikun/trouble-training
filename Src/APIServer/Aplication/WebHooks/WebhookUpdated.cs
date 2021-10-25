@@ -8,9 +8,7 @@ namespace APIServer.Aplication.WebHooks {
     /// </summary>
     public class Hook_HookUpdated : WebHookNotifyBase<HookResourceAction, Hook_HookUpdatedPayload> {
 
-        public Hook_HookUpdated(HookResourceAction action) : base(action) {
-
-        }
+        public Hook_HookUpdated(HookResourceAction action) : base(action) { }
 
         public Hook_HookUpdated(
             HookResourceAction action,
@@ -20,7 +18,6 @@ namespace APIServer.Aplication.WebHooks {
             this.payload = payload;
         }
     }
-
 
     [Serializable]
     public class Hook_HookUpdatedPayload {

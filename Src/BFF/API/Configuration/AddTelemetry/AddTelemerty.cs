@@ -7,6 +7,8 @@ using System;
 using BFF.Domain;
 using Microsoft.AspNetCore.Http;
 using SharedCore.Aplication.Extensions;
+using SharedCore.Aplication.Interfaces;
+using SharedCore.Aplication.Services;
 
 namespace BFF.Configuration {
     public static partial class ServiceExtension {
@@ -37,7 +39,8 @@ namespace BFF.Configuration {
                             {
                                 var req = rawObject as HttpRequest;
 
-                                await Extensions.HandleTracingActivityRename(req);    
+                                await SharedCore.Aplication.Shared.Common
+                                    .HandleTracingActivityRename(req);    
                             }
                         }
                     };
@@ -71,6 +74,8 @@ namespace BFF.Configuration {
                 //     // });
                 // }
             });
+
+            serviceCollection.AddSingleton<ITelemetry,Telemetry>();
 
             return serviceCollection;
         }

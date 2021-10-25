@@ -1,11 +1,14 @@
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Hosting;
-using OpenTelemetry.Trace;
-using OpenTelemetry.Resources;
 using System;
 using APIServer.Domain;
+using OpenTelemetry.Trace;
+using System.Threading.Tasks;
+using OpenTelemetry.Resources;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
+using SharedCore.Aplication.Services;
+using SharedCore.Aplication.Interfaces;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace APIServer.Configuration {
     public static partial class ServiceExtension {
@@ -29,6 +32,9 @@ namespace APIServer.Configuration {
                     opts.RecordException = true;
                     opts.Enrich = async (activity, eventName, rawObject) =>
                     {
+
+                        await Task.CompletedTask;
+                        
                         if (eventName.Equals("OnStartActivity"))
                         {
                             if (rawObject is HttpRequest {Path: {Value: "/graphql"}})
@@ -75,6 +81,8 @@ namespace APIServer.Configuration {
                 //     // });
                 // }
             });
+
+            serviceCollection.AddSingleton<ITelemetry,Telemetry>();
 
             return serviceCollection;
         }

@@ -1,20 +1,20 @@
 using System;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Linq;
-using System.Reflection;
-using System.Collections.Generic;
-using FluentValidation;
 using Serilog;
-using FluentValidation.Results;
-using System.Diagnostics;
-using SharedCore.Aplication.Interfaces;
+using System.Linq;
+using System.Threading;
+using FluentValidation;
 using APIServer.Domain;
+using System.Reflection;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using FluentValidation.Results;
+using System.Collections.Generic;
+using SharedCore.Aplication.Payload;
+using SharedCore.Aplication.Interfaces;
 using APIServer.Aplication.Shared.Errors;
 using SharedCore.Aplication.Shared.Attributes;
 using SharedCore.Aplication.Shared.Exceptions;
-using SharedCore.Aplication.Payload;
 
 namespace APIServer.Aplication.Shared.Behaviours {
 
@@ -27,49 +27,62 @@ namespace APIServer.Aplication.Shared.Behaviours {
     /// Authorization validator wrapper
     /// </summary>
     /// <typeparam name="TRequest"></typeparam>
-    public class AuthorizationValidator<TRequest> : AbstractValidator<TRequest>, IAuthorizationValidator {
-
-    }
+    public class AuthorizationValidator<TRequest> 
+    : AbstractValidator<TRequest>, IAuthorizationValidator { }
 
     /// <summary>
     /// Authorization behaviour for MediatR pipeline
     /// </summary>
     /// <typeparam name="TRequest"></typeparam>
     /// <typeparam name="TResponse"></typeparam>
-    public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> {
+    public class AuthorizationBehaviour<TRequest, TResponse> 
+    : IPipelineBehavior<TRequest, TResponse> {
         private readonly ICurrentUser _currentUserService;
         private readonly IEnumerable<IValidator<TRequest>> _validators;
         private readonly ILogger _logger;
+        private readonly ITelemetry _telemetry;
 
         public AuthorizationBehaviour(
             ICurrentUser currentUserService,
             IEnumerable<IValidator<TRequest>> validators,
-             ILogger logger) {
+            ILogger logger,
+            ITelemetry telemetry) {
             _currentUserService = currentUserService;
             _validators = validators;
             _logger = logger;
+            _telemetry = telemetry;
         }
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next) {
+        public async Task<TResponse> Handle(
+            TRequest request,
+            CancellationToken cancellationToken,
+            RequestHandlerDelegate<TResponse> next) {
 
-            var authorizeAttributes = request.GetType().GetCustomAttributes<AuthorizeAttribute>();
+            var authorizeAttributes = request.GetType()
+                .GetCustomAttributes<AuthorizeAttribute>();
 
             if (authorizeAttributes.Any()) {
 
                 var activity = Sources.DemoSource.StartActivity(
-                String.Format("AuthorizationBehaviour: Request<{0}>", request.GetType().FullName), ActivityKind.Server);
+                    String.Format(
+                        "AuthorizationBehaviour: Request<{0}>",
+                        request.GetType().FullName),
+                        ActivityKind.Server);
 
                 try {
-                    activity.Start();
+                    activity?.Start();
 
                     // Must be authenticated user
-                    if (!_currentUserService.Exist) {
+                    if (!_currentUserService.Exist)
                         return HandleUnAuthorised(null);
-                    }
 
                     // Role-based authorization
-                    var authorizeAttributesWithRoles = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Roles));
+                    var authorizeAttributesWithRoles = authorizeAttributes.Where(
+                        a => !string.IsNullOrWhiteSpace(a.Roles)
+                    );
+
                     if (authorizeAttributesWithRoles.Any()) {
+                        
                         foreach (var roles in authorizeAttributesWithRoles.Select(a => a.Roles.Split(','))) {
                             var authorized = false;
 
@@ -89,7 +102,10 @@ namespace APIServer.Aplication.Shared.Behaviours {
                     }
 
                     // Policy-based authorization
-                    var authorizeAttributesWithPolicies = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Policy));
+                    var authorizeAttributesWithPolicies = authorizeAttributes.Where(
+                        a => !string.IsNullOrWhiteSpace(a.Policy)
+                    );
+
                     if (authorizeAttributesWithPolicies.Any()) {
                         foreach (var policy in authorizeAttributesWithPolicies.Select(a => a.Policy)) {
                             if (!_currentUserService.HasRole(policy.Trim())) {
@@ -99,27 +115,32 @@ namespace APIServer.Aplication.Shared.Behaviours {
                     }
 
                     // Inner command validator autorization checks
-                    var authorizeAttributesWithInnerPolicies = authorizeAttributes.Where(a => a.InnerPolicy == true);
+                    var authorizeAttributesWithInnerPolicies = authorizeAttributes.Where(
+                        a => a.InnerPolicy == true
+                    );
+
                     if (authorizeAttributesWithInnerPolicies.Any()) {
-                        IValidator<TRequest>[] authValidators = _validators.Where(v => v is IAuthorizationValidator).ToArray();
-                        ValidationFailure[] authorization_validator_failures = await CommandAuthValidationFailuresAsync(request, authValidators);
 
-                        if (authorization_validator_failures.Any()) {
+                        IValidator<TRequest>[] authValidators = _validators.Where(
+                            v => v is IAuthorizationValidator).ToArray();
+
+                        ValidationFailure[] authorization_validator_failures = 
+                            await CommandAuthValidationFailuresAsync(request, authValidators);
+
+                        if (authorization_validator_failures.Any())
                             return HandleUnAuthorised(authorization_validator_failures);
-                        }
-                    }
-                } catch (Exception ex) {
-                    SharedCore.Aplication.Shared.Common.CheckAndSetOtelExceptionError(ex,_logger);
 
-                    // In case it is Mutation Response Payload = handled as payload error union
-                    if (SharedCore.Aplication.Shared.Common.IsSubclassOfRawGeneric(typeof(BasePayload<,>), typeof(TResponse))) {
-                        return Common.HandleBaseCommandException<TResponse>(ex);
-                    } else {
-                        throw ex;
                     }
+
+                } catch (Exception ex) {
+
+                    _telemetry.SetOtelError(ex);
+
+                    throw;
+
                 } finally {
-                    activity.Stop();
-                    activity.Dispose();
+                    activity?.Stop();
+                    activity?.Dispose();
                 }
             }
 
@@ -130,7 +151,10 @@ namespace APIServer.Aplication.Shared.Behaviours {
         private static TResponse HandleUnAuthorised(object error_obj) {
 
             // In case it is Mutation Response Payload = handled as payload error union
-            if (SharedCore.Aplication.Shared.Common.IsSubclassOfRawGeneric(typeof(BasePayload<,>), typeof(TResponse))) {
+            if (SharedCore.Aplication.Shared.Common.IsSubclassOfRawGeneric(
+                typeof(BasePayload<,>),
+                typeof(TResponse))
+            ) {
                 IBasePayload payload = ((IBasePayload)Activator.CreateInstance<TResponse>());
 
                 if (error_obj is ValidationFailure[]) {
@@ -156,20 +180,22 @@ namespace APIServer.Aplication.Shared.Behaviours {
             }
         }
 
-        private static async Task<ValidationFailure[]> CommandAuthValidationFailuresAsync(TRequest request, IEnumerable<IValidator<TRequest>> authValidators) {
+        private static async Task<ValidationFailure[]> CommandAuthValidationFailuresAsync(
+            TRequest request,
+            IEnumerable<IValidator<TRequest>> authValidators) {
+
             var validateTasks = authValidators
                 .Select(v => v.ValidateAsync(request));
+
             var validateResults = await Task.WhenAll(validateTasks);
+
             var validationFailures = validateResults
                 .SelectMany(r => r.Errors)
                 .Where(f => f != null)
                 .ToArray();
 
-            if (validationFailures == null) {
-                return new ValidationFailure[0];
-            } else {
-                return validationFailures;
-            }
+            return validationFailures == null ? 
+                new ValidationFailure[0] : validationFailures;
 
         }
     }

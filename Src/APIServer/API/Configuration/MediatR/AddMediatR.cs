@@ -1,18 +1,17 @@
 using MediatR;
-using System.Reflection;
 using FluentValidation;
-using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 using APIServer.Extensions;
+using APIServer.Domain.Core.Models.Events;
 using APIServer.Aplication.Shared.Behaviours;
 using APIServer.Aplication.Commands.WebHooks;
+using Microsoft.Extensions.DependencyInjection;
 using APIServer.Aplication.Commands.Internall.Hooks;
-using APIServer.Domain.Core.Models.Events;
 
 namespace APIServer.Configuration {
     public static partial class ServiceExtension {
         public static IServiceCollection AddMediatR(this IServiceCollection services) {
 
-            // Command executor
             services.AddMediatR(cfg => cfg.Using<AppMediator>(), typeof(CreateWebHook).GetTypeInfo().Assembly);
 
             services.AddTransient<APIServer.Extensions.IPublisher, APIServer.Extensions.Publisher>();
@@ -29,7 +28,7 @@ namespace APIServer.Configuration {
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TracingBehaviour<,>));
 
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CommandPerformanceBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
 

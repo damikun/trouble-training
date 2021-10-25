@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using HotChocolate;
 
 namespace SharedCore.Aplication.Payload  {
@@ -7,6 +8,8 @@ namespace SharedCore.Aplication.Payload  {
     public interface IBasePayload {
 
         void AddError(object o);
+
+        bool HasError();
 
     }
 
@@ -30,6 +33,19 @@ namespace SharedCore.Aplication.Payload  {
             this.errors.AddRange(errors);
 
             return (U)this;
+        }
+
+        /// <summary>
+        /// Check if any error exist
+        /// </summary>
+        [GraphQLIgnore]
+        public bool HasError() {
+
+            if(errors != null){
+                return errors.Any();
+            }
+
+            return false;
         }
 
         /// <summary>

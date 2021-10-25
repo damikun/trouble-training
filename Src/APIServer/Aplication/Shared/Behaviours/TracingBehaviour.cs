@@ -2,12 +2,11 @@ using System;
 using MediatR;
 using Serilog;
 using System.Threading;
-using System.Threading.Tasks;
 using APIServer.Domain;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using SharedCore.Aplication.Interfaces;
 using SharedCore.Aplication.Core.Commands;
-using SharedCore.Aplication.Payload;
 
 namespace APIServer.Aplication.Shared.Behaviours {
 
@@ -16,7 +15,8 @@ namespace APIServer.Aplication.Shared.Behaviours {
     /// </summary>
     /// <typeparam name="TRequest"></typeparam>
     /// <typeparam name="TResponse"></typeparam>
-    public class TracingBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> {
+    public class TracingBehaviour<TRequest, TResponse> 
+    : IPipelineBehavior<TRequest, TResponse> {
         private readonly ICurrentUser _currentUserService;
         private readonly ILogger _logger;
 
@@ -27,10 +27,17 @@ namespace APIServer.Aplication.Shared.Behaviours {
             _logger = logger;
         }
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next) {
+        public async Task<TResponse> Handle(
+            TRequest request,
+            CancellationToken cancellationToken,
+            RequestHandlerDelegate<TResponse> next ) {
 
             var activity = Sources.DemoSource.StartActivity(
-                String.Format("TracingBehaviour: Request<{0}>", typeof(TRequest).FullName), ActivityKind.Server);
+                String.Format(
+                    "TracingBehaviour: Request<{0}>",
+                    typeof(TRequest).FullName),
+                    ActivityKind.Server
+            );
 
             if (typeof(TRequest).IsSubclassOf(typeof(CommandBase))) {
 
@@ -50,24 +57,14 @@ namespace APIServer.Aplication.Shared.Behaviours {
                 }
             }
 
-            activity.Start();
             try {
-                // Continue in pipe
+                activity?.Start();
+                
                 return await next();
 
-            } catch (Exception ex) {
-
-                SharedCore.Aplication.Shared.Common.CheckAndSetOtelExceptionError(ex,_logger);
-
-                // In case it is Mutation Response Payload = handled as payload error union
-                if (SharedCore.Aplication.Shared.Common.IsSubclassOfRawGeneric(typeof(BasePayload<,>), typeof(TResponse))) {
-                    return Common.HandleBaseCommandException<TResponse>(ex);
-                } else {
-                    throw;
-                }
             } finally {
-                activity.Stop();
-                activity.Dispose();
+                activity?.Stop();
+                activity?.Dispose();
             }
         }
     }

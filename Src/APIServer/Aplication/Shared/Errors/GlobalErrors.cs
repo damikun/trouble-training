@@ -3,9 +3,11 @@ using SharedCore.Aplication.GraphQL.Errors;
 
 namespace APIServer.Aplication.Shared.Errors {
 
+    public interface ITestError { }
+
     public class UnAuthorised : BaseError, ICreateWebHookError,IRemoveWebHookError,IUpdateWebHookError, 
     IUpdateWebHookActivStateError, IUpdateWebHookSecretError, IUpdateWebHookTriggerEventsError,
-    IUpdateWebHookUriError {
+    IUpdateWebHookUriError, ITestError {
         public UnAuthorised() {
             this.message = "Unauthorised to process or access resource";
         }
@@ -23,7 +25,7 @@ namespace APIServer.Aplication.Shared.Errors {
 
     public class InternalServerError : BaseError,ICreateWebHookError,IRemoveWebHookError,IUpdateWebHookError, 
     IUpdateWebHookActivStateError, IUpdateWebHookSecretError, IUpdateWebHookTriggerEventsError,
-    IUpdateWebHookUriError{
+    IUpdateWebHookUriError, ITestError {
 
         public InternalServerError() {
             this.message = "Internal server error";
@@ -36,7 +38,7 @@ namespace APIServer.Aplication.Shared.Errors {
 
     public class ValidationError : BaseError, ICreateWebHookError,IRemoveWebHookError,IUpdateWebHookError, 
     IUpdateWebHookActivStateError, IUpdateWebHookSecretError, IUpdateWebHookTriggerEventsError,
-    IUpdateWebHookUriError{
+    IUpdateWebHookUriError, ITestError{
         public ValidationError() {
             this.message = "Some parameter/s are invalid or null";
         }
@@ -49,7 +51,10 @@ namespace APIServer.Aplication.Shared.Errors {
             this.message = message;
             this.FieldName = propName;
         }
+
+        #nullable enable
         public string? FieldName { get; set; }
+        #nullable disable
 
     }
 

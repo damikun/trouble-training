@@ -4,7 +4,12 @@
 
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using Serilog;
+using SharedCore.Domain.Models;
 
 namespace SharedCore.Aplication.Shared {
 
@@ -22,28 +27,46 @@ namespace SharedCore.Aplication.Shared {
             return false;
         }
 
-        // Helper to set curron opentelemtry log error
-        public static void SetOtelError(string error) {
-            var current = Activity.Current;
-            current?.SetTag("otel.status_code", "ERROR");
-            current?.SetTag("otel.status_description", error);
-        }
+        public async static Task<HttpRequest> HandleTracingActivityRename(HttpRequest req) {
+            req.EnableBuffering();
 
-        public static void SetOtelError(string error, ILogger logger, bool perform_log = true) {
-            SetOtelError(error);
+            try{
+                using (var buffer = new MemoryStream()) {
 
-            if(perform_log && logger != null){
-                logger.Error(error);
-            }
-        }
+                    await req.Body.CopyToAsync(buffer);
 
-        public static void CheckAndSetOtelExceptionError(Exception ex, ILogger logger) {
-            if(!ex.Data.Contains("command_failed")){
-                
-                ex.Data.Add("command_failed",true);
+                    buffer.Position = 0L;
 
-                Common.SetOtelError(ex?.ToString(),logger);
-            }
+                    using (var reader = new StreamReader(buffer))
+                    {
+                        var requestBodyAsString = await reader.ReadToEndAsync();
+
+                        if(requestBodyAsString !=null){
+
+                            PersistedRequestQueryBody parsed_body = null;
+
+                            try{
+                                parsed_body = JsonConvert.DeserializeObject<PersistedRequestQueryBody>(requestBodyAsString);
+
+                                if(parsed_body !=null && parsed_body.id !=null){
+
+                                    if(Activity.Current != null){
+                                        Activity.Current.DisplayName=string.Format(
+                                            "Path: {0}, Id:{1}","/graphql",parsed_body.id);
+                                    }
+                                }
+                            
+                            }catch{
+                                // Ignore this
+                            }                                         
+                        }
+                    }
+                }
+            }finally{
+                req.Body.Position = 0L;
+            }     
+
+            return req;
         }
         
     }

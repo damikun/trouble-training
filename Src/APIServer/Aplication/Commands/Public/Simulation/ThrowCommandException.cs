@@ -11,22 +11,23 @@ namespace APIServer.Aplication.Commands.WebHooks {
     /// <summary>
     /// Command for testing throwing command exception
     /// </summary>
-    public class ThrowCommandException : IRequest<ThrowCommandExceptionPayload> {
-        public ThrowCommandException() {
+    public class ThrowCommandException 
+        : IRequest<ThrowCommandExceptionPayload> {
 
-        }
+        public ThrowCommandException() { }
     }
 
     /// <summary>
     /// ThrowCommandException Validator
     /// </summary>
-    public class ThrowCommandExceptionValidator : AbstractValidator<ThrowCommandException> {
+    public class ThrowCommandExceptionValidator 
+        : AbstractValidator<ThrowCommandException> {
 
         private readonly IDbContextFactory<ApiDbContext> _factory;
 
-        public ThrowCommandExceptionValidator(IDbContextFactory<ApiDbContext> factory){
+        public ThrowCommandExceptionValidator(
+            IDbContextFactory<ApiDbContext> factory){
             _factory = factory;
-
         }
 
     }
@@ -39,12 +40,13 @@ namespace APIServer.Aplication.Commands.WebHooks {
     /// <summary>
     /// ThrowCommandExceptionPayload
     /// </summary>
-    public class ThrowCommandExceptionPayload : BasePayload<ThrowCommandExceptionPayload, IThrowCommandExceptionError> {
-
+    public class ThrowCommandExceptionPayload 
+        : BasePayload<ThrowCommandExceptionPayload, IThrowCommandExceptionError> {
     }
 
     /// <summary>Handler for <c>ThrowCommandException</c> command </summary>
-    public class ThrowCommandExceptionHandler : IRequestHandler<ThrowCommandException, ThrowCommandExceptionPayload> {
+    public class ThrowCommandExceptionHandler 
+        : IRequestHandler<ThrowCommandException, ThrowCommandExceptionPayload> {
 
         private static bool IsEnabled = true;
 
@@ -58,11 +60,16 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// <summary>
         /// Command handler for <c>ThrowCommandException</c>
         /// </summary>
-        public async Task<ThrowCommandExceptionPayload> Handle(ThrowCommandException request, CancellationToken cancellationToken) {
+        public async Task<ThrowCommandExceptionPayload> Handle(
+            ThrowCommandException request,
+            CancellationToken cancellationToken) {
                 
                 if(IsEnabled){
-                    throw new System.Exception("This is simulation of command problem");
+                    throw new System.Exception(
+                        "This is simulation of command problem");
                 }
+
+                await Task.CompletedTask;
 
                 return ThrowCommandExceptionPayload.Success();
         }

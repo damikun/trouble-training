@@ -1,12 +1,12 @@
 using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Reflection;
 using System.Text.Json;
-using System.Threading.Tasks;
 using APIServer.Domain;
-using Serilog;
+using System.Reflection;
+using System.Diagnostics;
+using System.ComponentModel;
+using System.Threading.Tasks;
 using SharedCore.Aplication.Core.Commands;
+using SharedCore.Aplication.Interfaces;
 
 namespace MediatR {
 
@@ -15,11 +15,12 @@ namespace MediatR {
     }
 
     public class CommandsExecutor {
-        private readonly IMediator mediator;
+        private readonly IMediator _mediator;
+        private readonly ITelemetry _telemetry;
         public readonly string assembly_name;
-        public CommandsExecutor(IMediator mediator) {
-
-            this.mediator = mediator;
+        public CommandsExecutor(IMediator mediator, ITelemetry telemetry) {
+            this._mediator = mediator;
+            this._telemetry = telemetry;
             this.assembly_name = "APIServer.Aplication";
         }
 
@@ -28,7 +29,8 @@ namespace MediatR {
             var type = GetType(mediatorSerializedObject);
 
             if (type != null) {
-                dynamic req = JsonSerializer.Deserialize(mediatorSerializedObject.Data, type);
+
+                dynamic req = DeserializeCommand(mediatorSerializedObject.Data,type);
 
                 if (req != null) {
 
@@ -52,7 +54,6 @@ namespace MediatR {
                             Activity.Current.AddTag("Parrent Id", I_base_command.ActivityId);
                         }
 
-
                     } else if (req is IRequest) {
 
                         activity_name = String.Format(
@@ -74,26 +75,29 @@ namespace MediatR {
                     }
 
                     try {
-                        activity.Start();
-                        await mediator.Send(req as IRequest);
+                        activity?.Start();
+
+                        await _mediator.Send(req as IRequest);
+                        
                     } catch (Exception ex) {
-                        activity.SetCustomProperty("Exception", ex.ToString());
-                        activity?.SetTag("otel.status_code", "ERROR");
-                        activity?.SetTag("otel.status_description", "See Exception field");
-                        
-                        Log.Error(ex.ToString());
-                        throw ex;
 
-                        
+                        _telemetry.SetOtelError(ex);
+
+                        throw;
+
                     } finally {
-                        activity.Stop();
+                        activity?.Stop();
 
-                        activity.Dispose();
+                        activity?.Dispose();
                     }
                 }
             }
 
             return Unit.Value;
+        }
+
+        private dynamic DeserializeCommand(string data, Type type){
+            return JsonSerializer.Deserialize(data, type);
         }
 
         public Task ExecuteCommand(string reuest) {

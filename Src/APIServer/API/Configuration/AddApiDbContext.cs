@@ -21,18 +21,17 @@ namespace APIServer.Configuration {
                 // ApiDbContext
                 serviceCollection.AddApiDbContext(Configuration,Environment);
 
-                // AppIdnetityDbContext
                 serviceCollection.AddPooledDbContextFactory<AppIdnetityDbContext>(
                     (s, o) => o
                         .UseNpgsql(Configuration["ConnectionStrings:AppIdnetityDbContext"], option => {
-                        option.EnableRetryOnFailure();
+                            
+                            option.EnableRetryOnFailure();
 
-                        if (Environment.IsDevelopment()) {
-                            o.EnableDetailedErrors();
-                            o.EnableSensitiveDataLogging();
-                        }
-
-                        }).UseLoggerFactory(s.GetRequiredService<ILoggerFactory>()));
+                            if (Environment.IsDevelopment()) {
+                                o.EnableDetailedErrors();
+                                o.EnableSensitiveDataLogging();
+                            }
+                        }));
 
             return serviceCollection;
         }

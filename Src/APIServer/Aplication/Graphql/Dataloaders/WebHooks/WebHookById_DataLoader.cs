@@ -8,6 +8,7 @@ using GreenDonut;
 using SharedCore.Aplication.Interfaces;
 using APIServer.Persistence;
 using APIServer.Aplication.GraphQL.DTO;
+using APIServer.Domain.Core.Models.WebHooks;
 
 namespace APIServer.Aplication.GraphQL.DataLoaders {
 
@@ -56,7 +57,7 @@ namespace APIServer.Aplication.GraphQL.DataLoaders {
                     ContentType = e.ContentType,
                     IsActive = e.IsActive,
                     LastTrigger = e.LastTrigger,
-                    ListeningEvents = e.HookEvents
+                    ListeningEvents = e.HookEvents !=null ? e.HookEvents.ToArray(): new HookEventType[0]
                 })
                 .ToDictionaryAsync(t => t.ID, cancellationToken);
             } finally {

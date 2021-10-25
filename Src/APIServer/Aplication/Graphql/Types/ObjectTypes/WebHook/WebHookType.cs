@@ -8,6 +8,7 @@ using APIServer.Aplication.GraphQL.DataLoaders;
 using SharedCore.Aplication.Interfaces;
 using APIServer.Persistence;
 using APIServer.Aplication.GraphQL.Extensions;
+using System.Threading.Tasks;
 
 namespace APIServer.Aplication.GraphQL.Types {
 #pragma warning disable 612, 618 
@@ -31,6 +32,8 @@ namespace APIServer.Aplication.GraphQL.Types {
             .UseDbContext<ApiDbContext>()
             .Resolve(async  ctx => {
 
+                await Task.CompletedTask;
+                
                 ApiDbContext _context = ctx.Service<ApiDbContext>();
 
                 ICurrentUser _current = ctx.Service<ICurrentUser>();

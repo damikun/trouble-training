@@ -1,7 +1,6 @@
-using Hangfire;
-using MediatR;
-using Newtonsoft.Json;
 using System;
+using Hangfire;
+using Newtonsoft.Json;
 
 namespace MediatR {
     public class AsyncCommand {
@@ -20,7 +19,6 @@ namespace MediatR {
         public string Enqueue(MediatorSerializedObject mediatorSerializedObject) {
             return BackgroundJob.Enqueue(() => _commandsExecutor.ExecuteCommand(mediatorSerializedObject));
         }
-
 
         public string Enqueue(IRequest request, string parentJobId, JobContinuationOptions continuationOption, string description = null) {
             var mediatorSerializedObject = SerializeObject(request, description);
@@ -54,7 +52,6 @@ namespace MediatR {
         }
         public void ScheduleRecurring(IRequest request, string name, string cronExpression, string description = null, string queue = "default") {
             var mediatorSerializedObject = SerializeObject(request, description);
-            // JobStorage.Current.GetConnection().GetAllEntriesFromHash($"recurring-job:{"aaaa"}").
             RecurringJob.AddOrUpdate(name, () => _commandsExecutor.ExecuteCommand(mediatorSerializedObject), cronExpression, TimeZoneInfo.Local, queue);
         }
 

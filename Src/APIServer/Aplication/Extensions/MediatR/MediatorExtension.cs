@@ -1,7 +1,8 @@
-using APIServer.Domain;
-using SharedCore.Aplication.Core.Commands;
 using System;
+using APIServer.Domain;
 using System.Diagnostics;
+using SharedCore.Aplication.Services;
+using SharedCore.Aplication.Core.Commands;
 
 namespace MediatR {
     public static class MediatorExtension {
@@ -11,8 +12,10 @@ namespace MediatR {
         /// <param name="mediator"></param>
         /// <param name="request">Request call expression that will be marshalled to a server.</param>
         /// <param name="description"></param>
-        /// <returns></returns>
-        public static string Enqueue(this IMediator mediator, IRequest request, string description = null) {
+        public static string Enqueue(
+            this IMediator mediator,
+            IRequest request,
+            string description = null) {
 
             Activity activity = null;
 
@@ -20,7 +23,10 @@ namespace MediatR {
                 ISharedCommandBase i_request_base = request as ISharedCommandBase;
 
                 activity = Sources.DemoSource.StartActivity(
-                    String.Format("SchedulerEnqueue: Request<{0}>", request.GetType().FullName), ActivityKind.Producer);
+                    String.Format(
+                        "SchedulerEnqueue: Request<{0}>",
+                        request.GetType().FullName),
+                        ActivityKind.Producer);
 
                 i_request_base.ActivityId = Activity.Current.Id;
 
@@ -29,7 +35,6 @@ namespace MediatR {
                     && Activity.Current != null
                     && Activity.Current.ParentId == null) {
                     Activity.Current.SetParentId(Activity.Current.Id);
-
                 }
 
                 if (Activity.Current != null && Activity.Current.ParentId != null) {
@@ -38,25 +43,32 @@ namespace MediatR {
 
             } else {
                 activity = Sources.DemoSource.StartActivity(
-                    String.Format("SchedulerEnqueue: Request<{0}>", request.GetType().FullName), ActivityKind.Producer);
+                    String.Format(
+                        "SchedulerEnqueue: Request<{0}>",
+                        request.GetType().FullName),
+                        ActivityKind.Producer);
             }
+
+            var telemetry = new Telemetry();
 
             try {
 
                 Activity.Current.AddTag("Activity Id", Activity.Current.Id);
 
-                activity.Start();
+                activity?.Start();
 
-                return new AsyncCommand(new CommandsExecutor(mediator)).Enqueue(request, description);
+                return new AsyncCommand(
+                    new CommandsExecutor(mediator, telemetry)).Enqueue(request, description);
+
             } catch (Exception ex) {
-                activity.SetCustomProperty("Exception", ex.ToString());
-                activity?.SetTag("otel.status_code", "ERROR");
-                activity?.SetTag("otel.status_description", "See Exception field");
 
-                throw ex;
+                telemetry.SetOtelError(ex);
+
+                throw;
+
             } finally {
-                activity.Stop();
-                activity.Dispose();
+                activity?.Stop();
+                activity?.Dispose();
             }
 
         }
@@ -70,7 +82,7 @@ namespace MediatR {
         /// <param name="scheduleAt"></param>
         /// <param name="description"></param>
         public static void Schedule(this IMediator mediator, IRequest request, DateTimeOffset scheduleAt, string description = null) {
-            new AsyncCommand(new CommandsExecutor(mediator)).Schedule(request, scheduleAt, description);
+            new AsyncCommand(new CommandsExecutor(mediator, new Telemetry())).Schedule(request, scheduleAt, description);
         }
         /// <summary>
         /// Creates a new background job based on a specified method call expression
@@ -83,7 +95,7 @@ namespace MediatR {
         /// <param name="description"></param>
         /// <param name="queue"></param>
         public static void ScheduleRecurring(this IMediator mediator, IRequest request, string name, string cronExpression, string description = null, string queue = "default") {
-            new AsyncCommand(new CommandsExecutor(mediator)).ScheduleRecurring(request, name, cronExpression, description, queue);
+            new AsyncCommand(new CommandsExecutor(mediator, new Telemetry())).ScheduleRecurring(request, name, cronExpression, description, queue);
         }
     }
 }

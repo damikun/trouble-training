@@ -1,15 +1,17 @@
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Linq;
+using System.Threading;
+using MediatR.Pipeline;
 using FluentValidation;
-using SharedCore.Aplication.Shared.Attributes;
-using Microsoft.EntityFrameworkCore;
 using APIServer.Persistence;
-using APIServer.Domain.Core.Models.WebHooks;
+using System.Threading.Tasks;
+using SharedCore.Aplication.Payload;
+using Microsoft.EntityFrameworkCore;
 using SharedCore.Aplication.Interfaces;
 using APIServer.Aplication.Shared.Errors;
-using SharedCore.Aplication.Payload;
+using SharedCore.Aplication.Shared.Attributes;
+using APIServer.Domain.Core.Models.WebHooks;
+using SharedCore.Aplication.Core.Commands;
 
 namespace APIServer.Aplication.Commands.WebHooks {
 
@@ -17,7 +19,7 @@ namespace APIServer.Aplication.Commands.WebHooks {
     /// Command for updateing WebHook secret
     /// </summary>
     [Authorize]
-    public class UpdateWebHookSecret : IRequest<UpdateWebHookSecretPayload> {
+    public class UpdateWebHookSecret : CommandBase<UpdateWebHookSecretPayload> {
 
         /// <summary>WebHook Id </summary>
         public long WebHookId { get; set; }
@@ -25,6 +27,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// <summary> Secret </summary>
         public string Secret { get; set; }
     }
+
+    //---------------------------------------
+    //---------------------------------------
 
     /// <summary>
     /// UpdateWebHookSecret Validator
@@ -57,6 +62,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
         }
     }
 
+    //---------------------------------------
+    //---------------------------------------
+
     /// <summary>
     /// IUpdateWebHookSecretError
     /// </summary>
@@ -72,6 +80,10 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// </summary>
         public WebHook hook { get; set; }
     }
+
+    //---------------------------------------
+    //---------------------------------------
+
 
     /// <summary>Handler for <c>UpdateWebHookSecret</c> command </summary>
     public class UpdateWebHookSecretHandler : IRequestHandler<UpdateWebHookSecret, UpdateWebHookSecretPayload> {
@@ -132,6 +144,39 @@ namespace APIServer.Aplication.Commands.WebHooks {
             response.hook = wh;
 
             return response;
+        }
+    }
+
+    //---------------------------------------
+    //---------------------------------------
+
+    public class UpdateWebHookSecretPostProcessor
+        : IRequestPostProcessor<UpdateWebHookSecret,UpdateWebHookSecretPayload>
+    {
+        /// <summary>
+        /// Injected <c>IPublisher</c>
+        /// </summary>
+        private readonly APIServer.Extensions.IPublisher _publisher;
+
+        public UpdateWebHookSecretPostProcessor(APIServer.Extensions.IPublisher publisher)
+        {
+            _publisher = publisher;
+        }
+
+        public async Task Process(
+            UpdateWebHookSecret request,
+            UpdateWebHookSecretPayload response,
+            CancellationToken cancellationToken)
+        {
+            if(response != null && !response.HasError()){
+                try {
+                    
+                    await Task.CompletedTask;
+
+                    // Add Notification hire
+
+                } catch { }
+            }
         }
     }
 }

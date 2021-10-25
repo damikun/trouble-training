@@ -18,7 +18,8 @@ namespace APIServer.Extensions {
             ServiceFactory serviceFactory
             ) : base(serviceFactory) {
         }
-
+        
+        #nullable enable
         public AppMediator(
             ServiceFactory serviceFactory,
             Func<IEnumerable<Func<INotification, CancellationToken, Task>>, INotification, CancellationToken, Task>? publishStrategy
@@ -26,14 +27,17 @@ namespace APIServer.Extensions {
 
             _publishStrategy = publishStrategy != null ? publishStrategy : SyncStopOnException;
         }
+        #nullable disable
 
         public Task<TResponse> Send<TResponse>(ICommandBase<TResponse> request, CancellationToken cancellationToken = default) {
             return base.Send<TResponse>(request, cancellationToken);
         }
 
+        #nullable enable
         public Task<object?> Send(ICommandBase request, CancellationToken cancellationToken = default) {
             return base.Send(request as object, cancellationToken);
         }
+        #nullable disable
 
         private static async Task SyncStopOnException(IEnumerable<Func<INotification, CancellationToken, Task>> handlers, INotification notification, CancellationToken cancellationToken) {
             foreach (var handler in handlers) {
@@ -79,13 +83,13 @@ namespace APIServer.Extensions {
             try {
                 Activity.Current.AddTag("Activity Id", Activity.Current.Id);
 
-                activity.Start();
+                activity?.Start();
 
                 return _publishStrategy != null ? _publishStrategy(allHandlers, notification, cancellationToken) : base.PublishCore(allHandlers, notification, cancellationToken);
 
             } finally {
-                activity.Stop();
-                activity.Dispose();
+                activity?.Stop();
+                activity?.Dispose();
             }
         }
     }

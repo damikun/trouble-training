@@ -19,14 +19,16 @@ Before we begin, let me show you an example from the playground of **6a** error.
 
 ### Content
 
+- [Intro](#intro)
+  - [Content](#content)
 - [GraphQL Errors](#graphql-errors)
 - [Mutation Errors](#mutation-errors)
 - [Stage 6a Integration](#stage-6a-integration)
-    - [Abstraction](#abstraction)
-        - [Validation errors](#validation-errors)
-        - [Authorization errors](#authorization-errors)
-    - [Hotchocolate integration](#hotchocolate-integration)
-- [Demo UI](#demo-ui)
+  - [Abstraction](#abstraction)
+    - [Validation errors](#validation-errors)
+    - [Authorization errors](#authorization-errors)
+  - [Hotchocolate integration](#hotchocolate-integration)
+- [Clinet](#clinet)
 - [Repository](#repository)
 
 > &#10240;
@@ -465,7 +467,7 @@ namespace ErrorHandling.Aplication.Shared.Behaviours {
 
                 try {
 
-                    activity.Start();
+                    activity?.Start();
                     var context = new ValidationContext<TRequest>(request);
 
                     var validationResults = await Task.WhenAll(
@@ -493,8 +495,8 @@ namespace ErrorHandling.Aplication.Shared.Behaviours {
                     }
 
                 } finally {
-                    activity.Stop();
-                    activity.Dispose();
+                    activity?.Stop();
+                    activity?.Dispose();
                 }
             }
 
@@ -580,7 +582,7 @@ namespace ErrorHandling.Aplication.Shared.Behaviours {
                 String.Format("AuthorizationBehaviour: Request<{0}>", request.GetType().FullName), ActivityKind.Server);
 
                 try {
-                    activity.Start();
+                    activity?.Start();
 
                     // Must be authenticated user
                     if (!_currentUserService.Exist) {
@@ -638,8 +640,8 @@ namespace ErrorHandling.Aplication.Shared.Behaviours {
                         throw ex;
                     }
                 } finally {
-                    activity.Stop();
-                    activity.Dispose();
+                    activity?.Stop();
+                    activity?.Dispose();
                 }
             }
 

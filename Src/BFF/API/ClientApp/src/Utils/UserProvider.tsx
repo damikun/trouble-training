@@ -42,6 +42,7 @@ export default function UserProvider({ children }: UserProviderProps) {
     {},
     { fetchPolicy: "store-or-network" }
   );
+  
   const userStoreInitCtx = useMemo(() => {
     return {
       user: preloaded_user_data,

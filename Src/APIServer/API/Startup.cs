@@ -2,18 +2,18 @@
 // See LICENSE in root.
 
 using System;
-using APIServer.Configuration;
 using Hangfire;
+using APIServer.Configuration;
 using HotChocolate.AspNetCore;
+using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using SharedCore.Aplication.Services;
+using SharedCore.Aplication.Interfaces;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-using SharedCore.Aplication.Interfaces;
-using SharedCore.Aplication.Services;
 
 namespace APIServer
 {
@@ -31,7 +31,7 @@ namespace APIServer
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public virtual void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
 
@@ -39,9 +39,9 @@ namespace APIServer
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api", Version = "v1" });
             });
 
-            services.AddAuth(Configuration);
+            ConfigureAuth(services);
 
-            services.AddDbContext(Configuration,Environment);
+            ConfigureDBContext(services);
 
             services.AddHttpClient();
 
@@ -53,19 +53,19 @@ namespace APIServer
 
             services.AddMemoryCache();
 
-            services.AddTelemerty(Configuration,Environment);
+            ConfigureTelemetry(services);
 
             services.AddScoped<ICurrentUser, CurrentUser>();
 
             services.AddMediatR();
 
-            services.AddScheduler(Configuration);
+            ConfigureScheduler(services);
 
             services.AddSingleton(Serilog.Log.Logger);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(
+        public virtual void Configure(
             IApplicationBuilder app,
              IWebHostEnvironment env,
              IServiceProvider serviceProvider,
@@ -114,6 +114,27 @@ namespace APIServer
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
             });
+        }
+
+
+        public virtual void ConfigureDBContext(IServiceCollection services)
+        {
+            services.AddDbContext(Configuration,Environment);
+        }
+
+        public virtual void ConfigureScheduler(IServiceCollection services)
+        {
+            services.AddScheduler(Configuration);
+        }
+
+        public virtual void ConfigureTelemetry(IServiceCollection services)
+        {
+            services.AddTelemerty(Configuration,Environment);
+        }
+
+        public virtual void ConfigureAuth(IServiceCollection services)
+        {
+            services.AddAuth(Configuration);
         }
     }
 }

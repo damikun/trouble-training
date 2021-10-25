@@ -1,16 +1,18 @@
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Linq;
+using MediatR.Pipeline;
 using FluentValidation;
-using SharedCore.Aplication.Shared.Attributes;
-using Microsoft.EntityFrameworkCore;
-using APIServer.Aplication.Shared;
+using System.Threading;
 using APIServer.Persistence;
-using APIServer.Domain.Core.Models.WebHooks;
+using System.Threading.Tasks;
+using APIServer.Aplication.Shared;
+using Microsoft.EntityFrameworkCore;
+using SharedCore.Aplication.Payload;
 using SharedCore.Aplication.Interfaces;
 using APIServer.Aplication.Shared.Errors;
-using SharedCore.Aplication.Payload;
+using APIServer.Domain.Core.Models.WebHooks;
+using SharedCore.Aplication.Shared.Attributes;
+using SharedCore.Aplication.Core.Commands;
 
 namespace APIServer.Aplication.Commands.WebHooks {
 
@@ -18,7 +20,7 @@ namespace APIServer.Aplication.Commands.WebHooks {
     /// Command for updating webhook Uri
     /// </summary>
     [Authorize]
-    public class UpdateWebHookUri : IRequest<UpdateWebHookUriPayload> {
+    public class UpdateWebHookUri : CommandBase<UpdateWebHookUriPayload> {
 
         /// <summary>WebHook Id </summary>
         public long WebHookId { get; set; }
@@ -26,6 +28,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// <summary> Url </summary>
         public string WebHookUrl { get; set; }
     }
+
+    //---------------------------------------
+    //---------------------------------------
 
     /// <summary>
     /// UpdateWebHookUri Validator
@@ -78,6 +83,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
         }
     }
 
+    //---------------------------------------
+    //---------------------------------------
+
     /// <summary>
     /// IUpdateWebHookUriError
     /// </summary>
@@ -93,6 +101,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// </summary>
         public WebHook hook { get; set; }
     }
+
+    //---------------------------------------
+    //---------------------------------------
 
     /// <summary>Handler for <c>UpdateWebHookUri</c> command </summary>
     public class UpdateWebHookUriHandler : IRequestHandler<UpdateWebHookUri, UpdateWebHookUriPayload> {
@@ -154,6 +165,39 @@ namespace APIServer.Aplication.Commands.WebHooks {
 
             return response;
 
+        }
+    }
+
+    //---------------------------------------
+    //---------------------------------------
+
+    public class UpdateWebHookUriPostProcessor
+        : IRequestPostProcessor<UpdateWebHookUriPayload,UpdateWebHookUriPayload>
+    {
+        /// <summary>
+        /// Injected <c>IPublisher</c>
+        /// </summary>
+        private readonly APIServer.Extensions.IPublisher _publisher;
+
+        public UpdateWebHookUriPostProcessor(APIServer.Extensions.IPublisher publisher)
+        {
+            _publisher = publisher;
+        }
+
+        public async Task Process(
+            UpdateWebHookUriPayload request,
+            UpdateWebHookUriPayload response,
+            CancellationToken cancellationToken)
+        {
+            if(response != null && !response.HasError()){
+                try {
+
+                    await Task.CompletedTask;
+
+                    // Add Notification hire
+
+                } catch { }
+            }
         }
     }
 }

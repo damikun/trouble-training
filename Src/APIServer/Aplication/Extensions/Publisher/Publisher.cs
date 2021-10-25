@@ -34,12 +34,14 @@ namespace APIServer.Extensions {
             return mediator.Send<TResponse>(request, cancellationToken);
         }
 
+        #nullable enable
         public Task<object?> Send(ICommandBase request, CancellationToken cancellationToken = default) {
             if (!PublishStrategies.TryGetValue(DefaultStrategy, out var mediator)) {
                 throw new ArgumentException($"Cannot get default strategy");
             }
             return mediator.Send(request as object, cancellationToken);
         }
+        #nullable disable
 
         //-------------------------------------------------
         //-------------------------------------------------

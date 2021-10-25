@@ -1553,13 +1553,13 @@ namespace APIServer.Extensions {
             try {
                 Activity.Current.AddTag("Activity Id", Activity.Current.Id);
 
-                activity.Start();
+                activity?.Start();
 
                 return _publishStrategy != null ? _publishStrategy(allHandlers, notification, cancellationToken) : base.PublishCore(allHandlers, notification, cancellationToken);
 
             } finally {
-                activity.Stop();
-                activity.Dispose();
+                activity?.Stop();
+                activity?.Dispose();
             }
         }
     }

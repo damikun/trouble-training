@@ -62,6 +62,8 @@ namespace APIServer.Aplication.Notifications.WebHooks {
             if (request == null )
                 return;
 
+            await Task.CompletedTask;
+            
             try {
                 _mediator.Enqueue(new EnqueSaveEvent<WebHookUpdated>() {
                     Event = new WebHookUpdated() {
@@ -121,6 +123,8 @@ namespace APIServer.Aplication.Notifications.WebHooks {
 
             if (request == null )
                 return;
+
+            await Task.CompletedTask;
 
             WebHookUpdated ev = new WebHookUpdated() {
                 ActorID = _currentuser.UserId,

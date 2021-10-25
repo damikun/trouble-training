@@ -1,17 +1,17 @@
 using System;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Linq;
-using System.Collections.Generic;
-using FluentValidation;
 using Serilog;
-using FluentValidation.Results;
-using System.Diagnostics;
-using SharedCore.Aplication.Interfaces;
+using System.Linq;
+using System.Threading;
+using FluentValidation;
 using APIServer.Domain;
-using APIServer.Aplication.Shared.Errors;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using FluentValidation.Results;
+using System.Collections.Generic;
 using SharedCore.Aplication.Payload;
+using SharedCore.Aplication.Interfaces;
+using APIServer.Aplication.Shared.Errors;
 
 namespace APIServer.Aplication.Shared.Behaviours {
 
@@ -20,29 +20,41 @@ namespace APIServer.Aplication.Shared.Behaviours {
     /// </summary>
     /// <typeparam name="TRequest"></typeparam>
     /// <typeparam name="TResponse"></typeparam>
-    public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> {
+    public class ValidationBehaviour<TRequest, TResponse>
+     : IPipelineBehavior<TRequest, TResponse> {
         private readonly ICurrentUser _currentUserService;
         private readonly IEnumerable<IValidator<TRequest>> _validators;
         private readonly ILogger _logger;
+        private readonly ITelemetry _telemetry;
 
         public ValidationBehaviour(
             ICurrentUser currentUserService,
             IEnumerable<IValidator<TRequest>> validators,
-             ILogger logger) {
-            _currentUserService = currentUserService;
-            _validators = validators;
-            _logger = logger;
+            ILogger logger,
+            ITelemetry telemetry) {
+                _currentUserService = currentUserService;
+                _validators = validators;
+                _logger = logger;
+                _telemetry = telemetry;
         }
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next) {
+        public async Task<TResponse> Handle(
+            TRequest request,
+            CancellationToken cancellationToken,
+            RequestHandlerDelegate<TResponse> next) {
 
+            
             if (_validators.Any()) {
-                var activity = Sources.DemoSource.StartActivity(
-                        String.Format("ValidationBehaviour: Request<{0}>", request.GetType().FullName), ActivityKind.Server);
 
+                var activity = Sources.DemoSource.StartActivity(
+                    String.Format(
+                        "ValidationBehaviour: Request<{0}>",
+                        request.GetType().FullName),
+                        ActivityKind.Server);
                 try {
 
-                    activity.Start();
+                    activity?.Start();
+
                     var context = new ValidationContext<TRequest>(request);
 
                     var validationResults = await Task.WhenAll(
@@ -54,24 +66,18 @@ namespace APIServer.Aplication.Shared.Behaviours {
                     .Where(f => f != null)
                     .ToList();
 
-                    if (failures.Count != 0) {
+                    if (failures.Count != 0)
                         return HandleValidationErrors(failures);
-                    }
 
                 } catch (Exception ex) {
 
-                    SharedCore.Aplication.Shared.Common.CheckAndSetOtelExceptionError(ex,_logger);
+                    _telemetry.SetOtelError(ex);
 
-                    // In case it is Mutation Response Payload = handled as payload error union
-                    if (SharedCore.Aplication.Shared.Common.IsSubclassOfRawGeneric(typeof(BasePayload<,>), typeof(TResponse))) {
-                        return Common.HandleBaseCommandException<TResponse>(ex);
-                    } else {
-                        throw;
-                    }
+                    throw;
 
                 } finally {
-                    activity.Stop();
-                    activity.Dispose();
+                    activity?.Stop();
+                    activity?.Dispose();
                 }
             }
 
@@ -82,12 +88,19 @@ namespace APIServer.Aplication.Shared.Behaviours {
         private static TResponse HandleValidationErrors(List<ValidationFailure> error_obj) {
 
             // In case it is Mutation Response Payload = handled as payload error union
-            if (SharedCore.Aplication.Shared.Common.IsSubclassOfRawGeneric(typeof(BasePayload<,>), typeof(TResponse))) {
+            if (SharedCore.Aplication.Shared.Common.IsSubclassOfRawGeneric(
+                typeof(BasePayload<,>),
+                typeof(TResponse))
+            ) {
                 IBasePayload payload = ((IBasePayload)Activator.CreateInstance<TResponse>());
 
                 foreach (var item in error_obj) {
 
-                    payload.AddError(new ValidationError(item.PropertyName, item.ErrorMessage));
+                    payload.AddError(
+                        new ValidationError(
+                            item.PropertyName,
+                            item.ErrorMessage)
+                    );
                 }
 
                 return (TResponse)payload;
@@ -96,13 +109,21 @@ namespace APIServer.Aplication.Shared.Behaviours {
                 if (error_obj != null) {
 
                     var first_item = error_obj.First();
+
                     if (first_item != null) {
-                        throw new SharedCore.Aplication.Shared.Exceptions.ValidationException(
-                            string.Format("Field: {0} - {1}", first_item.PropertyName, first_item.ErrorMessage));
+                        throw new SharedCore.Aplication.Shared.Exceptions
+                        .ValidationException(
+                            string.Format(
+                                "Field: {0} - {1}",
+                                first_item.PropertyName,
+                                first_item.ErrorMessage
+                            )
+                        );
                     }
 
                 }
-                throw new SharedCore.Aplication.Shared.Exceptions.ValidationException("Validation error appear");
+                throw new SharedCore.Aplication.Shared.Exceptions
+                .ValidationException("Validation error appear");
 
             }
         }

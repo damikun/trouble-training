@@ -3,19 +3,19 @@ using MediatR;
 using System.Linq;
 using HotChocolate;
 using HotChocolate.Data;
+using HotChocolate.Types;
 using APIServer.Persistence;
 using System.Threading.Tasks;
 using HotChocolate.Types.Relay;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
-using SharedCore.Aplication.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using SharedCore.Aplication.Interfaces;
 using APIServer.Aplication.GraphQL.DTO;
 using APIServer.Aplication.GraphQL.Types;
 using APIServer.Domain.Core.Models.WebHooks;
 using APIServer.Aplication.GraphQL.Extensions;
 using APIServer.Aplication.GraphQL.DataLoaders;
-using HotChocolate.Types;
 
 namespace APIServer.Aplication.GraphQL.Queries {
 
@@ -69,6 +69,8 @@ namespace APIServer.Aplication.GraphQL.Queries {
                 return null;
             }
 
+            await Task.CompletedTask;
+
             return context.WebHooksHistory
             .AsNoTracking()
             .Where(e => e.WebHookID == hook_id)
@@ -93,6 +95,8 @@ namespace APIServer.Aplication.GraphQL.Queries {
         /// </summary>
         public async Task<IEnumerable<string>> GetWebHookEventsTriggers() {
 
+            await Task.CompletedTask;
+            
             return Enum.GetNames(typeof(HookEventType)).ToList();
         }
 

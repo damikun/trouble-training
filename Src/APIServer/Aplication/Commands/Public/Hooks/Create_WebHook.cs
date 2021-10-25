@@ -2,19 +2,21 @@ using MediatR;
 using System.Linq;
 using System.Threading;
 using FluentValidation;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using SharedCore.Aplication.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using APIServer.Domain.Core.Models.WebHooks;
-using APIServer.Persistence;
+using MediatR.Pipeline;
 using System.Diagnostics;
 using APIServer.Extensions;
+using APIServer.Persistence;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 using APIServer.Aplication.Shared;
-using APIServer.Aplication.Notifications.WebHooks;
+using SharedCore.Aplication.Payload;
+using Microsoft.EntityFrameworkCore;
+using SharedCore.Aplication.Interfaces;
+using APIServer.Domain.Core.Models.WebHooks;
 using APIServer.Aplication.Shared.Behaviours;
 using SharedCore.Aplication.Shared.Attributes;
-using SharedCore.Aplication.Payload;
+using APIServer.Aplication.Notifications.WebHooks;
+using SharedCore.Aplication.Core.Commands;
 
 namespace APIServer.Aplication.Commands.WebHooks {
 
@@ -23,7 +25,7 @@ namespace APIServer.Aplication.Commands.WebHooks {
     /// </summary>
     [Authorize] // <-- Activate Auth check for command
     // [Authorize(FieldPolicy = true)] <-- Uncommend to activate Field Auth check for command
-    public class CreateWebHook : IRequest<CreateWebHookPayload> {
+    public class CreateWebHook : CommandBase<CreateWebHookPayload> {
 
         public CreateWebHook() {
             this.HookEvents = new HashSet<HookEventType>();
@@ -33,7 +35,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
         public string WebHookUrl { get; set; }
 
         /// <summary> Secret </summary>
+        #nullable enable
         public string? Secret { get; set; }
+        #nullable disable
 
         /// <summary> IsActive </summary>
         public bool IsActive { get; set; }
@@ -41,6 +45,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// <summary> HookEvents </summary>
         public HashSet<HookEventType> HookEvents { get; set; }
     }
+
+    //---------------------------------------
+    //---------------------------------------
 
     /// <summary>
     /// CreateWebHook Validator
@@ -72,7 +79,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
             .NotNull();
         }
 
-        public async Task<bool>  BeUniqueByURL(string url, CancellationToken cancellationToken) {
+        public async Task<bool>  BeUniqueByURL(
+            string url,
+            CancellationToken cancellationToken) {
             
             await using ApiDbContext dbContext = 
                 _factory.CreateDbContext();
@@ -80,7 +89,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
             return await dbContext.WebHooks.AllAsync(e => e.WebHookUrl != url);
         }
 
-        public async Task<bool> CheckMaxAllowedHooksCount(string url, CancellationToken cancellationToken) {
+        public async Task<bool> CheckMaxAllowedHooksCount(
+            string url,
+            CancellationToken cancellationToken) {
             
             await using ApiDbContext dbContext = 
                 _factory.CreateDbContext();
@@ -105,6 +116,8 @@ namespace APIServer.Aplication.Commands.WebHooks {
         }
     }
 
+    //---------------------------------------
+    //---------------------------------------
 
     /// <summary>
     /// ICreateWebHookError
@@ -121,6 +134,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// </summary>
         public WebHook hook { get; set; }
     }
+
+    //---------------------------------------
+    //---------------------------------------
 
     /// <summary>Handler for <c>CreateWebHook</c> command </summary>
     public class CreateWebHookHandler : IRequestHandler<CreateWebHook, CreateWebHookPayload> {
@@ -158,36 +174,65 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// <summary>
         /// Command handler for <c>CreateWebHook</c>
         /// </summary>
-        public async Task<CreateWebHookPayload> Handle(CreateWebHook request, CancellationToken cancellationToken) {
+        public async Task<CreateWebHookPayload> Handle(
+            CreateWebHook request,CancellationToken cancellationToken) {
 
             await using ApiDbContext dbContext = 
                 _factory.CreateDbContext();
 
-                WebHook hook = new WebHook {
-                    WebHookUrl = request.WebHookUrl,
-                    Secret = request.Secret,
-                    ContentType = "application/json",
-                    IsActive = request.IsActive,
-                    HookEvents = request.HookEvents != null ? request.HookEvents.Distinct().ToArray() : new HookEventType[0]
-                };
+            WebHook hook = new WebHook {
+                WebHookUrl = request.WebHookUrl,
+                Secret = request.Secret,
+                ContentType = "application/json",
+                IsActive = request.IsActive,
+                HookEvents = request.HookEvents != null ? 
+                    request.HookEvents.Distinct().ToArray() : new HookEventType[0]
+            };
 
-                dbContext.WebHooks.Add(hook);
+            dbContext.WebHooks.Add(hook);
 
-                await dbContext.SaveChangesAsync(cancellationToken);
+            await dbContext.SaveChangesAsync(cancellationToken);
 
+            var response = CreateWebHookPayload.Success();
+
+            response.hook = hook;
+
+            return response;
+        }
+    }
+
+    //---------------------------------------
+    //---------------------------------------
+
+    public class CreateWebHookPostProcessor
+        : IRequestPostProcessor<CreateWebHook,CreateWebHookPayload>
+    {
+        /// <summary>
+        /// Injected <c>IPublisher</c>
+        /// </summary>
+        private readonly APIServer.Extensions.IPublisher _publisher;
+
+        public CreateWebHookPostProcessor(APIServer.Extensions.IPublisher publisher)
+        {
+            _publisher = publisher;
+        }
+
+        public async Task Process(
+            CreateWebHook request,
+            CreateWebHookPayload response,
+            CancellationToken cancellationToken)
+        {
+            if(response != null && !response.HasError()){
                 try {
+
+                    // You can extend and add any custom fields to Notification!
 
                     await _publisher.Publish(new WebHookCreatedNotifi() {
                         ActivityId = Activity.Current.Id
                     }, PublishStrategy.ParallelNoWait, default(CancellationToken));
 
                 } catch { }
-
-                var response = CreateWebHookPayload.Success();
-
-                response.hook = hook;
-
-                return response;
+            }
         }
     }
 }

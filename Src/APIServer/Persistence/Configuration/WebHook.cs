@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using APIServer.Domain.Core.Models.WebHooks;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace APIServer.Presistence {
     public class WebHookonfiguration : IEntityTypeConfiguration<WebHook> {

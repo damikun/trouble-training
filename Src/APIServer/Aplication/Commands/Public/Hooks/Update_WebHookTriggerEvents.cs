@@ -1,16 +1,18 @@
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Linq;
+using System.Threading;
 using FluentValidation;
-using SharedCore.Aplication.Shared.Attributes;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using APIServer.Domain.Core.Models.WebHooks;
+using MediatR.Pipeline;
 using APIServer.Persistence;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using SharedCore.Aplication.Payload;
+using Microsoft.EntityFrameworkCore;
 using SharedCore.Aplication.Interfaces;
 using APIServer.Aplication.Shared.Errors;
-using SharedCore.Aplication.Payload;
+using APIServer.Domain.Core.Models.WebHooks;
+using SharedCore.Aplication.Shared.Attributes;
+using SharedCore.Aplication.Core.Commands;
 
 namespace APIServer.Aplication.Commands.WebHooks {
 
@@ -18,7 +20,7 @@ namespace APIServer.Aplication.Commands.WebHooks {
     /// Command for updating webhook Uri
     /// </summary>
     [Authorize]
-    public class UpdateWebHookTriggerEvents : IRequest<UpdateWebHookTriggerEventsPayload> {
+    public class UpdateWebHookTriggerEvents : CommandBase<UpdateWebHookTriggerEventsPayload> {
 
         /// <summary>WebHook Id </summary>
         public long WebHookId { get; set; }
@@ -26,6 +28,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// <summary> HookEvents </summary>y>
         public HashSet<HookEventType> HookEvents { get; set; }
     }
+
+    //---------------------------------------
+    //---------------------------------------
 
     /// <summary>
     /// UpdateWebHookTriggerEvents Validator
@@ -58,6 +63,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
         }
     }
 
+    //---------------------------------------
+    //---------------------------------------
+
     /// <summary>
     /// IUpdateWebHookTriggerEventsError
     /// </summary>
@@ -73,6 +81,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// </summary>
         public WebHook hook { get; set; }
     }
+    
+    //---------------------------------------
+    //---------------------------------------
 
     /// <summary>Handler for <c>UpdateWebHookTriggerEvents</c> command </summary>
     public class UpdateWebHookTriggerEventsHandler : IRequestHandler<UpdateWebHookTriggerEvents, UpdateWebHookTriggerEventsPayload> {
@@ -133,6 +144,39 @@ namespace APIServer.Aplication.Commands.WebHooks {
             response.hook = wh;
 
             return response;
+        }
     }
+
+    //---------------------------------------
+    //---------------------------------------
+
+    public class UpdateWebHookTriggerEventsPostProcessor
+        : IRequestPostProcessor<UpdateWebHookTriggerEvents,UpdateWebHookTriggerEventsPayload>
+    {
+        /// <summary>
+        /// Injected <c>IPublisher</c>
+        /// </summary>
+        private readonly APIServer.Extensions.IPublisher _publisher;
+
+        public UpdateWebHookTriggerEventsPostProcessor(APIServer.Extensions.IPublisher publisher)
+        {
+            _publisher = publisher;
+        }
+
+        public async Task Process(
+            UpdateWebHookTriggerEvents request,
+            UpdateWebHookTriggerEventsPayload response,
+            CancellationToken cancellationToken)
+        {
+            if(response != null && !response.HasError()){
+                try {
+
+                    await Task.CompletedTask;
+
+                    // Add Notification hire
+
+                } catch { }
+            }
+        }
     }
 }

@@ -7,6 +7,8 @@ using System;
 using Device.Domain;
 using Microsoft.AspNetCore.Http;
 using SharedCore.Aplication.Extensions;
+using SharedCore.Aplication.Interfaces;
+using SharedCore.Aplication.Services;
 
 namespace Device.Configuration {
     public static partial class ServiceExtension {
@@ -34,7 +36,8 @@ namespace Device.Configuration {
                             {
                                 var req = rawObject as HttpRequest;
 
-                                await Extensions.HandleTracingActivityRename(req);    
+                                await SharedCore.Aplication.Shared.Common
+                                    .HandleTracingActivityRename(req);    
                             }
                         }
                     };
@@ -52,6 +55,8 @@ namespace Device.Configuration {
                     options.Endpoint = new Uri("http://localhost:55680");             
                 });
             });
+
+            serviceCollection.AddSingleton<ITelemetry,Telemetry>();
 
             return serviceCollection;
         }
