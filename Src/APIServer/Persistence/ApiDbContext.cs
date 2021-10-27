@@ -1,8 +1,7 @@
-
-
 using Microsoft.EntityFrameworkCore;
-using APIServer.Domain.Core.Models.WebHooks;
+using APIServer.Persistence.Extensions;
 using APIServer.Domain.Core.Models.Events;
+using APIServer.Domain.Core.Models.WebHooks;
 
 namespace APIServer.Persistence {
 
@@ -12,7 +11,7 @@ namespace APIServer.Persistence {
             public DbSet<WebHookRecord> WebHooksHistory { get; set; }
 
             public DbSet<DomainEvent> Events { get; set; }
-        // Asset
+
         public ApiDbContext(
             DbContextOptions<ApiDbContext> options)
             : base(options) {
@@ -20,7 +19,10 @@ namespace APIServer.Persistence {
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
-            modelBuilder.HasPostgresExtension("citext");
+
+            if(this.Database.IsNpgsql()){
+                modelBuilder.HasPostgresExtension("citext");
+            }
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApiDbContext).Assembly);
 
@@ -30,13 +32,28 @@ namespace APIServer.Persistence {
 
             modelBuilder.Entity<WebHookUpdated>().ToTable("WebHookUpdatedEvent");
 
+            if(!this.Database.IsNpgsql()){
+                modelBuilder.Entity<WebHook>().Property(e => e.HookEvents).HasConversion(
+                    new EnumArrToString_StringToEnumArr_Converter(
+                        e=> EnumArrToString_StringToEnumArr_Converter.Convert(e),
+                        s=> EnumArrToString_StringToEnumArr_Converter.Convert(s)
+                    )
+                );
+            }
+
+            //---------------------
+            // Initial DB data
+            //---------------------
+
             modelBuilder.Entity<WebHook>().HasData(
                 new WebHook() { 
                     ID = 1,
                     WebHookUrl = "https://localhost:5015/hookloopback",
                     IsActive = true,
                     ContentType = "application/json",
-                    HookEvents=new HookEventType[]{HookEventType.hook}
+                    HookEvents= new HookEventType[] {
+                        HookEventType.hook
+                    }
                 });
 
             base.OnModelCreating(modelBuilder);

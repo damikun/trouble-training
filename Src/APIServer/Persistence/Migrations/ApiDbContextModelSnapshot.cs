@@ -51,8 +51,8 @@ namespace APIServer.Persistence.Migrations
                     b.Property<string>("ContentType")
                         .HasColumnType("text");
 
-                    b.Property<int[]>("HookEvents")
-                        .HasColumnType("integer[]");
+                    b.Property<string>("HookEvents")
+                        .HasColumnType("text");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -75,7 +75,7 @@ namespace APIServer.Persistence.Migrations
                         {
                             ID = 1L,
                             ContentType = "application/json",
-                            HookEvents = new[] { 0 },
+                            HookEvents = "hook",
                             IsActive = true,
                             WebHookUrl = "https://localhost:5015/hookloopback"
                         });

@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Resources;
 using System;
-using Device.Domain;
 using Microsoft.AspNetCore.Http;
-using SharedCore.Aplication.Extensions;
 using SharedCore.Aplication.Interfaces;
 using SharedCore.Aplication.Services;
 
@@ -17,9 +15,12 @@ namespace Device.Configuration {
             this IServiceCollection serviceCollection,
             IConfiguration Configuration, IWebHostEnvironment Environment) {
 
+            serviceCollection.AddTelemetryService(Configuration, out string source);
+            
             serviceCollection.AddOpenTelemetryTracing((builder) => {
+                
                 // Sources
-                builder.AddSource(Sources.DemoSource.Name);
+                builder.AddSource(source);
 
                 builder.SetResourceBuilder(ResourceBuilder
                   .CreateDefault()

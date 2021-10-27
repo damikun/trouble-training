@@ -7,9 +7,9 @@ namespace SharedCore.Aplication.Core.Commands {
     /// Base abstract class of all Notifi
     /// </summary>
     public abstract class BaseNotifi : INotificationBase {
-#nullable enable
+        #nullable enable
         public string? ActivityId { get; set; }
-#nullable disable
+        #nullable disable
         public DateTime TimeStamp { get; set; } = DateTime.Now;
 
         public string Type { get { return this.GetType().Name; } }

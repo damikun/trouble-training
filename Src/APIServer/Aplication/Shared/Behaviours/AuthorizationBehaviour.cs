@@ -4,7 +4,6 @@ using Serilog;
 using System.Linq;
 using System.Threading;
 using FluentValidation;
-using APIServer.Domain;
 using System.Reflection;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -63,7 +62,7 @@ namespace APIServer.Aplication.Shared.Behaviours {
 
             if (authorizeAttributes.Any()) {
 
-                var activity = Sources.DemoSource.StartActivity(
+                var activity = _telemetry.AppSource.StartActivity(
                     String.Format(
                         "AuthorizationBehaviour: Request<{0}>",
                         request.GetType().FullName),

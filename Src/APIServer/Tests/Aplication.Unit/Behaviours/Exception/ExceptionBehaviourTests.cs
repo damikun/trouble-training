@@ -5,6 +5,7 @@ using Serilog;
 using System.Linq;
 using System.Threading;
 using FluentAssertions;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using SharedCore.Aplication.Interfaces;
 using APIServer.Aplication.Shared.Errors;
@@ -25,31 +26,33 @@ namespace APIServer.Application.UnitTests.Behaviours
             _logger = new Mock<ILogger>();
 
             _telemetry = new Mock<ITelemetry>();
+
+            _telemetry.Setup(e=>e.AppSource).Returns(new ActivitySource("SomeSource"));
         }
 
         [Fact]
         public async Task HandleThrowAsCommandInternallError()
         {
-            
+
             var exBehaviour = new UnhandledExBehaviour<ExceptionTestCommand, ExceptionTestPayload>(
                 _currentUserService.Object,
                 _logger.Object,
                 _telemetry.Object
             );
 
-            var resposne = await exBehaviour.Handle(
+            var response = await exBehaviour.Handle(
                 new ExceptionTestCommand { },
                 new CancellationToken(),
                 new ExceptionTestCommandHandler<ExceptionTestPayload>().HandleWithThrow
             );
 
-            resposne.Should().NotBeNull();
+            response.Should().NotBeNull();
 
-            resposne.Should().BeOfType<ExceptionTestPayload>();
+            response.Should().BeOfType<ExceptionTestPayload>();
 
-            resposne.errors.Any().Should().BeTrue();
+            response.errors.Any().Should().BeTrue();
 
-            resposne.errors.First().Should().BeOfType<InternalServerError>();
+            response.errors.First().Should().BeOfType<InternalServerError>();
 
             _telemetry.Verify(e=>e.SetOtelError(It.IsAny<Exception>()),Times.Once);
         }
@@ -64,17 +67,17 @@ namespace APIServer.Application.UnitTests.Behaviours
                 _telemetry.Object
             );
 
-            var resposne = await exBehaviour.Handle(
+            var response = await exBehaviour.Handle(
                 new ExceptionTestCommand { },
                 new CancellationToken(),
                 new ExceptionTestCommandHandler<ExceptionTestPayload>().HandleWithoutThrow
             );
 
-            resposne.Should().NotBeNull();
+            response.Should().NotBeNull();
 
-            resposne.Should().BeOfType<ExceptionTestPayload>();
+            response.Should().BeOfType<ExceptionTestPayload>();
 
-            resposne.errors.Any().Should().BeFalse();
+            response.errors.Any().Should().BeFalse();
 
             _telemetry.Verify(e=>e.SetOtelError(It.IsAny<Exception>()),Times.Never);
         }

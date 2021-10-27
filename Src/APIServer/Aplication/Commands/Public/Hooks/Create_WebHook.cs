@@ -4,19 +4,20 @@ using System.Threading;
 using FluentValidation;
 using MediatR.Pipeline;
 using System.Diagnostics;
-using APIServer.Extensions;
 using APIServer.Persistence;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using APIServer.Aplication.Shared;
 using SharedCore.Aplication.Payload;
 using Microsoft.EntityFrameworkCore;
+using SharedCore.Aplication.Services;
 using SharedCore.Aplication.Interfaces;
+using SharedCore.Aplication.Core.Commands;
 using APIServer.Domain.Core.Models.WebHooks;
 using APIServer.Aplication.Shared.Behaviours;
 using SharedCore.Aplication.Shared.Attributes;
 using APIServer.Aplication.Notifications.WebHooks;
-using SharedCore.Aplication.Core.Commands;
+
 
 namespace APIServer.Aplication.Commands.WebHooks {
 
@@ -149,7 +150,7 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// <summary>
         /// Injected <c>IPublisher</c>
         /// </summary>
-        private readonly APIServer.Extensions.IPublisher _publisher;
+        private readonly SharedCore.Aplication.Interfaces.IPublisher _publisher;
 
         /// <summary>
         /// Injected <c>ICurrentUser</c>
@@ -161,7 +162,7 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// </summary>
         public CreateWebHookHandler(
             IDbContextFactory<ApiDbContext> factory,
-            APIServer.Extensions.IPublisher publisher,
+            SharedCore.Aplication.Interfaces.IPublisher publisher,
             ICurrentUser currentuser) {
 
             _factory = factory;
@@ -210,9 +211,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// <summary>
         /// Injected <c>IPublisher</c>
         /// </summary>
-        private readonly APIServer.Extensions.IPublisher _publisher;
+        private readonly SharedCore.Aplication.Interfaces.IPublisher _publisher;
 
-        public CreateWebHookPostProcessor(APIServer.Extensions.IPublisher publisher)
+        public CreateWebHookPostProcessor(SharedCore.Aplication.Interfaces.IPublisher publisher)
         {
             _publisher = publisher;
         }
@@ -223,6 +224,7 @@ namespace APIServer.Aplication.Commands.WebHooks {
             CancellationToken cancellationToken)
         {
             if(response != null && !response.HasError()){
+ 
                 try {
 
                     // You can extend and add any custom fields to Notification!

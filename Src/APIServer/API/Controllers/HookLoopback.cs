@@ -23,7 +23,6 @@ namespace APIServer.Controllers {
             dynamic parsedJson = JsonConvert.DeserializeObject(action.ToString());  
 
             return Ok();
-
         }
 
     }

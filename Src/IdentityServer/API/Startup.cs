@@ -8,10 +8,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Elastic.Apm.DiagnosticSource;
 using Microsoft.Net.Http.Headers;
-using Elastic.Apm.AspNetCore;
 using Microsoft.AspNetCore.HttpOverrides;
+using SharedCore.Configuration;
 
 namespace IdentityServer.API
 {
@@ -52,7 +51,7 @@ namespace IdentityServer.API
             if (Environment.IsDevelopment()){
                 app.UseDeveloperExceptionPage();
 
-                ServiceExtension.InitializeDbTestData(app);
+                IdentityServer.Configuration.ServiceExtension.InitializeDbTestData(app);
             }
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions {
@@ -86,7 +85,10 @@ namespace IdentityServer.API
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{Action=Index}/{id?}");
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{Action=Index}/{id?}");
+                    
                 endpoints.MapRazorPages();
             });
         }

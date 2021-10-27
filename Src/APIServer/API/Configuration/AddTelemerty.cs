@@ -1,12 +1,10 @@
 using System;
-using APIServer.Domain;
 using OpenTelemetry.Trace;
 using System.Threading.Tasks;
 using OpenTelemetry.Resources;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
 using SharedCore.Aplication.Services;
-using SharedCore.Aplication.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,9 +15,12 @@ namespace APIServer.Configuration {
             this IServiceCollection serviceCollection,
             IConfiguration Configuration, IWebHostEnvironment Environment) {
 
+            serviceCollection.AddTelemetryService(Configuration, out string source);
+            
             serviceCollection.AddOpenTelemetryTracing((builder) => {
+                
                 // Sources
-                builder.AddSource(Sources.DemoSource.Name);
+                builder.AddSource(source);
 
                 builder.SetResourceBuilder(ResourceBuilder
                   .CreateDefault()
@@ -39,7 +40,7 @@ namespace APIServer.Configuration {
                         {
                             if (rawObject is HttpRequest {Path: {Value: "/graphql"}})
                             {
-                                // Do something else
+                                // Do something with request..
                             }
                         }
                     };
@@ -47,7 +48,6 @@ namespace APIServer.Configuration {
                     // {
                     //     // only collect telemetry about HTTP GET requests
                     //     // return httpContext.Request.Method.Equals("GET");
-                    //     // return httpContext.Request.Path.Value != "/graphql";
                     // };
                 });
 
@@ -81,8 +81,6 @@ namespace APIServer.Configuration {
                 //     // });
                 // }
             });
-
-            serviceCollection.AddSingleton<ITelemetry,Telemetry>();
 
             return serviceCollection;
         }

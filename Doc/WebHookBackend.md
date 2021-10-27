@@ -684,7 +684,7 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// <summary>
         /// Injected <c>IPublisher</c>
         /// </summary>
-        private readonly APIServer.Extensions.IPublisher _publisher;
+        private readonly SharedCore.Aplication.Interfaces.IPublisher _publisher;
 
         /// <summary>
         /// Injected <c>ICurrentUser</c>
@@ -696,7 +696,7 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// </summary>
         public CreateWebHookHandler(
             IDbContextFactory<ApiDbContext> factory,
-            APIServer.Extensions.IPublisher publisher,
+            SharedCore.Aplication.Interfaces.IPublisher publisher,
             ICurrentUser currentuser) {
 
             _factory = factory;
@@ -1450,7 +1450,7 @@ namespace APIServer.Configuration {
             // Command executor
             services.AddMediatR(cfg => cfg.Using<AppMediator>(), typeof(CreateWebHook).GetTypeInfo().Assembly);
 
-            services.AddTransient<APIServer.Extensions.IPublisher, APIServer.Extensions.Publisher>();
+            services.AddTransient<SharedCore.Aplication.Interfaces.IPublisher, APIServer.Extensions.Publisher>();
 
             services.AddValidatorsFromAssembly(typeof(CreateWebHookValidator).GetTypeInfo().Assembly);
 

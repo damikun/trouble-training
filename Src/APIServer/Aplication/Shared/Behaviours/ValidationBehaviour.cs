@@ -46,7 +46,7 @@ namespace APIServer.Aplication.Shared.Behaviours {
             
             if (_validators.Any()) {
 
-                var activity = Sources.DemoSource.StartActivity(
+                var activity = _telemetry.AppSource.StartActivity(
                     String.Format(
                         "ValidationBehaviour: Request<{0}>",
                         request.GetType().FullName),

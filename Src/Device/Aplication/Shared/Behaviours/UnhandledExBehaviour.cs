@@ -4,9 +4,8 @@ using Serilog;
 using System.Threading;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Device.Domain;
-using SharedCore.Aplication.Interfaces;
 using SharedCore.Aplication.Payload;
+using SharedCore.Aplication.Interfaces;
 
 namespace Device.Aplication.Shared.Behaviours {
 
@@ -36,7 +35,7 @@ namespace Device.Aplication.Shared.Behaviours {
             RequestHandlerDelegate<TResponse> next
         ) {
 
-            var activity = Sources.DemoSource.StartActivity(
+            var activity = _telemetry.AppSource.StartActivity(
                 String.Format(
                     "UnhandledExBehaviour: Request<{0}>",
                      typeof(TRequest).FullName),
@@ -62,7 +61,10 @@ namespace Device.Aplication.Shared.Behaviours {
                     return Common.HandleBaseCommandException<TResponse>(ex);
                 } else {
 
-                    ex.Data.Add("command_failed",true); 
+                    if(!ex.Data.Contains("command_failed")){
+                        
+                        ex.Data.Add("command_failed",true); 
+                    }   
 
                     throw;
                 }

@@ -15,6 +15,13 @@ namespace APIServer.Presistence {
             builder.HasMany(e => e.Records)
             .WithOne(e => e.WebHook)
             .HasForeignKey(e => e.WebHookID);
+
+            // builder.Property(e => e.HookEvents).HasConversion(
+            //     new EnumArrToString_StringToEnumArr_Converter(
+            //         e=> EnumArrToString_StringToEnumArr_Converter.Convert(e),
+            //         s=> EnumArrToString_StringToEnumArr_Converter.Convert(s)
+            //     )
+            // );
         }
     }
 }

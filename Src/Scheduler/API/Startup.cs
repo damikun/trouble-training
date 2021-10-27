@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Scheduler.Domain;
-using SharedCore.Configuration;
 using Hangfire.PostgreSql;
 using APIServer.Configuration;
 
@@ -51,7 +49,7 @@ namespace Scheduler
 
             services.AddSingleton(Serilog.Log.Logger);
 
-            services.AddTelemerty(Configuration,Environment, Sources.DemoSource.Name);
+            services.AddTelemerty(Configuration,Environment);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

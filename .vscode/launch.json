@@ -5,13 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "IdentityServer",
+            "name": "APIServer",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceFolder}/IdentityServer/API/bin/Debug/net5.0/IdentityServer.dll",
+            // "preLaunchTask": "build",
+            "program": "${workspaceFolder}/Src/APIServer/API/bin/Debug/net5.0/APIServer.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/IdentityServer/API",
+            "cwd": "${workspaceFolder}/Src/APIServer/API",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",
@@ -20,9 +20,9 @@
             "env": {
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
-            "sourceFileMap": {
-                "/Views": "${workspaceFolder}/Views"
-            }
+            // "sourceFileMap": {
+            //     "/Views": "${workspaceFolder}/Views"
+            // }
         },
         {
             "name": ".NET Core Attach",

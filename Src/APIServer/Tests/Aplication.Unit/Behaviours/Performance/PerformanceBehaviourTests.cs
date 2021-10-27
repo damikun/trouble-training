@@ -5,6 +5,7 @@ using Serilog;
 using System.Linq;
 using System.Threading;
 using FluentAssertions;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using SharedCore.Aplication.Interfaces;
@@ -28,6 +29,16 @@ namespace APIServer.Application.UnitTests.Behaviours
             _env = new Mock<IWebHostEnvironment>(); 
 
             _telemetry = new Mock<ITelemetry>();
+
+            _telemetry.Setup(e=>e.AppSource).Returns(new ActivitySource("SomeSource"));
+
+            _telemetry.Setup(e=>e.Current).Returns(Activity.Current);
+
+            _telemetry.Setup(e=>e.SetOtelError(It.IsAny<Exception>()));
+
+            _telemetry.Setup(e=>e.SetOtelError(It.IsAny<string>(),false)); 
+
+            _telemetry.Setup(e=>e.SetOtelWarning(It.IsAny<string>()));
         }
 
         [Fact]
@@ -46,17 +57,17 @@ namespace APIServer.Application.UnitTests.Behaviours
 
             command.monitor_time = 70;
 
-            var resposne = await exBehaviour.Handle(
+            var response = await exBehaviour.Handle(
                 command,
                 new CancellationToken(),
                 new TestPerformanceCommandHandler<PerformanceTestPayload>().HandleDelayd
             );
 
-            resposne.Should().NotBeNull();
+            response.Should().NotBeNull();
 
-            resposne.Should().BeOfType<PerformanceTestPayload>();
+            response.Should().BeOfType<PerformanceTestPayload>();
 
-            resposne.errors.Any().Should().BeFalse();
+            response.errors.Any().Should().BeFalse();
 
             _logger.Verify(e=>e.Warning(
                 String.Format(

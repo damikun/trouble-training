@@ -1,20 +1,28 @@
+using System;
+using OpenTelemetry.Trace;
+using System.Threading.Tasks;
+using OpenTelemetry.Resources;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
+using SharedCore.Aplication.Services;
+using SharedCore.Aplication.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Hosting;
-using OpenTelemetry.Trace;
-using OpenTelemetry.Resources;
-using System;
 
 namespace SharedCore.Configuration {
     public static partial class ServiceExtension {
 
         public static IServiceCollection AddTelemerty(
             this IServiceCollection serviceCollection,
-            IConfiguration Configuration, IWebHostEnvironment Environment,string source) {
+            IConfiguration Configuration,
+            IWebHostEnvironment Environment) {
 
+            serviceCollection.AddTelemetryService(Configuration, out string trace_source);
+            
             serviceCollection.AddOpenTelemetryTracing((builder) => {
+                
                 // Sources
-                builder.AddSource(source);
+                builder.AddSource(trace_source);
 
                 builder.SetResourceBuilder(ResourceBuilder
                   .CreateDefault()
@@ -25,20 +33,38 @@ namespace SharedCore.Configuration {
 
                 builder.AddAspNetCoreInstrumentation(opts => {
                     opts.RecordException = true;
+                    opts.Enrich = async (activity, eventName, rawObject) =>
+                    {
+
+                        await Task.CompletedTask;
+                        
+                        if (eventName.Equals("OnStartActivity"))
+                        {
+                            if (rawObject is HttpRequest {Path: {Value: "/graphql"}})
+                            {
+                                // Do something with request..
+                            }
+                        }
+                    };
+                    // opts.Filter = (httpContext) =>
+                    // {
+                    //     // only collect telemetry about HTTP GET requests
+                    //     // return httpContext.Request.Method.Equals("GET");
+                    // };
                 });
 
                 builder.AddElasticsearchClientInstrumentation();
 
                 builder.AddSqlClientInstrumentation();
 
-                builder.AddHttpClientInstrumentation(opts => opts.RecordException = true);
+                builder.AddHttpClientInstrumentation(
+                    opts => opts.RecordException = true);
 
-                builder.AddEntityFrameworkCoreInstrumentation(e => e.SetDbStatementForText = true);
+                builder.AddEntityFrameworkCoreInstrumentation(
+                    e => e.SetDbStatementForText = true);
 
                 builder.AddOtlpExporter(options => {
-                     var opentelemetry_endpoint_url = Configuration.GetConnectionString("Opentelemetry");
-
-                    options.Endpoint = new Uri(opentelemetry_endpoint_url); // Export to collector
+                    options.Endpoint = new Uri(Configuration["ConnectionStrings:OtelCollector"]); // Export to collector
                     // options.Endpoint = new Uri("http://localhost:8200"); // Export dirrectly to APM
                     // options.BatchExportProcessorOptions = new OpenTelemetry.BatchExportProcessorOptions<Activity>() {
                     // };                
@@ -52,11 +78,13 @@ namespace SharedCore.Configuration {
                 //         };
                 //     });
 
-                // builder.AddZipkinExporter(opts => {
-                //     opts.Endpoint = new Uri("http://localhost:9412/api/v2/spans");
-                // });
-                //}
+                //     // builder.AddZipkinExporter(opts => {
+                //     //     opts.Endpoint = new Uri("http://localhost:9412/api/v2/spans");
+                //     // });
+                // }
             });
+
+            serviceCollection.AddSingleton<ITelemetry,Telemetry>();
 
             return serviceCollection;
         }

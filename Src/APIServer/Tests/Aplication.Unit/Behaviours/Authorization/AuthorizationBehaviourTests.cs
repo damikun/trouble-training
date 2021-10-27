@@ -1,10 +1,12 @@
 ﻿using Moq;
 using Xunit;
+using System;
 using Serilog;
 using System.Linq;
 using System.Threading;
 using FluentAssertions;
 using FluentValidation;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using SharedCore.Aplication.Interfaces;
@@ -26,6 +28,16 @@ namespace APIServer.Application.UnitTests.Behaviours
             _logger = new Mock<ILogger>();
 
             _telemetry = new Mock<ITelemetry>();
+
+            _telemetry.Setup(e=>e.AppSource).Returns(new ActivitySource("SomeSource"));
+
+            _telemetry.Setup(e=>e.Current).Returns(Activity.Current);
+
+            _telemetry.Setup(e=>e.SetOtelError(It.IsAny<Exception>()));
+
+            _telemetry.Setup(e=>e.SetOtelError(It.IsAny<string>(),false)); 
+
+            _telemetry.Setup(e=>e.SetOtelWarning(It.IsAny<string>()));
         }
 
         [Fact]
@@ -42,17 +54,17 @@ namespace APIServer.Application.UnitTests.Behaviours
                 _telemetry.Object
             );
 
-            var resposne = await exBehaviour.Handle(
+            var response = await exBehaviour.Handle(
                 new AuthorizationTestCommand {SomeDataField="Zlobor" },
                 new CancellationToken(),
                 new TestAuthorizationCommandHandler<AuthorizationTestPayload>().Handler
             );
 
-            resposne.Should().NotBeNull();
+            response.Should().NotBeNull();
 
-            resposne.Should().BeOfType<AuthorizationTestPayload>();
+            response.Should().BeOfType<AuthorizationTestPayload>();
 
-            resposne.errors.Any().Should().BeFalse();
+            response.errors.Any().Should().BeFalse();
         }
 
         [Fact]
@@ -69,7 +81,7 @@ namespace APIServer.Application.UnitTests.Behaviours
                 _telemetry.Object
             );
 
-            var resposne = await exBehaviour.Handle(
+            var response = await exBehaviour.Handle(
                 new AuthorizationTestCommandWithAttribute {SomeDataField="Zlobor" },
                 new CancellationToken(),
                 new TestAuthorizationCommandHandler<AuthorizationTestPayload>().Handler
@@ -77,13 +89,13 @@ namespace APIServer.Application.UnitTests.Behaviours
 
             _currentUserService.Verify(e=>e.Exist,Times.Once);
 
-            resposne.Should().NotBeNull();
+            response.Should().NotBeNull();
 
-            resposne.Should().BeOfType<AuthorizationTestPayload>();
+            response.Should().BeOfType<AuthorizationTestPayload>();
 
-            resposne.errors.Any().Should().BeTrue();
+            response.errors.Any().Should().BeTrue();
 
-            resposne.errors.First().Should().BeOfType<UnAuthorised>();
+            response.errors.First().Should().BeOfType<UnAuthorised>();
         }
 
         [Fact]
@@ -103,7 +115,7 @@ namespace APIServer.Application.UnitTests.Behaviours
                 _telemetry.Object
             );
 
-            var resposne = await exBehaviour.Handle(
+            var response = await exBehaviour.Handle(
                 new AuthorizationTestCommandWithAttribute {SomeDataField="Zlobor" },
                 new CancellationToken(),
                 new TestAuthorizationCommandHandler<AuthorizationTestPayload>().Handler
@@ -111,11 +123,11 @@ namespace APIServer.Application.UnitTests.Behaviours
 
             _currentUserService.Verify(e=>e.Exist,Times.Once);
 
-            resposne.Should().NotBeNull();
+            response.Should().NotBeNull();
 
-            resposne.Should().BeOfType<AuthorizationTestPayload>();
+            response.Should().BeOfType<AuthorizationTestPayload>();
 
-            resposne.errors.Any().Should().BeFalse();
+            response.errors.Any().Should().BeFalse();
         }
 
 
@@ -135,19 +147,19 @@ namespace APIServer.Application.UnitTests.Behaviours
                 _telemetry.Object
             );
 
-            var resposne = await exBehaviour.Handle(
+            var response = await exBehaviour.Handle(
                 new AuthorizationTestCommandWithInnerAttribute {SomeDataField="Zlobor" },
                 new CancellationToken(),
                 new TestAuthorizationCommandHandler<AuthorizationTestPayload>().Handler
             );
 
-            resposne.Should().NotBeNull();
+            response.Should().NotBeNull();
 
-            resposne.Should().BeOfType<AuthorizationTestPayload>();
+            response.Should().BeOfType<AuthorizationTestPayload>();
 
-            resposne.errors.Any().Should().BeTrue();
+            response.errors.Any().Should().BeTrue();
 
-            resposne.errors.First().Should().BeOfType<UnAuthorised>();
+            response.errors.First().Should().BeOfType<UnAuthorised>();
         } 
 
         [Fact]
@@ -167,19 +179,19 @@ namespace APIServer.Application.UnitTests.Behaviours
                 _telemetry.Object
             );
 
-            var resposne = await exBehaviour.Handle(
+            var response = await exBehaviour.Handle(
                 new AuthorizationTestCommandWithRole { },
                 new CancellationToken(),
                 new TestAuthorizationCommandHandler<AuthorizationTestPayload>().Handler
             );
 
-            resposne.Should().NotBeNull();
+            response.Should().NotBeNull();
 
-            resposne.Should().BeOfType<AuthorizationTestPayload>();
+            response.Should().BeOfType<AuthorizationTestPayload>();
 
-            resposne.errors.Any().Should().BeTrue();
+            response.errors.Any().Should().BeTrue();
 
-            resposne.errors.First().Should().BeOfType<UnAuthorised>();
+            response.errors.First().Should().BeOfType<UnAuthorised>();
         }
 
         [Fact]
@@ -199,19 +211,19 @@ namespace APIServer.Application.UnitTests.Behaviours
                 _telemetry.Object
             );
 
-            var resposne = await exBehaviour.Handle(
+            var response = await exBehaviour.Handle(
                 new AuthorizationTestCommandWithPolicy { },
                 new CancellationToken(),
                 new TestAuthorizationCommandHandler<AuthorizationTestPayload>().Handler
             );
 
-            resposne.Should().NotBeNull();
+            response.Should().NotBeNull();
 
-            resposne.Should().BeOfType<AuthorizationTestPayload>();
+            response.Should().BeOfType<AuthorizationTestPayload>();
 
-            resposne.errors.Any().Should().BeTrue();
+            response.errors.Any().Should().BeTrue();
 
-            resposne.errors.First().Should().BeOfType<UnAuthorised>();
+            response.errors.First().Should().BeOfType<UnAuthorised>();
         } 
 
         [Fact]
@@ -231,15 +243,15 @@ namespace APIServer.Application.UnitTests.Behaviours
                 _telemetry.Object
             );
 
-            var resposne = await exBehaviour.Handle(
+            var response = await exBehaviour.Handle(
                 new AuthorizationQueryTest { },
                 new CancellationToken(),
                 new TestAuthorizationQueryHandler<AuthorizationQueryTestResponse>().Handler
             );
 
-            resposne.Should().NotBeNull();
+            response.Should().NotBeNull();
 
-            resposne.Should().BeOfType<AuthorizationQueryTestResponse>();
+            response.Should().BeOfType<AuthorizationQueryTestResponse>();
         }  
 
         [Fact]
@@ -259,15 +271,15 @@ namespace APIServer.Application.UnitTests.Behaviours
                 _telemetry.Object
             );
 
-            var resposne = await exBehaviour.Handle(
+            var response = await exBehaviour.Handle(
                 new AuthorizationQueryTestAuhorisedAtribute { },
                 new CancellationToken(),
                 new TestAuthorizationQueryHandler<AuthorizationQueryTestResponse>().Handler
             );
 
-            resposne.Should().NotBeNull();
+            response.Should().NotBeNull();
 
-            resposne.Should().BeOfType<AuthorizationQueryTestResponse>();
+            response.Should().BeOfType<AuthorizationQueryTestResponse>();
         }
 
         [Fact]

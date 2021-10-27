@@ -1,16 +1,17 @@
 using System;
-using Microsoft.Extensions.DependencyInjection;
 using HotChocolate;
 using HotChocolate.Types;
-using HotChocolate.Types.Pagination;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using HotChocolate.Types.Pagination;
+using Aplication.GraphQL.DataLoaders;
+using APIServer.Aplication.GraphQL.Types;
+using SharedCore.Aplication.GraphQL.Types;
 using APIServer.Aplication.GraphQL.Queries;
 using APIServer.Aplication.GraphQL.Mutation;
-using APIServer.Aplication.GraphQL.Types;
-using Aplication.GraphQL.DataLoaders;
+using APIServer.Aplication.GraphQL.Extensions;
 using APIServer.Aplication.GraphQL.DataLoaders;
-using SharedCore.Aplication.GraphQL.Types;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace APIServer.Configuration {
     public static partial class ServiceExtension {
@@ -19,7 +20,9 @@ namespace APIServer.Configuration {
 
             serviceCollection.AddGraphQLServer()
                     .SetPagingOptions(
-                        new PagingOptions { IncludeTotalCount = true, MaxPageSize = 200 })
+                        new PagingOptions { 
+                            IncludeTotalCount = true,
+                            MaxPageSize = 200 })
                     .ModifyRequestOptions(requestExecutorOptions => {
                         if (env.IsDevelopment() ||
                             System.Diagnostics.Debugger.IsAttached) {
@@ -27,11 +30,13 @@ namespace APIServer.Configuration {
                         }
                         
                          requestExecutorOptions.IncludeExceptionDetails = !env.IsProduction();
-
                     })
+                    .AllowIntrospection(env.IsDevelopment())
 
                     .AddGlobalObjectIdentification()
                     .AddQueryFieldToMutationPayloads()
+
+                    .AddHttpRequestInterceptor<IntrospectionInterceptor>()
 
                     .AddFiltering()
                     .AddSorting()

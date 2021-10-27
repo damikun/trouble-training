@@ -1,5 +1,8 @@
+
 using Hangfire;
 using Hangfire.PostgreSql;
+using SharedCore.Aplication.Services;
+using SharedCore.Aplication.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,9 +14,17 @@ namespace APIServer.Configuration {
             IConfiguration Configuration) {
 
             serviceCollection.AddHangfire((provider, configuration) => {
-                configuration.UsePostgreSqlStorage(Configuration["ConnectionStrings:HangfireConnection"]);
-                configuration.UseFilter(new AutomaticRetryAttribute { Attempts = 5 });
+                
+                configuration.UsePostgreSqlStorage(
+                    Configuration["ConnectionStrings:HangfireConnection"]);
+
+                configuration.UseFilter(new AutomaticRetryAttribute { 
+                    Attempts = 5 });
             });
+
+            serviceCollection.AddScoped<ICommandHandler,CommandHandler>();
+
+            serviceCollection.AddScoped<IScheduler,Scheduler>();
 
             // serviceCollection.AddHangfireServer(options => {
             //     options.Queues = new[] { "systemqueue", "default" };

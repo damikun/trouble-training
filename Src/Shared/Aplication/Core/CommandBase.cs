@@ -1,6 +1,6 @@
 using System;
 using System.Diagnostics;
-using MediatR;
+using SharedCore.Aplication.Interfaces;
 
 namespace SharedCore.Aplication.Core.Commands {
 
@@ -28,21 +28,5 @@ namespace SharedCore.Aplication.Core.Commands {
 
     public abstract class CommandBase : CommandCore, ICommandBase { }
 
-    public interface ICommandBase<TResponse> : IRequest<TResponse>, ISharedCommandBase { }
-
-    public interface ICommandBase : IRequest, ISharedCommandBase { }
-
-    public interface ISharedCommandBase {
-
-        #nullable enable
-        string? ActivityId { get; set; }
-        #nullable disable
-
-        CommandFlags Flags { get; set; }
-        
-        #nullable enable
-        long? monitor_time {get;set;} 
-        #nullable disable
-    }
 
 }

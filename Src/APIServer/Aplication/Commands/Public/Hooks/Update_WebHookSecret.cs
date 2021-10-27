@@ -156,9 +156,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// <summary>
         /// Injected <c>IPublisher</c>
         /// </summary>
-        private readonly APIServer.Extensions.IPublisher _publisher;
+        private readonly SharedCore.Aplication.Interfaces.IPublisher _publisher;
 
-        public UpdateWebHookSecretPostProcessor(APIServer.Extensions.IPublisher publisher)
+        public UpdateWebHookSecretPostProcessor(SharedCore.Aplication.Interfaces.IPublisher publisher)
         {
             _publisher = publisher;
         }

@@ -5,6 +5,8 @@ using HotChocolate.Types;
 using System.Collections.Generic;
 using APIServer.Domain.Core.Models.WebHooks;
 using APIServer.Aplication.Commands.WebHooks;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace APIServer.Aplication.GraphQL.Mutation {
 
@@ -40,7 +42,10 @@ namespace APIServer.Aplication.GraphQL.Mutation {
         /// <returns></returns>
         public async Task<CreateWebHookPayload> CreateWebHook(
             CreateWebHookInput request,
-            [Service] IMediator _mediator) {
+            [Service] IMediator _mediator,
+            [Service] IHttpContextAccessor accessor) {
+
+            var id = accessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             return await _mediator.Send(new CreateWebHook() {
                 WebHookUrl = request.WebHookUrl,

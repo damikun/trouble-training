@@ -9,6 +9,7 @@ using APIServer.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharedCore.Aplication.Core.Commands;
+using SharedCore.Aplication.Interfaces;
 
 namespace APIServer.Aplication.Commands.Internall.Hooks  {
 
@@ -31,9 +32,9 @@ namespace APIServer.Aplication.Commands.Internall.Hooks  {
         private readonly IDbContextFactory<ApiDbContext> _factory;
 
         /// <summary>
-        /// Injected <c>IMediator</c>
+        /// Injected <c>IScheduler</c>
         /// </summary>
-        private readonly IMediator _mediator;
+        private readonly IScheduler _scheduler;
 
         /// <summary>
         /// Injected <c>IHttpClientFactory</c>
@@ -45,10 +46,10 @@ namespace APIServer.Aplication.Commands.Internall.Hooks  {
         /// </summary>
         public EnqueueRelatedWebHooksHandler(
             IDbContextFactory<ApiDbContext> factory,
-            IMediator mediator,
+            IScheduler scheduler,
             IHttpClientFactory httpClient) {
             _factory = factory;
-            _mediator = mediator;
+            _scheduler = scheduler;
             _clientFactory = httpClient;
         }
 
@@ -66,15 +67,17 @@ namespace APIServer.Aplication.Commands.Internall.Hooks  {
 
             List<WebHook> hooks = await dbContext.WebHooks
             .AsNoTracking()
-            .Where(e => e.HookEvents.Contains(HookEventType.hook))
             .ToListAsync(cancellationToken);
+            
+            // Temporary solution (Because of test postgressql supports projection on array)
+            hooks= hooks.Where(e=>e.HookEvents.Contains(HookEventType.hook)).ToList();
 
             try {
                 if (hooks != null) {
                     foreach (var hook_item in hooks) {
                         if (hook_item.IsActive && hook_item.ID > 0) {
                             try {
-                                _mediator.Enqueue(new ProcessWebHook() {
+                                _scheduler.Enqueue(new ProcessWebHook() {
                                     HookId = hook_item.ID,
                                     Event = request.Event,
                                     EventType = request.EventType

@@ -8,7 +8,6 @@ using System;
 using APIServer.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using IdentityServer.Persistence;
 
 namespace APIServer.Configuration {
@@ -44,6 +43,7 @@ namespace APIServer.Configuration {
             var serviceScopeFactory = app_builder.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
 
             using (var serviceScope = serviceScopeFactory.CreateScope()) {
+                
                 var _factory = serviceScope.ServiceProvider.GetService<IDbContextFactory<ApiDbContext>>();
 
                  using ApiDbContext dbContext =  _factory.CreateDbContext();

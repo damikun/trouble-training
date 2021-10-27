@@ -2,12 +2,10 @@ using System;
 using MediatR;
 using Serilog;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using SharedCore.Aplication.Interfaces;
 using SharedCore.Aplication.Core.Commands;
-using Device.Domain;
-using SharedCore.Aplication.Payload;
 
 namespace Device.Aplication.Shared.Behaviours {
 
@@ -20,12 +18,15 @@ namespace Device.Aplication.Shared.Behaviours {
     : IPipelineBehavior<TRequest, TResponse> {
         private readonly ICurrentUser _currentUserService;
         private readonly ILogger _logger;
+        private readonly ITelemetry _telemetry;     
 
         public TracingBehaviour(
             ICurrentUser currentUserService,
-             ILogger logger) {
+            ILogger logger,
+            ITelemetry telemetry) {
             _currentUserService = currentUserService;
             _logger = logger;
+            _telemetry = telemetry;
         }
 
         public async Task<TResponse> Handle(
@@ -33,7 +34,7 @@ namespace Device.Aplication.Shared.Behaviours {
             CancellationToken cancellationToken,
             RequestHandlerDelegate<TResponse> next ) {
 
-            var activity = Sources.DemoSource.StartActivity(
+            var activity = _telemetry.AppSource.StartActivity(
                 String.Format(
                     "TracingBehaviour: Request<{0}>",
                     typeof(TRequest).FullName),

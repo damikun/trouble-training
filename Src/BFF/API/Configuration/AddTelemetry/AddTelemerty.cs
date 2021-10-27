@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Resources;
 using System;
-using BFF.Domain;
 using Microsoft.AspNetCore.Http;
-using SharedCore.Aplication.Extensions;
 using SharedCore.Aplication.Interfaces;
 using SharedCore.Aplication.Services;
 
@@ -17,9 +15,11 @@ namespace BFF.Configuration {
             this IServiceCollection serviceCollection,
             IConfiguration Configuration, IWebHostEnvironment Environment) {
 
+            serviceCollection.AddTelemetryService(Configuration, out string source);
+            
             serviceCollection.AddOpenTelemetryTracing((builder) => {
                 // Sources
-                builder.AddSource(Sources.DemoSource.Name);
+                builder.AddSource(source);
 
                 builder.SetResourceBuilder(ResourceBuilder
                   .CreateDefault()
@@ -55,10 +55,7 @@ namespace BFF.Configuration {
                 builder.AddEntityFrameworkCoreInstrumentation(e => e.SetDbStatementForText = true);
 
                 builder.AddOtlpExporter(options => {
-                    options.Endpoint = new Uri("http://localhost:55680"); // Export to collector
-                    // options.Endpoint = new Uri("http://localhost:8200"); // Export dirrectly to APM
-                    // options.BatchExportProcessorOptions = new OpenTelemetry.BatchExportProcessorOptions<Activity>() {
-                    // };                
+                    options.Endpoint = new Uri(Configuration["ConnectionStrings:OtelCollector"]);             
                 });
 
                 // if (Uri.TryCreate(Configuration.GetConnectionString("Jaeger"), UriKind.Absolute, out var uri)) {

@@ -1,10 +1,12 @@
 ﻿using Moq;
 using Xunit;
+using System;
 using Serilog;
 using System.Linq;
 using System.Threading;
 using FluentAssertions;
 using FluentValidation;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using SharedCore.Aplication.Interfaces;
@@ -26,6 +28,16 @@ namespace APIServer.Application.UnitTests.Behaviours
             _logger = new Mock<ILogger>();
 
             _telemetry = new Mock<ITelemetry>();
+
+            _telemetry.Setup(e=>e.AppSource).Returns(new ActivitySource("SomeSource"));
+
+            _telemetry.Setup(e=>e.Current).Returns(Activity.Current);
+
+            _telemetry.Setup(e=>e.SetOtelError(It.IsAny<Exception>()));
+
+            _telemetry.Setup(e=>e.SetOtelError(It.IsAny<string>(),false)); 
+
+            _telemetry.Setup(e=>e.SetOtelWarning(It.IsAny<string>()));
         }
 
         [Fact]
@@ -43,17 +55,17 @@ namespace APIServer.Application.UnitTests.Behaviours
                 _telemetry.Object
             );
 
-            var resposne = await exBehaviour.Handle(
+            var response = await exBehaviour.Handle(
                 new ValidationTestCommand {FirstName="Zlobor" },
                 new CancellationToken(),
                 new TestCommandHandler<ValidationTestPayload>().HandleWithoutThrow
             );
 
-            resposne.Should().NotBeNull();
+            response.Should().NotBeNull();
 
-            resposne.Should().BeOfType<ValidationTestPayload>();
+            response.Should().BeOfType<ValidationTestPayload>();
 
-            resposne.errors.Any().Should().BeFalse();
+            response.errors.Any().Should().BeFalse();
         }   
 
         [Fact]
@@ -71,24 +83,24 @@ namespace APIServer.Application.UnitTests.Behaviours
                 _telemetry.Object
             );
 
-            var resposne = await exBehaviour.Handle(
+            var response = await exBehaviour.Handle(
                 new ValidationTestCommand {FirstName=null },
                 new CancellationToken(),
                 new TestCommandHandler<ValidationTestPayload>().HandleWithoutThrow
             );
 
-            resposne.Should().NotBeNull();
+            response.Should().NotBeNull();
 
-            resposne.Should().BeOfType<ValidationTestPayload>();
+            response.Should().BeOfType<ValidationTestPayload>();
 
-            resposne.errors.Any().Should().BeTrue();
+            response.errors.Any().Should().BeTrue();
 
-            resposne.errors.Count().Should()
+            response.errors.Count().Should()
                 .Be(1,"only one validator was defined as: RuleFor(e => e.FirstName).NotNull()");
 
-            resposne.errors.First().Should().BeOfType<ValidationError>();
+            response.errors.First().Should().BeOfType<ValidationError>();
 
-            resposne.errors.First().Should().BeOfType<ValidationError>()
+            response.errors.First().Should().BeOfType<ValidationError>()
                 .Subject.message.Should().Be("Some error message");
         }
 
@@ -107,22 +119,22 @@ namespace APIServer.Application.UnitTests.Behaviours
                 _telemetry.Object
             );
 
-            var resposne = await exBehaviour.Handle(
+            var response = await exBehaviour.Handle(
                 new ValidationTestCommand {FirstName=null, Age=18 },
                 new CancellationToken(),
                 new TestCommandHandler<ValidationTestPayload>().HandleWithoutThrow
             );
 
-            resposne.Should().NotBeNull();
+            response.Should().NotBeNull();
 
-            resposne.Should().BeOfType<ValidationTestPayload>();
+            response.Should().BeOfType<ValidationTestPayload>();
 
-            resposne.errors.Any().Should().BeTrue();
+            response.errors.Any().Should().BeTrue();
 
-            resposne.errors.Count().Should()
+            response.errors.Count().Should()
                 .BeGreaterThan(1);
 
-            resposne.errors.First().Should().BeOfType<ValidationError>();
+            response.errors.First().Should().BeOfType<ValidationError>();
         }
 
         [Fact]
@@ -164,15 +176,15 @@ namespace APIServer.Application.UnitTests.Behaviours
                 _telemetry.Object
             );
 
-            var resposne = await exBehaviour.Handle(
+            var response = await exBehaviour.Handle(
                 new ValidationQuery {some_id=10},
                 new CancellationToken(),
                 new TestQueryHandler<ValidationQueryResponse>().HandleDefaultPayload
             );
 
-            resposne.Should().NotBeNull();
+            response.Should().NotBeNull();
 
-            resposne.Should().BeOfType<ValidationQueryResponse>();
+            response.Should().BeOfType<ValidationQueryResponse>();
         }
     }
 }

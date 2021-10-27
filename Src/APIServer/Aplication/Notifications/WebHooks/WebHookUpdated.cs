@@ -8,7 +8,6 @@ using System.Diagnostics;
 using SharedCore.Aplication.Interfaces;
 using APIServer.Domain.Core.Models.Events;
 using APIServer.Aplication.Commands.Internall.Hooks;
-using APIServer.Aplication.WebHooks;
 using APIServer.Domain.Core.Models.WebHooks;
 
 namespace APIServer.Aplication.Notifications.WebHooks {
@@ -26,9 +25,9 @@ namespace APIServer.Aplication.Notifications.WebHooks {
     public class WebHookUpdatedEventLogHandler : INotificationHandler<WebHookUpdatedNotifi> {
 
         /// <summary>
-        /// Injected <c>IMediator</c>
+        /// Injected <c>IScheduler</c>
         /// </summary>
-        private readonly IMediator _mediator;
+        private readonly IScheduler _scheduler;
 
         /// <summary>
         /// Injected <c>ICurrentUser</c>
@@ -41,13 +40,13 @@ namespace APIServer.Aplication.Notifications.WebHooks {
         private readonly ILogger _logger;
 
         public WebHookUpdatedEventLogHandler(
-            IMediator mediator,
+            IScheduler scheduler,
             ICurrentUser currentuser,
             ILogger logger,
             IHttpClientFactory clientFactory
             ) {
 
-            _mediator = mediator;
+            _scheduler = scheduler;
 
             _currentuser = currentuser;
 
@@ -65,7 +64,7 @@ namespace APIServer.Aplication.Notifications.WebHooks {
             await Task.CompletedTask;
             
             try {
-                _mediator.Enqueue(new EnqueSaveEvent<WebHookUpdated>() {
+                _scheduler.Enqueue(new EnqueSaveEvent<WebHookUpdated>() {
                     Event = new WebHookUpdated() {
                         ActorID = _currentuser.UserId,
                         WebHookId = request.WebHookId,
@@ -88,9 +87,9 @@ namespace APIServer.Aplication.Notifications.WebHooks {
     public class WebHookUpdatedHookQueueHandler : INotificationHandler<WebHookUpdatedNotifi> {
 
         /// <summary>
-        /// Injected <c>IMediator</c>
+        /// Injected <c>IScheduler</c>
         /// </summary>
-        private readonly IMediator _mediator;
+        private readonly IScheduler _scheduler;
 
         /// <summary>
         /// Injected <c>ICurrentUser</c>
@@ -103,13 +102,13 @@ namespace APIServer.Aplication.Notifications.WebHooks {
         private readonly ILogger _logger;
 
         public WebHookUpdatedHookQueueHandler(
-            IMediator mediator,
+            IScheduler scheduler,
             ICurrentUser currentuser,
             ILogger logger,
             IHttpClientFactory clientFactory
             ) {
 
-            _mediator = mediator;
+            _scheduler = scheduler;
 
             _currentuser = currentuser;
 
@@ -133,7 +132,7 @@ namespace APIServer.Aplication.Notifications.WebHooks {
             };
 
             try {
-                _mediator.Enqueue(new EnqueueRelatedWebHooks() {
+                _scheduler.Enqueue(new EnqueueRelatedWebHooks() {
                     Event =  new Hook_HookUpdated(
                                 HookResourceAction.hook_updated,
                                 new Hook_User_DTO() {

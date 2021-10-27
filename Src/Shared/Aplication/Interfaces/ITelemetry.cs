@@ -10,12 +10,13 @@ namespace SharedCore.Aplication.Interfaces {
             
         Activity Current {get;}
 
-
         void SetOtelError(string error, bool log = false);
 
         void SetOtelError(Exception ex);
 
         void SetOtelWarning(string error);
+
+        ActivitySource AppSource {get;}
 
     }
    

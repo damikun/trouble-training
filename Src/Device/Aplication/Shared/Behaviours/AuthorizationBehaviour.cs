@@ -1,20 +1,19 @@
 using System;
 using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Linq;
-using System.Reflection;
-using System.Collections.Generic;
-using FluentValidation;
 using Serilog;
-using FluentValidation.Results;
+using System.Linq;
+using System.Threading;
+using FluentValidation;
+using System.Reflection;
 using System.Diagnostics;
+using System.Threading.Tasks;
+using FluentValidation.Results;
+using System.Collections.Generic;
+using SharedCore.Aplication.Payload;
 using SharedCore.Aplication.Interfaces;
 using SharedCore.Aplication.Shared.Attributes;
-using Device.Domain;
-using Device.Aplication.Shared.Errors;
 using SharedCore.Aplication.Shared.Exceptions;
-using SharedCore.Aplication.Payload;
+using Device.Aplication.Shared.Errors;
 
 namespace Device.Aplication.Shared.Behaviours {
 
@@ -63,7 +62,7 @@ namespace Device.Aplication.Shared.Behaviours {
 
             if (authorizeAttributes.Any()) {
 
-                var activity = Sources.DemoSource.StartActivity(
+                var activity = _telemetry.AppSource.StartActivity(
                     String.Format(
                         "AuthorizationBehaviour: Request<{0}>",
                         request.GetType().FullName),
@@ -73,7 +72,7 @@ namespace Device.Aplication.Shared.Behaviours {
                     activity?.Start();
 
                     // Must be authenticated user
-                    if (!_currentUserService.Exist) 
+                    if (!_currentUserService.Exist)
                         return HandleUnAuthorised(null);
 
                     // Role-based authorization
