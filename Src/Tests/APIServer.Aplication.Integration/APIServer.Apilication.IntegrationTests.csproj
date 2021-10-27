@@ -30,9 +30,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Domain\APIServer.Domain.csproj" />
-    <ProjectReference Include="..\..\API\APIServer.csproj" />
-    <ProjectReference Include="..\..\Persistence\APIServer.Persistence.csproj" />
+    <ProjectReference Include="..\..\APIServer\Domain\APIServer.Domain.csproj" />
+    <ProjectReference Include="..\..\APIServer\API\APIServer.csproj" />
+    <ProjectReference Include="..\..\APIServer\Persistence\APIServer.Persistence.csproj" />
   </ItemGroup>
 
 </Project>
