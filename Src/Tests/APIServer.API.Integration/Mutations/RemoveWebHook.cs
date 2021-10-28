@@ -12,9 +12,6 @@ namespace APIServer.API.IntegrationTests.WebHooks
     [Collection("Sequential")]
     public class RemoveWebHookTests : BaseClassFixture
     {
-        private readonly IMediator _mediator;
-
-        private readonly IDbContextFactory<ApiDbContext> _dbcontextfactory;
 
         public RemoveWebHookTests(XunitFixture fixture):base(fixture){
 

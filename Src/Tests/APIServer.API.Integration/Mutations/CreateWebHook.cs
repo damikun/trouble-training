@@ -12,10 +12,6 @@ namespace APIServer.API.IntegrationTests.WebHooks
     [Collection("Sequential")]
     public class CreateWebHookTests : BaseClassFixture
     {
-        private readonly IMediator _mediator;
-
-        private readonly IDbContextFactory<ApiDbContext> _dbcontextfactory;
-
         public CreateWebHookTests(XunitFixture fixture):base(fixture){
 
         }

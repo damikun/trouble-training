@@ -37,16 +37,6 @@ namespace IdentityServer.API
                 },
                 new Client
                 {
-                    ClientId = "test",
-
-                    ClientSecrets = { new Secret("secret".Sha256()) },
-                    
-                    AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
-
-                    AllowedScopes = { "openid", "profile", "api" }
-                },
-                new Client
-                {
                     ClientId = "device",
 
                     ClientSecrets = { new Secret("secret".Sha256())},
