@@ -4,7 +4,7 @@ using IdentityModel;
 using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace IdentityServer.API
+namespace APIServer.API.IntegrationTests
 {
     public class Clients
     {
@@ -14,48 +14,15 @@ namespace IdentityServer.API
             {
                 new Client
                 {
-                    ClientId = "spa",
-
-                    ClientSecrets = { new Secret("secret".Sha256()) },
-                    
-                    AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
-
-                    RedirectUris = { "https://localhost:5015/signin-oidc" },
-                    
-                    BackChannelLogoutUri = "https://localhost:5015/bff/backchannel",
-                    
-                    PostLogoutRedirectUris = { "https://localhost:5015/signout-callback-oidc" },
-
-                    AllowedCorsOrigins = new List<string>
-                    {
-                        "http://localhost:3000", "http://localhost:5001",
-                    },
-
-                    AllowOfflineAccess = true,
-
-                    AllowedScopes = { "openid", "profile", "api" }
-                },
-                new Client
-                {
                     ClientId = "test",
 
                     ClientSecrets = { new Secret("secret".Sha256()) },
                     
-                    AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+
+                    AllowOfflineAccess = true,
 
                     AllowedScopes = { "openid", "profile", "api" }
-                },
-                new Client
-                {
-                    ClientId = "device",
-
-                    ClientSecrets = { new Secret("secret".Sha256())},
-
-                    ClientName = "Some machine or server using clinet credentials",
-
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-
-                    AllowedScopes = { "api" },
                 }
             };
         }

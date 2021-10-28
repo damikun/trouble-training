@@ -54,7 +54,17 @@ namespace APIServer.Persistence {
                     HookEvents= new HookEventType[] {
                         HookEventType.hook
                     }
-                });
+                },
+                new WebHook() { 
+                    ID = 2,
+                    WebHookUrl = "https://localhost:5015/hookloopback2",
+                    IsActive = false,
+                    ContentType = "application/json",
+                    HookEvents= new HookEventType[] {
+                        HookEventType.hook
+                    }
+                }
+                );
 
             base.OnModelCreating(modelBuilder);
         }

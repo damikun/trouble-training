@@ -36,6 +36,5 @@ namespace APIServer.Application.UnitTests.Behaviours
 
             Assert.True(result.Success);
         }
-
     }
 }

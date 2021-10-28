@@ -27,7 +27,7 @@ namespace IdentityServer.API
             Configuration = configuration;
         }
 
-        public void ConfigureServices(IServiceCollection services)
+        public virtual void ConfigureServices(IServiceCollection services)
         {
             services.AddCorsConfiguration(Environment);
 
@@ -44,7 +44,7 @@ namespace IdentityServer.API
             services.AddTelemerty(Configuration,Environment);
         }
 
-        public void Configure(
+        public virtual void Configure(
             IApplicationBuilder app,
             IWebHostEnvironment env) {
 

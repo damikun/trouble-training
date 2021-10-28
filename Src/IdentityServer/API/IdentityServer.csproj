@@ -46,10 +46,10 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.5.1" />
   </ItemGroup>
 
-  <Target Name="Tailwind" BeforeTargets="Build">
+  <!-- <Target Name="Tailwind" BeforeTargets="Build">
       <Exec Command="yarn install" />
       <Exec Command="yarn run css:build" />
-  </Target>
+  </Target> -->
 
   <ItemGroup>
     <ProjectReference Include="../../IdentityServer/Persistence/Persistence.csproj" />

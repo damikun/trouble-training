@@ -1,0 +1,1 @@
+﻿{"data":{"webhooks":{"edges":[{"node":{"id":"R1FMX1dlYkhvb2sKbDE=","guid":null,"isActive":true,"webHookUrl":"https://localhost:5015/hookloopback","listeningEvents":["HOOK"]}},{"node":{"id":"R1FMX1dlYkhvb2sKbDI=","guid":null,"isActive":false,"webHookUrl":"https://localhost:5015/hookloopback2","listeningEvents":["HOOK"]}}]}}}

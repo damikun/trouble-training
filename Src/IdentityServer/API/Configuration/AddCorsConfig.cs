@@ -19,7 +19,9 @@ namespace IdentityServer.Configuration
                     "https://localhost:5001",
                     "https://localhost:5015",
                     "https://localhost:5021",
-                    "https://localhost:5070"
+                    "https://localhost:5070",
+                    "https://localhost",
+                    "http://localhost"
                 };
             }else{
                  // Add your production origins hire
