@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace APIServer.Persistence.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20211026084859_Init")]
+    [Migration("20211029131403_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,8 +53,8 @@ namespace APIServer.Persistence.Migrations
                     b.Property<string>("ContentType")
                         .HasColumnType("text");
 
-                    b.Property<string>("HookEvents")
-                        .HasColumnType("text");
+                    b.Property<int[]>("HookEvents")
+                        .HasColumnType("integer[]");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -77,9 +77,17 @@ namespace APIServer.Persistence.Migrations
                         {
                             ID = 1L,
                             ContentType = "application/json",
-                            HookEvents = "hook",
+                            HookEvents = new[] { 0 },
                             IsActive = true,
                             WebHookUrl = "https://localhost:5015/hookloopback"
+                        },
+                        new
+                        {
+                            ID = 2L,
+                            ContentType = "application/json",
+                            HookEvents = new[] { 0 },
+                            IsActive = false,
+                            WebHookUrl = "https://localhost:5015/hookloopback2"
                         });
                 });
 

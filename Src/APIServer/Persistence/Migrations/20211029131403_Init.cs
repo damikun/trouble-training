@@ -36,7 +36,7 @@ namespace APIServer.Persistence.Migrations
                     Secret = table.Column<string>(type: "text", nullable: true),
                     ContentType = table.Column<string>(type: "text", nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false),
-                    HookEvents = table.Column<string>(type: "text", nullable: true),
+                    HookEvents = table.Column<int[]>(type: "integer[]", nullable: true),
                     LastTrigger = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
@@ -154,7 +154,11 @@ namespace APIServer.Persistence.Migrations
             migrationBuilder.InsertData(
                 table: "WebHooks",
                 columns: new[] { "ID", "ContentType", "HookEvents", "IsActive", "LastTrigger", "Secret", "WebHookUrl" },
-                values: new object[] { 1L, "application/json", "hook", true, null, null, "https://localhost:5015/hookloopback" });
+                values: new object[,]
+                {
+                    { 1L, "application/json", new[] { 0 }, true, null, null, "https://localhost:5015/hookloopback" },
+                    { 2L, "application/json", new[] { 0 }, false, null, null, "https://localhost:5015/hookloopback2" }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_WebHookHeader_WebHookID",
