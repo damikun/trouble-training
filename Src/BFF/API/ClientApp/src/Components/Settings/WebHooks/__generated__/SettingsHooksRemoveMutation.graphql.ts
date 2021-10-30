@@ -4,17 +4,18 @@
 /* @relayHash 88d3fb8a0c7cef7c5d314782f703ed0b */
 
 import { ConcreteRequest } from "relay-runtime";
+
 export type RemoveWebHookInput = {
     webHookId: unknown;
 };
 export type SettingsHooksRemoveMutationVariables = {
-    request?: RemoveWebHookInput | null;
+    request?: RemoveWebHookInput | null | undefined;
     connections: Array<string>;
 };
 export type SettingsHooksRemoveMutationResponse = {
     readonly removeWebHook: {
         readonly errors: ReadonlyArray<{
-            readonly message?: string | null;
+            readonly message?: string | null | undefined;
         } | null> | null;
         readonly removed_id: string | null;
     } | null;

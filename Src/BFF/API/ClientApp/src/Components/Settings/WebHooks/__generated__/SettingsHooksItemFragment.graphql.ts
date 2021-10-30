@@ -3,6 +3,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from "relay-runtime";
+
 import { FragmentRefs } from "relay-runtime";
 export type SettingsHooksItemFragment = {
     readonly id: string;
@@ -13,7 +14,7 @@ export type SettingsHooksItemFragment = {
 };
 export type SettingsHooksItemFragment$data = SettingsHooksItemFragment;
 export type SettingsHooksItemFragment$key = {
-    readonly " $data"?: SettingsHooksItemFragment$data;
+    readonly " $data"?: SettingsHooksItemFragment$data | undefined;
     readonly " $fragmentRefs": FragmentRefs<"SettingsHooksItemFragment">;
 };
 

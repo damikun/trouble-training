@@ -32,7 +32,7 @@ namespace APIServer.Aplication.GraphQL.Queries {
         [UseApiDbContextAttribute]
         [UsePaging(typeof(WebHookType))]
         [UseFiltering]
-        public IQueryable<GQL_WebHook> Webhooks(
+        public IAsyncEnumerable<GQL_WebHook> Webhooks(
         [Service] ICurrentUser current,
         [ScopedService] ApiDbContext context) {
 
@@ -50,7 +50,7 @@ namespace APIServer.Aplication.GraphQL.Queries {
                     IsActive = e.IsActive,
                     LastTrigger = e.LastTrigger,
                     ListeningEvents = e.HookEvents
-                });
+                }).AsAsyncEnumerable();
         }
 
         /// <summary>

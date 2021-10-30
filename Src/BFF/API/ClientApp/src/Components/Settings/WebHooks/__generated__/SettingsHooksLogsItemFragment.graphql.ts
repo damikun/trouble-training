@@ -3,6 +3,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from "relay-runtime";
+
 import { FragmentRefs } from "relay-runtime";
 export type HookEventType = "FILE" | "HOOK" | "MILESTONE" | "NOTE" | "PROJECT" | "%future added value";
 export type RecordResult = "DATA_QUERY_ERROR" | "HTTP_ERROR" | "OK" | "PARAMETER_ERROR" | "UNDEFINED" | "%future added value";
@@ -22,7 +23,7 @@ export type SettingsHooksLogsItemFragment = {
 };
 export type SettingsHooksLogsItemFragment$data = SettingsHooksLogsItemFragment;
 export type SettingsHooksLogsItemFragment$key = {
-    readonly " $data"?: SettingsHooksLogsItemFragment$data;
+    readonly " $data"?: SettingsHooksLogsItemFragment$data | undefined;
     readonly " $fragmentRefs": FragmentRefs<"SettingsHooksLogsItemFragment">;
 };
 

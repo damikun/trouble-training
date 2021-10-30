@@ -1,5 +1,5 @@
 {
-  "name": "TroubleFrontend",
+  "name": "trouble-training-frontend",
   "version": "0.1.0",
   "author": "Dalibor Kundrat",
   "private": true,
@@ -25,7 +25,7 @@
     "eslint-plugin-relay": "^1.8.2",
     "formik": "2.2.9",
     "framer-motion": "4.1.17",
-    "graphql": "^15.5.3",
+    "graphql": "15.4.0-experimental-stream-defer.1",
     "graphql-config": "^4.0.1",
     "history": "5.0.0",
     "js-cookie": "^3.0.1",
@@ -40,6 +40,7 @@
     "react-router": "6.0.0-beta.0",
     "react-router-dom": "6.0.0-beta.0",
     "react-scripts": "4.0.3",
+    "relay-compiler-experimental": "0.0.0-main-6d709fde",
     "relay-runtime": "0.0.0-main-2219c43b",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "tailwindcss-truncate-multiline": "^1.0.3",
@@ -62,7 +63,7 @@
     "startwatch": "npm run watch:css && craco start start",
     "start": "craco start",
     "build": "craco build",
-    "test": "craco test",
+    "test": "cypress open",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -91,11 +92,11 @@
     "@types/relay-compiler": "8.0.1",
     "@types/relay-runtime": "12.0.0",
     "babel-plugin-macros": "^3.1.0",
-    "babel-plugin-relay": "^11.0.2",
+    "babel-plugin-relay": "^12.0.0",
     "cypress": "^8.6.0",
     "fs-extra": "9.1.0",
     "relay-compiler": "12.0.0",
-    "relay-compiler-language-typescript": "^14.1.0",
+    "relay-compiler-language-typescript": "^14.3.0",
     "relay-config": "^11.0.2"
   },
   "browserslist": {

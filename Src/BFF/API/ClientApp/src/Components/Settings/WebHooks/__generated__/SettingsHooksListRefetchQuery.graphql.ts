@@ -1,13 +1,14 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 0f3181e0dd0f9a4eb53973b30e1437b5 */
+/* @relayHash 4290e22caf0448421a7a4f292a74e528 */
 
 import { ConcreteRequest } from "relay-runtime";
+
 import { FragmentRefs } from "relay-runtime";
 export type SettingsHooksListRefetchQueryVariables = {
-    after?: string | null;
-    first?: number | null;
+    after?: string | null | undefined;
+    first?: number | null | undefined;
 };
 export type SettingsHooksListRefetchQueryResponse = {
     readonly " $fragmentRefs": FragmentRefs<"SettingsHooksListFragment">;
@@ -42,7 +43,7 @@ fragment SettingsHooksListFragment_2HEEH6 on Query {
       startCursor
       endCursor
     }
-    edges {
+    edges @stream(label: "SettingsHooksListFragment$stream$edges", initialCount: 1) {
       node {
         id
         ...SettingsHooksItemFragment
@@ -149,68 +150,75 @@ return {
             "storageKey": null
           },
           {
-            "alias": null,
-            "args": null,
-            "concreteType": "WebhooksEdge",
-            "kind": "LinkedField",
-            "name": "edges",
-            "plural": true,
+            "if": null,
+            "kind": "Stream",
+            "label": "SettingsHooksListFragment$stream$edges",
             "selections": [
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "GQL_WebHook",
+                "concreteType": "WebhooksEdge",
                 "kind": "LinkedField",
-                "name": "node",
-                "plural": false,
+                "name": "edges",
+                "plural": true,
                 "selections": [
                   {
                     "alias": null,
                     "args": null,
-                    "kind": "ScalarField",
-                    "name": "id",
+                    "concreteType": "GQL_WebHook",
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "id",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "systemid",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "webHookUrl",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "isActive",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "__typename",
+                        "storageKey": null
+                      }
+                    ],
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "systemid",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "webHookUrl",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "isActive",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "__typename",
+                    "name": "cursor",
                     "storageKey": null
                   }
                 ],
                 "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "cursor",
-                "storageKey": null
               }
-            ],
-            "storageKey": null
+            ]
           },
           {
             "kind": "ClientExtension",
@@ -239,7 +247,7 @@ return {
     ]
   },
   "params": {
-    "id": "0f3181e0dd0f9a4eb53973b30e1437b5",
+    "id": "4290e22caf0448421a7a4f292a74e528",
     "metadata": {},
     "name": "SettingsHooksListRefetchQuery",
     "operationKind": "query",
@@ -247,5 +255,5 @@ return {
   }
 };
 })();
-(node as any).hash = 'ae80bd69c6f80dcde777011147d02f2f';
+(node as any).hash = '1469bfb1638f97f64377f02fafadb220';
 export default node;

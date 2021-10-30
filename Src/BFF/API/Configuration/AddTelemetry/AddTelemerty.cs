@@ -37,10 +37,10 @@ namespace BFF.Configuration {
                         {
                             if (rawObject is HttpRequest {Path: {Value: "/graphql"}})
                             {
-                                var req = rawObject as HttpRequest;
+                            //     var req = rawObject as HttpRequest;
 
-                                await SharedCore.Aplication.Shared.Common
-                                    .HandleTracingActivityRename(req);    
+                            //     await SharedCore.Aplication.Shared.Common
+                            //         .HandleTracingActivityRename(req);    
                             }
                         }
                     };

@@ -3327,10 +3327,10 @@ babel-plugin-polyfill-regenerator@^0.2.2:
   dependencies:
     "@babel/helper-define-polyfill-provider" "^0.2.2"
 
-babel-plugin-relay@^11.0.2:
-  version "11.0.2"
-  resolved "https://registry.yarnpkg.com/babel-plugin-relay/-/babel-plugin-relay-11.0.2.tgz#9ef5903226b12767114e12536c28566bddfe3aad"
-  integrity sha512-aUvTq/2wTSP43QMPbzLKXA5UTh8le1iXwZMH8Pi7rPnWzSLCaWfX6Jhy1gPVG2ADj2zjTciUsiGlOFoI3rP0Zw==
+babel-plugin-relay@^12.0.0:
+  version "12.0.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-relay/-/babel-plugin-relay-12.0.0.tgz#cdce02494b69e9477a4507f9972f8473081b732d"
+  integrity sha512-fQWmS3YEu1smPx4xrn+7RyzDAlgVDG5q2m5cb+qC/Tr2+gANkxqGtQ+YPiOX6g4rgdbE+7a6RT3lViBExYBVKw==
   dependencies:
     babel-plugin-macros "^2.0.0"
 
@@ -6606,7 +6606,12 @@ graphql-ws@^5.4.1:
   resolved "https://registry.yarnpkg.com/graphql-ws/-/graphql-ws-5.5.0.tgz#79f10248d23d104369eaef93acb9f887276a2c42"
   integrity sha512-WQepPMGQQoqS2VsrI2I3RMLCVz3CW4/6ZqGV6ABDOwH4R62DzjxwMlwZbj6vhSI/7IM3/C911yITwgs77iO/hw==
 
-"graphql@^14.0.0 || ^15.0.0", graphql@^15.5.3:
+graphql@15.4.0-experimental-stream-defer.1:
+  version "15.4.0-experimental-stream-defer.1"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.4.0-experimental-stream-defer.1.tgz#46ae3fd2b532284575e7ddcf6c4f08aa7fe53fa3"
+  integrity sha512-zlGgY7aLlIofjO0CfTpCYK/tMccnj+5jvjnkTnW5qOxYhgEltuCvpMNYOJ67gz6L1flTIigt5BVEM8JExgtW3w==
+
+"graphql@^14.0.0 || ^15.0.0":
   version "15.6.1"
   resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.6.1.tgz#9125bdf057553525da251e19e96dab3d3855ddfc"
   integrity sha512-3i5lu0z6dRvJ48QP9kFxBkJ7h4Kso7PS8eahyTFz5Jm6CvQfLtNIE8LX9N6JLnXTuwR+sIYnXzaWp6anOg0QQw==
@@ -11073,10 +11078,15 @@ relateurl@^0.2.7:
   resolved "https://registry.yarnpkg.com/relateurl/-/relateurl-0.2.7.tgz#54dbf377e51440aca90a4cd274600d3ff2d888a9"
   integrity sha1-VNvzd+UUQKypCkzSdGANP/LYiKk=
 
-relay-compiler-language-typescript@^14.1.0:
-  version "14.2.1"
-  resolved "https://registry.yarnpkg.com/relay-compiler-language-typescript/-/relay-compiler-language-typescript-14.2.1.tgz#6f6f806427506f641c91ebdfefa59c87ac86c3a6"
-  integrity sha512-c4oxy1fFWT9RMXtEfMZktuW8NT0iIfV5s6gh8K3CB1r4mUEnJDG631dCM4cnPYGbbjvSwOvteweFaxKqXbOg/w==
+relay-compiler-experimental@0.0.0-main-6d709fde:
+  version "0.0.0-main-6d709fde"
+  resolved "https://registry.yarnpkg.com/relay-compiler-experimental/-/relay-compiler-experimental-0.0.0-main-6d709fde.tgz#9776cddac588fdb24cc5d8ae8fdec59d858de316"
+  integrity sha512-s3/qp4QXlQJrbsUNdRaXP8ivnTpMooMRUhbLoed6LaRK0QF6bZn7NOkaKgDV/GK5W69Q1YOUBDsJ2ul02/4siw==
+
+relay-compiler-language-typescript@^14.3.0:
+  version "14.3.0"
+  resolved "https://registry.yarnpkg.com/relay-compiler-language-typescript/-/relay-compiler-language-typescript-14.3.0.tgz#33d516c0bd286c9ccd93d6854aa52df725c4de89"
+  integrity sha512-UonGzflk11duTthhbcbrVunx0IgdDjBgkrUSfZFpZRdfk/t1KlMiLiYHXXTNqFn76Gl9aOOlx9hzGVZ+rtEelA==
   dependencies:
     invariant "^2.2.4"
 

@@ -4,6 +4,7 @@
 /* @relayHash 306de519f3683359cc01e0832dfd6830 */
 
 import { ConcreteRequest } from "relay-runtime";
+
 export type HookEventType = "FILE" | "HOOK" | "MILESTONE" | "NOTE" | "PROJECT" | "%future added value";
 export type SettingsHooksEditQueryVariables = {
     hookid: string;

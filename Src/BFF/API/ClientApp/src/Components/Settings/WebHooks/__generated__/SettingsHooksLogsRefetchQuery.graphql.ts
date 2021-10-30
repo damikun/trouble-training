@@ -4,10 +4,11 @@
 /* @relayHash 034b69f31e9fac3e8c274d70b3f7dd88 */
 
 import { ConcreteRequest } from "relay-runtime";
+
 import { FragmentRefs } from "relay-runtime";
 export type SettingsHooksLogsRefetchQueryVariables = {
-    after?: string | null;
-    first?: number | null;
+    after?: string | null | undefined;
+    first?: number | null | undefined;
     hookid: string;
 };
 export type SettingsHooksLogsRefetchQueryResponse = {

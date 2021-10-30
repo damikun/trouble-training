@@ -3,6 +3,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from "relay-runtime";
+import SettingsHooksLogsRefetchQuery from "./SettingsHooksLogsRefetchQuery.graphql";
 import { FragmentRefs } from "relay-runtime";
 export type SettingsHooksLogsFragment_webHookRecords = {
     readonly webHookRecords: {
@@ -25,7 +26,7 @@ export type SettingsHooksLogsFragment_webHookRecords = {
 };
 export type SettingsHooksLogsFragment_webHookRecords$data = SettingsHooksLogsFragment_webHookRecords;
 export type SettingsHooksLogsFragment_webHookRecords$key = {
-    readonly " $data"?: SettingsHooksLogsFragment_webHookRecords$data;
+    readonly " $data"?: SettingsHooksLogsFragment_webHookRecords$data | undefined;
     readonly " $fragmentRefs": FragmentRefs<"SettingsHooksLogsFragment_webHookRecords">;
 };
 
@@ -73,7 +74,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./SettingsHooksLogsRefetchQuery.graphql')
+      "operation": SettingsHooksLogsRefetchQuery
     }
   },
   "name": "SettingsHooksLogsFragment_webHookRecords",

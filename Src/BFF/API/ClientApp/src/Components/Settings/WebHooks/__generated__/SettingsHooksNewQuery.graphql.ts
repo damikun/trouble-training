@@ -4,6 +4,7 @@
 /* @relayHash 15bac3f2b6c81a8e084d783130e26773 */
 
 import { ConcreteRequest } from "relay-runtime";
+
 export type SettingsHooksNewQueryVariables = {};
 export type SettingsHooksNewQueryResponse = {
     readonly webHookEventsTriggers: ReadonlyArray<string | null> | null;

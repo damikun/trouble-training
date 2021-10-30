@@ -28,7 +28,7 @@ type CreateWebHookPayload {
 
 type GQL_User implements Node {
   id: ID!
-  systemid: Long!
+  systemid: String!
   name: String
   sessionId: String!
   email: String

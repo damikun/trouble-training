@@ -1,9 +1,10 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 8a72a6d2d4faa4205991e8499e1721f1 */
+/* @relayHash b628a4de7a80bf296e42b0f8fbe94813 */
 
 import { ConcreteRequest } from "relay-runtime";
+
 import { FragmentRefs } from "relay-runtime";
 export type SettingsHooksQueryVariables = {};
 export type SettingsHooksQueryResponse = {
@@ -36,7 +37,7 @@ fragment SettingsHooksListFragment on Query {
       startCursor
       endCursor
     }
-    edges {
+    edges @stream(label: "SettingsHooksListFragment$stream$edges", initialCount: 1) {
       node {
         id
         ...SettingsHooksItemFragment
@@ -118,68 +119,75 @@ const node: ConcreteRequest = {
             "storageKey": null
           },
           {
-            "alias": null,
-            "args": null,
-            "concreteType": "WebhooksEdge",
-            "kind": "LinkedField",
-            "name": "edges",
-            "plural": true,
+            "if": null,
+            "kind": "Stream",
+            "label": "SettingsHooksListFragment$stream$edges",
             "selections": [
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "GQL_WebHook",
+                "concreteType": "WebhooksEdge",
                 "kind": "LinkedField",
-                "name": "node",
-                "plural": false,
+                "name": "edges",
+                "plural": true,
                 "selections": [
                   {
                     "alias": null,
                     "args": null,
-                    "kind": "ScalarField",
-                    "name": "id",
+                    "concreteType": "GQL_WebHook",
+                    "kind": "LinkedField",
+                    "name": "node",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "id",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "systemid",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "webHookUrl",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "isActive",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "__typename",
+                        "storageKey": null
+                      }
+                    ],
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "systemid",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "webHookUrl",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "isActive",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "__typename",
+                    "name": "cursor",
                     "storageKey": null
                   }
                 ],
                 "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "cursor",
-                "storageKey": null
               }
-            ],
-            "storageKey": null
+            ]
           },
           {
             "kind": "ClientExtension",
@@ -208,7 +216,7 @@ const node: ConcreteRequest = {
     ]
   },
   "params": {
-    "id": "8a72a6d2d4faa4205991e8499e1721f1",
+    "id": "b628a4de7a80bf296e42b0f8fbe94813",
     "metadata": {},
     "name": "SettingsHooksQuery",
     "operationKind": "query",

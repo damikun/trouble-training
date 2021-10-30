@@ -4,21 +4,22 @@
 /* @relayHash 37f4584be2d0d7b0142516123c8b584b */
 
 import { ConcreteRequest } from "relay-runtime";
+
 export type HookEventType = "FILE" | "HOOK" | "MILESTONE" | "NOTE" | "PROJECT" | "%future added value";
 export type UpdateWebHookInput = {
     webHookId: unknown;
-    webHookUrl?: string | null;
-    secret?: string | null;
+    webHookUrl?: string | null | undefined;
+    secret?: string | null | undefined;
     isActive: boolean;
-    hookEvents?: Array<HookEventType> | null;
+    hookEvents?: Array<HookEventType> | null | undefined;
 };
 export type SettingsHooksEditMutationVariables = {
-    request?: UpdateWebHookInput | null;
+    request?: UpdateWebHookInput | null | undefined;
 };
 export type SettingsHooksEditMutationResponse = {
     readonly updateWebHook: {
         readonly errors: ReadonlyArray<{
-            readonly message?: string | null;
+            readonly message?: string | null | undefined;
         } | null> | null;
         readonly hook: {
             readonly id: string;

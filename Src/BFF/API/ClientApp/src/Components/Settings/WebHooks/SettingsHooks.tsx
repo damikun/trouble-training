@@ -5,6 +5,7 @@ import { graphql } from "babel-plugin-relay/macro";
 import { SettingsHooksQuery } from "./__generated__/SettingsHooksQuery.graphql";
 import StayledButton from "../../../UIComponents/Buttons/StayledButton";
 import { useNavigate } from "react-router";
+import { useHooksContext } from "../Settings";
 import { SettingsHooksListFragment$key } from "./__generated__/SettingsHooksListFragment.graphql";
 import { SettingsHooksItemFragment$key } from "./__generated__/SettingsHooksItemFragment.graphql";
 import { SettingsHooksRemoveMutation } from "./__generated__/SettingsHooksRemoveMutation.graphql";
@@ -13,7 +14,6 @@ import { HandleErrors } from "../../../Utils/ErrorHelper";
 import StayledPromtButton from "../../../UIComponents/Buttons/StayledPromtButton";
 import { faFileMedicalAlt, faPen } from "@fortawesome/free-solid-svg-icons";
 import { ReactComponent as DeleteImage } from "../../../Images/remove.svg";
-import { useHooksContext } from "../Settings";
 import { SettingsHooksListRefetchQuery } from "./__generated__/SettingsHooksListRefetchQuery.graphql";
 
 const SettingsHooksQueryTag = graphql`
@@ -104,7 +104,7 @@ export const SettingsHooksListFragment = graphql`
         startCursor
         endCursor
       }
-      edges{
+      edges @stream(initialCount:1){
         node{
           id
           ...SettingsHooksItemFragment

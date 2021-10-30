@@ -4,6 +4,7 @@
 /* @relayHash 926bdab27f2710d2461c43e80c8a75e2 */
 
 import { ConcreteRequest } from "relay-runtime";
+
 import { FragmentRefs } from "relay-runtime";
 export type SettingsHooksLogsQueryVariables = {
     hookid: string;

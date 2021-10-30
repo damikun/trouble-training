@@ -3,6 +3,7 @@
 // @ts-nocheck
 
 import { ReaderFragment } from "relay-runtime";
+import SettingsHooksListRefetchQuery from "./SettingsHooksListRefetchQuery.graphql";
 import { FragmentRefs } from "relay-runtime";
 export type SettingsHooksListFragment = {
     readonly webhooks: {
@@ -24,7 +25,7 @@ export type SettingsHooksListFragment = {
 };
 export type SettingsHooksListFragment$data = SettingsHooksListFragment;
 export type SettingsHooksListFragment$key = {
-    readonly " $data"?: SettingsHooksListFragment$data;
+    readonly " $data"?: SettingsHooksListFragment$data | undefined;
     readonly " $fragmentRefs": FragmentRefs<"SettingsHooksListFragment">;
 };
 
@@ -67,7 +68,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./SettingsHooksListRefetchQuery.graphql')
+      "operation": SettingsHooksListRefetchQuery
     }
   },
   "name": "SettingsHooksListFragment",
@@ -120,52 +121,57 @@ return {
           "storageKey": null
         },
         {
-          "alias": null,
-          "args": null,
-          "concreteType": "WebhooksEdge",
-          "kind": "LinkedField",
-          "name": "edges",
-          "plural": true,
+          "kind": "Stream",
           "selections": [
             {
               "alias": null,
               "args": null,
-              "concreteType": "GQL_WebHook",
+              "concreteType": "WebhooksEdge",
               "kind": "LinkedField",
-              "name": "node",
-              "plural": false,
+              "name": "edges",
+              "plural": true,
               "selections": [
                 {
                   "alias": null,
                   "args": null,
-                  "kind": "ScalarField",
-                  "name": "id",
+                  "concreteType": "GQL_WebHook",
+                  "kind": "LinkedField",
+                  "name": "node",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "id",
+                      "storageKey": null
+                    },
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "__typename",
+                      "storageKey": null
+                    },
+                    {
+                      "args": null,
+                      "kind": "FragmentSpread",
+                      "name": "SettingsHooksItemFragment"
+                    }
+                  ],
                   "storageKey": null
                 },
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "__typename",
+                  "name": "cursor",
                   "storageKey": null
-                },
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "SettingsHooksItemFragment"
                 }
               ],
               "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "cursor",
-              "storageKey": null
             }
-          ],
-          "storageKey": null
+          ]
         },
         {
           "kind": "ClientExtension",
@@ -187,5 +193,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = 'ae80bd69c6f80dcde777011147d02f2f';
+(node as any).hash = '1469bfb1638f97f64377f02fafadb220';
 export default node;
