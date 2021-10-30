@@ -8,21 +8,23 @@ import { createEnvironment } from './Utils/Environment';
 import ErrorBoundary from './UIComponents/ErrorBoundery/ErrorBoundary';
 import GlobalBounderyErrorHandler from './Components/Errors/GlobalBounderyErrorHandler';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <RelayEnvironmentProvider 
-      environment={createEnvironment()}>
-      <Suspense fallback={null}>
-        <ErrorBoundary
-            fallback={<GlobalBounderyErrorHandler /> }
-          >
-          <App />
-        </ErrorBoundary>
-      </Suspense>
-    </RelayEnvironmentProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
+
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+<React.StrictMode>
+  <RelayEnvironmentProvider 
+    environment={createEnvironment()}>
+    <Suspense fallback={null}>
+      <ErrorBoundary
+          fallback={<GlobalBounderyErrorHandler /> }
+        >
+        <App />
+      </ErrorBoundary>
+    </Suspense>
+  </RelayEnvironmentProvider>
+</React.StrictMode>
 );
+
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import React from "react";
+import React, { useTransition } from "react";
 import { useCallback, useEffect, useState } from "react";
 import { useMatch, useResolvedPath } from "react-router";
 import { Link } from "../Link/Link";
@@ -69,9 +69,15 @@ function RouterTab({
     [setstate]
   );
 
+    //@ts-ignore
+    const [_,startTransition] = useTransition({
+      busyDelayMs: 2000,
+    });
+
   function HandleClick() {
-    // setstate(true);
-    tabCtx.setNavigating(to);
+    startTransition(() => {
+      tabCtx.setNavigating(to);
+    });
   }
 
   const flex_Var = flexVariant ? FLEX_VARIANT[flexVariant] : FLEX_VARIANT.row;

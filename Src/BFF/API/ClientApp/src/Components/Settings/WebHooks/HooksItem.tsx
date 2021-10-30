@@ -46,7 +46,7 @@ export default function HooksItem({ dataRef }: HooksItemProps) {
               message
             }
           }
-          
+
           removed_id @deleteEdge(connections: $connections)
         }
       }
@@ -81,7 +81,10 @@ export default function HooksItem({ dataRef }: HooksItemProps) {
       });
   }, [toast, commitRemove, entity,removeInFlight,HooksCtx?.connection_id ]);
 
-  const [_,startTransition] = useTransition();
+  //@ts-ignore
+  const [_,startTransition] = useTransition({
+      busyDelayMs: 2000,
+    });
 
   const handleEdit = useCallback(() => {
     startTransition(() => {

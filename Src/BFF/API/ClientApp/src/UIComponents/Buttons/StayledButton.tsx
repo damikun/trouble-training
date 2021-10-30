@@ -168,8 +168,11 @@ function StayledButton({
     () => (rounding ? ROUNDING[rounding] || ROUNDING.medium : ROUNDING.medium),
     [rounding]
   );
-
-  const [isPending,startTransition] = useTransition();
+  
+  //@ts-ignore
+  const [isPending,startTransition] = useTransition({
+    busyDelayMs: 2000,
+  });
 
   const handleClick = useCallback(
     (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
