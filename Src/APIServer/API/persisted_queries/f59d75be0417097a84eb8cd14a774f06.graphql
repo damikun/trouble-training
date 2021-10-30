@@ -1,0 +1,1 @@
+mutation HooksNewMutation(  $request: CreateWebHookInput) {  createWebHook(request: $request) {    errors {      __typename      ... on IBaseError {        __isIBaseError: __typename        message      }    }    hook {      id      systemid      webHookUrl      isActive    }  }}

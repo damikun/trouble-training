@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash cbe23f395b0ad9670ed9cf6bd7cb9609 */
+/* @relayHash f59d75be0417097a84eb8cd14a774f06 */
 
 import { ConcreteRequest } from "relay-runtime";
 
@@ -12,11 +12,11 @@ export type CreateWebHookInput = {
     isActive: boolean;
     hookEvents?: Array<HookEventType> | null | undefined;
 };
-export type SettingsHooksNewMutationVariables = {
+export type HooksNewMutationVariables = {
     request?: CreateWebHookInput | null | undefined;
     connections: Array<string>;
 };
-export type SettingsHooksNewMutationResponse = {
+export type HooksNewMutationResponse = {
     readonly createWebHook: {
         readonly errors: ReadonlyArray<{
             readonly message?: string | null | undefined;
@@ -29,15 +29,15 @@ export type SettingsHooksNewMutationResponse = {
         } | null;
     } | null;
 };
-export type SettingsHooksNewMutation = {
-    readonly response: SettingsHooksNewMutationResponse;
-    readonly variables: SettingsHooksNewMutationVariables;
+export type HooksNewMutation = {
+    readonly response: HooksNewMutationResponse;
+    readonly variables: HooksNewMutationVariables;
 };
 
 
 
 /*
-mutation SettingsHooksNewMutation(
+mutation HooksNewMutation(
   $request: CreateWebHookInput
 ) {
   createWebHook(request: $request) {
@@ -137,7 +137,7 @@ return {
     ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "SettingsHooksNewMutation",
+    "name": "HooksNewMutation",
     "selections": [
       {
         "alias": null,
@@ -174,7 +174,7 @@ return {
       (v0/*: any*/)
     ],
     "kind": "Operation",
-    "name": "SettingsHooksNewMutation",
+    "name": "HooksNewMutation",
     "selections": [
       {
         "alias": null,
@@ -231,13 +231,13 @@ return {
     ]
   },
   "params": {
-    "id": "cbe23f395b0ad9670ed9cf6bd7cb9609",
+    "id": "f59d75be0417097a84eb8cd14a774f06",
     "metadata": {},
-    "name": "SettingsHooksNewMutation",
+    "name": "HooksNewMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
-(node as any).hash = '578ae50be9d3a4c6db88ca020b8df79d';
+(node as any).hash = '3d10ada554bfe0338acb4be199a1c209';
 export default node;

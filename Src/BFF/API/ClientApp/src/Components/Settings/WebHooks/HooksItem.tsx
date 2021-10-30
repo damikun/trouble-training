@@ -1,160 +1,20 @@
 import clsx from "clsx";
-import { useTransition, useCallback, useEffect } from "react";
-import { useFragment, useLazyLoadQuery, useMutation, usePaginationFragment } from "react-relay/hooks";
+import { useTransition, useCallback} from "react";
+import { useFragment, useMutation } from "react-relay/hooks";
 import { graphql } from "babel-plugin-relay/macro";
-import { SettingsHooksQuery } from "./__generated__/SettingsHooksQuery.graphql";
 import StayledButton from "../../../UIComponents/Buttons/StayledButton";
 import { useNavigate } from "react-router";
 import { useHooksContext } from "../Settings";
-import { SettingsHooksListFragment$key } from "./__generated__/SettingsHooksListFragment.graphql";
-import { SettingsHooksItemFragment$key } from "./__generated__/SettingsHooksItemFragment.graphql";
-import { SettingsHooksRemoveMutation } from "./__generated__/SettingsHooksRemoveMutation.graphql";
+import { HooksItemFragment$key } from "./__generated__/HooksItemFragment.graphql";
+import { HooksItemRemoveMutation } from "./__generated__/HooksItemRemoveMutation.graphql";
 import { useToast } from "../../../UIComponents/Toast/ToastProvider";
 import { HandleErrors } from "../../../Utils/ErrorHelper";
 import StayledPromtButton from "../../../UIComponents/Buttons/StayledPromtButton";
 import { faFileMedicalAlt, faPen } from "@fortawesome/free-solid-svg-icons";
 import { ReactComponent as DeleteImage } from "../../../Images/remove.svg";
-import { SettingsHooksListRefetchQuery } from "./__generated__/SettingsHooksListRefetchQuery.graphql";
 
-const SettingsHooksQueryTag = graphql`
-  query SettingsHooksQuery {
-    ...SettingsHooksListFragment
-  }
-`;
-
-export default SettingsHooks
-
-function SettingsHooks() {
-
-  const data = useLazyLoadQuery<SettingsHooksQuery>(
-    SettingsHooksQueryTag,
-    { },
-    { fetchPolicy: "store-or-network"}
-  );
-
-  const navigate = useNavigate();
-
-  const [isInFlight, startTransition] = useTransition();
-
-  const hanldeCreateNewNavigate = useCallback(() => {
-    !isInFlight &&
-      startTransition(() => {
-        navigate(`New`);
-      });
-  }, [startTransition, navigate,isInFlight]);
-
-  return (
-    <div
-      className={clsx(
-        "flex w-full h-full rounded-b-md max-h-full overflow-hidden",
-        "relative max-w-full overflow-y-scroll scrollbarwidth",
-        "scrollbarhide scrollbarhide2"
-      )}
-    >
-      <div className="absolute w-full align-middle h-full">
-        <div className="h-full relative max-w-full flex-col">
-          <div className="flex flex-col max-w-3xl space-y-2 h-full">
-            <div className="flex justify-between flex-nowrap space-x-2">
-              <div className="flex font-bold text-gray-800 text-md text-lg px-1">
-                WebHook
-              </div>
-
-              <StayledButton
-                variant="secondaryblue"
-                size="normal"
-                onClick={hanldeCreateNewNavigate}
-              >
-                Create new
-              </StayledButton>
-            </div>
-
-            <p className="flex prose-sm px-1 w-full">
-              WebHooks let external services to be notified when certain events
-              happen. It send`s the POST request to list of specified URLs with
-              custom body content.
-            </p>
-
-            <div className="flex h-full">
-              <SettingsHooksList dataRef={data} />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-///////////////////////////////////////////////
-///////////////////////////////////////////////
-
-export const SettingsHooksListFragment = graphql`
-  fragment SettingsHooksListFragment on Query 
-  @argumentDefinitions(
-    first: { type: Int }
-    after: { type: String }
-  ) @refetchable(queryName: "SettingsHooksListRefetchQuery") {
-    webhooks(
-      first: $first
-      after: $after
-    ) @connection(key: "SettingsHooksListConnection_webhooks"){
-      __id
-      pageInfo {
-        hasPreviousPage
-        hasNextPage
-        startCursor
-        endCursor
-      }
-      edges @stream(initialCount:1){
-        node{
-          id
-          ...SettingsHooksItemFragment
-        }
-      }
-    }
-  }
-`;
-
-type SettingsHooksListProps = {
-  dataRef: SettingsHooksListFragment$key | null;
-};
-
-function SettingsHooksList({ dataRef }: SettingsHooksListProps) {
-  
-  const entity = useFragment(SettingsHooksListFragment, dataRef);
-
-  const pagination = usePaginationFragment<
-  SettingsHooksListRefetchQuery,
-  SettingsHooksListFragment$key
->(SettingsHooksListFragment, dataRef);
-
-  const hooksCtx = useHooksContext();
-
-  useEffect(() => {
-    hooksCtx?.setConnectionId(
-      pagination.data?.webhooks?.__id
-        ? pagination.data?.webhooks?.__id
-        : ""
-    );
-  }, [pagination, pagination.data, pagination.data?.webhooks?.__id]);
-
-  return (
-    <div className="flex flex-col divide-y w-full">
-      {entity?.webhooks?.edges?.map((entity) => {
-        return entity ? (
-          <SettingsHooksItem key={entity?.node?.id} dataRef={entity.node} />
-        ) : (
-          <></>
-        );
-      })}
-    </div>
-  );
-}
-
-///////////////////////////////////////////////
-///////////////////////////////////////////////
-
-export const SettingsHooksItemFragment = graphql`
-  fragment SettingsHooksItemFragment on GQL_WebHook {
+export const HooksItemFragment = graphql`
+  fragment HooksItemFragment on GQL_WebHook {
     id
     systemid
     webHookUrl
@@ -162,20 +22,20 @@ export const SettingsHooksItemFragment = graphql`
   }
 `;
 
-type SettingsHooksItemProps = {
-  dataRef: SettingsHooksItemFragment$key | null;
+type HooksItemProps = {
+  dataRef: HooksItemFragment$key | null;
 };
 
-function SettingsHooksItem({ dataRef }: SettingsHooksItemProps) {
-  const entity = useFragment(SettingsHooksItemFragment, dataRef);
+export default function HooksItem({ dataRef }: HooksItemProps) {
+  const entity = useFragment(HooksItemFragment, dataRef);
 
   const navigate = useNavigate();
 
   const [
     commitRemove,
     removeInFlight,
-  ] = useMutation<SettingsHooksRemoveMutation>(graphql`
-    mutation SettingsHooksRemoveMutation(
+  ] = useMutation<HooksItemRemoveMutation>(graphql`
+    mutation HooksItemRemoveMutation(
       $request: RemoveWebHookInput
       $connections: [ID!]!
     ) {
@@ -186,9 +46,8 @@ function SettingsHooksItem({ dataRef }: SettingsHooksItemProps) {
               message
             }
           }
-
+          
           removed_id @deleteEdge(connections: $connections)
-
         }
       }
     }

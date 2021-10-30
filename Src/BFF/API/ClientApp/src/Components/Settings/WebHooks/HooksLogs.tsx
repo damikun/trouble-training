@@ -7,39 +7,39 @@ import {
 } from "react-relay/hooks";
 import { useParams, useSearchParams } from "react-router-dom";
 import { graphql } from "babel-plugin-relay/macro";
-import { SettingsHooksLogsQuery } from "./__generated__/SettingsHooksLogsQuery.graphql";
+import { HooksLogsQuery } from "./__generated__/HooksLogsQuery.graphql";
 import StayledInfinityScrollContainer from "../../../UIComponents/ScrollContainter/StayledInfinityScrollContainer";
-import { SettingsHooksLogsRefetchQuery } from "./__generated__/SettingsHooksLogsRefetchQuery.graphql";
-import { SettingsHooksLogsFragment_webHookRecords$key } from "./__generated__/SettingsHooksLogsFragment_webHookRecords.graphql";
+import { HooksLogsRefetchQuery } from "./__generated__/HooksLogsRefetchQuery.graphql";
+import { HooksLogsFragment_webHookRecords$key } from "./__generated__/HooksLogsFragment_webHookRecords.graphql";
 import {
-  SettingsHooksLogsItemFragment$key,
+  HooksLogsItemFragment$key,
   RecordResult,
-} from "./__generated__/SettingsHooksLogsItemFragment.graphql";
+} from "./__generated__/HooksLogsItemFragment.graphql";
 import ActivityTimeStamp from "../../../UIComponents/Timestamp/ActivityTimeStamp";
 import Badge from "../../../UIComponents/Badged/Badge";
 import Modal from "../../../UIComponents/Modal/Modal";
-import SettingsHooksLogsDetail from "./SettingsHooksLogsDetail";
+import HooksLogsDetail from "./HooksLogsDetail";
 import AssignedDetailPlaceholder from "../../../UIComponents/DetailPlaceholder";
 
-const SettingsHooksLogsQueryTag = graphql`
-  query SettingsHooksLogsQuery($hookid: ID!) {
-    ...SettingsHooksLogsFragment_webHookRecords
+const HooksLogsQueryTag = graphql`
+  query HooksLogsQuery($hookid: ID!) {
+    ...HooksLogsFragment_webHookRecords
       @arguments(first: 20, after: null, hookid: $hookid)
 
     serverDateTime
   }
 `;
 
-export const SettingsHooksLogsFragment = graphql`
-  fragment SettingsHooksLogsFragment_webHookRecords on Query
+export const HooksLogsFragment = graphql`
+  fragment HooksLogsFragment_webHookRecords on Query
   @argumentDefinitions(
     first: { type: Int }
     after: { type: String }
     hookid: { type: "ID!" }
   )
-  @refetchable(queryName: "SettingsHooksLogsRefetchQuery") {
+  @refetchable(queryName: "HooksLogsRefetchQuery") {
     webHookRecords(first: $first, after: $after, hook_id: $hookid)
-      @connection(key: "SettingsHooksLogsConnection_webHookRecords") {
+      @connection(key: "HooksLogsConnection_webHookRecords") {
       __id
       pageInfo {
         hasPreviousPage
@@ -51,20 +51,20 @@ export const SettingsHooksLogsFragment = graphql`
         cursor
         node {
           id
-          ...SettingsHooksLogsItemFragment
+          ...HooksLogsItemFragment
         }
       }
     }
   }
 `;
 
-export default React.memo(SettingsHooksLogs);
+export default React.memo(HooksLogs);
 
-function SettingsHooksLogs() {
+function HooksLogs() {
   const { hookid }: any = useParams();
 
-  const data = useLazyLoadQuery<SettingsHooksLogsQuery>(
-    SettingsHooksLogsQueryTag,
+  const data = useLazyLoadQuery<HooksLogsQuery>(
+    HooksLogsQueryTag,
     {
       hookid: hookid,
     },
@@ -74,9 +74,9 @@ function SettingsHooksLogs() {
   );
 
   const pagination = usePaginationFragment<
-    SettingsHooksLogsRefetchQuery,
-    SettingsHooksLogsFragment_webHookRecords$key
-  >(SettingsHooksLogsFragment, data);
+    HooksLogsRefetchQuery,
+    HooksLogsFragment_webHookRecords$key
+  >(HooksLogsFragment, data);
 
   function HandleScrollEnd() {
     pagination.hasNext && !pagination.isLoadingNext && pagination.loadNext(20);
@@ -113,7 +113,7 @@ function SettingsHooksLogs() {
         isOpen={activity_id !== null}
         OnClose={handleModalClose}
         component={
-          <SettingsHooksLogsDetail onClose={handleModalClose} />
+          <HooksLogsDetail onClose={handleModalClose} />
         }
         fallback={<AssignedDetailPlaceholder />}
       />
@@ -176,8 +176,8 @@ function Header() {
 ///////////////////////////////////////////
 ///////////////////////////////////////////
 
-export const SettingsHooksLogsItemFragment = graphql`
-  fragment SettingsHooksLogsItemFragment on GQL_WebHookRecord {
+export const HooksLogsItemFragment = graphql`
+  fragment HooksLogsItemFragment on GQL_WebHookRecord {
     id
     statusCode
     timestamp
@@ -193,7 +193,7 @@ export const SettingsHooksLogsItemFragment = graphql`
 `;
 
 type ProjectSettingsHooksItemProps = {
-  dataRef: SettingsHooksLogsItemFragment$key | null;
+  dataRef: HooksLogsItemFragment$key | null;
   onDetail?: (id: string) => void;
   serverDate?: string | null | undefined;
 };
@@ -203,7 +203,7 @@ function ProjectSettingsHooksItem({
   onDetail,
   serverDate,
 }: ProjectSettingsHooksItemProps) {
-  const entity = useFragment(SettingsHooksLogsItemFragment, dataRef);
+  const entity = useFragment(HooksLogsItemFragment, dataRef);
 
   const ActivityMemorisedTimestamp = useMemo(
     () => (entity?.timestamp ? new Date(entity.timestamp) : undefined),

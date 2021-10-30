@@ -6,14 +6,14 @@ import React, { useMemo, useState } from "react";
 import ContentContainer from "../../../UIComponents/Container/ContentContainer";
 import Section from "../../../UIComponents/Section/Section";
 import SectionTitle from "../../../UIComponents/Section/SectionTitle";
-import { SettingsHooksLogsDetailQuery } from "./__generated__/SettingsHooksLogsDetailQuery.graphql";
+import { HooksLogsDetailQuery } from "./__generated__/HooksLogsDetailQuery.graphql";
 import clsx from "clsx";
 import ModalFormControl from "../../../UIComponents/FormControl";
 import CopyToClipboard from "../../../UIComponents/CopyToClipboard/CopyToClipboard";
 import { ItemWrapperContainer } from "../../../UIComponents/Container/ItemWrapperContainer";
 
-const SettingsHooksLogsDetailQueryTag = graphql`
-  query SettingsHooksLogsDetailQuery($hook_record_id: ID!) {
+const HooksLogsDetailQueryTag = graphql`
+  query HooksLogsDetailQuery($hook_record_id: ID!) {
     webHookRecord(hook_record_id: $hook_record_id) {
       id
       statusCode
@@ -49,19 +49,19 @@ function GetJsonData(
   }
 }
 
-export type SettingsHooksLogsDetailProps = {
+export type HooksLogsDetailProps = {
   onClose: () => void;
 };
 
-export default function SettingsHooksLogsDetail(
-  props: SettingsHooksLogsDetailProps
+export default function HooksLogsDetail(
+  props: HooksLogsDetailProps
 ) {
   const [searchParams] = useSearchParams();
 
   const [hookId] = useState(searchParams.get("hook_id"));
 
-  const enity_detail_data = useLazyLoadQuery<SettingsHooksLogsDetailQuery>(
-    SettingsHooksLogsDetailQueryTag,
+  const enity_detail_data = useLazyLoadQuery<HooksLogsDetailQuery>(
+    HooksLogsDetailQueryTag,
     { hook_record_id: hookId ? hookId : "" },
     {
       fetchPolicy: "store-or-network",

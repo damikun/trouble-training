@@ -1,16 +1,16 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 9ccb0e4526d127832528260c5e9d0d3a */
+/* @relayHash 77cbb508cd2444c1f28ab1b7a1d7e1ca */
 
 import { ConcreteRequest } from "relay-runtime";
 
 export type HookEventType = "FILE" | "HOOK" | "MILESTONE" | "NOTE" | "PROJECT" | "%future added value";
 export type RecordResult = "DATA_QUERY_ERROR" | "HTTP_ERROR" | "OK" | "PARAMETER_ERROR" | "UNDEFINED" | "%future added value";
-export type SettingsHooksLogsDetailQueryVariables = {
+export type HooksLogsDetailQueryVariables = {
     hook_record_id: string;
 };
-export type SettingsHooksLogsDetailQueryResponse = {
+export type HooksLogsDetailQueryResponse = {
     readonly webHookRecord: {
         readonly id: string;
         readonly statusCode: number;
@@ -29,15 +29,15 @@ export type SettingsHooksLogsDetailQueryResponse = {
         readonly responseBody: string | null;
     } | null;
 };
-export type SettingsHooksLogsDetailQuery = {
-    readonly response: SettingsHooksLogsDetailQueryResponse;
-    readonly variables: SettingsHooksLogsDetailQueryVariables;
+export type HooksLogsDetailQuery = {
+    readonly response: HooksLogsDetailQueryResponse;
+    readonly variables: HooksLogsDetailQueryVariables;
 };
 
 
 
 /*
-query SettingsHooksLogsDetailQuery(
+query HooksLogsDetailQuery(
   $hook_record_id: ID!
 ) {
   webHookRecord(hook_record_id: $hook_record_id) {
@@ -189,7 +189,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "SettingsHooksLogsDetailQuery",
+    "name": "HooksLogsDetailQuery",
     "selections": (v2/*: any*/),
     "type": "Query",
     "abstractKey": null
@@ -198,17 +198,17 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "SettingsHooksLogsDetailQuery",
+    "name": "HooksLogsDetailQuery",
     "selections": (v2/*: any*/)
   },
   "params": {
-    "id": "9ccb0e4526d127832528260c5e9d0d3a",
+    "id": "77cbb508cd2444c1f28ab1b7a1d7e1ca",
     "metadata": {},
-    "name": "SettingsHooksLogsDetailQuery",
+    "name": "HooksLogsDetailQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
-(node as any).hash = '006ebfa46fd9fb6de37d02cb192a0622';
+(node as any).hash = 'b701ab0888657efdb4d2992f4989feec';
 export default node;

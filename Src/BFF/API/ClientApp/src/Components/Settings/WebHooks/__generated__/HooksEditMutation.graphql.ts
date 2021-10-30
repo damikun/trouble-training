@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 37f4584be2d0d7b0142516123c8b584b */
+/* @relayHash 0708eda8907dca524f5a173a75cfb4ea */
 
 import { ConcreteRequest } from "relay-runtime";
 
@@ -13,10 +13,10 @@ export type UpdateWebHookInput = {
     isActive: boolean;
     hookEvents?: Array<HookEventType> | null | undefined;
 };
-export type SettingsHooksEditMutationVariables = {
+export type HooksEditMutationVariables = {
     request?: UpdateWebHookInput | null | undefined;
 };
-export type SettingsHooksEditMutationResponse = {
+export type HooksEditMutationResponse = {
     readonly updateWebHook: {
         readonly errors: ReadonlyArray<{
             readonly message?: string | null | undefined;
@@ -29,15 +29,15 @@ export type SettingsHooksEditMutationResponse = {
         } | null;
     } | null;
 };
-export type SettingsHooksEditMutation = {
-    readonly response: SettingsHooksEditMutationResponse;
-    readonly variables: SettingsHooksEditMutationVariables;
+export type HooksEditMutation = {
+    readonly response: HooksEditMutationResponse;
+    readonly variables: HooksEditMutationVariables;
 };
 
 
 
 /*
-mutation SettingsHooksEditMutation(
+mutation HooksEditMutation(
   $request: UpdateWebHookInput
 ) {
   updateWebHook(request: $request) {
@@ -131,7 +131,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "SettingsHooksEditMutation",
+    "name": "HooksEditMutation",
     "selections": [
       {
         "alias": null,
@@ -165,7 +165,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "SettingsHooksEditMutation",
+    "name": "HooksEditMutation",
     "selections": [
       {
         "alias": null,
@@ -201,13 +201,13 @@ return {
     ]
   },
   "params": {
-    "id": "37f4584be2d0d7b0142516123c8b584b",
+    "id": "0708eda8907dca524f5a173a75cfb4ea",
     "metadata": {},
-    "name": "SettingsHooksEditMutation",
+    "name": "HooksEditMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
-(node as any).hash = 'cdb4f331af4124807a124c3130ba7137';
+(node as any).hash = 'abc1bbf068d9013e769762f6a4792e73';
 export default node;

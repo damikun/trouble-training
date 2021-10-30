@@ -5,17 +5,17 @@
 import { ReaderFragment } from "relay-runtime";
 
 import { FragmentRefs } from "relay-runtime";
-export type SettingsHooksItemFragment = {
+export type HooksItemFragment = {
     readonly id: string;
     readonly systemid: unknown;
     readonly webHookUrl: string | null;
     readonly isActive: boolean;
-    readonly " $refType": "SettingsHooksItemFragment";
+    readonly " $refType": "HooksItemFragment";
 };
-export type SettingsHooksItemFragment$data = SettingsHooksItemFragment;
-export type SettingsHooksItemFragment$key = {
-    readonly " $data"?: SettingsHooksItemFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"SettingsHooksItemFragment">;
+export type HooksItemFragment$data = HooksItemFragment;
+export type HooksItemFragment$key = {
+    readonly " $data"?: HooksItemFragment$data | undefined;
+    readonly " $fragmentRefs": FragmentRefs<"HooksItemFragment">;
 };
 
 
@@ -24,7 +24,7 @@ const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "SettingsHooksItemFragment",
+  "name": "HooksItemFragment",
   "selections": [
     {
       "alias": null,
@@ -58,5 +58,5 @@ const node: ReaderFragment = {
   "type": "GQL_WebHook",
   "abstractKey": null
 };
-(node as any).hash = '01c446f3587ed9fa4fcd56acf5c44817';
+(node as any).hash = 'be418b7ecfe90ea03eacff016f4e1900';
 export default node;

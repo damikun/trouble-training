@@ -1,0 +1,1 @@
+mutation HooksItemRemoveMutation(  $request: RemoveWebHookInput) {  removeWebHook(request: $request) {    errors {      __typename      ... on IBaseError {        __isIBaseError: __typename        message      }    }    removed_id  }}

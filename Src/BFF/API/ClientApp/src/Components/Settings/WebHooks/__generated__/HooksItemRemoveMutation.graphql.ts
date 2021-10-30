@@ -1,18 +1,18 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 88d3fb8a0c7cef7c5d314782f703ed0b */
+/* @relayHash 9ed62d930b4035555b3d4c366407c1d7 */
 
 import { ConcreteRequest } from "relay-runtime";
 
 export type RemoveWebHookInput = {
     webHookId: unknown;
 };
-export type SettingsHooksRemoveMutationVariables = {
+export type HooksItemRemoveMutationVariables = {
     request?: RemoveWebHookInput | null | undefined;
     connections: Array<string>;
 };
-export type SettingsHooksRemoveMutationResponse = {
+export type HooksItemRemoveMutationResponse = {
     readonly removeWebHook: {
         readonly errors: ReadonlyArray<{
             readonly message?: string | null | undefined;
@@ -20,15 +20,15 @@ export type SettingsHooksRemoveMutationResponse = {
         readonly removed_id: string | null;
     } | null;
 };
-export type SettingsHooksRemoveMutation = {
-    readonly response: SettingsHooksRemoveMutationResponse;
-    readonly variables: SettingsHooksRemoveMutationVariables;
+export type HooksItemRemoveMutation = {
+    readonly response: HooksItemRemoveMutationResponse;
+    readonly variables: HooksItemRemoveMutationVariables;
 };
 
 
 
 /*
-mutation SettingsHooksRemoveMutation(
+mutation HooksItemRemoveMutation(
   $request: RemoveWebHookInput
 ) {
   removeWebHook(request: $request) {
@@ -91,7 +91,7 @@ return {
     ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "SettingsHooksRemoveMutation",
+    "name": "HooksItemRemoveMutation",
     "selections": [
       {
         "alias": null,
@@ -128,7 +128,7 @@ return {
       (v0/*: any*/)
     ],
     "kind": "Operation",
-    "name": "SettingsHooksRemoveMutation",
+    "name": "HooksItemRemoveMutation",
     "selections": [
       {
         "alias": null,
@@ -180,13 +180,13 @@ return {
     ]
   },
   "params": {
-    "id": "88d3fb8a0c7cef7c5d314782f703ed0b",
+    "id": "9ed62d930b4035555b3d4c366407c1d7",
     "metadata": {},
-    "name": "SettingsHooksRemoveMutation",
+    "name": "HooksItemRemoveMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
-(node as any).hash = 'cebb218bd9b1b180a1c3ef597685fd38';
+(node as any).hash = 'eb08175b4edb6266d5531a0926777bbd';
 export default node;

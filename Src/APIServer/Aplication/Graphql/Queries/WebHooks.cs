@@ -16,6 +16,9 @@ using APIServer.Aplication.GraphQL.Types;
 using APIServer.Domain.Core.Models.WebHooks;
 using APIServer.Aplication.GraphQL.Extensions;
 using APIServer.Aplication.GraphQL.DataLoaders;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using APIServer.Aplication.Shared;
 
 namespace APIServer.Aplication.GraphQL.Queries {
 
@@ -45,12 +48,39 @@ namespace APIServer.Aplication.GraphQL.Queries {
                 .Select(e=>  new GQL_WebHook {
                     ID = e.ID,
                     WebHookUrl = e.WebHookUrl,
-                    // Secret = e.Secret,
                     ContentType = e.ContentType,
                     IsActive = e.IsActive,
                     LastTrigger = e.LastTrigger,
                     ListeningEvents = e.HookEvents
                 }).AsAsyncEnumerable();
+        }
+
+        public async IAsyncEnumerable<GQL_WebHook> WebHooksTestStream(
+        [Service] ICurrentUser current,
+        [Service] IDbContextFactory<ApiDbContext> factory,
+        [EnumeratorCancellation] CancellationToken ct) {
+
+            if (current.Exist) {
+                var db_context = factory.CreateDbContext();
+                
+                var stream = db_context.WebHooks
+                    .AsNoTracking()
+                    .Select(e=>  new GQL_WebHook {
+                        ID = e.ID,
+                        WebHookUrl = e.WebHookUrl,
+                        ContentType = e.ContentType,
+                        IsActive = e.IsActive,
+                        LastTrigger = e.LastTrigger,
+                        ListeningEvents = e.HookEvents
+                    }).AsAsyncEnumerable();
+
+                await foreach(var hook in stream.WithCancellation(ct)){
+
+                    yield return hook;
+
+                    Thread.Sleep(1000); // Just to slow since DB is fast
+                }
+            }
         }
 
         /// <summary>

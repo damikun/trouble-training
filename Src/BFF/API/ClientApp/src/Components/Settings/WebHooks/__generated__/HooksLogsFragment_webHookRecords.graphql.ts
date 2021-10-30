@@ -3,9 +3,9 @@
 // @ts-nocheck
 
 import { ReaderFragment } from "relay-runtime";
-import SettingsHooksLogsRefetchQuery from "./SettingsHooksLogsRefetchQuery.graphql";
+import HooksLogsRefetchQuery from "./HooksLogsRefetchQuery.graphql";
 import { FragmentRefs } from "relay-runtime";
-export type SettingsHooksLogsFragment_webHookRecords = {
+export type HooksLogsFragment_webHookRecords = {
     readonly webHookRecords: {
         readonly __id: string;
         readonly pageInfo: {
@@ -18,16 +18,16 @@ export type SettingsHooksLogsFragment_webHookRecords = {
             readonly cursor: string;
             readonly node: {
                 readonly id: string;
-                readonly " $fragmentRefs": FragmentRefs<"SettingsHooksLogsItemFragment">;
+                readonly " $fragmentRefs": FragmentRefs<"HooksLogsItemFragment">;
             } | null;
         }> | null;
     } | null;
-    readonly " $refType": "SettingsHooksLogsFragment_webHookRecords";
+    readonly " $refType": "HooksLogsFragment_webHookRecords";
 };
-export type SettingsHooksLogsFragment_webHookRecords$data = SettingsHooksLogsFragment_webHookRecords;
-export type SettingsHooksLogsFragment_webHookRecords$key = {
-    readonly " $data"?: SettingsHooksLogsFragment_webHookRecords$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"SettingsHooksLogsFragment_webHookRecords">;
+export type HooksLogsFragment_webHookRecords$data = HooksLogsFragment_webHookRecords;
+export type HooksLogsFragment_webHookRecords$key = {
+    readonly " $data"?: HooksLogsFragment_webHookRecords$data | undefined;
+    readonly " $fragmentRefs": FragmentRefs<"HooksLogsFragment_webHookRecords">;
 };
 
 
@@ -74,10 +74,10 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": SettingsHooksLogsRefetchQuery
+      "operation": HooksLogsRefetchQuery
     }
   },
-  "name": "SettingsHooksLogsFragment_webHookRecords",
+  "name": "HooksLogsFragment_webHookRecords",
   "selections": [
     {
       "alias": "webHookRecords",
@@ -90,7 +90,7 @@ return {
       ],
       "concreteType": "WebHookRecordsConnection",
       "kind": "LinkedField",
-      "name": "__SettingsHooksLogsConnection_webHookRecords_connection",
+      "name": "__HooksLogsConnection_webHookRecords_connection",
       "plural": false,
       "selections": [
         {
@@ -172,7 +172,7 @@ return {
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "SettingsHooksLogsItemFragment"
+                  "name": "HooksLogsItemFragment"
                 }
               ],
               "storageKey": null
@@ -200,5 +200,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '348fb4d25c2be5fff797000831f1640e';
+(node as any).hash = 'dfd757f4123c3f299b15bccdac04def7';
 export default node;

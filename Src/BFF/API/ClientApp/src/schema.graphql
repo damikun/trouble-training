@@ -95,6 +95,7 @@ type Query {
   "Lookup nodes by a list of IDs."
   nodes("The list of node IDs." ids: [ID!]!): [Node]!
   webhooks("Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: GQL_WebHookFilterInput): WebhooksConnection
+  webHooksStream: [GQL_WebHook]
   webHookRecords(hook_id: ID! "Returns the first _n_ elements from the list." first: Int "Returns the elements in the list that come after the specified cursor." after: String "Returns the last _n_ elements from the list." last: Int "Returns the elements in the list that come before the specified cursor." before: String where: GQL_WebHookRecordFilterInput): WebHookRecordsConnection
   webHookEventsTriggers: [String]
   webHookRecord(hook_record_id: ID!): GQL_WebHookRecord

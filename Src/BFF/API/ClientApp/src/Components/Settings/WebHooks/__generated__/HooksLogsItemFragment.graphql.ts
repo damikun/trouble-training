@@ -7,7 +7,7 @@ import { ReaderFragment } from "relay-runtime";
 import { FragmentRefs } from "relay-runtime";
 export type HookEventType = "FILE" | "HOOK" | "MILESTONE" | "NOTE" | "PROJECT" | "%future added value";
 export type RecordResult = "DATA_QUERY_ERROR" | "HTTP_ERROR" | "OK" | "PARAMETER_ERROR" | "UNDEFINED" | "%future added value";
-export type SettingsHooksLogsItemFragment = {
+export type HooksLogsItemFragment = {
     readonly id: string;
     readonly statusCode: number;
     readonly timestamp: string;
@@ -19,12 +19,12 @@ export type SettingsHooksLogsItemFragment = {
         readonly systemid: unknown;
         readonly webHookUrl: string | null;
     } | null;
-    readonly " $refType": "SettingsHooksLogsItemFragment";
+    readonly " $refType": "HooksLogsItemFragment";
 };
-export type SettingsHooksLogsItemFragment$data = SettingsHooksLogsItemFragment;
-export type SettingsHooksLogsItemFragment$key = {
-    readonly " $data"?: SettingsHooksLogsItemFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"SettingsHooksLogsItemFragment">;
+export type HooksLogsItemFragment$data = HooksLogsItemFragment;
+export type HooksLogsItemFragment$key = {
+    readonly " $data"?: HooksLogsItemFragment$data | undefined;
+    readonly " $fragmentRefs": FragmentRefs<"HooksLogsItemFragment">;
 };
 
 
@@ -41,7 +41,7 @@ return {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "SettingsHooksLogsItemFragment",
+  "name": "HooksLogsItemFragment",
   "selections": [
     (v0/*: any*/),
     {
@@ -110,5 +110,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '8ea8b80fb5b6c48feef3d4efe7594793';
+(node as any).hash = '164e24ffa824845f36362a9202685cd4';
 export default node;

@@ -3,9 +3,9 @@
 // @ts-nocheck
 
 import { ReaderFragment } from "relay-runtime";
-import SettingsHooksListRefetchQuery from "./SettingsHooksListRefetchQuery.graphql";
+import HooksListRefetchQuery from "./HooksListRefetchQuery.graphql";
 import { FragmentRefs } from "relay-runtime";
-export type SettingsHooksListFragment = {
+export type HooksListFragment = {
     readonly webhooks: {
         readonly __id: string;
         readonly pageInfo: {
@@ -17,16 +17,16 @@ export type SettingsHooksListFragment = {
         readonly edges: ReadonlyArray<{
             readonly node: {
                 readonly id: string;
-                readonly " $fragmentRefs": FragmentRefs<"SettingsHooksItemFragment">;
+                readonly " $fragmentRefs": FragmentRefs<"HooksItemFragment">;
             } | null;
         }> | null;
     } | null;
-    readonly " $refType": "SettingsHooksListFragment";
+    readonly " $refType": "HooksListFragment";
 };
-export type SettingsHooksListFragment$data = SettingsHooksListFragment;
-export type SettingsHooksListFragment$key = {
-    readonly " $data"?: SettingsHooksListFragment$data | undefined;
-    readonly " $fragmentRefs": FragmentRefs<"SettingsHooksListFragment">;
+export type HooksListFragment$data = HooksListFragment;
+export type HooksListFragment$key = {
+    readonly " $data"?: HooksListFragment$data | undefined;
+    readonly " $fragmentRefs": FragmentRefs<"HooksListFragment">;
 };
 
 
@@ -68,17 +68,17 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": SettingsHooksListRefetchQuery
+      "operation": HooksListRefetchQuery
     }
   },
-  "name": "SettingsHooksListFragment",
+  "name": "HooksListFragment",
   "selections": [
     {
       "alias": "webhooks",
       "args": null,
       "concreteType": "WebhooksConnection",
       "kind": "LinkedField",
-      "name": "__SettingsHooksListConnection_webhooks_connection",
+      "name": "__HooksListConnection_webhooks_connection",
       "plural": false,
       "selections": [
         {
@@ -154,9 +154,14 @@ return {
                       "storageKey": null
                     },
                     {
-                      "args": null,
-                      "kind": "FragmentSpread",
-                      "name": "SettingsHooksItemFragment"
+                      "kind": "Defer",
+                      "selections": [
+                        {
+                          "args": null,
+                          "kind": "FragmentSpread",
+                          "name": "HooksItemFragment"
+                        }
+                      ]
                     }
                   ],
                   "storageKey": null
@@ -193,5 +198,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '1469bfb1638f97f64377f02fafadb220';
+(node as any).hash = '80d10061737d7bcdfbe6219d9de711f3';
 export default node;

@@ -10,10 +10,10 @@ import Welcome from "./Info/Welcome";
 import FourOhOne from "../Errors/FourOhOne";
 import PrivateRoute from "../../Utils/PrivateRouter";
 import ContainerSpinner from "../../UIComponents/Spinner/ContainerSpinner";
-import SettingsHooks from "./WebHooks/SettingsHooks";
-import SettingsHooksEdit from "./WebHooks/SettingsHooksEdit";
-import SettingsHooksNew from "./WebHooks/SettingsHooksNew";
-import SettingsHooksLogs from "./WebHooks/SettingsHooksLogs";
+import Hooks from "./WebHooks/Hooks";
+import HooksEdit from "./WebHooks/HooksEdit";
+import HooksNew from "./WebHooks/HooksNew";
+import HooksLogs from "./WebHooks/HooksLogs";
 import React from "react";
 
 const view_WebHooks = true;
@@ -90,16 +90,16 @@ export default function Settings() {
                       <HooksContext.Provider value={ctx}>
                         <Routes>
                           <Route path={"Edit/:hookid"}>
-                            <SettingsHooksEdit />
+                            <HooksEdit />
                           </Route>
                           <Route path={"Logs/:hookid"}>
-                            <SettingsHooksLogs />
+                            <HooksLogs />
                           </Route>
                           <Route path={"New"}>
-                            <SettingsHooksNew />
+                            <HooksNew />
                           </Route>
                           <Route path={"/"}>
-                            <SettingsHooks />
+                            <Hooks />
                           </Route>
                         </Routes>
                       </HooksContext.Provider>

@@ -1,36 +1,36 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 034b69f31e9fac3e8c274d70b3f7dd88 */
+/* @relayHash cf33244e99070c3d23f796bdfcbb4e8b */
 
 import { ConcreteRequest } from "relay-runtime";
 
 import { FragmentRefs } from "relay-runtime";
-export type SettingsHooksLogsRefetchQueryVariables = {
+export type HooksLogsRefetchQueryVariables = {
     after?: string | null | undefined;
     first?: number | null | undefined;
     hookid: string;
 };
-export type SettingsHooksLogsRefetchQueryResponse = {
-    readonly " $fragmentRefs": FragmentRefs<"SettingsHooksLogsFragment_webHookRecords">;
+export type HooksLogsRefetchQueryResponse = {
+    readonly " $fragmentRefs": FragmentRefs<"HooksLogsFragment_webHookRecords">;
 };
-export type SettingsHooksLogsRefetchQuery = {
-    readonly response: SettingsHooksLogsRefetchQueryResponse;
-    readonly variables: SettingsHooksLogsRefetchQueryVariables;
+export type HooksLogsRefetchQuery = {
+    readonly response: HooksLogsRefetchQueryResponse;
+    readonly variables: HooksLogsRefetchQueryVariables;
 };
 
 
 
 /*
-query SettingsHooksLogsRefetchQuery(
+query HooksLogsRefetchQuery(
   $after: String
   $first: Int
   $hookid: ID!
 ) {
-  ...SettingsHooksLogsFragment_webHookRecords_3PuEnP
+  ...HooksLogsFragment_webHookRecords_3PuEnP
 }
 
-fragment SettingsHooksLogsFragment_webHookRecords_3PuEnP on Query {
+fragment HooksLogsFragment_webHookRecords_3PuEnP on Query {
   webHookRecords(first: $first, after: $after, hook_id: $hookid) {
     pageInfo {
       hasPreviousPage
@@ -42,14 +42,14 @@ fragment SettingsHooksLogsFragment_webHookRecords_3PuEnP on Query {
       cursor
       node {
         id
-        ...SettingsHooksLogsItemFragment
+        ...HooksLogsItemFragment
         __typename
       }
     }
   }
 }
 
-fragment SettingsHooksLogsItemFragment on GQL_WebHookRecord {
+fragment HooksLogsItemFragment on GQL_WebHookRecord {
   id
   statusCode
   timestamp
@@ -113,7 +113,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "SettingsHooksLogsRefetchQuery",
+    "name": "HooksLogsRefetchQuery",
     "selections": [
       {
         "args": [
@@ -126,7 +126,7 @@ return {
           }
         ],
         "kind": "FragmentSpread",
-        "name": "SettingsHooksLogsFragment_webHookRecords"
+        "name": "HooksLogsFragment_webHookRecords"
       }
     ],
     "type": "Query",
@@ -136,7 +136,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "SettingsHooksLogsRefetchQuery",
+    "name": "HooksLogsRefetchQuery",
     "selections": [
       {
         "alias": null,
@@ -305,20 +305,20 @@ return {
           "hook_id"
         ],
         "handle": "connection",
-        "key": "SettingsHooksLogsConnection_webHookRecords",
+        "key": "HooksLogsConnection_webHookRecords",
         "kind": "LinkedHandle",
         "name": "webHookRecords"
       }
     ]
   },
   "params": {
-    "id": "034b69f31e9fac3e8c274d70b3f7dd88",
+    "id": "cf33244e99070c3d23f796bdfcbb4e8b",
     "metadata": {},
-    "name": "SettingsHooksLogsRefetchQuery",
+    "name": "HooksLogsRefetchQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
-(node as any).hash = '348fb4d25c2be5fff797000831f1640e';
+(node as any).hash = 'dfd757f4123c3f299b15bccdac04def7';
 export default node;

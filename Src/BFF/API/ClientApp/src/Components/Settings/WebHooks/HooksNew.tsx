@@ -3,7 +3,7 @@ import React, { useTransition, useCallback, useState } from "react";
 import { useLazyLoadQuery, useMutation } from "react-relay/hooks";
 import { graphql } from "babel-plugin-relay/macro";
 import UniversalFormInputSection from "../../../UIComponents/Inputs/UniversalFormInputSection.tsx";
-import { SettingsHooksNewQuery } from "./__generated__/SettingsHooksNewQuery.graphql";
+import { HooksNewQuery } from "./__generated__/HooksNewQuery.graphql";
 import SectionTitle from "../../../UIComponents/Section/SectionTitle";
 import Section from "../../../UIComponents/Section/Section";
 import Toggle from "../../../UIComponents/Toggle/Toggle";
@@ -12,8 +12,8 @@ import { useToast } from "../../../UIComponents/Toast/ToastProvider";
 import { useFormik } from "formik";
 import {
   HookEventType,
-  SettingsHooksNewMutation,
-} from "./__generated__/SettingsHooksNewMutation.graphql";
+  HooksNewMutation,
+} from "./__generated__/HooksNewMutation.graphql";
 import { HandleErrors } from "../../../Utils/ErrorHelper";
 import { useNavigate } from "react-router";
 import { generateErrors, is } from "../../../Utils/Validation";
@@ -21,8 +21,8 @@ import { URL_REGEX } from "../../../constants";
 import { EVENT_TRIGGERS } from "./HooksShared";
 import { useHooksContext } from "../Settings";
 
-const SettingsHooksNewQueryTag = graphql`
-  query SettingsHooksNewQuery {
+const HooksNewQueryTag = graphql`
+  query HooksNewQuery {
     webHookEventsTriggers
   }
 `;
@@ -35,9 +35,9 @@ function getTriggerArr(map: Map<string, boolean>) {
   return triggers;
 }
 
-export default SettingsHooksNew;
+export default HooksNew;
 
-function SettingsHooksNew() {
+function HooksNew() {
 
   const [triggers, setTriggers] = useState({
     checkedItems: new Map<string, boolean>(),
@@ -46,8 +46,8 @@ function SettingsHooksNew() {
   const toast = useToast();
 
   //@ts-ignore
-  const data = useLazyLoadQuery<SettingsHooksNewQuery>(
-    SettingsHooksNewQueryTag,
+  const data = useLazyLoadQuery<HooksNewQuery>(
+    HooksNewQueryTag,
     {
      
     },
@@ -77,8 +77,8 @@ function SettingsHooksNew() {
   const [
     commit,
     isInFlight,
-  ] = useMutation<SettingsHooksNewMutation>(graphql`
-    mutation SettingsHooksNewMutation(
+  ] = useMutation<HooksNewMutation>(graphql`
+    mutation HooksNewMutation(
       $request: CreateWebHookInput
       $connections: [ID!]!
       ) {

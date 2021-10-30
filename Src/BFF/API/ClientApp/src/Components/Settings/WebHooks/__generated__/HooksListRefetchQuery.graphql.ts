@@ -1,46 +1,52 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash b628a4de7a80bf296e42b0f8fbe94813 */
+/* @relayHash bde6b525b98f066e3c60a84903e6ad2f */
 
 import { ConcreteRequest } from "relay-runtime";
 
 import { FragmentRefs } from "relay-runtime";
-export type SettingsHooksQueryVariables = {};
-export type SettingsHooksQueryResponse = {
-    readonly " $fragmentRefs": FragmentRefs<"SettingsHooksListFragment">;
+export type HooksListRefetchQueryVariables = {
+    after?: string | null | undefined;
+    first?: number | null | undefined;
 };
-export type SettingsHooksQuery = {
-    readonly response: SettingsHooksQueryResponse;
-    readonly variables: SettingsHooksQueryVariables;
+export type HooksListRefetchQueryResponse = {
+    readonly " $fragmentRefs": FragmentRefs<"HooksListFragment">;
+};
+export type HooksListRefetchQuery = {
+    readonly response: HooksListRefetchQueryResponse;
+    readonly variables: HooksListRefetchQueryVariables;
 };
 
 
 
 /*
-query SettingsHooksQuery {
-  ...SettingsHooksListFragment
+query HooksListRefetchQuery(
+  $after: String
+  $first: Int
+) {
+  ...HooksListFragment_2HEEH6
 }
 
-fragment SettingsHooksItemFragment on GQL_WebHook {
+fragment HooksItemFragment on GQL_WebHook {
   id
   systemid
   webHookUrl
   isActive
 }
 
-fragment SettingsHooksListFragment on Query {
-  webhooks {
+fragment HooksListFragment_2HEEH6 on Query {
+  webhooks(first: $first, after: $after) {
     pageInfo {
       hasPreviousPage
       hasNextPage
       startCursor
       endCursor
     }
-    edges @stream(label: "SettingsHooksListFragment$stream$edges", initialCount: 1) {
+    edges @stream(label: "HooksListFragment$stream$edges", initialCount: 2) {
       node {
         id
-        ...SettingsHooksItemFragment
+        ...HooksItemFragment @defer(label: "HooksListFragment$defer$HooksItemFragment")
         __typename
       }
       cursor
@@ -49,17 +55,49 @@ fragment SettingsHooksListFragment on Query {
 }
 */
 
-const node: ConcreteRequest = {
+const node: ConcreteRequest = (function(){
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "after"
+  },
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "first"
+  }
+],
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "after",
+    "variableName": "after"
+  },
+  {
+    "kind": "Variable",
+    "name": "first",
+    "variableName": "first"
+  }
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
+return {
   "fragment": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "SettingsHooksQuery",
+    "name": "HooksListRefetchQuery",
     "selections": [
       {
-        "args": null,
+        "args": (v1/*: any*/),
         "kind": "FragmentSpread",
-        "name": "SettingsHooksListFragment"
+        "name": "HooksListFragment"
       }
     ],
     "type": "Query",
@@ -67,13 +105,13 @@ const node: ConcreteRequest = {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "SettingsHooksQuery",
+    "name": "HooksListRefetchQuery",
     "selections": [
       {
         "alias": null,
-        "args": null,
+        "args": (v1/*: any*/),
         "concreteType": "WebhooksConnection",
         "kind": "LinkedField",
         "name": "webhooks",
@@ -121,7 +159,7 @@ const node: ConcreteRequest = {
           {
             "if": null,
             "kind": "Stream",
-            "label": "SettingsHooksListFragment$stream$edges",
+            "label": "HooksListFragment$stream$edges",
             "selections": [
               {
                 "alias": null,
@@ -139,40 +177,42 @@ const node: ConcreteRequest = {
                     "name": "node",
                     "plural": false,
                     "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "id",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "systemid",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "webHookUrl",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "isActive",
-                        "storageKey": null
-                      },
+                      (v2/*: any*/),
                       {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
                         "name": "__typename",
                         "storageKey": null
+                      },
+                      {
+                        "if": null,
+                        "kind": "Defer",
+                        "label": "HooksListFragment$defer$HooksItemFragment",
+                        "selections": [
+                          (v2/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "systemid",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "webHookUrl",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "isActive",
+                            "storageKey": null
+                          }
+                        ]
                       }
                     ],
                     "storageKey": null
@@ -206,22 +246,23 @@ const node: ConcreteRequest = {
       },
       {
         "alias": null,
-        "args": null,
+        "args": (v1/*: any*/),
         "filters": null,
         "handle": "connection",
-        "key": "SettingsHooksListConnection_webhooks",
+        "key": "HooksListConnection_webhooks",
         "kind": "LinkedHandle",
         "name": "webhooks"
       }
     ]
   },
   "params": {
-    "id": "b628a4de7a80bf296e42b0f8fbe94813",
+    "id": "bde6b525b98f066e3c60a84903e6ad2f",
     "metadata": {},
-    "name": "SettingsHooksQuery",
+    "name": "HooksListRefetchQuery",
     "operationKind": "query",
     "text": null
   }
 };
-(node as any).hash = '849dae2a7d5589901579ec361f0bfff6';
+})();
+(node as any).hash = '80d10061737d7bcdfbe6219d9de711f3';
 export default node;

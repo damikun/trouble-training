@@ -1,0 +1,1 @@
+query HooksEditQuery(  $hookid: ID!) {  webHookById(webhook_id: $hookid) {    id    systemid    webHookUrl    isActive    listeningEvents  }  webHookEventsTriggers}

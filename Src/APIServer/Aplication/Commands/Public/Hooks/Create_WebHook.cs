@@ -57,6 +57,8 @@ namespace APIServer.Aplication.Commands.WebHooks {
 
         private readonly IDbContextFactory<ApiDbContext> _factory;
 
+        const long  MAX_HOOK_COUNT = 10;
+
         public CreateWebHookValidator(IDbContextFactory<ApiDbContext> factory){
             _factory = factory;
 
@@ -96,8 +98,6 @@ namespace APIServer.Aplication.Commands.WebHooks {
             
             await using ApiDbContext dbContext = 
                 _factory.CreateDbContext();
-
-            const long  MAX_HOOK_COUNT = 3;
             
             return (await dbContext.WebHooks.CountAsync()) <= MAX_HOOK_COUNT;
         }

@@ -17,13 +17,13 @@ import { URL_REGEX } from "../../../constants";
 import { EVENT_TRIGGERS } from "./HooksShared";
 import {
   HookEventType,
-  SettingsHooksEditMutation,
-} from "./__generated__/SettingsHooksEditMutation.graphql";
-import { SettingsHooksEditQuery } from "./__generated__/SettingsHooksEditQuery.graphql";
+  HooksEditMutation,
+} from "./__generated__/HooksEditMutation.graphql";
+import { HooksEditQuery } from "./__generated__/HooksEditQuery.graphql";
 import RecordNotFound from "../../../UIComponents/RecordNotFound";
 
-const SettingsHooksEditQueryTag = graphql`
-  query SettingsHooksEditQuery($hookid: ID!) {
+const HooksEditQueryTag = graphql`
+  query HooksEditQuery($hookid: ID!) {
     webHookById(webhook_id: $hookid) {
       id
       systemid
@@ -55,15 +55,15 @@ function getTriggersInitState(
   return map;
 }
 
-export default React.memo(SettingsHooksEdit);
+export default React.memo(HooksEdit);
 
-function SettingsHooksEdit() {
+function HooksEdit() {
   const { hookid }: any = useParams();
 
   const toast = useToast();
 
-  const data = useLazyLoadQuery<SettingsHooksEditQuery>(
-    SettingsHooksEditQueryTag,
+  const data = useLazyLoadQuery<HooksEditQuery>(
+    HooksEditQueryTag,
     {
       hookid: hookid,
     },
@@ -107,8 +107,8 @@ function SettingsHooksEdit() {
   const [
     commit,
     isInFlight,
-  ] = useMutation<SettingsHooksEditMutation>(graphql`
-    mutation SettingsHooksEditMutation($request: UpdateWebHookInput) {
+  ] = useMutation<HooksEditMutation>(graphql`
+    mutation HooksEditMutation($request: UpdateWebHookInput) {
       updateWebHook(request: $request) {
         ... on UpdateWebHookPayload {
           errors {

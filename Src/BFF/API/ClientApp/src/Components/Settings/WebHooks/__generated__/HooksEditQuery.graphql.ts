@@ -1,15 +1,15 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 306de519f3683359cc01e0832dfd6830 */
+/* @relayHash 1ca9aa6c32da8b0f79d98c000542072c */
 
 import { ConcreteRequest } from "relay-runtime";
 
 export type HookEventType = "FILE" | "HOOK" | "MILESTONE" | "NOTE" | "PROJECT" | "%future added value";
-export type SettingsHooksEditQueryVariables = {
+export type HooksEditQueryVariables = {
     hookid: string;
 };
-export type SettingsHooksEditQueryResponse = {
+export type HooksEditQueryResponse = {
     readonly webHookById: {
         readonly id: string;
         readonly systemid: unknown;
@@ -19,15 +19,15 @@ export type SettingsHooksEditQueryResponse = {
     } | null;
     readonly webHookEventsTriggers: ReadonlyArray<string | null> | null;
 };
-export type SettingsHooksEditQuery = {
-    readonly response: SettingsHooksEditQueryResponse;
-    readonly variables: SettingsHooksEditQueryVariables;
+export type HooksEditQuery = {
+    readonly response: HooksEditQueryResponse;
+    readonly variables: HooksEditQueryVariables;
 };
 
 
 
 /*
-query SettingsHooksEditQuery(
+query HooksEditQuery(
   $hookid: ID!
 ) {
   webHookById(webhook_id: $hookid) {
@@ -115,7 +115,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "SettingsHooksEditQuery",
+    "name": "HooksEditQuery",
     "selections": (v1/*: any*/),
     "type": "Query",
     "abstractKey": null
@@ -124,17 +124,17 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "SettingsHooksEditQuery",
+    "name": "HooksEditQuery",
     "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "306de519f3683359cc01e0832dfd6830",
+    "id": "1ca9aa6c32da8b0f79d98c000542072c",
     "metadata": {},
-    "name": "SettingsHooksEditQuery",
+    "name": "HooksEditQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
-(node as any).hash = '189fd53b6b30bf85596af9b30d21c140';
+(node as any).hash = '2229ad24e59a9df850317e0530ca957b';
 export default node;

@@ -1,56 +1,63 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 4290e22caf0448421a7a4f292a74e528 */
+/* @relayHash b1185fc23cf6631cfd996a90761d1210 */
 
 import { ConcreteRequest } from "relay-runtime";
 
 import { FragmentRefs } from "relay-runtime";
-export type SettingsHooksListRefetchQueryVariables = {
-    after?: string | null | undefined;
-    first?: number | null | undefined;
+export type HooksLogsQueryVariables = {
+    hookid: string;
 };
-export type SettingsHooksListRefetchQueryResponse = {
-    readonly " $fragmentRefs": FragmentRefs<"SettingsHooksListFragment">;
+export type HooksLogsQueryResponse = {
+    readonly serverDateTime: string;
+    readonly " $fragmentRefs": FragmentRefs<"HooksLogsFragment_webHookRecords">;
 };
-export type SettingsHooksListRefetchQuery = {
-    readonly response: SettingsHooksListRefetchQueryResponse;
-    readonly variables: SettingsHooksListRefetchQueryVariables;
+export type HooksLogsQuery = {
+    readonly response: HooksLogsQueryResponse;
+    readonly variables: HooksLogsQueryVariables;
 };
 
 
 
 /*
-query SettingsHooksListRefetchQuery(
-  $after: String
-  $first: Int
+query HooksLogsQuery(
+  $hookid: ID!
 ) {
-  ...SettingsHooksListFragment_2HEEH6
+  ...HooksLogsFragment_webHookRecords_36DEwC
+  serverDateTime
 }
 
-fragment SettingsHooksItemFragment on GQL_WebHook {
-  id
-  systemid
-  webHookUrl
-  isActive
-}
-
-fragment SettingsHooksListFragment_2HEEH6 on Query {
-  webhooks(first: $first, after: $after) {
+fragment HooksLogsFragment_webHookRecords_36DEwC on Query {
+  webHookRecords(first: 20, hook_id: $hookid) {
     pageInfo {
       hasPreviousPage
       hasNextPage
       startCursor
       endCursor
     }
-    edges @stream(label: "SettingsHooksListFragment$stream$edges", initialCount: 1) {
+    edges {
+      cursor
       node {
         id
-        ...SettingsHooksItemFragment
+        ...HooksLogsItemFragment
         __typename
       }
-      cursor
     }
+  }
+}
+
+fragment HooksLogsItemFragment on GQL_WebHookRecord {
+  id
+  statusCode
+  timestamp
+  triggerType
+  guid
+  result
+  webHook {
+    id
+    systemid
+    webHookUrl
   }
 }
 */
@@ -60,37 +67,55 @@ var v0 = [
   {
     "defaultValue": null,
     "kind": "LocalArgument",
-    "name": "after"
-  },
-  {
-    "defaultValue": null,
-    "kind": "LocalArgument",
-    "name": "first"
+    "name": "hookid"
   }
 ],
-v1 = [
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "serverDateTime",
+  "storageKey": null
+},
+v2 = {
+  "kind": "Literal",
+  "name": "first",
+  "value": 20
+},
+v3 = [
+  (v2/*: any*/),
   {
     "kind": "Variable",
-    "name": "after",
-    "variableName": "after"
-  },
-  {
-    "kind": "Variable",
-    "name": "first",
-    "variableName": "first"
+    "name": "hook_id",
+    "variableName": "hookid"
   }
-];
+],
+v4 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "SettingsHooksListRefetchQuery",
+    "name": "HooksLogsQuery",
     "selections": [
+      (v1/*: any*/),
       {
-        "args": (v1/*: any*/),
+        "args": [
+          (v2/*: any*/),
+          {
+            "kind": "Variable",
+            "name": "hookid",
+            "variableName": "hookid"
+          }
+        ],
         "kind": "FragmentSpread",
-        "name": "SettingsHooksListFragment"
+        "name": "HooksLogsFragment_webHookRecords"
       }
     ],
     "type": "Query",
@@ -100,14 +125,14 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "SettingsHooksListRefetchQuery",
+    "name": "HooksLogsQuery",
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "WebhooksConnection",
+        "args": (v3/*: any*/),
+        "concreteType": "WebHookRecordsConnection",
         "kind": "LinkedField",
-        "name": "webhooks",
+        "name": "webHookRecords",
         "plural": false,
         "selections": [
           {
@@ -150,33 +175,73 @@ return {
             "storageKey": null
           },
           {
-            "if": null,
-            "kind": "Stream",
-            "label": "SettingsHooksListFragment$stream$edges",
+            "alias": null,
+            "args": null,
+            "concreteType": "WebHookRecordsEdge",
+            "kind": "LinkedField",
+            "name": "edges",
+            "plural": true,
             "selections": [
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "WebhooksEdge",
+                "kind": "ScalarField",
+                "name": "cursor",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "GQL_WebHookRecord",
                 "kind": "LinkedField",
-                "name": "edges",
-                "plural": true,
+                "name": "node",
+                "plural": false,
                 "selections": [
+                  (v4/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "statusCode",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "timestamp",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "triggerType",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "guid",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "result",
+                    "storageKey": null
+                  },
                   {
                     "alias": null,
                     "args": null,
                     "concreteType": "GQL_WebHook",
                     "kind": "LinkedField",
-                    "name": "node",
+                    "name": "webHook",
                     "plural": false,
                     "selections": [
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "id",
-                        "storageKey": null
-                      },
+                      (v4/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -190,20 +255,6 @@ return {
                         "kind": "ScalarField",
                         "name": "webHookUrl",
                         "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "isActive",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "__typename",
-                        "storageKey": null
                       }
                     ],
                     "storageKey": null
@@ -212,13 +263,14 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "cursor",
+                    "name": "__typename",
                     "storageKey": null
                   }
                 ],
                 "storageKey": null
               }
-            ]
+            ],
+            "storageKey": null
           },
           {
             "kind": "ClientExtension",
@@ -237,23 +289,26 @@ return {
       },
       {
         "alias": null,
-        "args": (v1/*: any*/),
-        "filters": null,
+        "args": (v3/*: any*/),
+        "filters": [
+          "hook_id"
+        ],
         "handle": "connection",
-        "key": "SettingsHooksListConnection_webhooks",
+        "key": "HooksLogsConnection_webHookRecords",
         "kind": "LinkedHandle",
-        "name": "webhooks"
-      }
+        "name": "webHookRecords"
+      },
+      (v1/*: any*/)
     ]
   },
   "params": {
-    "id": "4290e22caf0448421a7a4f292a74e528",
+    "id": "b1185fc23cf6631cfd996a90761d1210",
     "metadata": {},
-    "name": "SettingsHooksListRefetchQuery",
+    "name": "HooksLogsQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
-(node as any).hash = '1469bfb1638f97f64377f02fafadb220';
+(node as any).hash = 'bced0d9589c29342dc2df8f95b06a93b';
 export default node;
