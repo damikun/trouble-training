@@ -1,0 +1,1 @@
+query HooksStreamDeferQuery {  ...HooksStreamDeferListFragment}fragment HooksStreamDeferListFragment on Query {  B: webHooksTestStream @stream(label: "HooksStreamDeferListFragment$stream$B", initialCount: 3) {    id    ...Item2Fragment @defer(label: "HooksStreamDeferListFragment$defer$Item2Fragment")  }}fragment Item2Fragment on GQL_WebHook {  id  systemid  webHookUrl  isActive}

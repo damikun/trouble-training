@@ -15,6 +15,8 @@ import HooksEdit from "./WebHooks/HooksEdit";
 import HooksNew from "./WebHooks/HooksNew";
 import HooksLogs from "./WebHooks/HooksLogs";
 import React from "react";
+import HooksStream from "./Stream_Defer/HooksStream";
+import HooksStreamDefer from "./Stream_Defer/HooksStreamDefer";
 
 const view_WebHooks = true;
 
@@ -27,6 +29,16 @@ export const SettingsTabs = [
     label: "WebHooks",
     path: `Hooks`,
     pattern: "Hooks/*",
+  },
+  {
+    label: "Test @stream",
+    path: `stream/`,
+    pattern: "stream/*",
+  },
+  {
+    label: "Test @stream+@defer",
+    path: `defer+stream`,
+    pattern: "defer+stream/*",
   },
 ] as RouterTabItemType[];
 
@@ -103,6 +115,32 @@ export default function Settings() {
                           </Route>
                         </Routes>
                       </HooksContext.Provider>
+                    }
+                  />
+
+                  <PrivateRoute
+                    path={`${SettingsTabs[2].path}/*`}
+                    authorised={view_WebHooks}
+                    unauthorisedComponent={<FourOhOne />}
+                    element={
+                        <Routes>
+                          <Route path={"/"}>
+                            <HooksStream />
+                          </Route>
+                        </Routes>
+                    }
+                  />
+
+                  <PrivateRoute
+                    path={`${SettingsTabs[3].path}/*`}
+                    authorised={view_WebHooks}
+                    unauthorisedComponent={<FourOhOne />}
+                    element={
+                        <Routes>
+                          <Route path={"/"}>
+                            <HooksStreamDefer />
+                          </Route>
+                        </Routes>
                     }
                   />
 

@@ -78,7 +78,7 @@ namespace APIServer.Aplication.GraphQL.Queries {
 
                     yield return hook;
 
-                    Thread.Sleep(1000); // Just to slow since DB is fast
+                    Thread.Sleep(350); // Just to slow since DB is fast
                 }
             }
         }

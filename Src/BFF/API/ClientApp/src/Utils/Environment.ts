@@ -68,20 +68,25 @@ const fetchGraphQL: FetchFunction = (operation, variables, _cacheConfig) => {
 
 			const parts = await meros<ExecutionPatchResult>(response);
 
-			if (isAsyncIterable(parts)) {
-				for await (const part of parts) {
-					if (!part.json) {
-						sink.error(
-              new Error('Failed to parse part as json'));
-						break;
+				if (isAsyncIterable(parts)) {
+					for await (const part of parts) {
+						if (!part.json) {
+							sink.error(new Error('Failed to parse part as json'));
+							break;
+						}
+	
+						  //@ts-ignore
+						sink.next(part?.body);
 					}
-
-          //@ts-ignore
-					sink.next(part.body);
+				} else {
+	
+					var data = await parts?.json();
+	
+					if(data){
+						sink.next(data);
+					}
+		
 				}
-			} else {
-				sink.next(await parts.json());
-			}
 
 			sink.complete();
 		})();

@@ -16,9 +16,7 @@ const HooksQueryTag = graphql`
   }
 `;
 
-export default Hooks
-
-function Hooks() {
+export default function Hooks() {
 
   const data = useLazyLoadQuery<HooksQuery>(
     HooksQueryTag,

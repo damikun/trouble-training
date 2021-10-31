@@ -16,7 +16,7 @@ export default function PrivateRouter({
   unauthorisedComponent,
   ...rest
 }: Props) {
-  //@ts-ignore
+
   const userStore = useUserStore();
 
   if (!userStore?.user?.me) {
