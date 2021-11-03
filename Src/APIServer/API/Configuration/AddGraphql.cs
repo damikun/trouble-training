@@ -41,6 +41,8 @@ namespace APIServer.Configuration {
                     .AddFiltering()
                     .AddSorting()
 
+                    .TryAddTypeInterceptor<StreamTypeInterceptor>()
+
                     .AddQueryType<Query>()
                         .AddTypeExtension<WebHookQueries>()
                         .AddTypeExtension<UserQueries>()

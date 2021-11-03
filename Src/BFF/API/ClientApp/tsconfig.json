@@ -18,11 +18,16 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "types": [
+      "cypress"
+    ],
     "jsx": "react-jsx"
   },
   "include": [
     "src",
-    "babel.config.js"
+    "babel.config.js",
+    "node_modules/cypress",
+    "cypress/*/*.ts"
   ],
   "exclude": [
     "node_modules",

@@ -58,7 +58,7 @@ export default function HooksStreamDefer() {
 export const HooksStreamDeferListFragment = graphql`
   fragment HooksStreamDeferListFragment on Query 
  {
-  webHooksTestStream @stream(initialCount: 2) {
+  webHooksTestStream @stream(initial_count: 2) {
       id
       ...ItemFragment @defer
     }

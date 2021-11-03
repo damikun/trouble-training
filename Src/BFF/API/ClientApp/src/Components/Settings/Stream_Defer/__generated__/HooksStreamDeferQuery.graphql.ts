@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 8c0480b2f8016ad45d021ac531193d3d */
+/* @relayHash 9cddf4e406483e947e1ddf19be01d965 */
 
 import { ConcreteRequest } from "relay-runtime";
 
@@ -23,7 +23,7 @@ query HooksStreamDeferQuery {
 }
 
 fragment HooksStreamDeferListFragment on Query {
-  webHooksTestStream @stream(label: "HooksStreamDeferListFragment$stream$webHooksTestStream", initialCount: 2) {
+  webHooksTestStream @stream(label: "HooksStreamDeferListFragment$stream$webHooksTestStream", initial_count: 2) {
     id
     ...ItemFragment @defer(label: "HooksStreamDeferListFragment$defer$ItemFragment")
   }
@@ -118,7 +118,7 @@ return {
     ]
   },
   "params": {
-    "id": "8c0480b2f8016ad45d021ac531193d3d",
+    "id": "9cddf4e406483e947e1ddf19be01d965",
     "metadata": {},
     "name": "HooksStreamDeferQuery",
     "operationKind": "query",

@@ -1,0 +1,13 @@
+{
+    "root": ".",
+    "sources": {
+      "src": "default"
+    },
+    "projects": {
+      "default": {
+        "schema": "./src/schema.graphql",
+        "jsModuleFormat": "commonjs",
+        "haste": false
+      }
+    }
+  }

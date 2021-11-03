@@ -1,0 +1,1 @@
+query HooksStreamQuery {  ...HooksStreamListFragment}fragment HooksStreamListFragment on Query {  webHooksTestStream @stream(label: "HooksStreamListFragment$stream$webHooksTestStream", initial_count: 2) {    id    ...ItemFragment  }}fragment ItemFragment on GQL_WebHook {  id  systemid  webHookUrl  isActive}

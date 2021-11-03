@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 6a44e73da11a3654ece8143e6b102906 */
+/* @relayHash 1df337b847aad575dbb3006eb2e13ec7 */
 
 import { ConcreteRequest } from "relay-runtime";
 
@@ -37,7 +37,7 @@ fragment HooksListFragment on Query {
       startCursor
       endCursor
     }
-    edges @stream(label: "HooksListFragment$stream$edges", initialCount: 2) {
+    edges @stream(label: "HooksListFragment$stream$edges", initial_count: 2) {
       node {
         id
         ...HooksItemFragment @defer(label: "HooksListFragment$defer$HooksItemFragment")
@@ -226,7 +226,7 @@ return {
     ]
   },
   "params": {
-    "id": "6a44e73da11a3654ece8143e6b102906",
+    "id": "1df337b847aad575dbb3006eb2e13ec7",
     "metadata": {},
     "name": "HooksQuery",
     "operationKind": "query",

@@ -96,10 +96,10 @@ export const HooksListFragment = graphql`
         startCursor
         endCursor
       }
-      edges @stream(initialCount:2){
+      edges @stream(initial_count:2){
         node{
           id
-          ...HooksItemFragment@defer
+          ...HooksItemFragment @defer
         }
       }
     }

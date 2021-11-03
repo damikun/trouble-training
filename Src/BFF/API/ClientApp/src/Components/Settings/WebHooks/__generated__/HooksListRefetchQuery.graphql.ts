@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash bde6b525b98f066e3c60a84903e6ad2f */
+/* @relayHash 297466b8de04fddca7c17646fa8a901a */
 
 import { ConcreteRequest } from "relay-runtime";
 
@@ -43,7 +43,7 @@ fragment HooksListFragment_2HEEH6 on Query {
       startCursor
       endCursor
     }
-    edges @stream(label: "HooksListFragment$stream$edges", initialCount: 2) {
+    edges @stream(label: "HooksListFragment$stream$edges", initial_count: 2) {
       node {
         id
         ...HooksItemFragment @defer(label: "HooksListFragment$defer$HooksItemFragment")
@@ -256,7 +256,7 @@ return {
     ]
   },
   "params": {
-    "id": "bde6b525b98f066e3c60a84903e6ad2f",
+    "id": "297466b8de04fddca7c17646fa8a901a",
     "metadata": {},
     "name": "HooksListRefetchQuery",
     "operationKind": "query",
@@ -264,5 +264,5 @@ return {
   }
 };
 })();
-(node as any).hash = '80d10061737d7bcdfbe6219d9de711f3';
+(node as any).hash = '3110e82c2371d7327607d76ff9664771';
 export default node;

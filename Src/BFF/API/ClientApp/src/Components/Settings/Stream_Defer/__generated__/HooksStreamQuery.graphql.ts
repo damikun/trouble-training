@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 24139b8b1cb3389cd376d1bed1cb15cc */
+/* @relayHash b99f8558b91c57b70256e08aad9e539e */
 
 import { ConcreteRequest } from "relay-runtime";
 
@@ -23,7 +23,7 @@ query HooksStreamQuery {
 }
 
 fragment HooksStreamListFragment on Query {
-  webHooksTestStream @stream(label: "HooksStreamListFragment$stream$webHooksTestStream", initialCount: 2) {
+  webHooksTestStream @stream(label: "HooksStreamListFragment$stream$webHooksTestStream", initial_count: 2) {
     id
     ...ItemFragment
   }
@@ -108,7 +108,7 @@ const node: ConcreteRequest = {
     ]
   },
   "params": {
-    "id": "24139b8b1cb3389cd376d1bed1cb15cc",
+    "id": "b99f8558b91c57b70256e08aad9e539e",
     "metadata": {},
     "name": "HooksStreamQuery",
     "operationKind": "query",

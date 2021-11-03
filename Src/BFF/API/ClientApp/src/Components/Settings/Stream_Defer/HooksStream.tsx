@@ -58,7 +58,7 @@ export default function HooksStream() {
 export const HooksStreamListFragment = graphql`
   fragment HooksStreamListFragment on Query 
  {
-  webHooksTestStream @stream(initialCount: 2) {
+  webHooksTestStream @stream(initial_count: 2) {
       id
       ...ItemFragment
     }
