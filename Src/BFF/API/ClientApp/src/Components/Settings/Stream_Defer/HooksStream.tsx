@@ -22,7 +22,7 @@ export default function HooksStream() {
     HooksStreamQueryTag,
     { },
     // For test reasons we use network-only to rerender on each route change
-    { fetchPolicy: "network-only",UNSTABLE_renderPolicy:"partial", fetchKey:"Key1"},
+    { fetchPolicy: "store-or-network",UNSTABLE_renderPolicy:"partial"},
   );
 
   return (

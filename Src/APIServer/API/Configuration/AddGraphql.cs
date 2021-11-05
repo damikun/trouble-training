@@ -12,6 +12,7 @@ using APIServer.Aplication.GraphQL.Mutation;
 using APIServer.Aplication.GraphQL.Extensions;
 using APIServer.Aplication.GraphQL.DataLoaders;
 using Microsoft.Extensions.DependencyInjection;
+using HotChocolate.Execution.Configuration;
 
 namespace APIServer.Configuration {
     public static partial class ServiceExtension {
@@ -42,6 +43,7 @@ namespace APIServer.Configuration {
                     .AddSorting()
 
                     .TryAddTypeInterceptor<StreamTypeInterceptor>()
+                    .AddHttpRequestInterceptor<StreamRequestInterceptor>()
 
                     .AddQueryType<Query>()
                         .AddTypeExtension<WebHookQueries>()
@@ -83,11 +85,36 @@ namespace APIServer.Configuration {
                     .AddDataLoader<WebHookByIdDataLoader>()
                     .AddDataLoader<WebHookRecordByIdDataLoader>()
 
-                    .UsePersistedQueryPipeline()
+                    .UseCustomPipeline()
                     .UseReadPersistedQuery()
                     .AddReadOnlyFileSystemQueryStorage("./persisted_queries");
                     
             return serviceCollection;
         }
+
+
+        public static IRequestExecutorBuilder UseCustomPipeline(
+            this IRequestExecutorBuilder builder)
+        {
+            if (builder is null){
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder
+                .UseInstrumentations()
+                .UseExceptions()
+                .UseTimeout()
+                .UseDocumentCache()
+                .UseReadPersistedQuery()
+                .UseDocumentParser()
+                .UseDocumentValidation()
+                .UseRequest<StreamArgumentRewriteMiddelware>() // Temporary workeround !
+                .UseOperationCache()
+                .UseOperationComplexityAnalyzer()
+                .UseOperationResolver()
+                .UseOperationVariableCoercion()
+                .UseOperationExecution();
+        }
+
     }
 }
