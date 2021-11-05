@@ -23,10 +23,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Device/Domain/Device.Domain.csproj" />
+    <ProjectReference Include="..\..\Device\Domain\Device.Domain.csproj" />
 
-    <ProjectReference Include="../../Shared/Domain/Shared.Domain.csproj" />
-    <ProjectReference Include="../../Shared/Aplication/Shared.Aplication.csproj" />
-    <ProjectReference Include="../../Shared/Api/Shared.Api.csproj" />
+    <ProjectReference Include="..\..\Shared\Domain\Shared.Domain.csproj" />
+    <ProjectReference Include="..\..\Shared\Aplication\Shared.Aplication.csproj" />
+    <ProjectReference Include="..\..\Shared\Api\Shared.Api.csproj" />
   </ItemGroup>
 </Project>

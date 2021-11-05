@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Shared/Domain/Shared.Domain.csproj" />
-    <ProjectReference Include="../../Shared/Aplication/Shared.Aplication.csproj" />
+    <ProjectReference Include="..\..\Shared\Domain\Shared.Domain.csproj" />
+    <ProjectReference Include="..\..\Shared\Aplication\Shared.Aplication.csproj" />
   </ItemGroup>
 </Project>

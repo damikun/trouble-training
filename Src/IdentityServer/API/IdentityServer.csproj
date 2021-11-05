@@ -52,15 +52,13 @@
   </Target> -->
 
   <ItemGroup>
-    <ProjectReference Include="../../IdentityServer/Persistence/Persistence.csproj" />
-    <ProjectReference Include="../../IdentityServer/Domain/Domain.csproj" />
-    <ProjectReference Include="../../IdentityServer/Aplication/Aplication.csproj" />
+    <ProjectReference Include="..\..\IdentityServer\Persistence\Persistence.csproj" />
+    <ProjectReference Include="..\..\IdentityServer\Domain\Domain.csproj" />
+    <ProjectReference Include="..\..\IdentityServer\Aplication\Aplication.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Shared/Domain/Shared.Domain.csproj" />
-    <!-- <ProjectReference Include="../../Shared/Aplication/Shared.Aplication.csproj" /> -->
-    <!-- <ProjectReference Include="../../Shared/Persistence/Shared.Persistence.csproj" />  -->
+    <ProjectReference Include="..\..\Shared\Domain\Shared.Domain.csproj" />
   </ItemGroup>
   
 </Project>

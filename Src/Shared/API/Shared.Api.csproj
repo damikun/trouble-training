@@ -39,8 +39,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../Shared/Domain/Shared.Domain.csproj" />
-    <ProjectReference Include="../../Shared/Aplication/Shared.Aplication.csproj" />
-    <ProjectReference Include="../../Shared/Persistence/Shared.Persistence.csproj" />
+    <ProjectReference Include="..\..\Shared\Domain\Shared.Domain.csproj" />
+    <ProjectReference Include="..\..\Shared\Aplication\Shared.Aplication.csproj" />
+    <ProjectReference Include="..\..\Shared\Persistence\Shared.Persistence.csproj" />
   </ItemGroup>
 </Project>

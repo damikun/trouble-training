@@ -19,12 +19,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../IdentityServer/Domain/Domain.csproj" />
-    <ProjectReference Include="../../IdentityServer/Aplication/Aplication.csproj" />
+    <ProjectReference Include="..\..\IdentityServer\Domain\Domain.csproj" />
+    <ProjectReference Include="..\..\IdentityServer\Aplication\Aplication.csproj" />
 
-    <ProjectReference Include="../../Shared/Domain/Shared.Domain.csproj" />
-    <ProjectReference Include="../../Shared/Aplication/Shared.Aplication.csproj" />
-    <ProjectReference Include="../../Shared/Persistence/Shared.Persistence.csproj" />
-    <ProjectReference Include="../../Shared/Api/Shared.Api.csproj" />
+    <ProjectReference Include="..\..\Shared\Domain\Shared.Domain.csproj" />
+    <ProjectReference Include="..\..\Shared\Aplication\Shared.Aplication.csproj" />
+    <ProjectReference Include="..\..\Shared\Persistence\Shared.Persistence.csproj" />
+    <ProjectReference Include="..\..\Shared\Api\Shared.Api.csproj" />
   </ItemGroup>
 </Project>
