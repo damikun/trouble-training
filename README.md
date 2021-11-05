@@ -1,3 +1,4 @@
+
 <h2 align="center">Full Stack Workshop (Frontend + Backend + Monitoring) </h2>
 
 <p align="center">
@@ -5,13 +6,18 @@
 </p>
 <p align="center" > The application contains a full frontend and backend implementation with infrastructure and app monitoring. There are several patterns used such as. <b>Mediator, BFF, Domain</b> etc.. and everything is secured with <b>Identity server</b> fully supporting <b>OpenId Connect</b> and <b>OAuth2.0</b></p>
 
+
 <h5 align="center" >
+  
+![example workflow](https://github.com/damikun/trouble-training/actions/workflows/build-and-test.yml/badge.svg)
+
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/WebHookBackend.md" >WebHook backend setup</a></br>
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/Logging.md" >Configure Logging</a></br>
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/OpenTelemetry.md">Configure Tracing</a></br>
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/Identity.md">Configure Identity</a></br>
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/ElasticSearch.md">Configure Monitoring</a></br>
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/GraphQL%20-%20MutationErrors.md">Handle GraphQL Errors</a></br>
+
 </h5>
 
 <p align="center" >Demo Application contains small UI, where you can manage your WebHooks</p>
