@@ -18,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace APIServer
 {
     public class Startup
+
     {
         public Startup(IConfiguration configuration, IWebHostEnvironment enviroment)
         {
@@ -90,7 +91,7 @@ namespace APIServer
             app.UseRouting();
 
             app.UseAuthentication();
-            
+
             app.UseAuthorization();
 
             app.UseHangfireServer();
@@ -103,7 +104,7 @@ namespace APIServer
             {
                 endpoints.MapControllers()
                     .RequireAuthorization("ApiCaller");
-                
+
                 endpoints.MapGraphQL()
                 .WithOptions(new GraphQLServerOptions {
                     EnableSchemaRequests = env.IsDevelopment(),

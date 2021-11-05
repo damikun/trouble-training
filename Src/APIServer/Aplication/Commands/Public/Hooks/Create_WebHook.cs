@@ -65,7 +65,7 @@ namespace APIServer.Aplication.Commands.WebHooks {
             RuleFor(e => e.WebHookUrl)
             .NotEmpty()
             .NotNull();
-            
+
             RuleFor(e => e.WebHookUrl)
             .Matches(Common.URI_REGEX)
             .WithMessage("Does not match URI expression");
@@ -85,8 +85,8 @@ namespace APIServer.Aplication.Commands.WebHooks {
         public async Task<bool>  BeUniqueByURL(
             string url,
             CancellationToken cancellationToken) {
-            
-            await using ApiDbContext dbContext = 
+
+            await using ApiDbContext dbContext =
                 _factory.CreateDbContext();
 
             return await dbContext.WebHooks.AllAsync(e => e.WebHookUrl != url);
@@ -95,10 +95,10 @@ namespace APIServer.Aplication.Commands.WebHooks {
         public async Task<bool> CheckMaxAllowedHooksCount(
             string url,
             CancellationToken cancellationToken) {
-            
-            await using ApiDbContext dbContext = 
+
+            await using ApiDbContext dbContext =
                 _factory.CreateDbContext();
-            
+
             return (await dbContext.WebHooks.CountAsync()) <= MAX_HOOK_COUNT;
         }
     }
@@ -178,7 +178,7 @@ namespace APIServer.Aplication.Commands.WebHooks {
         public async Task<CreateWebHookPayload> Handle(
             CreateWebHook request,CancellationToken cancellationToken) {
 
-            await using ApiDbContext dbContext = 
+            await using ApiDbContext dbContext =
                 _factory.CreateDbContext();
 
             WebHook hook = new WebHook {
@@ -186,7 +186,7 @@ namespace APIServer.Aplication.Commands.WebHooks {
                 Secret = request.Secret,
                 ContentType = "application/json",
                 IsActive = request.IsActive,
-                HookEvents = request.HookEvents != null ? 
+                HookEvents = request.HookEvents != null ?
                     request.HookEvents.Distinct().ToArray() : new HookEventType[0]
             };
 
@@ -224,7 +224,7 @@ namespace APIServer.Aplication.Commands.WebHooks {
             CancellationToken cancellationToken)
         {
             if(response != null && !response.HasError()){
- 
+
                 try {
 
                     // You can extend and add any custom fields to Notification!
