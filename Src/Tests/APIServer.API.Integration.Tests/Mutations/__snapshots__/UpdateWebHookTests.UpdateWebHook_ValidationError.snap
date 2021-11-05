@@ -1,0 +1,1 @@
+﻿{"data":{"updateWebHook":{"hook":null,"errors":[{"message":"Hook endpoint allready exist","fieldName":"WebHookUrl"},{"message":"Hook was not found","fieldName":"WebHookId"}]}}}
