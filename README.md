@@ -149,6 +149,8 @@ In each folder you will find `docker-compose.yml` and you need to run the comman
 
 ### Restoring all projects
 
+You can run Nuke build,Restore and Test by using `.\build.cmd` (from root folder) or do it manualy using this steps:
+
 Go to dirrectory: `APIServer/API` and run `dotnet restore`
 
 Go to dirrectory: `IdentityServer/API` and run `dotnet restore`
