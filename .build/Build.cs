@@ -18,9 +18,6 @@ using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
-
-[CheckBuildProjectConfigurations]
-[ShutdownDotNetAfterServerBuild]
 [GitHubActions(
     "build-and-test",
     GitHubActionsImage.WindowsLatest,
@@ -28,6 +25,8 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
     GitHubActionsImage.MacOsLatest,
     On = new[] { GitHubActionsTrigger.PullRequest, GitHubActionsTrigger.Push },
     AutoGenerate = true)]
+[CheckBuildProjectConfigurations]
+[ShutdownDotNetAfterServerBuild]
 partial class Build : NukeBuild
 {
     /// Support plugins are available for:
