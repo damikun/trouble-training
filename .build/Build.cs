@@ -24,7 +24,7 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
 [GitHubActions(
     "build-and-test",
     GitHubActionsImage.WindowsLatest,
-    On = new[] { GitHubActionsTrigger.PullRequest },
+    On = new[] { GitHubActionsTrigger.PullRequest, GitHubActionsTrigger.Push },
     AutoGenerate = true)]
 partial class Build : NukeBuild
 {
