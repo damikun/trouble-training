@@ -21,7 +21,7 @@ using static Nuke.Common.Tools.DotNet.DotNetTasks;
 [GitHubActions(
     "build-and-test",
     GitHubActionsImage.WindowsLatest,
-    GitHubActionsImage.UbuntuLatest,
+    // GitHubActionsImage.UbuntuLatest,
     GitHubActionsImage.MacOsLatest,
     On = new[] { GitHubActionsTrigger.PullRequest, GitHubActionsTrigger.Push },
     AutoGenerate = true)]
