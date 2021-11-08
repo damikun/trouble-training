@@ -17,7 +17,7 @@ using Nuke.Common.CI.GitHubActions;
         GitHubActionsTrigger.PullRequest,
         GitHubActionsTrigger.Push
     },
-    AutoGenerate = false)]
+    AutoGenerate = true)]
 [GitHubActions(
     "frontend-restore-and-build",
     GitHubActionsImage.WindowsLatest,
