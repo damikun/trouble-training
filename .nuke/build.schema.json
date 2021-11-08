@@ -6,14 +6,6 @@
     "build": {
       "type": "object",
       "properties": {
-        "CdsadasdI": {
-          "type": "boolean",
-          "description": "CdwedewdewdSI"
-        },
-        "CI": {
-          "type": "boolean",
-          "description": "CI"
-        },
         "Configuration": {
           "type": "string",
           "description": "Configuration to build - Default is 'Debug' (local) or 'Release' (server)",
@@ -81,6 +73,7 @@
             "enum": [
               "All",
               "Backend_All",
+              "Backend_APITest",
               "Backend_Clean",
               "Backend_Compile",
               "Backend_IntegrationTest",
@@ -108,6 +101,7 @@
             "enum": [
               "All",
               "Backend_All",
+              "Backend_APITest",
               "Backend_Clean",
               "Backend_Compile",
               "Backend_IntegrationTest",

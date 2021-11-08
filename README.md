@@ -9,9 +9,6 @@
 
 <h5 align="center" >
   
-![Backend](https://github.com/damikun/trouble-training/actions/workflows/backend-restore-build-and-test.yml/badge.svg)
-![Frontend](https://github.com/damikun/trouble-training/actions/workflows/frontend-restore-and-build.yml/badge.svg)
-
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/WebHookBackend.md" >WebHook backend setup</a></br>
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/Logging.md" >Configure Logging</a></br>
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/OpenTelemetry.md">Configure Tracing</a></br>
@@ -19,6 +16,10 @@
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/ElasticSearch.md">Configure Monitoring</a></br>
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/GraphQL%20-%20MutationErrors.md">Handle GraphQL Errors</a></br>
 
+</br>
+
+![Backend](https://github.com/damikun/trouble-training/actions/workflows/backend-restore-build-and-test.yml/badge.svg)
+![Frontend](https://github.com/damikun/trouble-training/actions/workflows/frontend-restore-and-build.yml/badge.svg)
 </h5>
 
 <p align="center" >Demo Application contains small UI, where you can manage your WebHooks</p>
@@ -140,13 +141,16 @@ In each folder you will find `docker-compose.yml` and you need to run the comman
 
 ### Restoring all projects
 
-**Option A:** In case you wanna use Nuke build-scripts to restore Frontend and Backend use the following commands:
-
-1) Build Backend: `.\build.cmd BackendCompile` (run from root folder)
-
-2) Build Frontend: `.\build.cmd FrontendBuild` (run from root folder)
+**Option A:** In case you wanna use Nuke build-scripts to restore Frontend and Backend use the following command  `.\build.cmd All` (this will take some time to processs)
 
 > **NOTE** This scripts use `npm`. In case you wanna use `yarn` you need to install maunaly using Option-B since Nuke does not support yarn yet..
+
+<p align="center">
+
+<img src="Doc/Assets/BuildPipe.PNG" alt="Build automation pipaline" >
+
+</p>
+
 
 </br>
 
