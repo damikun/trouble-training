@@ -10,14 +10,14 @@ using Nuke.Common.CI.GitHubActions;
 [GitHubActions(
     "backend-restore-build-and-test",
     GitHubActionsImage.WindowsLatest,
-    // GitHubActionsImage.UbuntuLatest,
+    GitHubActionsImage.UbuntuLatest,
     GitHubActionsImage.MacOsLatest,
     InvokedTargets = new[] { nameof(Backend_All) },
     On = new[] {
         GitHubActionsTrigger.PullRequest,
         GitHubActionsTrigger.Push
     },
-    AutoGenerate = true)]
+    AutoGenerate = false)]
 [GitHubActions(
     "frontend-restore-and-build",
     GitHubActionsImage.WindowsLatest,
@@ -27,7 +27,7 @@ using Nuke.Common.CI.GitHubActions;
          GitHubActionsTrigger.PullRequest,
          GitHubActionsTrigger.Push
     },
-    AutoGenerate = true)]
+    AutoGenerate = false)]
 [CheckBuildProjectConfigurations]
 [ShutdownDotNetAfterServerBuild]
 partial class Build : NukeBuild
@@ -39,14 +39,16 @@ partial class Build : NukeBuild
 
     [Solution] readonly Solution Solution;
     [GitRepository] readonly GitRepository GitRepository;
+    [Parameter("CI")] bool CI { get; } = false;
+
+    [Parameter("CdwedewdewdSI")] bool CdsadasdI { get; } = false;
+
 
     //---------------
     // Enviroment
     //---------------
 
     AbsolutePath SourceDirectory => RootDirectory / "Src";
-
-    [CI] readonly GitHubActions DevOpsPipeLine;
 
 
     //---------------
@@ -56,6 +58,16 @@ partial class Build : NukeBuild
     protected override void OnBuildInitialized()
     {
         Logger.Info("🚀 Build process started");
+
+        if (CI == false)
+        {
+            Logger.Info(
+                string.Format(
+                    "Env CI:{0}- Warnings are not equal as Errors on npm build time",
+                    CI
+                )
+            );
+        }
 
         base.OnBuildInitialized();
     }

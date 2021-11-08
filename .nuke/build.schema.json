@@ -6,6 +6,14 @@
     "build": {
       "type": "object",
       "properties": {
+        "CdsadasdI": {
+          "type": "boolean",
+          "description": "CdwedewdewdSI"
+        },
+        "CI": {
+          "type": "boolean",
+          "description": "CI"
+        },
         "Configuration": {
           "type": "string",
           "description": "Configuration to build - Default is 'Debug' (local) or 'Release' (server)",

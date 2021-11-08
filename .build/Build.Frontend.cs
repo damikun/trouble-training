@@ -85,9 +85,9 @@ partial class Build : NukeBuild
                         output.StartsWith("npm WARN", StringComparison.OrdinalIgnoreCase) ||
                         output.Contains("npmWARN", StringComparison.OrdinalIgnoreCase) ||
                         output.Contains("npm WARN", StringComparison.OrdinalIgnoreCase))
-                        Logger.Normal(output);
+                        Logger.Warn(output);
                     else
-                        Logger.Normal(output);
+                        Logger.Error(output);
 
                     break;
                 }
