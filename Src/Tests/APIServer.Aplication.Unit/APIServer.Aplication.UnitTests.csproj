@@ -24,7 +24,6 @@
     <ProjectReference Include="..\..\APIServer\API\APIServer.csproj" />
     <ProjectReference Include="..\..\APIServer\Persistence\APIServer.Persistence.csproj" />
 
-    <ProjectReference Include="../../../Shared/Aplication/Shared.Aplication.csproj" />
   </ItemGroup>
 
 </Project>

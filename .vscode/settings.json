@@ -1,4 +1,9 @@
 {
     "dotnet-test-explorer.enableTelemetry": false,
-    "dotnet-test-explorer.testProjectPath":"Src/**/*Tests.@(csproj|vbproj|fsproj)"
+    "dotnet-test-explorer.testProjectPath":"Src/**/*Tests.@(csproj|vbproj|fsproj)",
+    "editor.formatOnSave": true,
+    "editor.semanticHighlighting.enabled": true,
+    "csharp.semanticHighlighting.enabled": true,
+    "omnisharp.enableEditorConfigSupport": true,
+    "omnisharp.useGlobalMono": "always"
 }

@@ -60,6 +60,10 @@ ehthumbs.db
 Icon?
 Thumbs.db
 
+#nukeBuild
+./nuke/temp
+*.tmp
+*.tmp_proj
 
 # User-specific files
 *.user

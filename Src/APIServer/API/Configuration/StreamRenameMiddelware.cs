@@ -6,9 +6,9 @@ using HotChocolate.Language;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace APIServer.Configuration 
+namespace APIServer.Configuration
 {
-    
+
     internal sealed class StreamArgumentRewriteMiddelware
     {
         private readonly RequestDelegate _next;
@@ -22,46 +22,59 @@ namespace APIServer.Configuration
 
         public async ValueTask InvokeAsync(IRequestContext context)
         {
-            VisitNodes(context?.Document?.GetNodes());
+            if (context?.Document != null)
+            {
+                VisitNodes(context.Document.GetNodes());
 
-            await _next(context).ConfigureAwait(false);
+                await _next(context).ConfigureAwait(false);
+            }
+
         }
 
-        public static void VisitNodes(IEnumerable<ISyntaxNode> nodes){
+        public static void VisitNodes(IEnumerable<ISyntaxNode> nodes)
+        {
 
-            if(nodes == null){
+            if (nodes == null)
+            {
                 return;
             }
 
             foreach (var item in nodes)
             {
-                if(item!=null && item is ISelectionNode selectionNode){
+                if (item != null && item is ISelectionNode selectionNode)
+                {
 
-                    foreach (var directive in selectionNode?.Directives?.Where(s=>s?.Name?.Value == "stream"))
+                    foreach (var directive in selectionNode?.Directives?.Where(s => s?.Name?.Value == "stream"))
                     {
-                        RenameArgument(directive?.Arguments?
-                            .Where(e=>e.Name?.Value == "initial_count")
-                        );
+                        if (directive?.Arguments != null)
+                        {
+                            RenameArgument(directive.Arguments
+                                .Where(e => e.Name?.Value == "initial_count")
+                            );
+                        }
                     }
                 }
 
-                if(item !=null){
+                if (item != null)
+                {
                     VisitNodes(item.GetNodes());
                 }
             }
         }
 
-        public static void RenameArgument(IEnumerable<ArgumentNode> arguments){
+        public static void RenameArgument(IEnumerable<ArgumentNode> arguments)
+        {
             foreach (var argument in arguments)
-            {   
-                if(argument!=null){
+            {
+                if (argument != null)
+                {
                     argument.Name.WithValue("initialCount");
-                    
+
                     var some = typeof(NameNode).GetField(
                         "<Value>k__BackingField",
                         BindingFlags.Instance | BindingFlags.NonPublic
                     );
-                    
+
                     some?.SetValue(argument.Name, "initialCount");
                 }
             }

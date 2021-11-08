@@ -3,14 +3,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace APIServer.Controllers {
+namespace APIServer.Controllers
+{
 
     [AllowAnonymous]
-    public class HookController : BaseController {
+    public class HookController : BaseController
+    {
 
         private readonly ILogger<HookController> _logger;
 
-        public HookController(ILogger<HookController> logger) {
+        public HookController(ILogger<HookController> logger)
+        {
             _logger = logger;
         }
 
@@ -18,11 +21,21 @@ namespace APIServer.Controllers {
         /// This is hook test loopback echo controller
         /// </summary>
         [HttpPost]
-        public ActionResult HookLoopback([FromBody] object action) {
+        public ActionResult HookLoopback([FromBody] object action)
+        {
+            if (action.ToString() != null)
+            {
 
-            dynamic parsedJson = JsonConvert.DeserializeObject(action.ToString());  
+                var str = action.ToString();
 
-            return Ok();
+                if (str != null && !string.IsNullOrWhiteSpace(str))
+                {
+                    dynamic parsedJson = JsonConvert.DeserializeObject(str);
+                    return Ok();
+                }
+            }
+
+            return BadRequest();
         }
 
     }

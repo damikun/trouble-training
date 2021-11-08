@@ -76,11 +76,9 @@ On this monitoring graphical visualization, you can see entire request sended fr
 ## Setup projects and env.
 
 <p align="center">
-<h3>You can use <a href="https://www.youtube.com/watch?v=3LBqZiW_Hvo">step-by-step instalation video</a> which use this steps: </h3>
+<h3>You can use <a href="https://www.youtube.com/watch?v=3LBqZiW_Hvo">step-by-step instalation video</a> which use manual instalation process following this steps:</h3>
 </p>
 
-
-  - [Instal Net SDK](#instal-net-sdk)
   - [Download docker](#download-docker)
   - [Compose docker images](#compose-docker-images)
   - [Restoring all projects](#restoring-all-projects)
@@ -88,8 +86,6 @@ On this monitoring graphical visualization, you can see entire request sended fr
   - [Migrations](#migrations)
   - [Run Frontned and Backend](#run-frontned-and-backend)
   - [Run Elastic and Beats](#run-elastic-and-beats)
-
-
 
 To run this stack locally, you need to ensure thfollowing:
 - Make sure you have NET SDK installed. 
@@ -101,18 +97,6 @@ To run this stack locally, you need to ensure thfollowing:
 - You need to migrate all DBs (each project has its own migration folder).
 - Run the NetCore project from the terminal or back it up to Docker.
 
-</br>
-
-### Instal Net SDK
-
-[Make sure you have](https://dotnet.microsoft.com/download) Net 5.0 SDK installed. You can cheque the SDK version by running: `dotnet --list-sdks` in your terminal.
-
-```sh
-#Example output on Windows
-PS C:\Users\dakupc> dotnet --list-sdks
-5.0.100 [C:\Program Files\dotnet\sdk]
-5.0.201 [C:\Program Files\dotnet\sdk]
-```
 </br>
 
 ### Download docker
@@ -155,7 +139,32 @@ In each folder you will find `docker-compose.yml` and you need to run the comman
 
 ### Restoring all projects
 
-You can run Nuke build,Restore and Test by using `.\build.cmd` (from root folder) or do it manualy using this steps:
+**Option A:** In case you wanna use Nuke build-scripts to restore Frontend and Backend use the following commands:
+
+1) Build Backend: `.\build.cmd BackendCompile` (run from root folder)
+
+2) Build Frontend: `.\build.cmd FrontendBuild` (run from root folder)
+
+> **NOTE** This scripts use `npm`. In case you wanna use `yarn` you need to install maunaly using Option-B since Nuke does not support yarn yet..
+
+</br>
+
+
+**Option B:** In case you wanna do it step-by-step or use yarn or scripts does not work for you follow this steps:
+
+Manualy install .net-sdk:
+
+[Make sure you have](https://dotnet.microsoft.com/download) Net 5.0 SDK installed. You can cheque the SDK version by running: `dotnet --list-sdks` in your terminal.
+
+```sh
+#Example output on Windows
+PS C:\Users\dakupc> dotnet --list-sdks
+5.0.100 [C:\Program Files\dotnet\sdk]
+5.0.201 [C:\Program Files\dotnet\sdk]
+```
+</br>
+
+Manualy restore:
 
 Go to dirrectory: `APIServer/API` and run `dotnet restore`
 

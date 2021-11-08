@@ -71,10 +71,20 @@
           "items": {
             "type": "string",
             "enum": [
-              "Clean",
-              "Compile",
-              "Restore",
-              "Test"
+              "All",
+              "Backend_All",
+              "Backend_Clean",
+              "Backend_Compile",
+              "Backend_IntegrationTest",
+              "Backend_Restore",
+              "Backend_Test",
+              "Backend_UnitTest",
+              "Frontend_AddTailwind",
+              "Frontend_All",
+              "Frontend_Clean",
+              "Frontend_RelayCompile",
+              "Frontend_Restore",
+              "Frontend_TryBuild"
             ]
           }
         },
@@ -88,10 +98,20 @@
           "items": {
             "type": "string",
             "enum": [
-              "Clean",
-              "Compile",
-              "Restore",
-              "Test"
+              "All",
+              "Backend_All",
+              "Backend_Clean",
+              "Backend_Compile",
+              "Backend_IntegrationTest",
+              "Backend_Restore",
+              "Backend_Test",
+              "Backend_UnitTest",
+              "Frontend_AddTailwind",
+              "Frontend_All",
+              "Frontend_Clean",
+              "Frontend_RelayCompile",
+              "Frontend_Restore",
+              "Frontend_TryBuild"
             ]
           }
         },
