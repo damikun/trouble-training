@@ -62,11 +62,32 @@ partial class Build : NukeBuild
         .DependsOn(Frontend_AddTailwind, Frontend_RelayCompile)
         .Executes(() =>
         {
+            NpmTasks.NpmLogger = CustomLogger;
+
             NpmTasks.NpmRun(settings =>
                 settings
                     .SetCommand("build")
                     .SetProcessWorkingDirectory(FrontendDirectory)
             );
         });
+
+    public static void CustomLogger(OutputType type, string output)
+    {
+        switch (type)
+        {
+            case OutputType.Std:
+                Logger.Normal(output);
+                break;
+            case OutputType.Err:
+                {
+                    if (output.StartsWith("npmWARN"))
+                        Logger.Warn(output);
+                    else
+                        Logger.Error(output);
+
+                    break;
+                }
+        }
+    }
 
 }

@@ -9,7 +9,8 @@
 
 <h5 align="center" >
   
-![example workflow](https://github.com/damikun/trouble-training/actions/workflows/build-and-test.yml/badge.svg)
+![Backend](https://github.com/damikun/trouble-training/actions/workflows/backend-restore-build-and-test.yml/badge.svg,)
+![Frontend](https://github.com/damikun/trouble-training/actions/workflows/frontend-restore-and-build.yml/badge.svg)
 
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/WebHookBackend.md" >WebHook backend setup</a></br>
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/Logging.md" >Configure Logging</a></br>

@@ -95,12 +95,12 @@
     "babel-plugin-relay": "12.0.0",
     "cypress": "8.6.0",
     "fs-extra": "9.1.0",
+    "nan": "^2.15.0",
     "postcss": "^7.0.39",
     "relay-compiler": "12.0.0",
     "relay-compiler-language-typescript": "14.3.0",
     "relay-config": "11.0.2",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17",
-    "nan": "^2.15.0"
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17"
   },
   "browserslist": {
     "production": [
