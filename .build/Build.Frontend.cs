@@ -1,3 +1,4 @@
+using System;
 using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
@@ -80,8 +81,11 @@ partial class Build : NukeBuild
                 break;
             case OutputType.Err:
                 {
-                    if (output.StartsWith("npmWARN") || output.StartsWith("npm WARN"))
-                        Logger.Warn(output);
+                    if (output.StartsWith("npmWARN", StringComparison.OrdinalIgnoreCase) ||
+                        output.StartsWith("npm WARN", StringComparison.OrdinalIgnoreCase) ||
+                        output.Contains("npmWARN", StringComparison.OrdinalIgnoreCase) ||
+                        output.Contains("npm WARN", StringComparison.OrdinalIgnoreCase))
+                        Logger.Normal(output);
                     else
                         Logger.Error(output);
 

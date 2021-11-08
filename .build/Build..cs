@@ -46,6 +46,8 @@ partial class Build : NukeBuild
 
     AbsolutePath SourceDirectory => RootDirectory / "Src";
 
+    [CI] readonly GitHubActions DevOpsPipeLine;
+
 
     //---------------
     // Build process
