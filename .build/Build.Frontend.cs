@@ -87,7 +87,7 @@ partial class Build : NukeBuild
                         output.Contains("npm WARN", StringComparison.OrdinalIgnoreCase))
                         Logger.Normal(output);
                     else
-                        Logger.Error(output);
+                        Logger.Normal(output);
 
                     break;
                 }
