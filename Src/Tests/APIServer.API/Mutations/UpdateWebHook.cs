@@ -10,13 +10,15 @@ namespace APIServer.API.IntegrationTests.WebHooks
     public class UpdateWebHookTests : BaseClassFixture
     {
 
-        public UpdateWebHookTests(XunitFixture fixture):base(fixture){
+        public UpdateWebHookTests(XunitFixture fixture) : base(fixture)
+        {
 
         }
 
-        public static string GetTestMutation(){
+        public static string GetTestMutation()
+        {
 
-            return  @"mutation($request: UpdateWebHookInput){
+            return @"mutation($request: UpdateWebHookInput){
                 updateWebHook(request:$request){
                     ... on UpdateWebHookPayload{
                     hook{
@@ -46,8 +48,10 @@ namespace APIServer.API.IntegrationTests.WebHooks
 
             var mutation = GetTestMutation();
 
-            var variables =  new { 
-                request = new { 
+            var variables = new
+            {
+                request = new
+                {
                     webHookId = 1,
                     isActive = false,
                     webHookUrl = "https://somenewurl"
@@ -58,7 +62,7 @@ namespace APIServer.API.IntegrationTests.WebHooks
               Common.GetDefaultUser(),
               Common.GetDefaultClinet());
 
-            var response = await HttpClient.ProcessQuery(mutation,variables);
+            var response = await HttpClient.ProcessQuery(mutation, variables);
 
             response.raw_response.StatusCode.Should().Be(200);
 
@@ -72,9 +76,11 @@ namespace APIServer.API.IntegrationTests.WebHooks
 
             var mutation = GetTestMutation();
 
-            var variables =  new { 
-                request = new { 
-                    webHookId = 999,
+            var variables = new
+            {
+                request = new
+                {
+                    webHookId = 9999,
                     isActive = false,
                     webHookUrl = "https://somenewurl"
                 }
@@ -84,28 +90,30 @@ namespace APIServer.API.IntegrationTests.WebHooks
               Common.GetDefaultUser(),
               Common.GetDefaultClinet());
 
-            var response = await HttpClient.ProcessQuery(mutation,variables);
+            var response = await HttpClient.ProcessQuery(mutation, variables);
 
             response.raw_response.StatusCode.Should().Be(200);
 
             Snapshot.Match(response.data_content);
         }
-       
+
         [Fact]
         public async Task UpdateWebHook_Unauthorised()
         {
 
             var mutation = GetTestMutation();
-            
-            var variables =  new { 
-                request = new { 
+
+            var variables = new
+            {
+                request = new
+                {
                     webHookId = 1,
                     isActive = false,
                     webHookUrl = "https://somenewurl"
                 }
             };
 
-            var response = await HttpClient.ProcessQuery(mutation,variables);
+            var response = await HttpClient.ProcessQuery(mutation, variables);
 
             response.raw_response.StatusCode.Should().Be(200);
 
