@@ -14,7 +14,7 @@ partial class Build : NukeBuild
     AbsolutePath Backend_TestsDirectory => RootDirectory / "Src" / "Tests";
     AbsolutePath Backend_Unit_Tests_Directory => RootDirectory / "Src" / "Tests" / "APIServer.Aplication.Unit";
     AbsolutePath Backend_Integration_Tests_Directory => RootDirectory / "Src" / "Tests" / "APIServer.Aplication.Integration";
-    AbsolutePath Backend_API_Tests_Directory => RootDirectory / "Src" / "Tests" / "APIServer.API.Tests";
+    AbsolutePath Backend_API_Tests_Directory => RootDirectory / "Src" / "Tests" / "APIServer.API";
 
 
     //---------------
