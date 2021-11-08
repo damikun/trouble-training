@@ -33,6 +33,8 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
       - name: Run './build.cmd Frontend_All'
         run: ./build.cmd Frontend_All
+        env:
+          CI: false
   macOS-latest:
     name: macOS-latest
     runs-on: macOS-latest
@@ -47,3 +49,5 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
       - name: Run './build.cmd Frontend_All'
         run: ./build.cmd Frontend_All
+        env:
+          CI: false
