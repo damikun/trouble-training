@@ -80,7 +80,7 @@ partial class Build : NukeBuild
                 break;
             case OutputType.Err:
                 {
-                    if (output.StartsWith("npmWARN"))
+                    if (output.StartsWith("npmWARN") || output.StartsWith("npm WARN"))
                         Logger.Warn(output);
                     else
                         Logger.Error(output);
