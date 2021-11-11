@@ -16,7 +16,12 @@
 
 name: backend-restore-build-and-test
 
-on: [pull_request, push]
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
 
 jobs:
   windows-latest:

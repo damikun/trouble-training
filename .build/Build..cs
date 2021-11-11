@@ -13,10 +13,12 @@ using Nuke.Common.CI.GitHubActions;
     InvokedTargets = new[] {
          nameof(Backend_All)
     },
-    On = new[] {
-        GitHubActionsTrigger.PullRequest,
-        GitHubActionsTrigger.Push
-    },
+    // On = new[] {
+    //     GitHubActionsTrigger.PullRequest,
+    //     GitHubActionsTrigger.Push
+    // },
+    OnPushIncludePaths = new[] { "src/**" },
+    OnPushBranches = new[] { "main" },
     AutoGenerate = true)]
 [GitHubActions(
     "frontend-restore-and-build",
@@ -25,10 +27,12 @@ using Nuke.Common.CI.GitHubActions;
     InvokedTargets = new[] {
          nameof(Frontend_All)
     },
-    On = new[] {
-         GitHubActionsTrigger.PullRequest,
-         GitHubActionsTrigger.Push
-    },
+    // On = new[] {
+    //      GitHubActionsTrigger.PullRequest,
+    //      GitHubActionsTrigger.Push
+    // },
+    OnPushIncludePaths = new[] { "src/**" },
+    OnPushBranches = new[] { "main" },
     AutoGenerate = false)]
 [CheckBuildProjectConfigurations]
 [ShutdownDotNetAfterServerBuild]

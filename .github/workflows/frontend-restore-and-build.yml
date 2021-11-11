@@ -16,7 +16,12 @@
 
 name: frontend-restore-and-build
 
-on: [pull_request, push]
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/**"
 
 jobs:
   windows-latest:
