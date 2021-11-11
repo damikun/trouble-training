@@ -81,14 +81,22 @@ partial class Build : NukeBuild
                 break;
             case OutputType.Err:
                 {
-                    if (output.StartsWith("npmWARN", StringComparison.OrdinalIgnoreCase) ||
-                        output.StartsWith("npm WARN", StringComparison.OrdinalIgnoreCase) ||
-                        output.Contains("npmWARN", StringComparison.OrdinalIgnoreCase) ||
-                        output.Contains("npm WARN", StringComparison.OrdinalIgnoreCase))
-                        Logger.Warn(output);
-                    else
-                        Logger.Error(output);
+                    if (
+                        output.Contains(
+                            "npmWARN",
+                            StringComparison.OrdinalIgnoreCase
+                        ) ||
 
+                        output.Contains(
+                            "npm WARN",
+                            StringComparison.OrdinalIgnoreCase
+                        ))
+
+                        Logger.Warn(output);
+
+                    else
+
+                        Logger.Error(output);
                     break;
                 }
         }

@@ -15,7 +15,7 @@
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/Identity.md">Configure Identity</a></br>
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/ElasticSearch.md">Configure Monitoring</a></br>
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/GraphQL%20-%20MutationErrors.md">Handle GraphQL Errors</a></br>
-
+  <a href="https://github.com/damikun/trouble-training/blob/main/Doc/BuildSystem.md">Build Automation</a></br>
 </br>
 
 ![Backend](https://github.com/damikun/trouble-training/actions/workflows/backend-restore-build-and-test.yml/badge.svg)
@@ -51,7 +51,8 @@ Please follow these steps if you want to understand it because of the connection
 3) [Configure telemetry](Doc/OpenTelemetry.md) - I`ll show you how to properly set up Opentelemetry and Elastic APM.
 4) [Configure identity](Doc/Identity.md) - You`ll learn how to use the BFF pattern to secure your application.
 5) [Configure monitoring](Doc/ElasticSearch.md) - You will learn how to monitor the entire app stack (this depends on parts 1 and 2).
-6) [Handle GraphQL Mutation errors](https://github.com/damikun/trouble-training/blob/main/Doc/GraphQL%20-%20MutationErrors.md) - You will learn how to integrate *6a* Union with Interface pattern.
+6) [Handle GraphQL Mutation errors](https://github.com/damikun/trouble-training/blob/main/Doc/GraphQL%20-%20MutationErrors.md) - You will learn how to integrate *6a* pattern.
+7) [Build automation and workflows](Doc/BuildSystem.md) - You will learn how to setup build plan and generate workflows.
 
 <br />
 <p align="center">

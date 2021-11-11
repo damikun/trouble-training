@@ -6,22 +6,25 @@ using Nuke.Common.Execution;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.CI.GitHubActions;
 
-
 [GitHubActions(
     "backend-restore-build-and-test",
     GitHubActionsImage.WindowsLatest,
     GitHubActionsImage.MacOsLatest,
-    InvokedTargets = new[] { nameof(Backend_All) },
+    InvokedTargets = new[] {
+         nameof(Backend_All)
+    },
     On = new[] {
         GitHubActionsTrigger.PullRequest,
         GitHubActionsTrigger.Push
     },
-    AutoGenerate = false)]
+    AutoGenerate = true)]
 [GitHubActions(
     "frontend-restore-and-build",
     GitHubActionsImage.WindowsLatest,
     GitHubActionsImage.MacOsLatest,
-    InvokedTargets = new[] { nameof(Frontend_All) },
+    InvokedTargets = new[] {
+         nameof(Frontend_All)
+    },
     On = new[] {
          GitHubActionsTrigger.PullRequest,
          GitHubActionsTrigger.Push
@@ -33,10 +36,17 @@ partial class Build : NukeBuild
 {
     public static int Main() => Execute<Build>(x => x.Backend_Compile);
 
+    //---------------
+    // Params and Definitions
+    //---------------
+
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
+    [Parameter] readonly bool CI = false;
+
     [Solution] readonly Solution Solution;
+
     [GitRepository] readonly GitRepository GitRepository;
 
     //---------------
@@ -44,7 +54,6 @@ partial class Build : NukeBuild
     //---------------
 
     AbsolutePath SourceDirectory => RootDirectory / "Src";
-
 
     //---------------
     // Build process
@@ -58,13 +67,19 @@ partial class Build : NukeBuild
     }
 
     Target Backend_All => _ => _
-        .DependsOn(Backend_Clean, Backend_Test);
+        .DependsOn(
+            Backend_Clean,
+            Backend_Test
+        );
 
     Target Frontend_All => _ => _
-        .DependsOn(Frontend_Clean, Frontend_TryBuild);
+        .DependsOn(
+            Frontend_Clean,
+            Frontend_TryBuild
+        );
+
     Target All => _ => _
         .DependsOn(
             Backend_All,
             Frontend_All);
-
 }
