@@ -17,7 +17,7 @@ using Nuke.Common.CI.GitHubActions;
     //     GitHubActionsTrigger.PullRequest,
     //     GitHubActionsTrigger.Push
     // },
-    OnPushIncludePaths = new[] { "src/**" },
+    OnPushIncludePaths = new[] { "Src/**" },
     OnPushBranches = new[] { "main" },
     AutoGenerate = true)]
 [GitHubActions(
@@ -31,7 +31,7 @@ using Nuke.Common.CI.GitHubActions;
     //      GitHubActionsTrigger.PullRequest,
     //      GitHubActionsTrigger.Push
     // },
-    OnPushIncludePaths = new[] { "src/**" },
+    OnPushIncludePaths = new[] { "Src/**" },
     OnPushBranches = new[] { "main" },
     AutoGenerate = false)]
 [CheckBuildProjectConfigurations]

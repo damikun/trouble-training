@@ -21,7 +21,7 @@ on:
     branches:
       - main
     paths:
-      - 'src/**'
+      - "Src/**"
 
 jobs:
   windows-latest:
