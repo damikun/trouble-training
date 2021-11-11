@@ -237,10 +237,8 @@ Let us take a look at Main `Build.cs` for this demo:
     GitHubActionsImage.WindowsLatest,
     GitHubActionsImage.MacOsLatest,
     InvokedTargets = new[] { nameof(Backend_All) },
-    On = new[] {
-        GitHubActionsTrigger.PullRequest,
-        GitHubActionsTrigger.Push
-    },
+    OnPushIncludePaths = new[] { "Src/**" },
+    OnPushBranches = new[] { "main" },
     AutoGenerate = true)]
 [GitHubActions(
     "frontend-restore-and-build",
@@ -251,6 +249,7 @@ Let us take a look at Main `Build.cs` for this demo:
          GitHubActionsTrigger.PullRequest,
          GitHubActionsTrigger.Push
     },
+    OnPushBranches = new[] { "main" },
     AutoGenerate = false)]
 [CheckBuildProjectConfigurations]
 [ShutdownDotNetAfterServerBuild]
@@ -326,7 +325,12 @@ This informs Nuke to generate the source code as `.github/workflows/backend-rest
 ```yaml
 name: backend-restore-build-and-test
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "Src/**"
 
 jobs:
   windows-latest:
