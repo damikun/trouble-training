@@ -14,11 +14,10 @@ using Nuke.Common.Tools.GitVersion;
     InvokedTargets = new[] {
          nameof(Backend_All)
     },
-    // On = new[] {
-    //     GitHubActionsTrigger.PullRequest,
-    //     GitHubActionsTrigger.Push
-    // },
-    OnPushIncludePaths = new[] { "Src/**" },
+    OnPushIncludePaths = new[] {
+        "Src/**",
+        ".build/**"
+    },
     OnPushBranches = new[] { "main" },
     AutoGenerate = true)]
 [GitHubActions(
@@ -32,7 +31,10 @@ using Nuke.Common.Tools.GitVersion;
     //      GitHubActionsTrigger.PullRequest,
     //      GitHubActionsTrigger.Push
     // },
-    OnPushIncludePaths = new[] { "Src/**" },
+    OnPushIncludePaths = new[] {
+        "Src/**",
+        ".build/**"
+    },
     OnPushBranches = new[] { "main" },
     AutoGenerate = false)]
 [CheckBuildProjectConfigurations]
