@@ -1,8 +1,10 @@
 using Nuke.Common;
 using Nuke.Common.IO;
+using Nuke.Common.Tooling;
 using Nuke.Common.Tools.NuGet;
 using Nuke.Common.Tools.DotNet;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
+
 
 partial class Build : NukeBuild
 {
@@ -45,9 +47,17 @@ partial class Build : NukeBuild
         {
             DotNetTest(s => s
                 .SetProjectFile(Backend_Integration_Tests_Directory)
-                .SetConfiguration(Configuration)
-                .EnableNoRestore()
-                .EnableNoBuild());
+
+                // .SetConfiguration(Configuration)
+                // .EnableNoRestore()
+                // .EnableNoBuild()
+
+                // Alternativaly you can name your aruments manualy
+                .SetProcessArgumentConfigurator(arguments => arguments
+                .Add($"--configuration {Configuration}")
+                .Add("--no-restore")
+                .Add("--no-build")
+                .Add("--logger console;verbosity=normal")));
         });
 
     Target Backend_APITest => _ => _

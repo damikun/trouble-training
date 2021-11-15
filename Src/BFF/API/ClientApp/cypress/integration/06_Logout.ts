@@ -23,7 +23,7 @@ describe('Logout Tests', () => {
     .click()
 
     cy.contains("You are now logged out")
-
+    
   });
 
 });

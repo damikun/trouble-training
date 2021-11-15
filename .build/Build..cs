@@ -5,6 +5,7 @@ using Nuke.Common.IO;
 using Nuke.Common.Execution;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.CI.GitHubActions;
+using Nuke.Common.Tools.GitVersion;
 
 [GitHubActions(
     "backend-restore-build-and-test",
@@ -51,6 +52,8 @@ partial class Build : NukeBuild
 
     [Solution] readonly Solution Solution;
 
+    [GitVersion] readonly GitVersion GitVersion;
+
     [GitRepository] readonly GitRepository GitRepository;
 
     //---------------
@@ -73,7 +76,8 @@ partial class Build : NukeBuild
     Target Backend_All => _ => _
         .DependsOn(
             Backend_Clean,
-            Backend_Test
+            Backend_Test,
+            Backend_Dockerize
         );
 
     Target Frontend_All => _ => _
@@ -86,5 +90,16 @@ partial class Build : NukeBuild
         .DependsOn(
             Backend_All,
             Frontend_All);
+
+
+    Target E2ETests => _ => _
+        .DependsOn(
+            Backend_All,
+            Frontend_All)
+        .Executes(() =>
+        {
+
+
+        });
 
 }

@@ -1,10 +1,13 @@
-
 using System;
 using System.Linq;
 using Nuke.Common;
 using Nuke.Common.IO;
+using Nuke.Common.Git;
+using Nuke.Common.Tooling;
 using Nuke.Common.Tools.NuGet;
 using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.Docker;
+using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Utilities.Collections;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
@@ -17,6 +20,10 @@ partial class Build : NukeBuild
     // Enviroment
     //---------------
 
+    AbsolutePath OutputDirectory => RootDirectory / "out";
+    AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
+    AbsolutePath APIServerDockerFile => RootDirectory / "Src" / "APIServer" / "API" / "DockerFile";
+    AbsolutePath APIServerDockerOutput => RootDirectory / "Docker" / ".build" / "APIServer";
 
     //---------------
     // Build process
@@ -44,7 +51,10 @@ partial class Build : NukeBuild
         .Executes(() =>
         {
             DotNetRestore(s => s
-                .SetProjectFile(Solution));
+                .SetProjectFile(Solution)
+            //.DisableProcessLogInvocation()
+            // .DisableProcessLogOutput()
+            );
         });
 
     Target Backend_Compile => _ => _
@@ -54,6 +64,36 @@ partial class Build : NukeBuild
             DotNetBuild(s => s
                 .SetProjectFile(Solution)
                 .SetConfiguration(Configuration)
-                .EnableNoRestore());
+                .EnableNoRestore()
+                .SetCopyright($"Copyright © DaliborKundrat {DateTime.Now.Year}")
+            // .SetOutputDirectory(OutputDirectory)
+            );
         });
+
+    Target Backend_Dockerize => _ => _
+        .After(Backend_Compile)
+        .Executes(() =>
+        {
+
+            DockerTasks.DockerVersion();
+
+
+        });
+
+    // Pack is only as exemple
+    Target Backend_Pack => _ => _
+        .DependsOn(Backend_Compile)
+        .OnlyWhenStatic(() => GitRepository.IsOnMasterBranch())
+        .Produces(ArtifactsDirectory / "*.nupkg")
+        .Executes(() =>
+        {
+            DotNetPack(s => s
+                .EnableNoBuild()
+                .EnableNoCache()
+                .SetAuthors("Dalibor Kundrat")
+                .EnableNoRestore()
+                .SetProject(Solution)
+                .SetOutputDirectory(ArtifactsDirectory));
+        });
+
 }

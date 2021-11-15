@@ -3,12 +3,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-namespace APIServer.Configuration {
-    public static partial class ServiceExtension {
+namespace APIServer.Configuration
+{
+    public static partial class ServiceExtension
+    {
 
         public static IServiceCollection AddAuth(
             this IServiceCollection serviceCollection,
-            IConfiguration Configuration) {
+            IConfiguration Configuration)
+        {
 
 
             serviceCollection.AddAuthentication("token")
@@ -20,10 +23,13 @@ namespace APIServer.Configuration {
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateAudience = false,
+                    ValidateIssuer = true,
+                    ValidateLifetime = true,
+
                     ValidTypes = new[] { "at+jwt" },
-                    
+
                     NameClaimType = "name",
-                    RoleClaimType = "role" 
+                    RoleClaimType = "role"
                 };
             });
 
@@ -33,7 +39,7 @@ namespace APIServer.Configuration {
                 {
                     policy.RequireClaim("scope", "api");
                 });
-                
+
             });
 
             JwtSecurityTokenHandler.DefaultMapInboundClaims = true;
