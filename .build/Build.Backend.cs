@@ -72,12 +72,10 @@ partial class Build : NukeBuild
 
     Target Backend_Dockerize => _ => _
         .After(Backend_Compile)
+        .OnlyWhenStatic(() => EnvironmentInfo.IsLinux || EnvironmentInfo.IsWin)
         .Executes(() =>
         {
-
-            // DockerTasks.DockerVersion();
-
-
+            DockerTasks.DockerVersion();
         });
 
     // Pack is only as exemple
