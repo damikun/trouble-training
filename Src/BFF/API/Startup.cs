@@ -1,18 +1,18 @@
 // Copyright (c) Dalibor Kundrat All rights reserved.
 // See LICENSE in root.
 
+using Duende.Bff;
+using BFF.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Duende.Bff;
-using Microsoft.AspNetCore.HttpOverrides;
-using BFF.Configuration;
+using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 
 namespace BFF
-{    
+{
     public class Startup
     {
         public Startup(IConfiguration configuration, IWebHostEnvironment enviroment)
@@ -33,7 +33,8 @@ namespace BFF
             services.AddControllersWithViews();
 
             // In production, the React files will be served from this directory
-            services.AddSpaStaticFiles(configuration => {
+            services.AddSpaStaticFiles(configuration =>
+            {
                 configuration.RootPath = "ClientApp/build";
             });
 
@@ -42,21 +43,24 @@ namespace BFF
             services.AddIdentityConfiguration();
 
             services.AddHealthChecks();
-        
-            services.Configure<ForwardedHeadersOptions>(options => {
+
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
             });
-            
-            services.AddTelemerty(Configuration,Environment);
+
+            services.AddTelemerty(Configuration, Environment);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment()) {
+            if (env.IsDevelopment())
+            {
                 app.UseDeveloperExceptionPage();
             }
-            else {
+            else
+            {
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
@@ -81,16 +85,17 @@ namespace BFF
 
             app.UseAuthorization(); // adds authorization for local and remote API endpoints
 
-            app.UseEndpoints(endpoints => {
+            app.UseEndpoints(endpoints =>
+            {
 
                 // local APIs
                 endpoints.MapControllers()
                     .RequireAuthorization()
                     .AsBffApiEndpoint();
-                    
+
                 endpoints.MapBffManagementEndpoints();   // login, logout, user, backchannel logout...
 
-                bool csrf_protection_enabled =  !env.IsDevelopment();
+                bool csrf_protection_enabled = !env.IsDevelopment();
 
                 // proxy endpoint for cross-site APIs
                 // all calls to /api/* will be forwarded to the remote API
@@ -100,37 +105,52 @@ namespace BFF
                     "/graphql",
                     "https://localhost:5022/graphql",
                     csrf_protection_enabled)
-                .WithOptionalUserAccessToken()          
+                .WithOptionalUserAccessToken()
                 .AllowAnonymous();
 
                 endpoints.MapRemoteBffApiEndpoint(
                     "/traces",
                     "http://localhost:55690/v1/traces",
-                    csrf_protection_enabled)      
+                    csrf_protection_enabled)
                 .AllowAnonymous();
 
-                if (env.IsDevelopment()) {
+                if (env.IsDevelopment())
+                {
 
                     endpoints.MapRemoteBffApiEndpoint(
                         "/hookloopback",
                         "https://localhost:5022/api/Hook/hookloopback",
-                        false)    
+                        false)
+                    .AllowAnonymous();
+
+                    endpoints.MapRemoteBffApiEndpoint(
+                        "/reset",
+                        "https://localhost:5022/api/Test/ClearDatabase",
+                        false)
                     .AllowAnonymous();
 
                     endpoints.MapRemoteBffApiEndpoint(
                         "/scheduler",
                         "https://localhost:5022/scheduler",
                         csrf_protection_enabled)
-                    .WithOptionalUserAccessToken()  
+                    .WithOptionalUserAccessToken()
+                    .AllowAnonymous();
+
+                    endpoints.MapRemoteBffApiEndpoint(
+                        "/swagger",
+                        "https://localhost:5022/swagger",
+                        csrf_protection_enabled)
                     .AllowAnonymous();
                 }
-            
+
             });
 
-            app.UseSpa(spa => {
+            app.UseSpa(spa =>
+            {
                 spa.Options.SourcePath = "ClientApp";
 
-                if (env.IsDevelopment()){
+                if (env.IsDevelopment())
+                {
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });

@@ -15,7 +15,7 @@
     "@testing-library/react": "11.1.0",
     "@testing-library/user-event": "12.1.10",
     "@types/js-cookie": "2.2.7",
-    "@types/mocha": "9.0.0",
+    "@types/mocha": "^9.0.0",
     "axios": "0.21.4",
     "babel-plugin-import": "1.13.3",
     "clsx": "1.1.1",
@@ -61,7 +61,8 @@
     "startwatch": "npm run watch:css && craco start start",
     "start": "craco start",
     "build": "craco build",
-    "test": "cypress open",
+    "test": "cypress run --config pageLoadTimeout=30000,baseUrl=https://localhost:5015",
+    "cypress": "cypress open --config pageLoadTimeout=30000,baseUrl=https://localhost:5015",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

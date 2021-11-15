@@ -36,7 +36,8 @@ namespace APIServer
         {
             services.AddControllers();
 
-            services.AddSwaggerGen(c =>{
+            services.AddSwaggerGen(c =>
+            {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api", Version = "v1" });
             });
 
@@ -72,13 +73,15 @@ namespace APIServer
              IServiceProvider serviceProvider,
              IServiceScopeFactory scopeFactory)
         {
-            app.UseForwardedHeaders(new ForwardedHeadersOptions{
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost,
             });
 
-            app.UseEnsureApiContextCreated(serviceProvider,scopeFactory);
+            app.UseEnsureApiContextCreated(serviceProvider, scopeFactory);
 
-            if (env.IsDevelopment()) {
+            if (env.IsDevelopment())
+            {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Api v1"));
@@ -96,19 +99,24 @@ namespace APIServer
 
             app.UseHangfireServer();
 
-            if(env.IsDevelopment()){
+            if (env.IsDevelopment())
+            {
                 app.UseHangfireDashboard("/scheduler");
             }
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers()
-                    .RequireAuthorization("ApiCaller");
+                endpoints.MapControllers();
+                // .RequireAuthorization("ApiCaller");
 
                 endpoints.MapGraphQL()
-                .WithOptions(new GraphQLServerOptions {
+                .WithOptions(new GraphQLServerOptions
+                {
                     EnableSchemaRequests = env.IsDevelopment(),
-                    Tool = { Enable = env.IsDevelopment() },
+                    Tool = {
+                        Enable = env.IsDevelopment(),
+                        DisableTelemetry = true
+                    },
                 });
 
                 endpoints.MapControllerRoute(
@@ -120,7 +128,7 @@ namespace APIServer
 
         public virtual void ConfigureDBContext(IServiceCollection services)
         {
-            services.AddDbContext(Configuration,Environment);
+            services.AddDbContext(Configuration, Environment);
         }
 
         public virtual void ConfigureScheduler(IServiceCollection services)
@@ -130,7 +138,7 @@ namespace APIServer
 
         public virtual void ConfigureTelemetry(IServiceCollection services)
         {
-            services.AddTelemerty(Configuration,Environment);
+            services.AddTelemerty(Configuration, Environment);
         }
 
         public virtual void ConfigureAuth(IServiceCollection services)

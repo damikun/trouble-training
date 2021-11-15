@@ -47,6 +47,7 @@ export type DropDownMenuProps = {
   position?: keyof typeof POSITION_VARIANTS;
   orientation?: keyof typeof ORIENTATION_VARIANTS;
   preventCloseOnClick?: boolean;
+  id?:string
 };
 
 export type DropDownContextType = {
@@ -76,6 +77,7 @@ function DropDownMenu({
   position = "bottomleft",
   orientation = "downright",
   preventCloseOnClick = false,
+  id
 }: DropDownMenuProps) {
   const [visible, setVisible] = useState(false);
 
@@ -150,6 +152,7 @@ function DropDownMenu({
       value={dropDownContext(enabled ? enabled : false)}
     >
       <div
+        id={id}
         onClick={handleClick}
         ref={parrent}
         className={clsx(

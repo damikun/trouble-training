@@ -121,62 +121,57 @@ return {
           "storageKey": null
         },
         {
-          "kind": "Stream",
+          "alias": null,
+          "args": null,
+          "concreteType": "WebhooksEdge",
+          "kind": "LinkedField",
+          "name": "edges",
+          "plural": true,
           "selections": [
             {
               "alias": null,
               "args": null,
-              "concreteType": "WebhooksEdge",
+              "concreteType": "GQL_WebHook",
               "kind": "LinkedField",
-              "name": "edges",
-              "plural": true,
+              "name": "node",
+              "plural": false,
               "selections": [
                 {
                   "alias": null,
                   "args": null,
-                  "concreteType": "GQL_WebHook",
-                  "kind": "LinkedField",
-                  "name": "node",
-                  "plural": false,
-                  "selections": [
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "id",
-                      "storageKey": null
-                    },
-                    {
-                      "alias": null,
-                      "args": null,
-                      "kind": "ScalarField",
-                      "name": "__typename",
-                      "storageKey": null
-                    },
-                    {
-                      "kind": "Defer",
-                      "selections": [
-                        {
-                          "args": null,
-                          "kind": "FragmentSpread",
-                          "name": "HooksItemFragment"
-                        }
-                      ]
-                    }
-                  ],
+                  "kind": "ScalarField",
+                  "name": "id",
                   "storageKey": null
                 },
                 {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
-                  "name": "cursor",
+                  "name": "__typename",
                   "storageKey": null
+                },
+                {
+                  "kind": "Defer",
+                  "selections": [
+                    {
+                      "args": null,
+                      "kind": "FragmentSpread",
+                      "name": "HooksItemFragment"
+                    }
+                  ]
                 }
               ],
               "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "cursor",
+              "storageKey": null
             }
-          ]
+          ],
+          "storageKey": null
         },
         {
           "kind": "ClientExtension",
@@ -198,5 +193,5 @@ return {
   "abstractKey": null
 };
 })();
-(node as any).hash = '3110e82c2371d7327607d76ff9664771';
+(node as any).hash = '3d451160ba83f216a90e27b9503e3610';
 export default node;

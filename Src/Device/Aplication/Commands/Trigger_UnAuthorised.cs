@@ -6,18 +6,22 @@ using SharedCore.Aplication.Payload;
 using Device.Aplication.Shared.Errors;
 using System.Net.Http;
 
-namespace Device.Aplication.Commands.Test {
+namespace Device.Aplication.Commands.Test
+{
 
-    public class Trigger_UnAuthorised : IRequest<Trigger_UnAuthorisedPayload> {
+    public class Trigger_UnAuthorised : IRequest<Trigger_UnAuthorisedPayload>
+    {
 
     }
 
     /// <summary>
     /// Trigger_UnAuthorised Validator
     /// </summary>
-    public class Trigger_UnAuthorisedValidator : AbstractValidator<Trigger_UnAuthorised> {
+    public class Trigger_UnAuthorisedValidator : AbstractValidator<Trigger_UnAuthorised>
+    {
 
-        public Trigger_UnAuthorisedValidator(){
+        public Trigger_UnAuthorisedValidator()
+        {
 
         }
     }
@@ -30,12 +34,14 @@ namespace Device.Aplication.Commands.Test {
     /// <summary>
     /// Trigger_UnAuthorisedPayload
     /// </summary>
-    public class Trigger_UnAuthorisedPayload : BasePayload<Trigger_UnAuthorisedPayload, ITrigger_UnAuthorisedError> {
+    public class Trigger_UnAuthorisedPayload : BasePayload<Trigger_UnAuthorisedPayload, ITrigger_UnAuthorisedError>
+    {
 
     }
 
     /// <summary>Handler for <c>Trigger_UnAuthorised</c> command </summary>
-    public class Trigger_UnAuthorisedHandler : IRequestHandler<Trigger_UnAuthorised, Trigger_UnAuthorisedPayload> {
+    public class Trigger_UnAuthorisedHandler : IRequestHandler<Trigger_UnAuthorised, Trigger_UnAuthorisedPayload>
+    {
 
         /// <summary>
         /// Injected <c>IHttpClientFactory</c>
@@ -46,27 +52,32 @@ namespace Device.Aplication.Commands.Test {
         /// Main constructor
         /// </summary>
         public Trigger_UnAuthorisedHandler(
-            IHttpClientFactory clientFactory) {
-                _clientFactory = clientFactory;
-            }
+            IHttpClientFactory clientFactory)
+        {
+            _clientFactory = clientFactory;
+        }
 
         /// <summary>
         /// Command handler for <c>Trigger_UnAuthorised</c>
         /// </summary>
-        public async Task<Trigger_UnAuthorisedPayload> Handle(Trigger_UnAuthorised request, CancellationToken cancellationToken) {
+        public async Task<Trigger_UnAuthorisedPayload> Handle(Trigger_UnAuthorised request, CancellationToken cancellationToken)
+        {
 
 
             var client = _clientFactory.CreateClient("client_without_token_managment");
-            
-            var client_response = await client.GetAsync("TestAuth/TestClientCredentials", cancellationToken);
 
-            if(client_response.IsSuccessStatusCode ){
+            var client_response = await client.GetAsync("Test/TestClientCredentials", cancellationToken);
+
+            if (client_response.IsSuccessStatusCode)
+            {
                 var response = Trigger_UnAuthorisedPayload.Success();
                 return response;
-            }else{
+            }
+            else
+            {
                 var response = Trigger_UnAuthorisedPayload.Error(new InternalServerError(
-                    string.Format("Failed to process api call status code: {0}",client_response.StatusCode)));
-                
+                    string.Format("Failed to process api call status code: {0}", client_response.StatusCode)));
+
                 return response;
             }
         }

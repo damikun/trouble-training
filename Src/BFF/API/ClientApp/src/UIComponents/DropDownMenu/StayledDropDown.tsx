@@ -83,6 +83,7 @@ export type StayledDropDownMenuProps = {
   orientation?: keyof typeof ORIENTATION_VARIANTS;
   size?: keyof typeof SIZE_VARIANTS;
   maxHeight?: "max-h-96" | "max-h-132" | "max-h-80" | "max-h-60";
+  id?:string
 };
 
 export default React.memo(StayledDropDownMenu);
@@ -107,6 +108,7 @@ function StayledDropDownMenu({
   enabled = false,
   deletable = true,
   size = "auto",
+  id
 }: StayledDropDownMenuProps) {
   const onItemSelected = useCallback(
     (value: any) => {
@@ -126,6 +128,7 @@ function StayledDropDownMenu({
 
   return (
     <DropDownMenu
+      id={id}
       preventCloseOnClick={preventCloseOnClick}
       enabled={enabled}
       position={position}

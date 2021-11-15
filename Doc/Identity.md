@@ -1750,7 +1750,7 @@ public async Task<Trigger_AuthorisedPayload> Handle(Trigger_Authorised request, 
 
     var client = _clientFactory.CreateClient("test_auth_client");
 
-    var client_response = await client.GetAsync("TestAuth/TestClientCredentials", cancellationToken);
+    var client_response = await client.GetAsync("Test/TestClientCredentials", cancellationToken);
 
     if(client_response.IsSuccessStatusCode ){
         var response = Trigger_AuthorisedPayload.Success();

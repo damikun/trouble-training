@@ -7,11 +7,11 @@ import { ConcreteRequest } from "relay-runtime";
 
 export type HookEventType = "FILE" | "HOOK" | "MILESTONE" | "NOTE" | "PROJECT" | "%future added value";
 export type UpdateWebHookInput = {
+    hookEvents?: Array<HookEventType> | null | undefined;
+    isActive: boolean;
+    secret?: string | null | undefined;
     webHookId: unknown;
     webHookUrl?: string | null | undefined;
-    secret?: string | null | undefined;
-    isActive: boolean;
-    hookEvents?: Array<HookEventType> | null | undefined;
 };
 export type HooksEditMutationVariables = {
     request?: UpdateWebHookInput | null | undefined;

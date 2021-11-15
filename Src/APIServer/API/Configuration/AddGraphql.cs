@@ -7,45 +7,61 @@ using HotChocolate.Types.Pagination;
 using Aplication.GraphQL.DataLoaders;
 using APIServer.Aplication.GraphQL.Types;
 using SharedCore.Aplication.GraphQL.Types;
+using HotChocolate.Execution.Configuration;
 using APIServer.Aplication.GraphQL.Queries;
 using APIServer.Aplication.GraphQL.Mutation;
 using APIServer.Aplication.GraphQL.Extensions;
 using APIServer.Aplication.GraphQL.DataLoaders;
 using Microsoft.Extensions.DependencyInjection;
-using HotChocolate.Execution.Configuration;
 
-namespace APIServer.Configuration {
-    public static partial class ServiceExtension {
+namespace APIServer.Configuration
+{
+    public static partial class ServiceExtension
+    {
         public static IServiceCollection AddGraphql(
-            this IServiceCollection serviceCollection, IWebHostEnvironment env) {
+            this IServiceCollection serviceCollection, IWebHostEnvironment env)
+        {
 
             serviceCollection.AddGraphQLServer()
                     .SetPagingOptions(
-                        new PagingOptions { 
+                        new PagingOptions
+                        {
                             IncludeTotalCount = true,
-                            MaxPageSize = 200 })
-                    .ModifyRequestOptions(requestExecutorOptions => {
+                            MaxPageSize = 200
+                        })
+                    .ModifyRequestOptions(requestExecutorOptions =>
+                    {
                         if (env.IsDevelopment() ||
-                            System.Diagnostics.Debugger.IsAttached) {
+                            System.Diagnostics.Debugger.IsAttached)
+                        {
                             requestExecutorOptions.ExecutionTimeout = TimeSpan.FromMinutes(1);
                         }
-                        
-                         requestExecutorOptions.IncludeExceptionDetails = !env.IsProduction();
+
+                        requestExecutorOptions.IncludeExceptionDetails = !env.IsProduction();
                     })
                     .AllowIntrospection(env.IsDevelopment())
+                    .AddExportDirectiveType()
+
+                    .ModifyOptions(options =>
+                    {
+                        options.UseXmlDocumentation = true;
+
+                        options.SortFieldsByName = true;
+
+                        options.RemoveUnreachableTypes = true;
+                    })
 
                     .AddGlobalObjectIdentification()
                     .AddQueryFieldToMutationPayloads()
 
                     .AddHttpRequestInterceptor<IntrospectionInterceptor>()
+                    .TryAddTypeInterceptor<StreamTypeInterceptor>()
+                    .AddHttpRequestInterceptor<StreamRequestInterceptor>()
 
                     .AddFiltering()
                     .AddSorting()
 
-                    .TryAddTypeInterceptor<StreamTypeInterceptor>()
-                    .AddHttpRequestInterceptor<StreamRequestInterceptor>()
-
-                    .AddQueryType<Query>()
+                    .AddQueryType<QueryType>()
                         .AddTypeExtension<WebHookQueries>()
                         .AddTypeExtension<UserQueries>()
                         .AddTypeExtension<SystemQueries>()
@@ -54,6 +70,7 @@ namespace APIServer.Configuration {
 
                     .BindRuntimeType<DateTime, DateTimeType>()
                     .BindRuntimeType<int, IntType>()
+                    .BindRuntimeType<long, LongType>()
 
                     .AddType<BadRequestType>()
                     .AddType<InternalServerErrorType>()
@@ -88,7 +105,7 @@ namespace APIServer.Configuration {
                     .UseCustomPipeline()
                     .UseReadPersistedQuery()
                     .AddReadOnlyFileSystemQueryStorage("./persisted_queries");
-                    
+
             return serviceCollection;
         }
 
@@ -96,7 +113,8 @@ namespace APIServer.Configuration {
         public static IRequestExecutorBuilder UseCustomPipeline(
             this IRequestExecutorBuilder builder)
         {
-            if (builder is null){
+            if (builder is null)
+            {
                 throw new ArgumentNullException(nameof(builder));
             }
 

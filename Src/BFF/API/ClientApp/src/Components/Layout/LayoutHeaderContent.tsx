@@ -59,6 +59,7 @@ export default function LayoutHeaderMd() {
 
                 <div className="flex relative flex-col pl-2">
                   <StayledDropDown
+                    id="__UserMenuDropdown"
                     iconPosition="left"
                     deletable={false}
                     enabled

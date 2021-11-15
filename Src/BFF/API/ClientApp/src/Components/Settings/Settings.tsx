@@ -32,7 +32,7 @@ export const SettingsTabs = [
   },
   {
     label: "Test @stream",
-    path: `stream/`,
+    path: `stream`,
     pattern: "stream/*",
   },
   {

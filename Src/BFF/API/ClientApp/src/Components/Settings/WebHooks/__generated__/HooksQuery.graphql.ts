@@ -1,7 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 // @ts-nocheck
-/* @relayHash 1df337b847aad575dbb3006eb2e13ec7 */
+/* @relayHash e33131e2a19cb7934744cf93adb9e84b */
 
 import { ConcreteRequest } from "relay-runtime";
 
@@ -37,7 +37,7 @@ fragment HooksListFragment on Query {
       startCursor
       endCursor
     }
-    edges @stream(label: "HooksListFragment$stream$edges", initial_count: 2) {
+    edges {
       node {
         id
         ...HooksItemFragment @defer(label: "HooksListFragment$defer$HooksItemFragment")
@@ -127,77 +127,70 @@ return {
             "storageKey": null
           },
           {
-            "if": null,
-            "kind": "Stream",
-            "label": "HooksListFragment$stream$edges",
+            "alias": null,
+            "args": null,
+            "concreteType": "WebhooksEdge",
+            "kind": "LinkedField",
+            "name": "edges",
+            "plural": true,
             "selections": [
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "WebhooksEdge",
+                "concreteType": "GQL_WebHook",
                 "kind": "LinkedField",
-                "name": "edges",
-                "plural": true,
+                "name": "node",
+                "plural": false,
                 "selections": [
+                  (v0/*: any*/),
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "GQL_WebHook",
-                    "kind": "LinkedField",
-                    "name": "node",
-                    "plural": false,
+                    "kind": "ScalarField",
+                    "name": "__typename",
+                    "storageKey": null
+                  },
+                  {
+                    "if": null,
+                    "kind": "Defer",
+                    "label": "HooksListFragment$defer$HooksItemFragment",
                     "selections": [
                       (v0/*: any*/),
                       {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
-                        "name": "__typename",
+                        "name": "systemid",
                         "storageKey": null
                       },
                       {
-                        "if": null,
-                        "kind": "Defer",
-                        "label": "HooksListFragment$defer$HooksItemFragment",
-                        "selections": [
-                          (v0/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "systemid",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "webHookUrl",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "isActive",
-                            "storageKey": null
-                          }
-                        ]
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "webHookUrl",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "isActive",
+                        "storageKey": null
                       }
-                    ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "cursor",
-                    "storageKey": null
+                    ]
                   }
                 ],
                 "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "cursor",
+                "storageKey": null
               }
-            ]
+            ],
+            "storageKey": null
           },
           {
             "kind": "ClientExtension",
@@ -226,7 +219,7 @@ return {
     ]
   },
   "params": {
-    "id": "1df337b847aad575dbb3006eb2e13ec7",
+    "id": "e33131e2a19cb7934744cf93adb9e84b",
     "metadata": {},
     "name": "HooksQuery",
     "operationKind": "query",

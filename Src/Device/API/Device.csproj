@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HotChocolate.Data.EntityFramework" Version="12.1.0-preview.1" />
+    <PackageReference Include="HotChocolate.Data.EntityFramework" Version="12.2.2-preview.5" />
     <PackageReference Include="IdentityModel" Version="5.1.0" />
     <PackageReference Include="IdentityModel.AspNetCore" Version="4.0.0-rc.1" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.4" />

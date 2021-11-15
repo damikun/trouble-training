@@ -1,14 +1,23 @@
-using System.Reflection;
 using APIServer.Persistence;
+using System.Reflection;
 using HotChocolate.Types;
 using HotChocolate.Types.Descriptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Runtime.CompilerServices;
+using HotChocolate.Data;
 
-namespace APIServer.Aplication.GraphQL.Extensions {
+namespace APIServer.Aplication.GraphQL.Extensions
+{
 
-    public class UseApiDbContextAttribute : ObjectFieldDescriptorAttribute
+    public class UseApiDbContextAttribute : UseDbContextAttribute
     {
+        public UseApiDbContextAttribute(
+            [CallerLineNumber] int order = 0) : base(typeof(ApiDbContext))
+        {
+            Order = order;
+        }
+
         public override void OnConfigure(
             IDescriptorContext context,
             IObjectFieldDescriptor descriptor,
@@ -29,4 +38,17 @@ namespace APIServer.Aplication.GraphQL.Extensions {
                 disposeAsync: (s, c) => c.DisposeAsync());
         }
     }
+
+
+    // public class UseApiDbContextAttribute : ObjectFieldDescriptorAttribute
+    // {
+    //     public override void OnConfigure(
+    //         IDescriptorContext context,
+    //         IObjectFieldDescriptor descriptor,
+    //         MemberInfo member)
+    //     {
+    //         descriptor.UseDbContext<ApiDbContext>();
+    //     }
+    // }
+
 }

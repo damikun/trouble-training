@@ -2,13 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <!-- <LangVersion>10</LangVersion> -->
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HotChocolate.Data.EntityFramework" Version="12.1.0-preview.1" />
+    <PackageReference Include="HotChocolate.Data.EntityFramework" Version="12.2.2-preview.5" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.9" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
 
@@ -51,14 +52,14 @@
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="MediatR" Version="9.0.0" />
 
-    <PackageReference Include="HotChocolate.PersistedQueries.FileSystem" Version="12.1.0-preview.1" />
-    <PackageReference Include="HotChocolate.PersistedQueries.InMemory" Version="12.1.0-preview.1" />
+    <PackageReference Include="HotChocolate.PersistedQueries.FileSystem" Version="12.2.2-preview.5" />
+    <PackageReference Include="HotChocolate.PersistedQueries.InMemory" Version="12.2.2-preview.5" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
-    <PackageReference Include="HotChocolate" Version="12.1.0-preview.1" />
-    <PackageReference Include="HotChocolate.AspNetCore" Version="12.1.0-preview.1" />
-    <PackageReference Include="HotChocolate.Data" Version="12.1.0-preview.1" />
-    <PackageReference Include="HotChocolate.PersistedQueries.FileSystem" Version="12.1.0-preview.1" />
-    <PackageReference Include="HotChocolate.PersistedQueries.InMemory" Version="12.1.0-preview.1" />
+    <PackageReference Include="HotChocolate" Version="12.2.2-preview.5" />
+    <PackageReference Include="HotChocolate.AspNetCore" Version="12.2.2-preview.5" />
+    <PackageReference Include="HotChocolate.Data" Version="12.2.2-preview.5" />
+    <PackageReference Include="HotChocolate.PersistedQueries.FileSystem" Version="12.2.2-preview.5" />
+    <PackageReference Include="HotChocolate.PersistedQueries.InMemory" Version="12.2.2-preview.5" />
 
   </ItemGroup>
 

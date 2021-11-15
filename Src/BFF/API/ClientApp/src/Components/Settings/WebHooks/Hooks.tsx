@@ -21,7 +21,10 @@ export default function Hooks() {
   const data = useLazyLoadQuery<HooksQuery>(
     HooksQueryTag,
     { },
-    { fetchPolicy: "store-or-network",UNSTABLE_renderPolicy:"partial"},
+    {
+      fetchPolicy: "store-or-network",
+      UNSTABLE_renderPolicy:"partial"
+    },
   );
 
   const navigate = useNavigate();
@@ -37,6 +40,7 @@ export default function Hooks() {
 
   return (
     <div
+      id="__hookContainer"
       className={clsx(
         "flex w-full h-full rounded-b-md max-h-full overflow-hidden",
         "relative max-w-full overflow-y-scroll scrollbarwidth",
@@ -52,6 +56,7 @@ export default function Hooks() {
               </div>
 
               <StayledButton
+                name="create-new"
                 variant="secondaryblue"
                 size="normal"
                 onClick={hanldeCreateNewNavigate}
@@ -96,7 +101,7 @@ export const HooksListFragment = graphql`
         startCursor
         endCursor
       }
-      edges @stream(initial_count:2){
+      edges{
         node{
           id
           ...HooksItemFragment @defer
@@ -127,7 +132,8 @@ function HooksList({ dataRef }: HooksListProps) {
         ? pagination.data?.webhooks?.__id
         : ""
     );
-  }, [pagination, pagination.data, pagination.data?.webhooks?.__id]);
+  }, [pagination, pagination.data,
+     pagination.data?.webhooks?.__id, hooksCtx]);
 
   return (
     <div className="flex flex-col divide-y w-full">

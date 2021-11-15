@@ -23,9 +23,21 @@ import { useHooksContext } from "../Settings";
 
 const HooksNewQueryTag = graphql`
   query HooksNewQuery {
-    webHookEventsTriggers
+
+    # This is for type demo uncoment for needs
+    # This is antipattern but can be used in specific scenarios!
+    #
+    # __type(name:"HookEventType"){
+    #   enumValues{
+    #     name
+    #     description
+    #   }
+    # }
+
+      webHookEventsTriggers
   }
 `;
+
 
 function getTriggerArr(map: Map<string, boolean>) {
   const triggers: Array<string> = [];
@@ -45,12 +57,11 @@ function HooksNew() {
 
   const toast = useToast();
 
+  // For introspection demo
   //@ts-ignore
   const data = useLazyLoadQuery<HooksNewQuery>(
     HooksNewQueryTag,
-    {
-     
-    },
+    { },
     {
       fetchPolicy: "store-or-network",
     }
@@ -105,6 +116,8 @@ function HooksNew() {
     }
   `);
 
+  const [validate, setValidate] = useState(false);
+
   const formik = useFormik({
     initialValues: {
       hookUrl: "",
@@ -142,8 +155,11 @@ function HooksNew() {
               });
             }
           },
+
         });
+
     },
+
 
     validate: (values) => {
       return generateErrors(values, {
@@ -157,9 +173,34 @@ function HooksNew() {
       });
     },
 
-    validateOnChange: false,
+    validateOnChange:validate
+
   });
 
+  const is_form_error = formik.errors.hookUrl != null || formik.errors.secret != null
+
+  const formikSubmitPreProcessor = useCallback(
+    (e?: React.FormEvent<HTMLFormElement> | undefined) => {
+      
+      setValidate(
+        is_form_error);
+
+      formik.handleSubmit(e);
+    },
+    [formik, is_form_error, formik.errors.hookUrl],
+  )
+
+  const formikChangePreProcessor = useCallback(
+    (e: React.ChangeEvent<any>) => {
+      
+      setValidate(
+        is_form_error);
+
+      formik.handleChange(e);
+    },
+    [formik, is_form_error, formik.errors.hookUrl],
+  )
+  
   return (
     <div
       className={clsx(
@@ -171,7 +212,8 @@ function HooksNew() {
       <div className="absolute w-full align-middle">
         <div className="h-full relative max-w-full flex-col">
           <form
-            onSubmit={formik.handleSubmit}
+            onSubmit={formikSubmitPreProcessor}
+            onChange={formikChangePreProcessor}
             className="flex flex-col max-w-3xl space-y-2"
           >
             <Header />
@@ -239,8 +281,9 @@ function HooksNew() {
               </div>
               <div className=" justify-start p-5">
                 <StayledButton
+                  disabled={is_form_error}
                   isloading={isInFlight}
-                  variant="secondaryblue"
+                  variant={!is_form_error? "secondaryblue":"secondarygray"}
                   size="normal"
                   type="submit"
                 >
@@ -262,7 +305,7 @@ function Header() {
   return (
     <div className="flex justify-between flex-nowrap space-x-2">
       <div className="flex font-bold text-gray-800 text-md text-lg px-1 h-8">
-        Edit WebHook
+        Create WebHook
       </div>
     </div>
   );

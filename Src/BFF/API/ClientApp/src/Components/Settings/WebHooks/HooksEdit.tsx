@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import React, { useTransition, useCallback, useState } from "react";
+import React, { useTransition, useCallback, useState, useMemo } from "react";
 import { useLazyLoadQuery, useMutation } from "react-relay/hooks";
 import { useParams } from "react-router-dom";
 import { graphql } from "babel-plugin-relay/macro";
@@ -55,20 +55,22 @@ function getTriggersInitState(
   return map;
 }
 
-export default React.memo(HooksEdit);
 
-function HooksEdit() {
+
+ export default function HooksEdit() {
   const { hookid }: any = useParams();
 
   const toast = useToast();
 
+  const [memorised_hook_id] = useState<string>(hookid)
+
   const data = useLazyLoadQuery<HooksEditQuery>(
     HooksEditQueryTag,
     {
-      hookid: hookid,
+      hookid: memorised_hook_id,
     },
     {
-      fetchPolicy: "store-and-network",
+      fetchPolicy: "store-or-network",
     }
   );
 
@@ -126,6 +128,8 @@ function HooksEdit() {
       }
     }
   `);
+
+const [validate, setValidate] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -185,17 +189,35 @@ function HooksEdit() {
       });
     },
 
-    validateOnChange: false,
+    validateOnChange:validate
   });
 
-  const handleFormChange = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
-      if (!isFormChanged) {
-        setFormChanged(true);
-      }
+  const is_form_error = formik.errors.hookUrl != null || formik.errors.secret != null
+
+  const formikSubmitPreProcessor = useCallback(
+    (e?: React.FormEvent<HTMLFormElement> | undefined) => {
+      
+      setValidate(
+        is_form_error);
+
+      formik.handleSubmit(e);
     },
-    [setFormChanged, isFormChanged]
-  );
+    [formik, is_form_error, formik.errors.hookUrl],
+  )
+
+  const formikChangePreProcessor = useCallback(
+    (e: React.ChangeEvent<any>) => {
+      
+      !isFormChanged && setFormChanged(true)
+
+      setValidate(
+        is_form_error);
+
+      formik.handleChange(e);
+    },
+    [formik, is_form_error, formik.errors.hookUrl,isFormChanged],
+  )
+
 
   if (!data.webHookById) {
     return (
@@ -221,8 +243,8 @@ function HooksEdit() {
       <div className="absolute w-full align-middle">
         <div className="h-full relative max-w-full flex-col">
           <form
-            onSubmit={formik.handleSubmit}
-            onChange={handleFormChange}
+            onSubmit={formikSubmitPreProcessor}
+            onChange={formikChangePreProcessor}
             className="flex flex-col max-w-3xl space-y-2"
           >
             <Header />
@@ -358,8 +380,9 @@ function HooksEdit() {
                 )}
               >
                 <StayledButton
+                  disabled={is_form_error}
                   isloading={isInFlight}
-                  variant="secondaryblue"
+                  variant={!is_form_error? "secondaryblue":"secondarygray"}
                   size="normal"
                   type="submit"
                 >

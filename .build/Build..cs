@@ -86,4 +86,5 @@ partial class Build : NukeBuild
         .DependsOn(
             Backend_All,
             Frontend_All);
+
 }

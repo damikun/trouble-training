@@ -1,0 +1,1 @@
+query HooksNewQuery {  __type(name: "HookEventType") {    enumValues {      name      description    }  }  webHookEventsTriggers}

@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HotChocolate.AspNetCore" Version="12.1.0-preview.1" />
+    <PackageReference Include="HotChocolate.AspNetCore" Version="12.2.2-preview.5" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.9" />
 
     <PackageReference Include="OpenTelemetry" Version="1.2.0-alpha1" />
