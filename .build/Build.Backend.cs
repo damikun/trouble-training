@@ -75,7 +75,7 @@ partial class Build : NukeBuild
         .Executes(() =>
         {
 
-            DockerTasks.DockerVersion();
+            // DockerTasks.DockerVersion();
 
 
         });
