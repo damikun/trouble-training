@@ -32,6 +32,18 @@ partial class Build : NukeBuild
         }
     );
 
+    Target Restore_Tools => _ => _
+    .After(Clean)
+    .Executes(() =>
+    {
+        try
+        {
+            DotNetTasks.DotNetToolRestore();
+        }
+        catch { }
+
+    });
+
     Target Postgresql_Init => _ => _
         .OnlyWhenStatic(() => EnvironmentInfo.IsLinux || EnvironmentInfo.IsWin)
         .Executes(() =>

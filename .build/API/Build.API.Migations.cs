@@ -20,7 +20,8 @@ partial class Build : NukeBuild
     Target API_Migrate_DB => _ => _
         .DependsOn(
             API_Compile,
-            API_Restore
+            API_Restore,
+            Restore_Tools
         // Postgresql_Init // Only in case postgresql is used
         )
         .After(

@@ -139,8 +139,10 @@ partial class Build : NukeBuild
             API_All,
             BFF_All,
             Identity_All,
-            Frontend_All
+            Frontend_All,
+            Restore_Tools
         );
+
 
     //----------------------------
     //----------------------------

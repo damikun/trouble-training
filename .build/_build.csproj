@@ -13,7 +13,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.HealthChecks" Version="2.2.0" />
     <PackageReference Include="Nuke.Common" Version="5.3.0" />
-    <PackageDownload Include="dotnet-ef" Version="[5.0.12]" />
+    
+    <PackageDownload Include="dotnet-ef" Version="[5.0.11]" />
     <PackageDownload Include="GitVersion.Tool" Version="[5.8.1]" />
     <PackageDownload Include="xunit.runner.console" Version="[2.4.1]" />
   </ItemGroup>

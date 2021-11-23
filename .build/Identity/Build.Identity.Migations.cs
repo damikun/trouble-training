@@ -21,7 +21,8 @@ partial class Build : NukeBuild
     Target Identity_Migrate_DB => _ => _
         .DependsOn(
             Identity_Compile,
-            Identity_Restore
+            Identity_Restore,
+            Restore_Tools
         // Postgresql_Init // Only in case postgres is used
         )
         .After(
