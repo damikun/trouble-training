@@ -148,6 +148,7 @@ partial class Build : NukeBuild
     //----------------------------
 
     Target SetupCertificates => _ => _
+        .OnlyWhenStatic(() => EnvironmentInfo.IsWin)
         .Executes(() =>
         {
             string pass = "dk@pass";
