@@ -1,10 +1,10 @@
+using System;
 using Nuke.Common;
 using System.Net.Http;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.Npm;
 using System.Threading.Tasks;
 using Nuke.Common.Tools.Docker;
-using System;
 
 partial class Build : NukeBuild
 {
@@ -97,7 +97,7 @@ partial class Build : NukeBuild
             BFFServerDir,
             null,
             null,
-            false
+            true
         );
 
         await WaitForHost(BFFProcess_Health_Url);
