@@ -152,7 +152,7 @@ partial class Build : NukeBuild
         {
             string pass = "dk@pass";
 
-            // DotNetTasks.DotNet("dev-certs https --clean");
+            DotNetTasks.DotNet("dev-certs https --clean");
 
             string homePath = (Environment.OSVersion.Platform == PlatformID.Unix ||
                             Environment.OSVersion.Platform == PlatformID.MacOSX)

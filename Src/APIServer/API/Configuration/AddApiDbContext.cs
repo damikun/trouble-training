@@ -35,7 +35,7 @@ namespace APIServer.Configuration
                     //         o.EnableSensitiveDataLogging();
                     //     }
                     // })
-                    .UseSqlite("Data Source=../Persistence/api.db", option =>
+                    .UseSqlite("Data Source=../IdentityServer/Persistence/identity.db", option =>
                    {
 
                        if (Environment.IsDevelopment())

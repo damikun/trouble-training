@@ -1,6 +1,6 @@
 
 using Hangfire;
-using Hangfire.PostgreSql;
+// using Hangfire.SQLite;
 using Hangfire.Storage.SQLite;
 using SharedCore.Aplication.Services;
 using SharedCore.Aplication.Interfaces;
@@ -23,7 +23,7 @@ namespace APIServer.Configuration
                 // configuration.UsePostgreSqlStorage(
                 //     Configuration["ConnectionStrings:HangfireConnection"]);
 
-                configuration.UseSQLiteStorage("Data Source=../Persistence/api.db");
+                configuration.UseSQLiteStorage();
 
                 configuration.UseFilter(new AutomaticRetryAttribute
                 {
