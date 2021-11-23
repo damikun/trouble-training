@@ -23,7 +23,7 @@ namespace IdentityServer.Configuration
                 //     opt.EnableRetryOnFailure();
                 // });
 
-                option.UseSqlite(Configuration["Data Source=../Persistence/api.db"], opt =>
+                option.UseSqlite("Data Source=../Persistence/api.db", opt =>
                 {
 
                 });
