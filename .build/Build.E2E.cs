@@ -120,11 +120,10 @@ partial class Build : NukeBuild
     .DependsOn(Init)
     .Executes(async () =>
     {
-        
         IdentityProcess = ProcessTasks.StartProcess(
             "dotnet",
             "run",
-            "/Src/IdentityServer/API",
+            IdentityServerDir,
             null,
             null,
             true
