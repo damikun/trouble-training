@@ -18,9 +18,14 @@ namespace IdentityServer.Configuration
             serviceCollection.AddDbContext<AppIdnetityDbContext>(option =>
             {
 
-                option.UseNpgsql(Configuration["ConnectionStrings:AppIdnetityDbContext"], opt =>
+                // option.UseNpgsql(Configuration["ConnectionStrings:AppIdnetityDbContext"], opt =>
+                // {
+                //     opt.EnableRetryOnFailure();
+                // });
+
+                option.UseSqlite(Configuration["Data Source=../Persistence/api.db"], opt =>
                 {
-                    opt.EnableRetryOnFailure();
+
                 });
 
                 if (Environment.IsDevelopment())

@@ -42,13 +42,14 @@ namespace IdentityServer.Configuration
             // codes, tokens, consents
             identityServerBuilder.AddOperationalStore<AppPersistedGrantDbContext>(options =>
                 options.ConfigureDbContext = builder =>
-                    builder.UseNpgsql(Configuration["ConnectionStrings:AppIdnetityDbContext"]));
+                    // builder.UseNpgsql(Configuration["ConnectionStrings:AppIdnetityDbContext"]));
+                    builder.UseSqlite("Data Source=../Persistence/api.db"));
 
             // clients, resources
             identityServerBuilder.AddConfigurationStore<AppConfigurationDbContext>(options =>
                 options.ConfigureDbContext = builder =>
-                    builder.UseNpgsql(Configuration["ConnectionStrings:AppIdnetityDbContext"]))
-                    .AddInMemoryCaching();
+                     // builder.UseNpgsql(Configuration["ConnectionStrings:AppIdnetityDbContext"]))
+                     builder.UseSqlite("Data Source=../Persistence/api.db"));
 
             identityServerBuilder.AddAspNetIdentity<ApplicationUser>();
             // serviceCollection.AddScoped<UserManager<ApplicationUser>, UserManager<ApplicationUser>>();

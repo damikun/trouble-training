@@ -1,30 +1,39 @@
 
 using Hangfire;
 using Hangfire.PostgreSql;
+using Hangfire.Storage.SQLite;
 using SharedCore.Aplication.Services;
 using SharedCore.Aplication.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace APIServer.Configuration {
-    public static partial class ServiceExtension {
+namespace APIServer.Configuration
+{
+    public static partial class ServiceExtension
+    {
 
         public static IServiceCollection AddScheduler(
             this IServiceCollection serviceCollection,
-            IConfiguration Configuration) {
+            IConfiguration Configuration)
+        {
 
-            serviceCollection.AddHangfire((provider, configuration) => {
-                
-                configuration.UsePostgreSqlStorage(
-                    Configuration["ConnectionStrings:HangfireConnection"]);
+            serviceCollection.AddHangfire((provider, configuration) =>
+            {
 
-                configuration.UseFilter(new AutomaticRetryAttribute { 
-                    Attempts = 5 });
+                // configuration.UsePostgreSqlStorage(
+                //     Configuration["ConnectionStrings:HangfireConnection"]);
+
+                configuration.UseSQLiteStorage("Data Source=../Persistence/api.db");
+
+                configuration.UseFilter(new AutomaticRetryAttribute
+                {
+                    Attempts = 5
+                });
             });
 
-            serviceCollection.AddScoped<ICommandHandler,CommandHandler>();
+            serviceCollection.AddScoped<ICommandHandler, CommandHandler>();
 
-            serviceCollection.AddScoped<IScheduler,Scheduler>();
+            serviceCollection.AddScoped<IScheduler, Scheduler>();
 
             // serviceCollection.AddHangfireServer(options => {
             //     options.Queues = new[] { "systemqueue", "default" };

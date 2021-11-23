@@ -11,6 +11,8 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <PackageReference Include="Hangfire.SQLite" Version="1.4.2" />
+    <PackageReference Include="Hangfire.Storage.SQLite" Version="0.3.0" />
     <PackageReference Include="HotChocolate.Data.EntityFramework" Version="12.3.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.11" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
