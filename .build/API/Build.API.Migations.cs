@@ -34,7 +34,7 @@ partial class Build : NukeBuild
             EntityFrameworkTasks
                 .EntityFrameworkDatabaseUpdate(e => e
                 .SetProcessWorkingDirectory(APIServerMigrationDir)
-                    .SetNoBuild(true)
+                // .SetNoBuild(true)
                 );
 
         });

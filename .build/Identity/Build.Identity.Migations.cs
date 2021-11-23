@@ -36,21 +36,21 @@ partial class Build : NukeBuild
                 .EntityFrameworkDatabaseUpdate(e => e
                 .SetProcessWorkingDirectory(IdentityMigrationDir)
                     .SetContext("AppConfigurationDbContext")
-                    .SetNoBuild(true)
+                // .SetNoBuild(true)
                 );
 
             EntityFrameworkTasks
                 .EntityFrameworkDatabaseUpdate(e => e
                     .SetProcessWorkingDirectory(IdentityMigrationDir)
                     .SetContext("AppPersistedGrantDbContext")
-                    .SetNoBuild(true)
+                // .SetNoBuild(true)
                 );
 
             EntityFrameworkTasks
                 .EntityFrameworkDatabaseUpdate(e => e
                 .SetProcessWorkingDirectory(IdentityMigrationDir)
                     .SetContext("AppIdnetityDbContext")
-                    .SetNoBuild(true)
+                // .SetNoBuild(true)
                 );
         });
 
