@@ -4,6 +4,7 @@ using Nuke.Common.Tooling;
 using Nuke.Common.Tools.Npm;
 using System.Threading.Tasks;
 using Nuke.Common.Tools.Docker;
+using System;
 
 partial class Build : NukeBuild
 {
@@ -125,7 +126,7 @@ partial class Build : NukeBuild
             IdentityServerDir,
             null,
             null,
-            false
+            true
         );
 
         await WaitForHost(IdentityProcess_Health_Url);
@@ -187,11 +188,20 @@ partial class Build : NukeBuild
                 }
                 else
                 {
+
+                    if (i == retry)
+                    {
+                        Logger.Error($"Responded with {response.StatusCode}");
+                    }
                     continue;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                if (i == retry)
+                {
+                    Logger.Error(ex.ToString());
+                }
 
             }
             finally
