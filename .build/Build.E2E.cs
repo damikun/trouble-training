@@ -122,7 +122,7 @@ partial class Build : NukeBuild
     {
         IdentityProcess = ProcessTasks.StartProcess(
             "dotnet",
-            "run --no-build --no-restore",
+            "run",
             IdentityServerDir,
             null,
             null,
