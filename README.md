@@ -3,13 +3,10 @@
 
 <p align="center">
   <img  width="900" src="Doc/Assets/stack_logos.png" alt="Workshop stack tools logos" >
-  <img  src="https://tracer-ruddy.vercel.app/api/trace/123456.png" >
 </p>
 <p align="center" > The application contains a full frontend and backend implementation with infrastructure and app monitoring. There are several patterns used such as. <b>Mediator, BFF, Domain</b> etc.. and everything is secured with <b>Identity server</b> fully supporting <b>OpenId Connect</b> and <b>OAuth2.0</b></p>
 
-
-<h5 align="center" >
-  
+<h5 align="cente
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/WebHookBackend.md" >WebHook backend setup</a></br>
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/Logging.md" >Configure Logging</a></br>
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/OpenTelemetry.md">Configure Tracing</a></br>
