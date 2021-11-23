@@ -47,7 +47,7 @@ partial class Build : NukeBuild
             Stop_API_Server,
             Stop_BFF_Server,
             Stop_Identity_Server)
-        .OnlyWhenStatic(() => EnvironmentInfo.IsLinux || EnvironmentInfo.IsWin)
+        // .OnlyWhenStatic(() => EnvironmentInfo.IsLinux || EnvironmentInfo.IsWin)
         .Executes(() =>
         {
 

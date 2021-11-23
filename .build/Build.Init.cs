@@ -25,7 +25,7 @@ partial class Build : NukeBuild
     //---------------
 
     Target Docker_Info => _ => _
-        // .OnlyWhenStatic(() => EnvironmentInfo.IsLinux || EnvironmentInfo.IsWin)
+        .OnlyWhenStatic(() => EnvironmentInfo.IsLinux || EnvironmentInfo.IsWin)
         .Executes(() =>
         {
             DockerTasks.DockerVersion();
@@ -33,7 +33,7 @@ partial class Build : NukeBuild
     );
 
     Target Postgresql_Init => _ => _
-        // .OnlyWhenStatic(() => EnvironmentInfo.IsLinux || EnvironmentInfo.IsWin)
+        .OnlyWhenStatic(() => EnvironmentInfo.IsLinux || EnvironmentInfo.IsWin)
         .Executes(() =>
         {
             TryStopAndRemove("trouble_db");
@@ -98,7 +98,7 @@ partial class Build : NukeBuild
 
     Target API_Init => _ => _
         .DependsOn(
-            Postgresql_Init,
+            // Postgresql_Init, // only in case postgres is required
             API_Compile,
             Frontend_Restore,
             API_Migrate_DB
@@ -106,7 +106,7 @@ partial class Build : NukeBuild
 
     Target Identity_Init => _ => _
         .DependsOn(
-            Postgresql_Init,
+            // Postgresql_Init,  // only in case postgres is required
             Identity_Compile,
             Identity_Migrate_DB
     );

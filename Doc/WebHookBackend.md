@@ -442,7 +442,7 @@ Entity configuration: (loaded with 'ApplyConfigurationsFromAssembly')
 
 `/Src/APIServer/Persistence/Configuration/WebHook.cs`
 ```c#
-namespace APIServer.Presistence {
+namespace APIServer.Persistence {
     public class WebHookonfiguration : IEntityTypeConfiguration<WebHook> {
         public void Configure(EntityTypeBuilder<WebHook> builder) {
 

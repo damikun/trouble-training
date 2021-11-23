@@ -19,8 +19,16 @@ partial class Build : NukeBuild
     //---------------
 
     Target Identity_Migrate_DB => _ => _
-        .DependsOn(Identity_Compile, Identity_Restore, Postgresql_Init)
-        .After(All, Identity_All, Postgresql_Init)
+        .DependsOn(
+            Identity_Compile,
+            Identity_Restore
+        // Postgresql_Init // Only in case postgres is used
+        )
+        .After(
+            All,
+            Identity_All,
+            Postgresql_Init
+        )
         .Executes(() =>
         {
             EntityFrameworkTasks

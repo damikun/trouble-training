@@ -1,7 +1,6 @@
 using Duende.IdentityServer.EntityFramework.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using Duende.IdentityServer.EntityFramework.DbContexts;
 
 namespace IdentityServer.Persistence
 {
@@ -14,8 +13,8 @@ namespace IdentityServer.Persistence
         {
 
             var builder = new DbContextOptionsBuilder<AppIdnetityDbContext>();
-            // builder.UseSqlite("Data Source=../Presistence/appDB.db");
-            builder.UseNpgsql(IDesignTimeDbContextFactoryExtensions.GetDatabaseConnectionString());
+            builder.UseSqlite("Data Source=../Persistence/identity.db");
+            //builder.UseNpgsql(IDesignTimeDbContextFactoryExtensions.GetDatabaseConnectionString());
             return new AppIdnetityDbContext(builder.Options);
         }
     }
@@ -26,8 +25,8 @@ namespace IdentityServer.Persistence
         {
             var builder = new DbContextOptionsBuilder<AppPersistedGrantDbContext>();
             var store = new OperationalStoreOptions();
-            // builder.UseSqlite("Data Source=../Presistence/appDB.db");
-            builder.UseNpgsql(IDesignTimeDbContextFactoryExtensions.GetDatabaseConnectionString());
+            builder.UseSqlite("Data Source=../Persistence/identity.db");
+            //builder.UseNpgsql(IDesignTimeDbContextFactoryExtensions.GetDatabaseConnectionString());
             return new AppPersistedGrantDbContext(builder.Options, store);
         }
     }
@@ -38,8 +37,8 @@ namespace IdentityServer.Persistence
         {
             var builder = new DbContextOptionsBuilder<AppConfigurationDbContext>();
             var store = new ConfigurationStoreOptions();
-            // builder.UseSqlite("Data Source=../Presistence/appDB.db");
-            builder.UseNpgsql(IDesignTimeDbContextFactoryExtensions.GetDatabaseConnectionString());
+            builder.UseSqlite("Data Source=../Persistence/identity.db");
+            // builder.UseNpgsql(IDesignTimeDbContextFactoryExtensions.GetDatabaseConnectionString());
             return new AppConfigurationDbContext(builder.Options, store);
         }
     }
@@ -48,7 +47,7 @@ namespace IdentityServer.Persistence
     {
         public static string GetDatabaseConnectionString()
         {
-
+            // For postgres
             return "Host=localhost;Port=5555;Database=IdentityDB;Username=postgres;Password=postgres";
         }
     }

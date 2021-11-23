@@ -1,14 +1,13 @@
-
+using System;
+using APIServer.Persistence;
+using Microsoft.Extensions.Hosting;
+using IdentityServer.Persistence;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using APIServer.Persistence.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Builder;
-using System;
-using APIServer.Persistence;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
-using IdentityServer.Persistence;
 
 namespace APIServer.Configuration
 {
@@ -25,17 +24,27 @@ namespace APIServer.Configuration
 
             serviceCollection.AddPooledDbContextFactory<AppIdnetityDbContext>(
                 (s, o) => o
-                    .UseNpgsql(Configuration["ConnectionStrings:AppIdnetityDbContext"], option =>
-                    {
+                    // .UseNpgsql(Configuration["ConnectionStrings:AppIdnetityDbContext"], option =>
+                    // {
 
-                        option.EnableRetryOnFailure();
+                    //     option.EnableRetryOnFailure();
 
-                        if (Environment.IsDevelopment())
-                        {
-                            o.EnableDetailedErrors();
-                            o.EnableSensitiveDataLogging();
-                        }
-                    }));
+                    //     if (Environment.IsDevelopment())
+                    //     {
+                    //         o.EnableDetailedErrors();
+                    //         o.EnableSensitiveDataLogging();
+                    //     }
+                    // })
+                    .UseSqlite("Data Source=../Persistence/api.db", option =>
+                   {
+
+                       if (Environment.IsDevelopment())
+                       {
+                           o.EnableDetailedErrors();
+                           o.EnableSensitiveDataLogging();
+                       }
+                   })
+            );
 
             return serviceCollection;
         }

@@ -5,38 +5,33 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace APIServer.Persistence.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20211029131403_Init")]
+    [Migration("20211123134650_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasPostgresExtension("citext")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.9")
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                .HasAnnotation("ProductVersion", "5.0.11");
 
             modelBuilder.Entity("APIServer.Domain.Core.Models.Events.DomainEvent", b =>
                 {
                     b.Property<long>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid?>("ActorID")
-                        .HasColumnType("uuid");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("EventType")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("TimeStamp")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ID");
 
@@ -47,26 +42,25 @@ namespace APIServer.Persistence.Migrations
                 {
                     b.Property<long>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("ContentType")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
-                    b.Property<int[]>("HookEvents")
-                        .HasColumnType("integer[]");
+                    b.Property<string>("HookEvents")
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("LastTrigger")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Secret")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("WebHookUrl")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ID");
 
@@ -77,7 +71,7 @@ namespace APIServer.Persistence.Migrations
                         {
                             ID = 1L,
                             ContentType = "application/json",
-                            HookEvents = new[] { 0 },
+                            HookEvents = "hook",
                             IsActive = true,
                             WebHookUrl = "https://localhost:5015/hookloopback"
                         },
@@ -85,7 +79,7 @@ namespace APIServer.Persistence.Migrations
                         {
                             ID = 2L,
                             ContentType = "application/json",
-                            HookEvents = new[] { 0 },
+                            HookEvents = "hook",
                             IsActive = false,
                             WebHookUrl = "https://localhost:5015/hookloopback2"
                         });
@@ -95,20 +89,19 @@ namespace APIServer.Persistence.Migrations
                 {
                     b.Property<long>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("CreatedTimestamp")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Value")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<long>("WebHookID")
-                        .HasColumnType("bigint");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("ID");
 
@@ -121,38 +114,37 @@ namespace APIServer.Persistence.Migrations
                 {
                     b.Property<long>("ID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Exception")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Guid")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("HookType")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("RequestBody")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("RequestHeaders")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ResponseBody")
-                        .HasColumnType("text");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Result")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("StatusCode")
-                        .HasColumnType("integer");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Timestamp")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("TEXT");
 
                     b.Property<long>("WebHookID")
-                        .HasColumnType("bigint");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("ID");
 
@@ -166,7 +158,7 @@ namespace APIServer.Persistence.Migrations
                     b.HasBaseType("APIServer.Domain.Core.Models.Events.DomainEvent");
 
                     b.Property<long>("WebHookId")
-                        .HasColumnType("bigint");
+                        .HasColumnType("INTEGER");
 
                     b.ToTable("WebHookCreatedEvent");
                 });
@@ -176,7 +168,7 @@ namespace APIServer.Persistence.Migrations
                     b.HasBaseType("APIServer.Domain.Core.Models.Events.DomainEvent");
 
                     b.Property<long>("WebHookId")
-                        .HasColumnType("bigint");
+                        .HasColumnType("INTEGER");
 
                     b.ToTable("WebHookRemovedEvent");
                 });
@@ -186,7 +178,7 @@ namespace APIServer.Persistence.Migrations
                     b.HasBaseType("APIServer.Domain.Core.Models.Events.DomainEvent");
 
                     b.Property<long>("WebHookId")
-                        .HasColumnType("bigint");
+                        .HasColumnType("INTEGER");
 
                     b.ToTable("WebHookUpdatedEvent");
                 });

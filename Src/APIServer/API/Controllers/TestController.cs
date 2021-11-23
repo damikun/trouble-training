@@ -8,7 +8,7 @@ namespace APIServer.Controllers
 {
 
 #if (!DEBUG)
-        [ApiExplorerSettings(IgnoreApi = true)]
+    [ApiExplorerSettings(IgnoreApi = true)]
 #endif
 
     public class TestController : BaseController
