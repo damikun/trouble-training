@@ -25,7 +25,7 @@ partial class Build : NukeBuild
     //---------------
 
     Target Docker_Info => _ => _
-        .OnlyWhenStatic(() => EnvironmentInfo.IsLinux || EnvironmentInfo.IsWin)
+        // .OnlyWhenStatic(() => EnvironmentInfo.IsLinux || EnvironmentInfo.IsWin)
         .Executes(() =>
         {
             DockerTasks.DockerVersion();
@@ -33,7 +33,7 @@ partial class Build : NukeBuild
     );
 
     Target Postgresql_Init => _ => _
-        .OnlyWhenStatic(() => EnvironmentInfo.IsLinux || EnvironmentInfo.IsWin)
+        // .OnlyWhenStatic(() => EnvironmentInfo.IsLinux || EnvironmentInfo.IsWin)
         .Executes(() =>
         {
             TryStopAndRemove("trouble_db");
