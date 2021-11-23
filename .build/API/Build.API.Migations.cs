@@ -29,6 +29,7 @@ partial class Build : NukeBuild
             Postgresql_Init)
         .Executes(() =>
         {
+
             EntityFrameworkTasks
                 .EntityFrameworkDatabaseUpdate(e => e
                 .SetProcessWorkingDirectory(APIServerMigrationDir)
