@@ -68,7 +68,7 @@ partial class Build : NukeBuild
     {
         APIProcess = ProcessTasks.StartProcess(
             "dotnet",
-            "run --no-build --no-restore",
+            "run",
             APIServerDir,
             null,
             null,
@@ -93,7 +93,7 @@ partial class Build : NukeBuild
     {
         BFFProcess = ProcessTasks.StartProcess(
             "dotnet",
-            "run --no-build --no-restore",
+            "run",
             BFFServerDir,
             null,
             null,
@@ -125,7 +125,7 @@ partial class Build : NukeBuild
             IdentityServerDir,
             null,
             null,
-            true
+            false
         );
 
         await WaitForHost(IdentityProcess_Health_Url);
