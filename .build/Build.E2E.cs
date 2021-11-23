@@ -38,7 +38,7 @@ partial class Build : NukeBuild
         .OnlyWhenStatic(() => EnvironmentInfo.IsWin)
         .After(All)
         .DependsOn(
-            // SetupCertificates,
+            SetupCertificates,
             Start_API_Server,
             Start_Identity_Server,
             Start_BFF_Server,
@@ -162,7 +162,13 @@ partial class Build : NukeBuild
 
     public async static Task WaitForHost(string host_endpoint)
     {
-        var client = new HttpClient();
+
+        var handler = new HttpClientHandler()
+        {
+            ServerCertificateCustomValidationCallback = delegate { return true; },
+        };
+
+        var client = new HttpClient(handler);
         int retry = 15;
 
         await Task.Delay(500);

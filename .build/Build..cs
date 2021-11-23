@@ -172,7 +172,7 @@ partial class Build : NukeBuild
                 throw new Exception("Unsuported OS. Cetificates cannot be generates!");
             }
 
-            DotNetTasks.DotNet("dev-certs https -t");
+            // DotNetTasks.DotNet("dev-certs https -t");
 
             var projects = new AbsolutePath[] { APIServer_Project, BFF_Project, Identity_Project };
 
