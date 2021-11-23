@@ -3,5 +3,6 @@
     "chromeWebSecurity": false,
     "ignoreFiles": "**/ignore/*",
     "supportFile": "cypress/support/index.ts",
-    "experimentalSessionSupport": true
+    "experimentalSessionSupport": true,
+    "video": false
 }

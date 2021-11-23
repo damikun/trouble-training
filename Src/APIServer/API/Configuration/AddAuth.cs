@@ -13,12 +13,16 @@ namespace APIServer.Configuration
             IConfiguration Configuration)
         {
 
-
             serviceCollection.AddAuthentication("token")
             .AddJwtBearer("token", options =>
             {
                 options.Authority = Configuration["ConnectionStrings:AuthorityServer"];
                 options.MapInboundClaims = true;
+
+                // options.BackchannelHttpHandler = new HttpClientHandler
+                // {
+                //     ServerCertificateCustomValidationCallback = (sender, certificate, chain, sslPolicyErrors) => { return true; }
+                // };
 
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {

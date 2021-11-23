@@ -21,10 +21,12 @@ namespace APIServer
 
                 host.Run();
             }
-            catch (Exception ex){
+            catch (Exception ex)
+            {
                 Log.Fatal(ex, "Runtime unhandled exception");
             }
-            finally{
+            finally
+            {
                 Log.CloseAndFlush();
             }
         }
@@ -34,7 +36,8 @@ namespace APIServer
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    webBuilder.UseUrls("http://localhost:5021", "https://localhost:5022");
-                }).UseSerilog();
+                    // webBuilder.UseUrls("http://localhost:5021", "https://localhost:5022");
+                })
+        .UseSerilog();
     }
 }

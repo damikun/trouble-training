@@ -13,14 +13,17 @@ using System.Linq;
 
 namespace IdentityServer.Configuration
 {
-    public static partial class ServiceExtension {
+    public static partial class ServiceExtension
+    {
         public static IServiceCollection AddIdentityServer(
         this IServiceCollection serviceCollection,
         IConfiguration Configuration,
-        IWebHostEnvironment Environment) {
-        
+        IWebHostEnvironment Environment)
+        {
+
             // app user 
-            serviceCollection.AddIdentity<ApplicationUser, IdentityRole>(options => {
+            serviceCollection.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 6;
                 options.Password.RequireNonAlphanumeric = false;
@@ -30,8 +33,9 @@ namespace IdentityServer.Configuration
             .AddDefaultTokenProviders();
 
             var identityServerBuilder = serviceCollection.AddIdentityServer(options => options.KeyManagement.Enabled = true);
-            
-            if (Environment.IsDevelopment()) {
+
+            if (Environment.IsDevelopment())
+            {
                 identityServerBuilder.AddDeveloperSigningCredential();
             }
 
@@ -39,7 +43,7 @@ namespace IdentityServer.Configuration
             identityServerBuilder.AddOperationalStore<AppPersistedGrantDbContext>(options =>
                 options.ConfigureDbContext = builder =>
                     builder.UseNpgsql(Configuration["ConnectionStrings:AppIdnetityDbContext"]));
-                    
+
             // clients, resources
             identityServerBuilder.AddConfigurationStore<AppConfigurationDbContext>(options =>
                 options.ConfigureDbContext = builder =>
@@ -48,12 +52,12 @@ namespace IdentityServer.Configuration
 
             identityServerBuilder.AddAspNetIdentity<ApplicationUser>();
             // serviceCollection.AddScoped<UserManager<ApplicationUser>, UserManager<ApplicationUser>>();
-            
+
             return serviceCollection;
 
         }
 
-         /// <summary>
+        /// <summary>
         /// A small bootstrapping method that will run EF migrations against the database and create your test data.
         /// </summary>
         public static void InitializeDbTestData(IApplicationBuilder app)

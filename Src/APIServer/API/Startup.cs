@@ -14,6 +14,8 @@ using SharedCore.Aplication.Interfaces;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net;
+using System.Net.Security;
 
 namespace APIServer
 {
@@ -35,6 +37,8 @@ namespace APIServer
         public virtual void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddCorsConfiguration(Environment);
 
             services.AddSwaggerGen(c =>
             {
@@ -64,6 +68,14 @@ namespace APIServer
             ConfigureScheduler(services);
 
             services.AddSingleton(Serilog.Log.Logger);
+
+            ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, errors) =>
+            {
+                // local dev, just approve all certs
+                if (Environment.IsDevelopment()) return true;
+
+                return errors == SslPolicyErrors.None;
+            };
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,7 +87,9 @@ namespace APIServer
         {
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost,
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+                ForwardedHeaders.XForwardedProto |
+                ForwardedHeaders.XForwardedHost
             });
 
             app.UseEnsureApiContextCreated(serviceProvider, scopeFactory);
@@ -90,6 +104,8 @@ namespace APIServer
             app.UseHealthChecks("/health");
 
             app.UseHttpsRedirection();
+
+            app.UseCors("cors_policy");
 
             app.UseRouting();
 

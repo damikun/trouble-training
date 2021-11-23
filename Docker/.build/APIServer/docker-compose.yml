@@ -1,0 +1,25 @@
+version: "3.7"
+services:
+  apiserver:
+    image: damikun/apiserver
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "5022:443"
+      - "5021:80"
+    # command: > 
+    #    dotnet dev-certs https --trust
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets
+      - ${USERPROFILE}/.aspnet/https:/root/.aspnet/https
+    environment:
+      - Kestrel__Certificates__Default__Path=/root/.aspnet/https/cert.pfx
+      - Kestrel__Certificates__Default__Password=dk@pass
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ConnectionStrings:ApiDbContext=Server=host.docker.internal;Port=5555;Database=apiserver;Username=postgres;Password=postgres
+      - ConnectionStrings:HangfireConnection=Host=host.docker.internal;Port=5555;Database=scheduler;Username=postgres;Password=postgres
+      - ConnectionStrings:AppIdnetityDbContext=Host=host.docker.internal;Port=5555;Database=identitydb;Username=postgres;Password=postgres
+      - ConnectionStrings:AuthorityServer=https://host.docker.internal:5001
+    # network_mode: "host"

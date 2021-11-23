@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -7,11 +7,13 @@
     <IsPackable>false</IsPackable>
     <SpaRoot>ClientApp\</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+    <UserSecretsId>3ec81d11-e15a-44a7-b654-63301b936b65</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Duende.BFF" Version="1.0.0-rc.3" />
-    <PackageReference Include="Duende.BFF.EntityFramework" Version="1.0.0-rc.3" />
+    <PackageReference Include="Duende.BFF" Version="1.1.0-preview.1" />
+    <PackageReference Include="Duende.BFF.EntityFramework" Version="1.1.0-preview.1" />
+    <PackageReference Include="Duende.BFF.Yarp" Version="1.1.0-preview.1" />
     <PackageReference Include="Duende.IdentityServer.EntityFramework.Storage" Version="5.2.2" />
     <PackageReference Include="HotChocolate.Data.EntityFramework" Version="11.3.7" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.4" />
@@ -84,7 +86,7 @@
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>
       <DistFiles Include="$(SpaRoot)build\**" />
-      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+      <ResolvedFileToPublish Include="@(DistFiles-&gt;'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
         <RelativePath>%(DistFiles.Identity)</RelativePath>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         <ExcludeFromSingleFile>true</ExcludeFromSingleFile>

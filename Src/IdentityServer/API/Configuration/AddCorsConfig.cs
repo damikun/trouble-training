@@ -7,29 +7,36 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace IdentityServer.Configuration
 {
-    public static partial class ServiceExtension {
+    public static partial class ServiceExtension
+    {
         public static IServiceCollection AddCorsConfiguration(
         this IServiceCollection serviceCollection,
-        IWebHostEnvironment Environment) {
+        IWebHostEnvironment Environment)
+        {
 
             string[] allowed_origins = null;
 
-            if(Environment.IsDevelopment()){
-                allowed_origins = new string[]{ 
+            if (Environment.IsDevelopment())
+            {
+                allowed_origins = new string[]{
                     "https://localhost:5001",
                     "https://localhost:5015",
                     "https://localhost:5021",
+                    "https://localhost:5022",
                     "https://localhost:5070",
                     "https://localhost",
+                    "host.docker.internal",
                     "http://localhost"
                 };
-            }else{
-                 // Add your production origins hire
-                allowed_origins = new string[]{ 
+            }
+            else
+            {
+                // Add your production origins hire
+                allowed_origins = new string[]{
                     "https://localhost:5001"
                 };
             }
-            
+
             serviceCollection.AddCors(options =>
             {
                 options.AddPolicy("cors_policy", policy =>
@@ -50,9 +57,9 @@ namespace IdentityServer.Configuration
             {
                 var logger = container.GetRequiredService<ILogger<DefaultCorsPolicyService>>();
 
-                return new DefaultCorsPolicyService(logger) 
+                return new DefaultCorsPolicyService(logger)
                 {
-                     AllowedOrigins = allowed_origins
+                    AllowedOrigins = allowed_origins
                     //AllowAll = true
                 };
             });

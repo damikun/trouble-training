@@ -2,12 +2,10 @@ using System;
 using System.Linq;
 using Nuke.Common;
 using Nuke.Common.IO;
-using Nuke.Common.Git;
-using Nuke.Common.Tooling;
 using Nuke.Common.Tools.NuGet;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.Docker;
-using Nuke.Common.Tools.GitVersion;
+using Nuke.Common.Tools.EntityFramework;
 using Nuke.Common.Utilities.Collections;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
@@ -22,32 +20,26 @@ partial class Build : NukeBuild
 
     AbsolutePath OutputDirectory => RootDirectory / "out";
     AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
-    AbsolutePath APIServerDockerFile => RootDirectory / "Src" / "APIServer" / "API" / "DockerFile";
+    AbsolutePath APIServerDockerFile => RootDirectory / "Src" / "APIServer" / "API" / "Dockerfile";
+    AbsolutePath APIServerDir => RootDirectory / "Src" / "APIServer" / "API";
     AbsolutePath APIServerDockerOutput => RootDirectory / "Docker" / ".build" / "APIServer";
+
+    private readonly string version = "0.0.1"; // just example
 
     //---------------
     // Build process
     //---------------
 
-    Target Backend_Clean => _ => _
-        .Before(Backend_Restore)
+    Target API_Clean => _ => _
+        .Before(API_Restore)
         .Executes(() =>
         {
-            SourceDirectory.GlobDirectories("**/bin", "**/obj")
-                .Where(e => !e.ToString().Contains(
-                    "node_modules",
-                    StringComparison.OrdinalIgnoreCase))
-                .Where(e => !e.ToString().Contains(
-                    "ClientApp",
-                    StringComparison.OrdinalIgnoreCase))
-                .ForEach(DeleteDirectory);
-
-            Backend_TestsDirectory.GlobDirectories("**/bin", "**/obj")
+            API_TestsDirectory.GlobDirectories("**/bin", "**/obj")
                 .Where(e => !e.Contains("node_modules"))
                 .ForEach(DeleteDirectory);
         });
 
-    Target Backend_Restore => _ => _
+    Target API_Restore => _ => _
         .Executes(() =>
         {
             DotNetRestore(s => s
@@ -57,8 +49,8 @@ partial class Build : NukeBuild
             );
         });
 
-    Target Backend_Compile => _ => _
-        .DependsOn(Backend_Restore)
+    Target API_Compile => _ => _
+        .DependsOn(API_Restore)
         .Executes(() =>
         {
             DotNetBuild(s => s
@@ -70,17 +62,30 @@ partial class Build : NukeBuild
             );
         });
 
-    Target Backend_Dockerize => _ => _
-        .After(Backend_Compile)
-        .OnlyWhenStatic(() => EnvironmentInfo.IsLinux || EnvironmentInfo.IsWin)
+    Target Api_DockerBuild => _ => _
+        .DependsOn(API_All)
         .Executes(() =>
         {
-            DockerTasks.DockerVersion();
+            var tagName = "damikun/apiserver:{0}";
+
+            DotNetTasks.DotNetPublish(s => s
+            .SetConfiguration("Debug")
+            .SetProject(APIServerDir));
+
+            DockerTasks.DockerBuild(s => s
+                .SetFile(APIServerDockerFile)
+                .SetTag(
+                    string.Format(tagName, "latest"))
+                .SetBuildArg($"version={version}",
+                    $"build_date={DateTime.Now:s}")
+                .SetPath(APIServerDir));
         });
 
+
+    /*
     // Pack is only as exemple
-    Target Backend_Pack => _ => _
-        .DependsOn(Backend_Compile)
+    Target API_Pack => _ => _
+        .DependsOn(API_Compile)
         .OnlyWhenStatic(() => GitRepository.IsOnMasterBranch())
         .Produces(ArtifactsDirectory / "*.nupkg")
         .Executes(() =>
@@ -93,5 +98,5 @@ partial class Build : NukeBuild
                 .SetProject(Solution)
                 .SetOutputDirectory(ArtifactsDirectory));
         });
-
+    */
 }

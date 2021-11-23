@@ -11,11 +11,11 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.9" />
     <PackageReference Include="Duende.IdentityServer" Version="5.2.2" />
 
-    <PackageReference Include="HotChocolate.AspNetCore" Version="12.2.2-preview.5" />
-    <PackageReference Include="HotChocolate" Version="12.2.2-preview.5" />
-    <PackageReference Include="HotChocolate.Data" Version="12.2.2-preview.5" />
+    <PackageReference Include="HotChocolate.AspNetCore" Version="12.3.1" />
+    <PackageReference Include="HotChocolate" Version="12.3.1" />
+    <PackageReference Include="HotChocolate.Data" Version="12.3.1" />
     
-    <PackageReference Include="HotChocolate.Data.EntityFramework" Version="12.2.2-preview.5" />
+    <PackageReference Include="HotChocolate.Data.EntityFramework" Version="12.3.1" />
 
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.9" />
 

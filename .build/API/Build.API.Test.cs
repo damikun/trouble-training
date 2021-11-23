@@ -13,40 +13,40 @@ partial class Build : NukeBuild
     // Enviroment
     //---------------
 
-    AbsolutePath Backend_TestsDirectory => RootDirectory / "Src" / "Tests";
-    AbsolutePath Backend_Unit_Tests_Directory => RootDirectory / "Src" / "Tests" / "APIServer.Aplication.Unit";
-    AbsolutePath Backend_Integration_Tests_Directory => RootDirectory / "Src" / "Tests" / "APIServer.Aplication.Integration";
-    AbsolutePath Backend_API_Tests_Directory => RootDirectory / "Src" / "Tests" / "APIServer.API";
+    AbsolutePath API_TestsDirectory => RootDirectory / "Src" / "Tests";
+    AbsolutePath API_Unit_Tests_Directory => RootDirectory / "Src" / "Tests" / "APIServer.Aplication.Unit";
+    AbsolutePath API_Integration_Tests_Directory => RootDirectory / "Src" / "Tests" / "APIServer.Aplication.Integration";
+    AbsolutePath API_API_Tests_Directory => RootDirectory / "Src" / "Tests" / "APIServer.API";
 
 
     //---------------
     // Build process
     //---------------
 
-    Target Backend_Test => _ => _
+    Target API_Test => _ => _
         .DependsOn(
-            Backend_UnitTest,
-            Backend_IntegrationTest,
-            Backend_APITest
+            API_UnitTest,
+            API_IntegrationTest,
+            API_APITest
         );
 
-    Target Backend_UnitTest => _ => _
-        .DependsOn(Backend_Compile)
+    Target API_UnitTest => _ => _
+        .DependsOn(API_Compile)
         .Executes(() =>
         {
             DotNetTest(s => s
-                .SetProjectFile(Backend_Unit_Tests_Directory)
+                .SetProjectFile(API_Unit_Tests_Directory)
                 .SetConfiguration(Configuration)
                 .EnableNoRestore()
                 .EnableNoBuild());
         });
 
-    Target Backend_IntegrationTest => _ => _
-        .DependsOn(Backend_Compile)
+    Target API_IntegrationTest => _ => _
+        .DependsOn(API_Compile)
         .Executes(() =>
         {
             DotNetTest(s => s
-                .SetProjectFile(Backend_Integration_Tests_Directory)
+                .SetProjectFile(API_Integration_Tests_Directory)
 
                 // .SetConfiguration(Configuration)
                 // .EnableNoRestore()
@@ -60,12 +60,12 @@ partial class Build : NukeBuild
                 .Add("--logger console;verbosity=normal")));
         });
 
-    Target Backend_APITest => _ => _
-        .DependsOn(Backend_Compile)
+    Target API_APITest => _ => _
+        .DependsOn(API_Compile)
         .Executes(() =>
         {
             DotNetTest(s => s
-                .SetProjectFile(Backend_API_Tests_Directory)
+                .SetProjectFile(API_API_Tests_Directory)
                 .SetConfiguration(Configuration)
                 .EnableNoRestore()
                 .EnableNoBuild());

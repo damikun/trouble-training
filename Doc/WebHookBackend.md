@@ -18,12 +18,6 @@ This pattern is used by most large companies and I will use [Github](https://doc
 - You can view the history of WebHooks that have been triggered.
 - You can view the system history (audit logs) when the webhook was created/deleted or the parameters were updated.
 
-> &#10240;
-> **Note:** You can find the full source code of the app, including identitiy, distributed logging, tracing and monitoring, in the open source github repo:
->
-> https://github.com/damikun/trouble-training
-> &#10240;
-
 ## ED diagram
 
 The ED diagram (Entity Relationship Model) shows the basic WebHook database tables and the relationships between them. This is what we need to build in our database
@@ -538,7 +532,7 @@ The `ConnectionStrings:ApiDbContext` is defined in `Src/APIServer/API/appsetting
 ```json
 {
   "ConnectionStrings": {
-    "ApiDbContext": "Host=localhost;Port=5432;Database=APIServer;Username=postgres;Password=postgres",
+    "ApiDbContext": "Host=localhost;Port=5555;Database=APIServer;Username=postgres;Password=postgres",
   },
 }
 ```

@@ -18,9 +18,9 @@ describe('Logout Tests', () => {
     .contains('Logout')
     .click()
 
-    cy.get('button')
-    .should('have.value', "logout")
-    .click()
+    // cy.get('button')
+    // .should('have.value', "logout")
+    // .click()
 
     cy.contains("You are now logged out")
     

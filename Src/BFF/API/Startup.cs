@@ -1,7 +1,6 @@
 // Copyright (c) Dalibor Kundrat All rights reserved.
 // See LICENSE in root.
 
-using Duende.Bff;
 using BFF.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +9,10 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using System.Net;
+using System.Net.Security;
+using Duende.Bff.Yarp;
+
 
 namespace BFF
 {
@@ -29,6 +32,8 @@ namespace BFF
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddCorsConfiguration(Environment);
 
             services.AddControllersWithViews();
 
@@ -50,6 +55,14 @@ namespace BFF
             });
 
             services.AddTelemerty(Configuration, Environment);
+
+            // ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, errors) =>
+            // {
+            //     // local dev, just approve all certs
+            //     if (Environment.IsDevelopment()) return true;
+
+            //     return errors == SslPolicyErrors.None;
+            // };
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,6 +81,8 @@ namespace BFF
             //app.UseElasticApm(Configuration, new IDiagnosticsSubscriber [0]);
 
             app.UseHealthChecks("/health");
+
+            app.UseCors("cors_policy");
 
             app.UseHttpsRedirection();
 

@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 using Microsoft.AspNetCore.HttpOverrides;
 using SharedCore.Configuration;
+using System.Net;
+using System.Net.Security;
 
 namespace IdentityServer.API
 {
@@ -33,28 +35,39 @@ namespace IdentityServer.API
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
-            services.AddAppIdentityDbContext(Configuration,Environment);
+            services.AddAppIdentityDbContext(Configuration, Environment);
 
             services.AddHealthChecks();
 
             services.AddMvc();
 
-            services.AddIdentityServer(Configuration,Environment);
+            services.AddIdentityServer(Configuration, Environment);
 
-            services.AddTelemerty(Configuration,Environment);
+            services.AddTelemerty(Configuration, Environment);
+
+            // ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, errors) =>
+            // {
+            //     // local dev, just approve all certs
+            //     if (Environment.IsDevelopment()) return true;
+
+            //     return errors == SslPolicyErrors.None;
+            // };
         }
 
         public virtual void Configure(
             IApplicationBuilder app,
-            IWebHostEnvironment env) {
+            IWebHostEnvironment env)
+        {
 
-            if (Environment.IsDevelopment()){
+            if (Environment.IsDevelopment())
+            {
                 app.UseDeveloperExceptionPage();
 
                 IdentityServer.Configuration.ServiceExtension.InitializeDbTestData(app);
             }
 
-            app.UseForwardedHeaders(new ForwardedHeadersOptions {
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor |
                 ForwardedHeaders.XForwardedProto
             });
@@ -67,16 +80,18 @@ namespace IdentityServer.API
 
             app.UseCors("cors_policy");
 
-            app.UseStaticFiles(new StaticFileOptions {
-                OnPrepareResponse = ctx => {
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                OnPrepareResponse = ctx =>
+                {
                     const int durationInSeconds = 5;
                     ctx.Context.Response.Headers[HeaderNames.CacheControl] =
                         "public,max-age=" + durationInSeconds;
                 }
             });
 
-            app.UseRouting(); 
-            
+            app.UseRouting();
+
             app.UseIdentityServer();
 
             app.UseAuthentication();
@@ -88,7 +103,7 @@ namespace IdentityServer.API
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{Action=Index}/{id?}");
-                    
+
                 endpoints.MapRazorPages();
             });
         }

@@ -22,6 +22,7 @@ namespace APIServer.Configuration
 
         public async ValueTask InvokeAsync(IRequestContext context)
         {
+
             if (context?.Document != null)
             {
                 VisitNodes(context.Document.GetNodes());

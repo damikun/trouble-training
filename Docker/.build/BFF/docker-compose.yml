@@ -1,0 +1,16 @@
+version: "3.7"
+services:
+  apiserver:
+    image: damikun/bff
+    restart: always
+    ports:
+      - "5015:443"
+      - "5014:80"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets
+      - ${USERPROFILE}/.aspnet/https:/root/.aspnet/https
+    environment:
+      - Kestrel__Certificates__Default__Path=/root/.aspnet/https/cert.pfx
+      - Kestrel__Certificates__Default__Password=dk@pass
+      - ConnectionStrings:AppIdnetityDbContext=Host=localhost;Port=5555;Database=identitydb;Username=postgres;Password=postgres
+    network_mode: "host"

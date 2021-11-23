@@ -9,20 +9,20 @@
 #
 #     - To trigger manual generation invoke:
 #
-#         nuke --generate-configuration GitHubActions_backend-restore-build-and-test --host GitHubActions
+#         nuke --generate-configuration GitHubActions_Backend-Frontend-Testing --host GitHubActions
 #
 # </auto-generated>
 # ------------------------------------------------------------------------------
 
-name: backend-restore-build-and-test
+name: Backend-Frontend-Testing
 
 on:
   push:
     branches:
       - main
     paths:
-      - 'Src/**'
-      - '.build/**'
+      - "Src/**"
+      - ".build/**"
 
 jobs:
   windows-latest:
@@ -37,8 +37,10 @@ jobs:
             .nuke/temp
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
-      - name: Run './build.cmd Backend_All'
-        run: ./build.cmd Backend_All
+      - name: Run './build.cmd E2E_Test All'
+        run: ./build.cmd E2E_Test All
+        env:
+          CI: false
   macOS-latest:
     name: macOS-latest
     runs-on: macOS-latest
@@ -51,5 +53,7 @@ jobs:
             .nuke/temp
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
-      - name: Run './build.cmd Backend_All'
-        run: ./build.cmd Backend_All
+      - name: Run './build.cmd E2E_Test All'
+        run: ./build.cmd E2E_Test All
+        env:
+          CI: false

@@ -1,12 +1,19 @@
-version: '3.7'
+version: "3.7"
 services:
-
   database:
     image: postgres
+    container_name: trouble_db
     restart: always
     ports:
-      - "5432:5432"
+      - "5555:5555"
     environment:
+      - POSTGRES_DB=Trouble
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_USER=postgres
       - MASTER_PASSWORD_REQUIRED=False
+    volumes:
+      - ./dev/tdev-db:/var/lib/postgresql/tdev-db
+      - ./APIServerDB.sh:/docker-entrypoint-initdb.d/APIServerDB.sh
+      - ./IdentityDB.sh:/docker-entrypoint-initdb.d/IdentityDB.sh
+      - ./SchedulerDB.sh:/docker-entrypoint-initdb.d/SchedulerDB.sh
+    command: -p 5555

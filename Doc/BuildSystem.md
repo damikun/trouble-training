@@ -593,3 +593,8 @@ partial class Build : NukeBuild
 }
 
 ```
+
+The full build process of this demo is more complex and you can find it under `.build` folder
+
+![Demo full nuke plan](./Assets/full_build_process.png "Demo full nuke plan")
+

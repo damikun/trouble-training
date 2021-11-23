@@ -80,12 +80,7 @@ const fetchGraphQL: FetchFunction = (operation, variables, _cacheConfig) => {
 					}
 				} else {
 	
-					var data = await parts?.json();
-	
-					if(data){
-						sink.next(data);
-					}
-		
+					sink.next(await parts.json());
 				}
 
 			sink.complete();
