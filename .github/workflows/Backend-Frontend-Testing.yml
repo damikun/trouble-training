@@ -37,8 +37,8 @@ jobs:
             .nuke/temp
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
-      - name: Run './build.cmd E2E_Test All'
-        run: ./build.cmd E2E_Test All
+      - name: Run './build.cmd E2E_RunAs_CI All'
+        run: ./build.cmd E2E_RunAs_CI All
         env:
           CI: false
   macOS-latest:
@@ -53,7 +53,7 @@ jobs:
             .nuke/temp
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
-      - name: Run './build.cmd E2E_Test All'
-        run: ./build.cmd E2E_Test All
+      - name: Run './build.cmd E2E_RunAs_CI All'
+        run: ./build.cmd E2E_RunAs_CI All
         env:
           CI: false

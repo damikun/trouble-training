@@ -189,6 +189,7 @@ partial class Build : NukeBuild
 
                 if (response.IsSuccessStatusCode)
                 {
+                    Logger.Success($"Host: {host_endpoint} is awailable");
                     return;
                 }
                 else

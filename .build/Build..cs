@@ -19,7 +19,7 @@ using Nuke.Common.Tooling;
     GitHubActionsImage.WindowsLatest,
     GitHubActionsImage.MacOsLatest,
     InvokedTargets = new[] {
-        nameof(E2E_Test),
+        nameof(E2E_RunAs_CI),
         nameof(All)
     },
     OnPushIncludePaths = new[] {
