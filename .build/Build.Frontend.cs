@@ -15,6 +15,10 @@ partial class Build : NukeBuild
 
     AbsolutePath FrontendDirectory = RootDirectory / "Src" / "BFF" / "API" / "ClientApp";
 
+    string frontend_relay_compiler_script_name = "relaycompile_presisted_js";
+
+    string frontend_build_script_name = "build";
+
     //---------------
     // Build process
     //---------------
@@ -54,7 +58,7 @@ partial class Build : NukeBuild
         {
             // Compile relay
             NpmTasks.NpmRun(s => s
-                .SetCommand("relaycompile_presisted_js")
+                .SetCommand(frontend_relay_compiler_script_name)
                 .SetProcessWorkingDirectory(FrontendDirectory)
             );
         });
@@ -67,7 +71,7 @@ partial class Build : NukeBuild
 
             NpmTasks.NpmRun(settings =>
                 settings
-                    .SetCommand("build")
+                    .SetCommand(frontend_build_script_name)
                     .SetProcessWorkingDirectory(FrontendDirectory)
             );
         });

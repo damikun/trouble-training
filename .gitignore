@@ -65,6 +65,7 @@ Thumbs.db
 ./nuke/.temp
 *.tmp
 *.tmp_proj
+*-plan.html
 
 # User-specific files
 *.user

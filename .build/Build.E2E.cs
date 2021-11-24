@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Nuke.Common;
 using System.Net.Http;
 using Nuke.Common.Tooling;
@@ -21,13 +22,19 @@ partial class Build : NukeBuild
     string BFFProcess_Health_Url = "https://localhost:5015/health";
     string IdentityProcess_Health_Url = "https://localhost:5001/health";
 
+    bool API_Logging = false;
+    bool BFF_Logging = false;
+    bool Identity_Logging = false;
+
+    string cypress_test_script_name = "test";
+
+
     //---------------
     // Build process
     //---------------
 
     protected override void OnBuildFinished()
     {
-
         KillProcess(APIProcess);
         KillProcess(BFFProcess);
         KillProcess(IdentityProcess);
@@ -47,6 +54,7 @@ partial class Build : NukeBuild
         .Executes(E2E_Test);
 
     Target E2E_Test => _ => _
+        .OnlyWhenStatic(() => this.InvokedTargets.Any(e => e.Name == nameof(E2E_RunAs_Local)))
         .DependsOn(
             Start_API_Server,
             Start_Identity_Server,
@@ -60,7 +68,7 @@ partial class Build : NukeBuild
             {
 
                 NpmTasks.NpmRun(s => s
-                    .SetCommand("test")
+                    .SetCommand(cypress_test_script_name)
                     .SetProcessWorkingDirectory(FrontendDirectory)
                 );
 
@@ -77,9 +85,9 @@ partial class Build : NukeBuild
             "dotnet",
             "run",
             APIServerDir,
-            null,
-            null,
-            false
+            null,           // env variables
+            null,           // Timeout 
+            API_Logging     // logs
         );
 
         await WaitForHost(APIProcess_Health_Url);
@@ -101,9 +109,9 @@ partial class Build : NukeBuild
             "dotnet",
             "run",
             BFFServerDir,
-            null,
-            null,
-            false
+            null,           // env variables
+            null,           // Timeout 
+            BFF_Logging     // logs
         );
 
         await WaitForHost(BFFProcess_Health_Url);
@@ -128,9 +136,9 @@ partial class Build : NukeBuild
             "dotnet",
             "run",
             IdentityServerDir,
-            null,
-            null,
-            false
+            null,               // env variables
+            null,               // Timeout 
+            Identity_Logging    // logs
         );
 
         await WaitForHost(IdentityProcess_Health_Url);

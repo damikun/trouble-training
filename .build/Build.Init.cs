@@ -20,6 +20,7 @@ partial class Build : NukeBuild
     AbsolutePath Identity_DB_Cfg => RootDirectory / "Docker" / "PostgresSql" / "IdentityDB.sh";
     AbsolutePath Scheduler_DB_Cfg => RootDirectory / "Docker" / "PostgresSql" / "SchedulerDB.sh";
 
+    string postgres_db_name = "trouble_db";
     //---------------
     // Build process
     //---------------
@@ -48,7 +49,7 @@ partial class Build : NukeBuild
         .OnlyWhenStatic(() => EnvironmentInfo.IsLinux || EnvironmentInfo.IsWin)
         .Executes(() =>
         {
-            TryStopAndRemove("trouble_db");
+            TryStopAndRemove(postgres_db_name);
 
             /* ####### YAML #######
 
@@ -77,7 +78,7 @@ partial class Build : NukeBuild
             // Docker Task representation of YAML
             DockerTasks.DockerRun(e => e
                 .SetImage("postgres")
-                .SetName("trouble_db")
+                .SetName(postgres_db_name)
                 .SetRestart("always")
                 .SetPublish("5555:5555")
                 .SetEnv(new string[] {
@@ -102,7 +103,7 @@ partial class Build : NukeBuild
     {
         try
         {
-            DockerTasks.Docker("stop trouble_db");
+            DockerTasks.Docker($"stop {postgres_db_name}");
         }
         catch { }
     });

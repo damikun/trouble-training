@@ -1,7 +1,6 @@
 using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
-using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.Docker;
 using Nuke.Common.Tools.EntityFramework;
 
