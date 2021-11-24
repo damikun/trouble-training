@@ -56,7 +56,7 @@ partial class Build : NukeBuild
     Target E2E_Test => _ => _
         .OnlyWhenStatic(() =>
             this.InvokedTargets.Any(e => e.Name == nameof(E2E_RunAs_Local) ||
-            (this.InvokedTargets.Any(e => e.Name == nameof(E2E_RunAs_CI) && EnvironmentInfo.IsWin))
+            (this.InvokedTargets.Any(e => e.Name == nameof(E2E_RunAs_CI) && EnvironmentInfo.IsWin))))
         .DependsOn(
             Start_API_Server,
             Start_Identity_Server,
@@ -80,6 +80,9 @@ partial class Build : NukeBuild
     //--------------------------------------------
 
     Target Start_API_Server => _ => _
+    .OnlyWhenStatic(() =>
+    this.InvokedTargets.Any(e => e.Name == nameof(E2E_RunAs_Local) ||
+    (this.InvokedTargets.Any(e => e.Name == nameof(E2E_RunAs_CI) && EnvironmentInfo.IsWin))))
     .After(SetupCertificates_Local, SetupCertificates_CI)
     .Executes(async () =>
     {
@@ -104,6 +107,9 @@ partial class Build : NukeBuild
     //--------------------------------------------
 
     Target Start_BFF_Server => _ => _
+    .OnlyWhenStatic(() =>
+    this.InvokedTargets.Any(e => e.Name == nameof(E2E_RunAs_Local) ||
+    (this.InvokedTargets.Any(e => e.Name == nameof(E2E_RunAs_CI) && EnvironmentInfo.IsWin))))
     .After(SetupCertificates_Local, SetupCertificates_CI)
     .Executes(async () =>
     {
@@ -131,6 +137,9 @@ partial class Build : NukeBuild
     //--------------------------------------------
 
     Target Start_Identity_Server => _ => _
+    .OnlyWhenStatic(() =>
+    this.InvokedTargets.Any(e => e.Name == nameof(E2E_RunAs_Local) ||
+    (this.InvokedTargets.Any(e => e.Name == nameof(E2E_RunAs_CI) && EnvironmentInfo.IsWin))))
     .After(SetupCertificates_Local, SetupCertificates_CI)
     .Executes(async () =>
     {
