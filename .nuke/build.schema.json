@@ -92,7 +92,10 @@
               "BFF_DockerBuild",
               "BFF_Restore",
               "Clean",
+              "Clean_Dev_Certificates",
               "Docker_Info",
+              "E2E_RunAs_CI",
+              "E2E_RunAs_Local",
               "E2E_Test",
               "Frontend_AddTailwind",
               "Frontend_All",
@@ -111,14 +114,17 @@
               "Postgresql_Init",
               "Postgresql_Stop",
               "Restore_Tools",
-              "SetupCertificates",
-              "SetupCertificatesCI",
+              "SetupCertificates_CI",
+              "SetupCertificates_Local",
+              "SetupDevCertificates",
               "Start_API_Server",
               "Start_BFF_Server",
               "Start_Identity_Server",
               "Stop_API_Server",
               "Stop_BFF_Server",
-              "Stop_Identity_Server"
+              "Stop_Identity_Server",
+              "TrustDevCertificates_CI",
+              "TrustDevCertificates_Local"
             ]
           }
         },
@@ -150,7 +156,10 @@
               "BFF_DockerBuild",
               "BFF_Restore",
               "Clean",
+              "Clean_Dev_Certificates",
               "Docker_Info",
+              "E2E_RunAs_CI",
+              "E2E_RunAs_Local",
               "E2E_Test",
               "Frontend_AddTailwind",
               "Frontend_All",
@@ -169,14 +178,17 @@
               "Postgresql_Init",
               "Postgresql_Stop",
               "Restore_Tools",
-              "SetupCertificates",
-              "SetupCertificatesCI",
+              "SetupCertificates_CI",
+              "SetupCertificates_Local",
+              "SetupDevCertificates",
               "Start_API_Server",
               "Start_BFF_Server",
               "Start_Identity_Server",
               "Stop_API_Server",
               "Stop_BFF_Server",
-              "Stop_Identity_Server"
+              "Stop_Identity_Server",
+              "TrustDevCertificates_CI",
+              "TrustDevCertificates_Local"
             ]
           }
         },

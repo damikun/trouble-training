@@ -35,35 +35,43 @@ partial class Build : NukeBuild
         base.OnBuildFinished();
     }
 
-    Target E2E_Test => _ => _
+    Target E2E_RunAs_CI => _ => _
+        .Requires(() => EnvironmentInfo.IsWin)
+        .OnlyWhenStatic(() => EnvironmentInfo.IsWin)
         .After(All)
+        .DependsOn(SetupCertificates_CI, Init)
+        .Triggers(E2E_Test);
+
+    Target E2E_RunAs_Local => _ => _
+        .After(All)
+        .DependsOn(SetupCertificates_Local, Init)
+        .Triggers(E2E_Test);
+
+    Target E2E_Test => _ => _
         .DependsOn(
-            SetupCertificatesCI,
             Start_API_Server,
             Start_Identity_Server,
-            Start_BFF_Server,
-            Init)
+            Start_BFF_Server)
         .Triggers(
             Stop_API_Server,
             Stop_BFF_Server,
             Stop_Identity_Server)
-        // .OnlyWhenStatic(() => EnvironmentInfo.IsLinux || EnvironmentInfo.IsWin)
+
         .Executes(() =>
-        {
+            {
 
-            NpmTasks.NpmRun(s => s
-                .SetCommand("test")
-                .SetProcessWorkingDirectory(FrontendDirectory)
-            );
+                NpmTasks.NpmRun(s => s
+                    .SetCommand("test")
+                    .SetProcessWorkingDirectory(FrontendDirectory)
+                );
 
-        }
-    );
+            }
+        );
 
     //--------------------------------------------
 
     Target Start_API_Server => _ => _
-    .After(SetupCertificates, Init)
-    .DependsOn(Init)
+    .After(E2E_RunAs_CI, E2E_RunAs_Local)
     .Executes(async () =>
     {
         APIProcess = ProcessTasks.StartProcess(
@@ -87,8 +95,7 @@ partial class Build : NukeBuild
     //--------------------------------------------
 
     Target Start_BFF_Server => _ => _
-    .After(SetupCertificates, Init)
-    .DependsOn(Init)
+    .After(E2E_RunAs_CI, E2E_RunAs_Local)
     .Executes(async () =>
     {
         BFFProcess = ProcessTasks.StartProcess(
@@ -97,7 +104,7 @@ partial class Build : NukeBuild
             BFFServerDir,
             null,
             null,
-            true
+            false
         );
 
         await WaitForHost(BFFProcess_Health_Url);
@@ -115,8 +122,7 @@ partial class Build : NukeBuild
     //--------------------------------------------
 
     Target Start_Identity_Server => _ => _
-    .After(SetupCertificates, Init)
-    .DependsOn(Init)
+    .After(E2E_RunAs_CI, E2E_RunAs_Local)
     .Executes(async () =>
     {
         IdentityProcess = ProcessTasks.StartProcess(

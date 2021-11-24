@@ -153,9 +153,7 @@ partial class Build : NukeBuild
     //----------------------------
     //----------------------------
 
-    Target SetupCertificatesCI => _ => _
-        .DependsOn(SetupCertificates)
-        .After(SetupCertificates)
+    Target TrustDevCertificates_CI => _ => _
         .OnlyWhenStatic(() => EnvironmentInfo.IsWin)
         .Executes(() =>
         {
@@ -165,16 +163,34 @@ partial class Build : NukeBuild
                 : Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
 
             PowerShell(
-                $"-NoProfile -ExecutionPolicy Unrestricted -File \"{CI_Cert_Script}\" {homePath}/.aspnet/https/cert.pfx dk@pass");
+                $"-NoProfile -ExecutionPolicy Unrestricted -File \"{CI_Cert_Script}\" {homePath}/.aspnet/https/cert.pfx dk@pass -Verb RunAs");
         });
 
-    Target SetupCertificates => _ => _
-        .OnlyWhenStatic(() => EnvironmentInfo.IsWin)
+    Target TrustDevCertificates_Local => _ => _
+        .Executes(() =>
+        {
+            DotNetTasks.DotNet("dev-certs https -t");
+        });
+
+    Target Clean_Dev_Certificates => _ => _
+        .Executes(() =>
+        {
+            DotNetTasks.DotNet("dev-certs https --clean");
+        });
+
+
+    Target SetupCertificates_Local => _ => _
+        .DependsOn(TrustDevCertificates_Local, SetupDevCertificates, Clean_Dev_Certificates);
+
+    Target SetupCertificates_CI => _ => _
+        .DependsOn(TrustDevCertificates_CI, SetupDevCertificates, Clean_Dev_Certificates);
+
+    Target SetupDevCertificates => _ => _
+        .Before(TrustDevCertificates_CI, TrustDevCertificates_Local)
+        .After(Clean_Dev_Certificates)
         .Executes(() =>
         {
             string pass = "dk@pass";
-
-            DotNetTasks.DotNet("dev-certs https --clean");
 
             string homePath = (Environment.OSVersion.Platform == PlatformID.Unix ||
                             Environment.OSVersion.Platform == PlatformID.MacOSX)
@@ -193,8 +209,6 @@ partial class Build : NukeBuild
             {
                 throw new Exception("Unsuported OS. Cetificates cannot be generates!");
             }
-
-            // DotNetTasks.DotNet("dev-certs https -t");
 
             var projects = new AbsolutePath[] { APIServer_Project, BFF_Project, Identity_Project };
 
