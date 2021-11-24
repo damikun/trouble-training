@@ -39,12 +39,12 @@ partial class Build : NukeBuild
         .OnlyWhenStatic(() => EnvironmentInfo.IsWin)
         .After(All)
         .DependsOn(SetupCertificates_CI, Init)
-        .Triggers(E2E_Test);
+        .Executes(E2E_Test);
 
     Target E2E_RunAs_Local => _ => _
         .After(All)
         .DependsOn(SetupCertificates_Local, Init)
-        .Triggers(E2E_Test);
+        .Executes(E2E_Test);
 
     Target E2E_Test => _ => _
         .DependsOn(
@@ -70,7 +70,7 @@ partial class Build : NukeBuild
     //--------------------------------------------
 
     Target Start_API_Server => _ => _
-    .After(E2E_RunAs_CI, E2E_RunAs_Local)
+    .After(SetupCertificates_Local, SetupCertificates_CI)
     .Executes(async () =>
     {
         APIProcess = ProcessTasks.StartProcess(
@@ -94,7 +94,7 @@ partial class Build : NukeBuild
     //--------------------------------------------
 
     Target Start_BFF_Server => _ => _
-    .After(E2E_RunAs_CI, E2E_RunAs_Local)
+    .After(SetupCertificates_Local, SetupCertificates_CI)
     .Executes(async () =>
     {
         BFFProcess = ProcessTasks.StartProcess(
@@ -121,7 +121,7 @@ partial class Build : NukeBuild
     //--------------------------------------------
 
     Target Start_Identity_Server => _ => _
-    .After(E2E_RunAs_CI, E2E_RunAs_Local)
+    .After(SetupCertificates_Local, SetupCertificates_CI)
     .Executes(async () =>
     {
         IdentityProcess = ProcessTasks.StartProcess(
