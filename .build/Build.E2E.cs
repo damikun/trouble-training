@@ -36,7 +36,6 @@ partial class Build : NukeBuild
     }
 
     Target E2E_RunAs_CI => _ => _
-        .Requires(() => EnvironmentInfo.IsWin)
         .OnlyWhenStatic(() => EnvironmentInfo.IsWin)
         .After(All)
         .DependsOn(SetupCertificates_CI, Init)
