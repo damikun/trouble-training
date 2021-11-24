@@ -12,6 +12,7 @@ using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Utilities.Collections;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
+using Nuke.Common.Tooling;
 
 [GitHubActions(
     "Backend-Frontend-Testing",
@@ -65,6 +66,8 @@ partial class Build : NukeBuild
 
     [GitRepository] readonly GitRepository GitRepository;
 
+    [PathExecutable] readonly Tool? PowerShell;
+
     //---------------
     // Enviroment
     //---------------
@@ -76,6 +79,9 @@ partial class Build : NukeBuild
     AbsolutePath BFF_Project => RootDirectory / "Src" / "BFF" / "API";
 
     AbsolutePath Identity_Project => RootDirectory / "Src" / "IdentityServer" / "API";
+
+    AbsolutePath Build_Root => RootDirectory / ".build";
+    AbsolutePath CI_Cert_Script => RootDirectory / ".build" / "ci_certs.ps1";
 
     //---------------
     // Build process
@@ -147,13 +153,27 @@ partial class Build : NukeBuild
     //----------------------------
     //----------------------------
 
+    Target SetupCertificatesCI => _ => _
+        .DependsOn(SetupCertificates)
+        .OnlyWhenStatic(() => EnvironmentInfo.IsWin)
+        .Executes(() =>
+        {
+            string homePath = (Environment.OSVersion.Platform == PlatformID.Unix ||
+                Environment.OSVersion.Platform == PlatformID.MacOSX)
+                ? Environment.GetEnvironmentVariable("HOME")
+                : Environment.ExpandEnvironmentVariables("%HOMEDRIVE%%HOMEPATH%");
+
+            PowerShell(
+                $"-NoProfile -ExecutionPolicy Unrestricted -File \"{CI_Cert_Script}\" {homePath}/.aspnet/https/cert.pfx dk@pass");
+        });
+
     Target SetupCertificates => _ => _
         .OnlyWhenStatic(() => EnvironmentInfo.IsWin)
         .Executes(() =>
         {
             string pass = "dk@pass";
 
-            // DotNetTasks.DotNet("dev-certs https --clean");
+            DotNetTasks.DotNet("dev-certs https --clean");
 
             string homePath = (Environment.OSVersion.Platform == PlatformID.Unix ||
                             Environment.OSVersion.Platform == PlatformID.MacOSX)

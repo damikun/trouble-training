@@ -38,7 +38,7 @@ partial class Build : NukeBuild
     Target E2E_Test => _ => _
         .After(All)
         .DependsOn(
-            SetupCertificates,
+            SetupCertificatesCI,
             Start_API_Server,
             Start_Identity_Server,
             Start_BFF_Server,
