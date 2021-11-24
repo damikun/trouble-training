@@ -596,5 +596,210 @@ partial class Build : NukeBuild
 
 The full build process of this demo is more complex and you can find it under `.build` folder
 
-![Demo full nuke plan](./Assets/full_build_process.png "Demo full nuke plan")
+![Demo full nuke plan](./Assets/trouble_training_build_plan.png "Demo full nuke plan")
+
+### Working with docker images
+
+This is the equivalent of `docker-compose.yaml` and nuke fluent varsion for postgresql docker image:
+
+```c#
+partial class Build : NukeBuild
+{
+ Target Postgresql_Init => _ => _
+        .OnlyWhenStatic(() => EnvironmentInfo.IsLinux || EnvironmentInfo.IsWin)
+        .Executes(() =>
+        {
+            /* ####### YAML #######
+
+            version: "3.7"
+            services:
+            database:
+                image: postgres
+                container_name: trouble_db
+                restart: always
+                ports:
+                - "5555:5555"
+                environment:
+                - POSTGRES_DB=Trouble
+                - POSTGRES_PASSWORD=postgres
+                - POSTGRES_USER=postgres
+                - MASTER_PASSWORD_REQUIRED=False
+                volumes:
+                - ./dev/tdev-db:/var/lib/postgresql/tdev-db
+                - ./APIServerDB.sh:/docker-entrypoint-initdb.d/APIServerDB.sh
+                - ./IdentityDB.sh:/docker-entrypoint-initdb.d/IdentityDB.sh
+                - ./SchedulerDB.sh:/docker-entrypoint-initdb.d/SchedulerDB.sh
+                command: -p 5555
+
+            */
+
+            // Docker Task representation of YAML
+            DockerTasks.DockerRun(e => e
+                .SetImage("postgres")
+                .SetName(postgres_db_name)
+                .SetRestart("always")
+                .SetPublish("5555:5555")
+                .SetEnv(new string[] {
+                    "POSTGRES_PASSWORD=postgres",
+                    "POSTGRES_USER=postgres",
+                    "MASTER_PASSWORD_REQUIRED=False"
+                })
+                .AddVolume($"{DB_Volume_Dir}:/var/lib/postgresql/tdev-db")
+                .AddVolume($"{APIServer_DB_Cfg}:/docker-entrypoint-initdb.d/APIServerDB.sh")
+                .AddVolume($"{Identity_DB_Cfg}:/docker-entrypoint-initdb.d/IdentityDB.sh")
+                .AddVolume($"{Scheduler_DB_Cfg}:/docker-entrypoint-initdb.d/SchedulerDB.sh")
+                .SetCommand("-p 5555")
+                .SetDetach(true)
+                .SetProcessWorkingDirectory(DatabaseDocker)
+
+            );
+
+        });
+}
+```
+
+The `.SetDetach(true)` is important since process will contine in background!
+
+### Working with `npm`
+
+To work with `npm` Nuke provides `NpmTask` class:
+
+```c#
+NpmTasks.NpmRun(s => s
+    .SetCommand(cypress_test_script_name)
+    .SetProcessWorkingDirectory(FrontendDirectory)
+);
+```
+
+where `cypress_test_script_name` is just string name of start script from `package.json`.
+
+```json
+{
+"scripts": {
+    "test": "cypress run --config pageLoadTimeout=30000,baseUrl=https://localhost:5015"
+  }
+}
+```
+
+### Working with process
+
+Nuke allow you dirrectly trigger system process as:
+
+```c#
+
+IProcess APIProcess;
+
+APIProcess = ProcessTasks.StartProcess(
+    "dotnet",
+    "run",
+    APIServerDir,
+    null,           // env variables
+    null,           // Timeout 
+    API_Logging     // logs
+);
+```
+
+where `StartProcess` is:
+
+```c#
+public static IProcess StartProcess(ToolSettings toolSettings);
+
+public static IProcess StartProcess(string toolPath, string arguments = null, string workingDirectory = null, IReadOnlyDictionary<string, string> environmentVariables = null, int? timeout = null, bool? logOutput = null, bool? logInvocation = null, bool? logTimestamp = null, string logFile = null, Action<OutputType, string> customLogger = null, Func<string, string> outputFilter = null);
+```
+
+To kill correspondend process:
+
+```c#
+Target Stop_Identity_Server => _ => _
+    .Executes(() =>
+    {
+        process.Kill();
+    });
+```
+
+Lets have a look on example to strat TestServers > process action > Stop
+
+```c#
+    Target E2E_Test => _ => _
+        .DependsOn(
+            Start_API_Server,
+            Start_Identity_Server,
+            Start_BFF_Server)
+        .Triggers(
+            Stop_API_Server,
+            Stop_BFF_Server,
+            Stop_Identity_Server)
+
+        .Executes(() =>
+            {
+
+                NpmTasks.NpmRun(s => s
+                    .SetCommand(cypress_test_script_name)
+                    .SetProcessWorkingDirectory(FrontendDirectory)
+                );
+
+            }
+        );
+
+```
+
+### Working with dotnet tools
+
+
+Often you need to use external tools as `dotnet-ef` to create/apply migration. To be able to do that make sure that yor `dotnet-tools.json` in `.config` folder contains this tool on listing:
+
+```json
+{
+    "version": 1,
+    "isRoot": true,
+    "tools": {
+      "nuke.globaltool": {
+        "version": "5.3.0",
+        "commands": [
+          "nuke"
+        ]
+      },
+      "dotnet-ef": {
+        "version": "5.0.11",
+        "commands": [
+          "dotnet-ef"
+        ]
+      }
+    }
+  }
+```
+
+You need to restore this tool before you work with it in targets:
+
+```c#
+Target Restore_Tools => _ => _
+    .After(Clean)
+    .Executes(() =>
+    {
+        DotNetTasks.DotNetToolRestore();
+    });
+```
+
+And then use it:
+
+```c#
+Target API_Migrate_DB => _ => _
+    .DependsOn(
+        API_Compile,
+        API_Restore,
+        Restore_Tools
+    )
+    .After(
+        All,
+        Postgresql_Init)
+    .Executes(() =>
+    {
+
+        EntityFrameworkTasks
+            .EntityFrameworkDatabaseUpdate(e => e
+            .SetProcessWorkingDirectory(APIServerMigrationDir)
+            );
+
+    });
+```
 
