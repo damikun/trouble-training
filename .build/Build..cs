@@ -183,6 +183,7 @@ partial class Build : NukeBuild
         .DependsOn(TrustDevCertificates_Local, SetupDevCertificates, Clean_Dev_Certificates);
 
     Target SetupCertificates_CI => _ => _
+        .Requires(() => EnvironmentInfo.IsWin)
         .DependsOn(TrustDevCertificates_CI, SetupDevCertificates, Clean_Dev_Certificates);
 
     Target SetupDevCertificates => _ => _
