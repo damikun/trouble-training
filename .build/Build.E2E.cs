@@ -54,7 +54,9 @@ partial class Build : NukeBuild
         .Executes(E2E_Test);
 
     Target E2E_Test => _ => _
-        .OnlyWhenStatic(() => this.InvokedTargets.Any(e => e.Name == nameof(E2E_RunAs_Local)))
+        .OnlyWhenStatic(() =>
+            this.InvokedTargets.Any(e => e.Name == nameof(E2E_RunAs_Local) ||
+            (this.InvokedTargets.Any(e => e.Name == nameof(E2E_RunAs_CI) && EnvironmentInfo.IsWin))
         .DependsOn(
             Start_API_Server,
             Start_Identity_Server,
@@ -190,8 +192,6 @@ partial class Build : NukeBuild
         {
             try
             {
-                // client.BaseAddress = new System.Uri(host_base);
-
                 var response = await client.GetAsync(host_endpoint);
 
                 if (response.IsSuccessStatusCode)
