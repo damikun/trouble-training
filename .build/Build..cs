@@ -155,6 +155,7 @@ partial class Build : NukeBuild
 
     Target SetupCertificatesCI => _ => _
         .DependsOn(SetupCertificates)
+        .After(SetupCertificates)
         .OnlyWhenStatic(() => EnvironmentInfo.IsWin)
         .Executes(() =>
         {
