@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": false,
+    "noEmit": true,
+    "types": [
+      "../../BFF/API/ClientApp/node_modules/cypress"
+    ],
+    "jsx": "react-jsx"
+  },
+  "include": [
+    "../../BFF/API/ClientApp/src",
+    "../../BFF/API/ClientApp/babel.config.js",
+    "../../BFF/API/ClientApp/node_modules/cypress",
+    "../../Tests/Frontend.Cypress/*/*.ts"
+  ]
+}

@@ -2,7 +2,15 @@
     "baseUrl": "https://localhost:5015",
     "chromeWebSecurity": false,
     "ignoreFiles": "**/ignore/*",
-    "supportFile": "cypress/support/index.ts",
     "experimentalSessionSupport": true,
-    "video": false
+    "video": false,
+
+
+    "fixturesFolder": "../../../Tests/Frontend.Cypress/fixtures",
+    "integrationFolder": "../../../Tests/Frontend.Cypress/integration",
+    "pluginsFile": "../../../Tests/Frontend.Cypress/plugins/index.js",
+    "screenshotsFolder": "../../../Tests/Frontend.Cypress/screenshots",
+    "videosFolder": "../../../Tests/Frontend.Cypress/videos",
+    "downloadsFolder": "../../../Tests/Frontend.Cypress/downloads",
+    "supportFile": "cypress/support.ts"
 }
