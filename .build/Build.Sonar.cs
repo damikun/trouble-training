@@ -12,9 +12,11 @@ partial class Build : NukeBuild
 
     [Parameter] readonly string SonarToken;
     const string SonarProjectKey = "trouble-training";
+    string Github_Organization_Name = "damikun";
 
     [Parameter("Sonar server")]
     readonly string SonarServer = IsLocalBuild ? "https://sonarcloud.io" : "https://sonarcloud.io"; // change url for local server
+
 
     string[] sonar_path_exclude = new string[]{
         "**/Generated/**/*",
@@ -29,8 +31,8 @@ partial class Build : NukeBuild
         "**/*.json",
         "**/*.sh",
         "**/*.md",
-        "**/bin/*",
-        "**/obj/*",
+        // "**/bin/*",
+        // "**/obj/*",
         "**/Tests/*",
         "**/Test/*",
         "**/node_modules/**/*"
@@ -54,7 +56,7 @@ partial class Build : NukeBuild
             SonarScannerBegin(s => s
                 .SetLogin(SonarToken)
                 .SetProjectKey(SonarProjectKey)
-                .SetOrganization("damikun")
+                .SetOrganization(Github_Organization_Name)
                 .SetServer(SonarServer)
                 .AddSourceExclusions(sonar_path_exclude)
                 .SetOpenCoverPaths(ArtifactsDirectory / "coverage.xml")
