@@ -23,6 +23,9 @@ jobs:
     name: windows-latest
     runs-on: windows-latest
     steps:
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "11"
       - uses: actions/checkout@v1
       - name: Cache .nuke/temp, ~/.nuget/packages
         uses: actions/cache@v2

@@ -2,6 +2,8 @@
 using Nuke.Common;
 using Nuke.Common.Tools.SonarScanner;
 using static Nuke.Common.Tools.SonarScanner.SonarScannerTasks;
+using Nuke.Common.Tooling;
+using Nuke.Common.Tools.DotNet;
 
 partial class Build : NukeBuild
 {
@@ -71,7 +73,8 @@ partial class Build : NukeBuild
         {
             SonarScannerEnd(s => s
                 .SetLogin(SonarToken)
-                .SetFramework("net5.0"));
+                .SetFramework("net5.0")
+                .SetProcessWorkingDirectory(RootDirectory));
         });
 
 }

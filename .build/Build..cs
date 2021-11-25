@@ -51,7 +51,7 @@ using Nuke.Common.Tooling;
     On = new[] { GitHubActionsTrigger.PullRequest },
     InvokedTargets = new[] { nameof(Sonar) },
     ImportSecrets = new[] { nameof(SonarToken) },
-    AutoGenerate = true)]
+    AutoGenerate = false)]
 [CheckBuildProjectConfigurations]
 [ShutdownDotNetAfterServerBuild]
 partial class Build : NukeBuild
