@@ -117,6 +117,8 @@
               "SetupCertificates_CI",
               "SetupCertificates_Local",
               "SetupDevCertificates",
+              "Sonar",
+              "SonarBegin",
               "Start_API_Server",
               "Start_BFF_Server",
               "Start_Identity_Server",
@@ -131,6 +133,13 @@
         "Solution": {
           "type": "string",
           "description": "Path to a solution file that is automatically loaded"
+        },
+        "SonarServer": {
+          "type": "string",
+          "description": "Sonar server"
+        },
+        "SonarToken": {
+          "type": "string"
         },
         "Target": {
           "type": "array",
@@ -181,6 +190,8 @@
               "SetupCertificates_CI",
               "SetupCertificates_Local",
               "SetupDevCertificates",
+              "Sonar",
+              "SonarBegin",
               "Start_API_Server",
               "Start_BFF_Server",
               "Start_Identity_Server",

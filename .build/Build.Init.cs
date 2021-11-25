@@ -21,6 +21,7 @@ partial class Build : NukeBuild
     AbsolutePath Scheduler_DB_Cfg => RootDirectory / "Docker" / "PostgresSql" / "SchedulerDB.sh";
 
     string postgres_db_name = "trouble_db";
+
     //---------------
     // Build process
     //---------------
