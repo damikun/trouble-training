@@ -138,6 +138,13 @@ partial class Build : NukeBuild
             Identity_Compile
         );
 
+    Target Backend_All => _ => _
+        .DependsOn(
+            API_All,
+            BFF_All,
+            Identity_All
+        );
+
     Target Frontend_All => _ => _
         .DependsOn(
             Frontend_Clean,
@@ -149,9 +156,7 @@ partial class Build : NukeBuild
 
     Target All => _ => _
         .DependsOn(
-            API_All,
-            BFF_All,
-            Identity_All,
+            Backend_All,
             Frontend_All,
             Restore_Tools
         );

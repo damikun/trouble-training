@@ -44,8 +44,7 @@ partial class Build : NukeBuild
         .Before(
             API_Compile,
             BFF_Compile,
-            Identity_Compile,
-            Frontend_Restore
+            Identity_Compile
         )
         .Requires(() => SonarToken)
         .Unlisted()
@@ -60,7 +59,7 @@ partial class Build : NukeBuild
         });
 
     Target Sonar => _ => _
-        .DependsOn(SonarBegin, All)
+        .DependsOn(SonarBegin, Backend_All)
         .Requires(() => SonarToken)
         .AssuredAfterFailure()
         .Executes(() =>
