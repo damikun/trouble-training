@@ -54,6 +54,7 @@ partial class Build : NukeBuild
             SonarScannerBegin(s => s
                 .SetLogin(SonarToken)
                 .SetProjectKey(SonarProjectKey)
+                .SetOrganization("damikun")
                 .SetServer(SonarServer)
                 .AddSourceExclusions(sonar_path_exclude)
                 .SetOpenCoverPaths(ArtifactsDirectory / "coverage.xml")
