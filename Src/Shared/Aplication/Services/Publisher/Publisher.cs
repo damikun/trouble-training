@@ -7,14 +7,17 @@ using System.Threading.Tasks;
 using MediatR;
 using SharedCore.Aplication.Interfaces;
 
-namespace SharedCore.Aplication.Services {
+namespace SharedCore.Aplication.Services
+{
 
-    public class Publisher : SharedCore.Aplication.Interfaces.IPublisher {
+    public class Publisher : SharedCore.Aplication.Interfaces.IPublisher
+    {
         private readonly ServiceFactory _serviceFactory;
         public IDictionary<PublishStrategy, IMediator> PublishStrategies = new Dictionary<PublishStrategy, IMediator>();
         public PublishStrategy DefaultStrategy { get; set; } = PublishStrategy.SyncContinueOnException;
 
-        public Publisher(ServiceFactory serviceFactory) {
+        public Publisher(ServiceFactory serviceFactory)
+        {
             _serviceFactory = serviceFactory;
 
             PublishStrategies[PublishStrategy.Async] = new AppMediator(_serviceFactory, AsyncContinueOnException);
@@ -28,39 +31,48 @@ namespace SharedCore.Aplication.Services {
         //-------------------------------------------------
         //-------------------------------------------------
 
-        public Task<TResponse> Send<TResponse>(ICommandBase<TResponse> request, CancellationToken cancellationToken = default) {
-            if (!PublishStrategies.TryGetValue(DefaultStrategy, out var mediator)) {
+        public Task<TResponse> Send<TResponse>(ICommandBase<TResponse> request, CancellationToken cancellationToken = default)
+        {
+            if (!PublishStrategies.TryGetValue(DefaultStrategy, out var mediator))
+            {
                 throw new ArgumentException($"Cannot get default strategy");
             }
             return mediator.Send<TResponse>(request, cancellationToken);
         }
 
-        #nullable enable
-        public Task<object?> Send(ICommandBase request, CancellationToken cancellationToken = default) {
-            if (!PublishStrategies.TryGetValue(DefaultStrategy, out var mediator)) {
+#nullable enable
+        public Task<object?> Send(ICommandBase request, CancellationToken cancellationToken = default)
+        {
+            if (!PublishStrategies.TryGetValue(DefaultStrategy, out var mediator))
+            {
                 throw new ArgumentException($"Cannot get default strategy");
             }
             return mediator.Send(request as object, cancellationToken);
         }
-        #nullable disable
+#nullable disable
 
         //-------------------------------------------------
         //-------------------------------------------------
 
-        public Task Publish<TNotification>(TNotification notification) {
+        public Task Publish<TNotification>(TNotification notification)
+        {
             return Publish(notification, DefaultStrategy, default(CancellationToken));
         }
 
-        public Task Publish<TNotification>(TNotification notification, PublishStrategy strategy) {
+        public Task Publish<TNotification>(TNotification notification, PublishStrategy strategy)
+        {
             return Publish(notification, strategy, default(CancellationToken));
         }
 
-        public Task Publish<TNotification>(TNotification notification, CancellationToken cancellationToken) {
+        public Task Publish<TNotification>(TNotification notification, CancellationToken cancellationToken)
+        {
             return Publish(notification, DefaultStrategy, cancellationToken);
         }
 
-        public Task Publish<TNotification>(TNotification notification, PublishStrategy strategy, CancellationToken cancellationToken) {
-            if (!PublishStrategies.TryGetValue(strategy, out var mediator)) {
+        public Task Publish<TNotification>(TNotification notification, PublishStrategy strategy, CancellationToken cancellationToken)
+        {
+            if (!PublishStrategies.TryGetValue(strategy, out var mediator))
+            {
                 throw new ArgumentException($"Unknown strategy: {strategy}");
             }
 
@@ -70,79 +82,106 @@ namespace SharedCore.Aplication.Services {
         //-------------------------------------------------
         //-------------------------------------------------
 
-        private Task ParallelWhenAll(IEnumerable<Func<INotification, CancellationToken, Task>> handlers, INotification notification, CancellationToken cancellationToken) {
+        private Task ParallelWhenAll(IEnumerable<Func<INotification, CancellationToken, Task>> handlers, INotification notification, CancellationToken cancellationToken)
+        {
             var tasks = new List<Task>();
 
-            foreach (var handler in handlers) {
+            foreach (var handler in handlers)
+            {
                 tasks.Add(Task.Run(() => handler(notification, cancellationToken)));
             }
 
             return Task.WhenAll(tasks);
         }
 
-        private Task ParallelWhenAny(IEnumerable<Func<INotification, CancellationToken, Task>> handlers, INotification notification, CancellationToken cancellationToken) {
+        private Task ParallelWhenAny(IEnumerable<Func<INotification, CancellationToken, Task>> handlers, INotification notification, CancellationToken cancellationToken)
+        {
             var tasks = new List<Task>();
 
-            foreach (var handler in handlers) {
+            foreach (var handler in handlers)
+            {
                 tasks.Add(Task.Run(() => handler(notification, cancellationToken)));
             }
 
             return Task.WhenAny(tasks);
         }
 
-        private Task ParallelNoWait(IEnumerable<Func<INotification, CancellationToken, Task>> handlers, INotification notification, CancellationToken cancellationToken) {
-            foreach (var handler in handlers) {
+        private Task ParallelNoWait(IEnumerable<Func<INotification, CancellationToken, Task>> handlers, INotification notification, CancellationToken cancellationToken)
+        {
+            foreach (var handler in handlers)
+            {
                 Task.Run(() => handler(notification, cancellationToken));
             }
 
             return Task.CompletedTask;
         }
 
-        private async Task AsyncContinueOnException(IEnumerable<Func<INotification, CancellationToken, Task>> handlers, INotification notification, CancellationToken cancellationToken) {
+        private async Task AsyncContinueOnException(IEnumerable<Func<INotification, CancellationToken, Task>> handlers, INotification notification, CancellationToken cancellationToken)
+        {
             var tasks = new List<Task>();
             var exceptions = new List<Exception>();
 
-            foreach (var handler in handlers) {
-                try {
+            foreach (var handler in handlers)
+            {
+                try
+                {
                     tasks.Add(handler(notification, cancellationToken));
-                } catch (Exception ex) when (!(ex is OutOfMemoryException || ex is StackOverflowException)) {
+                }
+                catch (Exception ex) when (!(ex is OutOfMemoryException || ex is StackOverflowException))
+                {
                     exceptions.Add(ex);
                 }
             }
 
-            try {
+            try
+            {
                 await Task.WhenAll(tasks).ConfigureAwait(false);
-            } catch (AggregateException ex) {
+            }
+            catch (AggregateException ex)
+            {
                 exceptions.AddRange(ex.Flatten().InnerExceptions);
-            } catch (Exception ex) when (!(ex is OutOfMemoryException || ex is StackOverflowException)) {
+            }
+            catch (Exception ex) when (!(ex is OutOfMemoryException || ex is StackOverflowException))
+            {
                 exceptions.Add(ex);
             }
 
-            if (exceptions.Any()) {
+            if (exceptions.Any())
+            {
                 throw new AggregateException(exceptions);
             }
         }
 
-        private async Task SyncStopOnException(IEnumerable<Func<INotification, CancellationToken, Task>> handlers, INotification notification, CancellationToken cancellationToken) {
-            foreach (var handler in handlers) {
+        private async Task SyncStopOnException(IEnumerable<Func<INotification, CancellationToken, Task>> handlers, INotification notification, CancellationToken cancellationToken)
+        {
+            foreach (var handler in handlers)
+            {
                 await handler(notification, cancellationToken).ConfigureAwait(false);
             }
         }
 
-        private async Task SyncContinueOnException(IEnumerable<Func<INotification, CancellationToken, Task>> handlers, INotification notification, CancellationToken cancellationToken) {
+        private async Task SyncContinueOnException(IEnumerable<Func<INotification, CancellationToken, Task>> handlers, INotification notification, CancellationToken cancellationToken)
+        {
             var exceptions = new List<Exception>();
 
-            foreach (var handler in handlers) {
-                try {
+            foreach (var handler in handlers)
+            {
+                try
+                {
                     await handler(notification, cancellationToken).ConfigureAwait(false);
-                } catch (AggregateException ex) {
+                }
+                catch (AggregateException ex)
+                {
                     exceptions.AddRange(ex.Flatten().InnerExceptions);
-                } catch (Exception ex) when (!(ex is OutOfMemoryException || ex is StackOverflowException)) {
+                }
+                catch (Exception ex) when (!(ex is OutOfMemoryException || ex is StackOverflowException))
+                {
                     exceptions.Add(ex);
                 }
             }
 
-            if (exceptions.Any()) {
+            if (exceptions.Any())
+            {
                 throw new AggregateException(exceptions);
             }
         }

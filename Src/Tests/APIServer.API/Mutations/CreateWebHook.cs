@@ -9,13 +9,15 @@ namespace APIServer.API.IntegrationTests.WebHooks
     [Collection("Sequential")]
     public class CreateWebHookTests : BaseClassFixture
     {
-        public CreateWebHookTests(XunitFixture fixture):base(fixture){
+        public CreateWebHookTests(XunitFixture fixture) : base(fixture)
+        {
 
         }
 
-        public static string GetTestMutation(){
+        public static string GetTestMutation()
+        {
 
-            return  @"mutation($request: CreateWebHookInput){
+            return @"mutation($request: CreateWebHookInput){
                 createWebHook(request:$request){
                     ... on CreateWebHookPayload{
                         hook{
@@ -45,15 +47,16 @@ namespace APIServer.API.IntegrationTests.WebHooks
 
             var mutation = GetTestMutation();
 
-            var variables =  new { 
-                request = new{  webHookUrl="https://someurl/path", isActive=true }
+            var variables = new
+            {
+                request = new { webHookUrl = "https://someurl/path", isActive = true }
             };
 
             await RunAs(
               Common.GetDefaultUser(),
               Common.GetDefaultClinet());
 
-            var response = await HttpClient.ProcessQuery(mutation,variables);
+            var response = await HttpClient.ProcessQuery(mutation, variables);
 
             response.raw_response.StatusCode.Should().Be(200);
 
@@ -66,15 +69,16 @@ namespace APIServer.API.IntegrationTests.WebHooks
 
             var mutation = GetTestMutation();
 
-            var variables =  new { 
-                request = new{  webHookUrl="some_invalid_url", isActive=true }
+            var variables = new
+            {
+                request = new { webHookUrl = "some_invalid_url", isActive = true }
             };
 
             await RunAs(
               Common.GetDefaultUser(),
               Common.GetDefaultClinet());
 
-            var response = await HttpClient.ProcessQuery(mutation,variables);
+            var response = await HttpClient.ProcessQuery(mutation, variables);
 
             response.raw_response.StatusCode.Should().Be(200);
 
@@ -86,17 +90,18 @@ namespace APIServer.API.IntegrationTests.WebHooks
         {
 
             var mutation = GetTestMutation();
-            
-            var variables =  new { 
-                request = new{  webHookUrl="https://someurl/path", isActive=true }
+
+            var variables = new
+            {
+                request = new { webHookUrl = "https://someurl/path", isActive = true }
             };
 
-            var response = await HttpClient.ProcessQuery(mutation,variables);
+            var response = await HttpClient.ProcessQuery(mutation, variables);
 
             response.raw_response.StatusCode.Should().Be(200);
 
             Snapshot.Match(response.data_content);
         }
-       
+
     }
 }

@@ -3,10 +3,13 @@ using System;
 using System.Collections.Generic;
 using APIServer.Domain.Core.Models.WebHooks;
 
-namespace APIServer.Aplication.GraphQL.DTO {
+namespace APIServer.Aplication.GraphQL.DTO
+{
 
-    public class GQL_WebHook {
-        public GQL_WebHook() {
+    public class GQL_WebHook
+    {
+        public GQL_WebHook()
+        {
 
         }
         // <summary>

@@ -5,9 +5,11 @@ using Newtonsoft.Json;
 using System.Diagnostics;
 using SharedCore.Aplication.Interfaces;
 
-namespace SharedCore.Aplication.Services {
+namespace SharedCore.Aplication.Services
+{
 
-    public class Scheduler: IScheduler {
+    public class Scheduler : IScheduler
+    {
 
         private readonly ICommandHandler _handler;
 
@@ -15,22 +17,25 @@ namespace SharedCore.Aplication.Services {
 
         public Scheduler(
             ICommandHandler handler,
-            ITelemetry telemetry) {
+            ITelemetry telemetry)
+        {
             _handler = handler;
             _telemetry = telemetry;
         }
-        
+
         public string Enqueue(
             IRequest request,
-            string description = null) {
+            string description = null)
+        {
 
             Activity activity = _telemetry.AppSource.StartActivity(
                     String.Format(
                         "SchedulerEnqueue: Request<{0}>",
                         request.GetType().FullName),
-                        ActivityKind.Producer);;
+                        ActivityKind.Producer); ;
 
-            if (request is ISharedCommandBase) {
+            if (request is ISharedCommandBase)
+            {
                 ISharedCommandBase i_request_base = request as ISharedCommandBase;
 
                 i_request_base.ActivityId = Activity.Current.Id;
@@ -38,16 +43,19 @@ namespace SharedCore.Aplication.Services {
                 // This chane activity parrent / children relation..
                 if (i_request_base.ActivityId != null
                     && Activity.Current != null
-                    && Activity.Current.ParentId == null) {
+                    && Activity.Current.ParentId == null)
+                {
                     Activity.Current.SetParentId(Activity.Current.Id);
                 }
 
-                if (Activity.Current != null && Activity.Current.ParentId != null) {
+                if (Activity.Current != null && Activity.Current.ParentId != null)
+                {
                     Activity.Current.AddTag("Parrent Id", Activity.Current.ParentId);
                 }
             }
 
-            try {
+            try
+            {
 
                 Activity.Current?.AddTag("Activity Id", Activity.Current.Id);
 
@@ -58,13 +66,17 @@ namespace SharedCore.Aplication.Services {
                 return BackgroundJob.Enqueue(
                     () => _handler.ExecuteCommand(mediatorSerializedObject));
 
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
 
                 _telemetry.SetOtelError(ex);
 
                 throw;
 
-            } finally {
+            }
+            finally
+            {
                 activity?.Stop();
                 activity?.Dispose();
             }
@@ -75,7 +87,8 @@ namespace SharedCore.Aplication.Services {
             IRequest request,
             string parentJobId,
             JobContinuationOptions continuationOption,
-            string description = null) {
+            string description = null)
+        {
 
             var mediatorSerializedObject = SerializeObject(request, description);
 
@@ -88,8 +101,9 @@ namespace SharedCore.Aplication.Services {
             MediatorSerializedObject mediatorSerializedObject,
             string parentJobId,
             JobContinuationOptions continuationOption,
-            string description = null) {
-                
+            string description = null)
+        {
+
             return BackgroundJob.ContinueJobWith(
                 parentJobId,
                 () => _handler.ExecuteCommand(mediatorSerializedObject), continuationOption);
@@ -98,8 +112,9 @@ namespace SharedCore.Aplication.Services {
         public void Schedule(
             IRequest request,
             DateTimeOffset scheduleAt,
-            string description = null) {
-            
+            string description = null)
+        {
+
             var mediatorSerializedObject = SerializeObject(request, description);
 
             BackgroundJob.Schedule(
@@ -109,7 +124,8 @@ namespace SharedCore.Aplication.Services {
         public void Schedule(
             MediatorSerializedObject mediatorSerializedObject,
             DateTimeOffset scheduleAt,
-            string description = null) {
+            string description = null)
+        {
 
             BackgroundJob.Schedule(
                 () => _handler.ExecuteCommand(mediatorSerializedObject), scheduleAt);
@@ -118,7 +134,8 @@ namespace SharedCore.Aplication.Services {
         public void Schedule(
             IRequest request,
             TimeSpan delay,
-            string description = null) {
+            string description = null)
+        {
             var mediatorSerializedObject = SerializeObject(request, description);
             var newTime = DateTime.Now + delay;
 
@@ -128,7 +145,8 @@ namespace SharedCore.Aplication.Services {
         public void Schedule(
             MediatorSerializedObject mediatorSerializedObject,
             TimeSpan delay,
-            string description = null) {
+            string description = null)
+        {
 
             var newTime = DateTime.Now + delay;
 
@@ -140,7 +158,8 @@ namespace SharedCore.Aplication.Services {
             string name,
             string cronExpression,
             string description = null,
-            string queue = "default") {
+            string queue = "default")
+        {
 
             var mediatorSerializedObject = SerializeObject(request, description);
 
@@ -157,7 +176,8 @@ namespace SharedCore.Aplication.Services {
             string name,
             string cronExpression,
             string description = null,
-            string queue = "default") {
+            string queue = "default")
+        {
 
             RecurringJob.AddOrUpdate(
                 name,
@@ -169,11 +189,13 @@ namespace SharedCore.Aplication.Services {
 
         private MediatorSerializedObject SerializeObject(
             object mediatorObject,
-            string description) {
+            string description)
+        {
 
             string fullTypeName = mediatorObject.GetType().FullName;
 
-            string data = JsonConvert.SerializeObject(mediatorObject, new JsonSerializerSettings {
+            string data = JsonConvert.SerializeObject(mediatorObject, new JsonSerializerSettings
+            {
                 Formatting = Formatting.None,
                 TypeNameHandling = TypeNameHandling.All
             });

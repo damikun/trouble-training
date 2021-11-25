@@ -15,13 +15,14 @@ namespace APIServer.Application.IntegrationTests
     {
         public TestStartup(
             IWebHostEnvironment environment,
-            IConfiguration configuration) 
-            : base(configuration,environment)
+            IConfiguration configuration)
+            : base(configuration, environment)
         {
-            
+
         }
 
-        public override void ConfigureServices(IServiceCollection services){
+        public override void ConfigureServices(IServiceCollection services)
+        {
 
             services.AddControllers();
 
@@ -53,12 +54,12 @@ namespace APIServer.Application.IntegrationTests
             IServiceProvider serviceProvider,
             IServiceScopeFactory scopeFactory)
         {
-            app.UseEnsureApiContextCreated(serviceProvider,scopeFactory);
+            app.UseEnsureApiContextCreated(serviceProvider, scopeFactory);
 
             app.UseRouting();
 
             app.UseAuthentication();
-            
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -70,7 +71,7 @@ namespace APIServer.Application.IntegrationTests
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
             });
-            
+
         }
     }
 }

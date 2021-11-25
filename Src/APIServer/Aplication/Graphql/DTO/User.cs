@@ -1,8 +1,11 @@
 
-namespace APIServer.Aplication.GraphQL.DTO {
+namespace APIServer.Aplication.GraphQL.DTO
+{
 
-    public class GQL_User {
-        public GQL_User() {
+    public class GQL_User
+    {
+        public GQL_User()
+        {
 
         }
 
@@ -15,19 +18,19 @@ namespace APIServer.Aplication.GraphQL.DTO {
         ///  Name
         /// </summary>
         public string Name { get; set; }
-        
-     #nullable enable
+
+#nullable enable
         /// <summary>
         ///  Name
         /// </summary>
         public string SessionId { get; set; }
 
-   
+
         /// <summary>
         ///  Email
         /// </summary>
         public string? Email { get; set; }
-        #nullable disable
+#nullable disable
     }
 }
 

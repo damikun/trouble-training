@@ -13,13 +13,15 @@ namespace APIServer.API.IntegrationTests.WebHooks
     public class QueryWebHookTests : BaseClassFixture
     {
 
-        public QueryWebHookTests(XunitFixture fixture):base(fixture){
+        public QueryWebHookTests(XunitFixture fixture) : base(fixture)
+        {
 
         }
 
-        public static string GetTestQuery(){
+        public static string GetTestQuery()
+        {
 
-            return  @"query{
+            return @"query{
                 webhooks{
                     edges{
                     node{
@@ -61,6 +63,6 @@ namespace APIServer.API.IntegrationTests.WebHooks
 
             Snapshot.Match(response.data_content);
         }
-       
+
     }
 }

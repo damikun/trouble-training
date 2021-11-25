@@ -16,7 +16,8 @@ namespace APIServer.Application.IntegrationTests
     public class TestCommon
     {
 
-         public static  IHttpContextAccessor SetAndGetAuthorisedTestContext(TestServer server){
+        public static IHttpContextAccessor SetAndGetAuthorisedTestContext(TestServer server)
+        {
 
             var accesor = server.Services
                 .GetService<IHttpContextAccessor>();
@@ -30,7 +31,8 @@ namespace APIServer.Application.IntegrationTests
             return accesor;
         }
 
-        public static IHttpContextAccessor SetAndGetUnAuthorisedTestConetxt(TestServer server){
+        public static IHttpContextAccessor SetAndGetUnAuthorisedTestConetxt(TestServer server)
+        {
 
             var accesor = server.Services
                 .GetService<IHttpContextAccessor>();
@@ -42,22 +44,26 @@ namespace APIServer.Application.IntegrationTests
             return accesor;
         }
 
-        public static HttpContext GetTestHttpContext(List<Claim> claims = null){
+        public static HttpContext GetTestHttpContext(List<Claim> claims = null)
+        {
 
-            if(claims == null){
+            if (claims == null)
+            {
                 return new DefaultHttpContext();
-            }else{
+            }
+            else
+            {
 
                 var mocked_idenity = new Mock<IIdentity>();
 
-                mocked_idenity.Setup(e=>e.IsAuthenticated).Returns(true);
+                mocked_idenity.Setup(e => e.IsAuthenticated).Returns(true);
 
-                mocked_idenity.Setup(e=>e.Name)
-                    .Returns(claims.Where(e=>e.Type == ClaimTypes.Name ).First().Value);
+                mocked_idenity.Setup(e => e.Name)
+                    .Returns(claims.Where(e => e.Type == ClaimTypes.Name).First().Value);
 
-                mocked_idenity.Setup(e=>e.AuthenticationType).Returns("SomeType");
+                mocked_idenity.Setup(e => e.AuthenticationType).Returns("SomeType");
 
-                var claimsIdentity = new ClaimsIdentity(mocked_idenity.Object,claims);
+                var claimsIdentity = new ClaimsIdentity(mocked_idenity.Object, claims);
 
                 var principal = new ClaimsPrincipal(claimsIdentity);
 
@@ -70,12 +76,14 @@ namespace APIServer.Application.IntegrationTests
 
         }
 
-        public static List<Claim> GetDefaultTestUserClaims(){
-            return  new(){
-                new Claim(ClaimTypes.Name,"Zlobor"),
-                new Claim(ClaimTypes.NameIdentifier,Guid.NewGuid().ToString())
+        public static List<Claim> GetDefaultTestUserClaims()
+        {
+            return new()
+            {
+                new Claim(ClaimTypes.Name, "Zlobor"),
+                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
             };
         }
-        
+
     }
 }

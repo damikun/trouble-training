@@ -2,9 +2,11 @@ using System;
 using MediatR;
 using SharedCore.Aplication.Services;
 
-namespace SharedCore.Aplication.Interfaces  {
+namespace SharedCore.Aplication.Interfaces
+{
 
-    public interface IScheduler {
+    public interface IScheduler
+    {
 
         string Enqueue(
             IRequest request,

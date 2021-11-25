@@ -10,9 +10,11 @@ using APIServer.Persistence;
 using APIServer.Aplication.GraphQL.DTO;
 using APIServer.Domain.Core.Models.WebHooks;
 
-namespace APIServer.Aplication.GraphQL.DataLoaders {
+namespace APIServer.Aplication.GraphQL.DataLoaders
+{
 
-    public class WebHookByIdDataLoader : BatchDataLoader<long, GQL_WebHook> {
+    public class WebHookByIdDataLoader : BatchDataLoader<long, GQL_WebHook>
+    {
         /// <summary>
         /// Injected <c>ApiDbContext</c>
         /// </summary>
@@ -28,39 +30,46 @@ namespace APIServer.Aplication.GraphQL.DataLoaders {
         public WebHookByIdDataLoader(
             IBatchScheduler scheduler,
             IDbContextFactory<ApiDbContext> factory,
-            ICurrentUser current) : base(scheduler) {
+            ICurrentUser current) : base(scheduler)
+        {
             _current = current;
             _factory = factory;
         }
 
         protected override async Task<IReadOnlyDictionary<long, GQL_WebHook>> LoadBatchAsync(
             IReadOnlyList<long> keys,
-            CancellationToken cancellationToken) {
+            CancellationToken cancellationToken)
+        {
 
-            if (!_current.Exist) {
+            if (!_current.Exist)
+            {
                 return new List<GQL_WebHook>().ToDictionary(e => e.ID, null);
             }
 
-            await using ApiDbContext dbContext = 
+            await using ApiDbContext dbContext =
                 _factory.CreateDbContext();
 
             await _semaphoregate.WaitAsync();
 
-            try {
+            try
+            {
                 return await dbContext.WebHooks
                 .AsNoTracking()
                 .Where(s => keys.Contains(s.ID))
-                .Select(e => new GQL_WebHook {
+                .Select(e => new GQL_WebHook
+                {
                     ID = e.ID,
                     WebHookUrl = e.WebHookUrl,
                     // Secret = e.Secret,
                     ContentType = e.ContentType,
                     IsActive = e.IsActive,
                     LastTrigger = e.LastTrigger,
-                    ListeningEvents = e.HookEvents !=null ? e.HookEvents.ToArray(): new HookEventType[0]
+                    ListeningEvents = e.HookEvents != null ? e.HookEvents.ToArray() : new HookEventType[0]
                 })
                 .ToDictionaryAsync(t => t.ID, cancellationToken);
-            } finally {
+            }
+            finally
+            {
                 _semaphoregate.Release();
             }
         }

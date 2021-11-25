@@ -1,7 +1,9 @@
 
-namespace APIServer.Domain.Core.Models.WebHooks {
+namespace APIServer.Domain.Core.Models.WebHooks
+{
 
-    public enum HookResourceAction {
+    public enum HookResourceAction
+    {
         undefined,
         hook_created,
         hook_removed,
@@ -10,12 +12,14 @@ namespace APIServer.Domain.Core.Models.WebHooks {
         // Etc Etc...
     }
 
-    public enum HookGrou2Action {
+    public enum HookGrou2Action
+    {
         undefined,
         something_happened,
     }
 
-    public enum HookGrou3Action {
+    public enum HookGrou3Action
+    {
         undefined,
         something_else_happened
     }

@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 
-namespace APIServer.Domain.Core.Models.WebHooks {
-    public class WebHook {
+namespace APIServer.Domain.Core.Models.WebHooks
+{
+    public class WebHook
+    {
 
-        public WebHook() {
+        public WebHook()
+        {
             this.Headers = new HashSet<WebHookHeader>();
             this.HookEvents = new HookEventType[0];
             this.Records = new List<WebHookRecord>();
@@ -25,10 +28,10 @@ namespace APIServer.Domain.Core.Models.WebHooks {
         /// <summary>
         /// Webhook secret
         /// </summary>
-        #nullable enable
+#nullable enable
         public string? Secret { get; set; }
-        #nullable disable
-        
+#nullable disable
+
         /// <summary>
         /// Content Type
         /// </summary>

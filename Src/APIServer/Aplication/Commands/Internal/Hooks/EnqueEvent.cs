@@ -6,12 +6,14 @@ using SharedCore.Aplication.Core.Commands;
 using Microsoft.EntityFrameworkCore;
 using APIServer.Persistence;
 
-namespace APIServer.Aplication.Commands.Internall.Hooks {
+namespace APIServer.Aplication.Commands.Internall.Hooks
+{
 
     /// <summary>
     /// Command for saving WebHookCreated
     /// </summary>
-    public class EnqueSaveEvent<T> : CommandBase {
+    public class EnqueSaveEvent<T> : CommandBase
+    {
 
         public T Event { get; set; }
     }
@@ -19,7 +21,8 @@ namespace APIServer.Aplication.Commands.Internall.Hooks {
     /// <summary>
     /// Command handler for <c>EnqueSaveEvent</c>
     /// </summary>
-    public class EnqueSaveEventHandler<T> : IRequestHandler<EnqueSaveEvent<T>, Unit> {
+    public class EnqueSaveEventHandler<T> : IRequestHandler<EnqueSaveEvent<T>, Unit>
+    {
 
         /// <summary>
         /// Injected <c>ApiDbContext</c>
@@ -29,7 +32,8 @@ namespace APIServer.Aplication.Commands.Internall.Hooks {
         /// <summary>
         /// Main Constructor
         /// </summary>
-        public EnqueSaveEventHandler(IDbContextFactory<ApiDbContext> factory) {
+        public EnqueSaveEventHandler(IDbContextFactory<ApiDbContext> factory)
+        {
 
             _factory = factory;
         }
@@ -37,13 +41,15 @@ namespace APIServer.Aplication.Commands.Internall.Hooks {
         /// <summary>
         /// Command handler for  <c>EnqueSaveEvent</c>
         /// </summary>
-        public async Task<Unit> Handle(EnqueSaveEvent<T> request, CancellationToken cancellationToken) {
+        public async Task<Unit> Handle(EnqueSaveEvent<T> request, CancellationToken cancellationToken)
+        {
 
-            if (request == null || request.Event == null) {
+            if (request == null || request.Event == null)
+            {
                 throw new ArgumentNullException();
             }
 
-            await using ApiDbContext dbContext = 
+            await using ApiDbContext dbContext =
                 _factory.CreateDbContext();
 
             dbContext.Add(request.Event);

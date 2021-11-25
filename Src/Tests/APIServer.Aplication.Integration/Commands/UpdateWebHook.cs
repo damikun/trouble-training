@@ -19,13 +19,14 @@ namespace APIServer.Application.IntegrationTests.WebHooks
 
         private readonly IDbContextFactory<ApiDbContext> _dbcontextfactory;
 
-        public UpdateWebHookTests(XunitFixture fixture):base(fixture){
+        public UpdateWebHookTests(XunitFixture fixture) : base(fixture)
+        {
 
             _mediator = this.TestServer.Services
                 .GetService<IMediator>();
 
             _dbcontextfactory = this.TestServer.Services
-                .GetService<IDbContextFactory<ApiDbContext>>(); 
+                .GetService<IDbContextFactory<ApiDbContext>>();
         }
 
         [Fact]
@@ -34,27 +35,30 @@ namespace APIServer.Application.IntegrationTests.WebHooks
 
             TestCommon.SetAndGetAuthorisedTestContext(this.TestServer);
 
-            await using ApiDbContext dbContext = 
+            await using ApiDbContext dbContext =
                 _dbcontextfactory.CreateDbContext();
 
-            WebHook hook = new WebHook(){
+            WebHook hook = new WebHook()
+            {
                 WebHookUrl = "https://testurl/random",
-                IsActive = false};
+                IsActive = false
+            };
 
             dbContext.WebHooks.Add(hook);
-            
+
             await dbContext.SaveChangesAsync();
 
-            dbContext.WebHooks.Any(e=>e.ID == hook.ID).Should().BeTrue();
+            dbContext.WebHooks.Any(e => e.ID == hook.ID).Should().BeTrue();
 
             bool updatet_state = true;
 
-            var response =  await _mediator.Send(new UpdateWebHook(){
+            var response = await _mediator.Send(new UpdateWebHook()
+            {
                 WebHookId = hook.ID,
                 WebHookUrl = hook.WebHookUrl,
-                IsActive =  updatet_state,
+                IsActive = updatet_state,
                 HookEvents = hook.HookEvents != null ?
-                     hook.HookEvents.ToHashSet(): new HashSet<HookEventType>(),
+                     hook.HookEvents.ToHashSet() : new HashSet<HookEventType>(),
                 Secret = hook.Secret,
             });
 
@@ -63,10 +67,10 @@ namespace APIServer.Application.IntegrationTests.WebHooks
             response.Should().BeOfType<UpdateWebHookPayload>()
                 .Subject.errors.Any().Should().BeFalse();
 
-            dbContext.WebHooks.Any(e=>e.ID == hook.ID)
+            dbContext.WebHooks.Any(e => e.ID == hook.ID)
                 .Should().BeTrue();
 
-            dbContext.WebHooks.AsNoTracking().Where(e=>e.ID == hook.ID)
+            dbContext.WebHooks.AsNoTracking().Where(e => e.ID == hook.ID)
                 .First().IsActive.Should().Be(updatet_state);
         }
 
@@ -75,18 +79,19 @@ namespace APIServer.Application.IntegrationTests.WebHooks
         {
             TestCommon.SetAndGetAuthorisedTestContext(this.TestServer);
 
-            await using ApiDbContext dbContext = 
+            await using ApiDbContext dbContext =
                 _dbcontextfactory.CreateDbContext();
 
             long some_unexisting_id = 999;
 
             dbContext.WebHooks.AsNoTracking()
-                .Any(e=>e.ID == some_unexisting_id).Should().BeFalse();
+                .Any(e => e.ID == some_unexisting_id).Should().BeFalse();
 
-            var response =  await _mediator.Send(new UpdateWebHook(){
+            var response = await _mediator.Send(new UpdateWebHook()
+            {
                 WebHookId = some_unexisting_id,
                 WebHookUrl = "https://someurl",
-                IsActive =  false,
+                IsActive = false,
             });
 
             response.Should().NotBeNull();
@@ -104,24 +109,27 @@ namespace APIServer.Application.IntegrationTests.WebHooks
         {
             TestCommon.SetAndGetAuthorisedTestContext(this.TestServer);
 
-            await using ApiDbContext dbContext = 
+            await using ApiDbContext dbContext =
                 _dbcontextfactory.CreateDbContext();
 
-            WebHook hook = new WebHook(){
+            WebHook hook = new WebHook()
+            {
                 WebHookUrl = "https://testurl/random2",
-                IsActive = false};
+                IsActive = false
+            };
 
             dbContext.WebHooks.Add(hook);
-            
+
             await dbContext.SaveChangesAsync();
 
             dbContext.WebHooks.AsNoTracking()
-                .Any(e=>e.ID == hook.ID).Should().BeTrue();
+                .Any(e => e.ID == hook.ID).Should().BeTrue();
 
-            var response =  await _mediator.Send(new UpdateWebHook(){
+            var response = await _mediator.Send(new UpdateWebHook()
+            {
                 WebHookId = hook.ID,
                 WebHookUrl = "invalid url format",
-                IsActive =  false,
+                IsActive = false,
             });
 
             response.Should().NotBeNull();
@@ -134,7 +142,7 @@ namespace APIServer.Application.IntegrationTests.WebHooks
                     .Subject.FieldName.Should().Be("WebHookUrl");
 
             dbContext.WebHooks.AsNoTracking()
-                .Where(e=>e.ID == hook.ID).First()
+                .Where(e => e.ID == hook.ID).First()
                     .WebHookUrl.Should().NotBe("invalid url format");
         }
 
@@ -143,23 +151,26 @@ namespace APIServer.Application.IntegrationTests.WebHooks
         {
             TestCommon.SetAndGetUnAuthorisedTestConetxt(this.TestServer);
 
-            await using ApiDbContext dbContext = 
+            await using ApiDbContext dbContext =
                 _dbcontextfactory.CreateDbContext();
 
-            WebHook hook = new WebHook(){
+            WebHook hook = new WebHook()
+            {
                 WebHookUrl = "https://testurl/random4",
-                IsActive = true};
+                IsActive = true
+            };
 
             dbContext.WebHooks.Add(hook);
-            
+
             await dbContext.SaveChangesAsync();
 
-            dbContext.WebHooks.Any(e=>e.ID == hook.ID).Should().BeTrue();
+            dbContext.WebHooks.Any(e => e.ID == hook.ID).Should().BeTrue();
 
-            var response =  await _mediator.Send(new UpdateWebHook(){
+            var response = await _mediator.Send(new UpdateWebHook()
+            {
                 WebHookId = hook.ID,
                 WebHookUrl = hook.WebHookUrl,
-                IsActive =  false,
+                IsActive = false,
             });
 
             response.Should().NotBeNull();
@@ -170,7 +181,7 @@ namespace APIServer.Application.IntegrationTests.WebHooks
             response.Should().BeOfType<UpdateWebHookPayload>()
                 .Subject.errors.First().Should().BeOfType<UnAuthorised>();
 
-            dbContext.WebHooks.Any(e=>e.ID == hook.ID).Should().BeTrue();
+            dbContext.WebHooks.Any(e => e.ID == hook.ID).Should().BeTrue();
         }
     }
 }

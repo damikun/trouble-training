@@ -15,7 +15,8 @@ using APIServer.Aplication.Shared.Errors;
 using SharedCore.Aplication.Shared.Attributes;
 using SharedCore.Aplication.Shared.Exceptions;
 
-namespace APIServer.Aplication.Shared.Behaviours {
+namespace APIServer.Aplication.Shared.Behaviours
+{
 
     /// <summary>
     /// Authorization marker interface for Fluent validation
@@ -26,16 +27,18 @@ namespace APIServer.Aplication.Shared.Behaviours {
     /// Authorization validator wrapper
     /// </summary>
     /// <typeparam name="TRequest"></typeparam>
-    public class AuthorizationValidator<TRequest> 
-    : AbstractValidator<TRequest>, IAuthorizationValidator { }
+    public class AuthorizationValidator<TRequest>
+    : AbstractValidator<TRequest>, IAuthorizationValidator
+    { }
 
     /// <summary>
     /// Authorization behaviour for MediatR pipeline
     /// </summary>
     /// <typeparam name="TRequest"></typeparam>
     /// <typeparam name="TResponse"></typeparam>
-    public class AuthorizationBehaviour<TRequest, TResponse> 
-    : IPipelineBehavior<TRequest, TResponse> {
+    public class AuthorizationBehaviour<TRequest, TResponse>
+    : IPipelineBehavior<TRequest, TResponse>
+    {
         private readonly ICurrentUser _currentUserService;
         private readonly IEnumerable<IValidator<TRequest>> _validators;
         private readonly ILogger _logger;
@@ -45,7 +48,8 @@ namespace APIServer.Aplication.Shared.Behaviours {
             ICurrentUser currentUserService,
             IEnumerable<IValidator<TRequest>> validators,
             ILogger logger,
-            ITelemetry telemetry) {
+            ITelemetry telemetry)
+        {
             _currentUserService = currentUserService;
             _validators = validators;
             _logger = logger;
@@ -55,12 +59,14 @@ namespace APIServer.Aplication.Shared.Behaviours {
         public async Task<TResponse> Handle(
             TRequest request,
             CancellationToken cancellationToken,
-            RequestHandlerDelegate<TResponse> next) {
+            RequestHandlerDelegate<TResponse> next)
+        {
 
             var authorizeAttributes = request.GetType()
                 .GetCustomAttributes<AuthorizeAttribute>();
 
-            if (authorizeAttributes.Any()) {
+            if (authorizeAttributes.Any())
+            {
 
                 var activity = _telemetry.AppSource.StartActivity(
                     String.Format(
@@ -68,7 +74,8 @@ namespace APIServer.Aplication.Shared.Behaviours {
                         request.GetType().FullName),
                         ActivityKind.Server);
 
-                try {
+                try
+                {
                     activity?.Start();
 
                     // Must be authenticated user
@@ -80,21 +87,26 @@ namespace APIServer.Aplication.Shared.Behaviours {
                         a => !string.IsNullOrWhiteSpace(a.Roles)
                     );
 
-                    if (authorizeAttributesWithRoles.Any()) {
-                        
-                        foreach (var roles in authorizeAttributesWithRoles.Select(a => a.Roles.Split(','))) {
+                    if (authorizeAttributesWithRoles.Any())
+                    {
+
+                        foreach (var roles in authorizeAttributesWithRoles.Select(a => a.Roles.Split(',')))
+                        {
                             var authorized = false;
 
-                            foreach (var role in roles) {
+                            foreach (var role in roles)
+                            {
 
-                                if (_currentUserService.HasRole(role.Trim())) {
+                                if (_currentUserService.HasRole(role.Trim()))
+                                {
                                     authorized = true;
                                     break;
                                 }
                             }
 
                             // Must be a member of at least one role in roles
-                            if (!authorized) {
+                            if (!authorized)
+                            {
                                 return HandleUnAuthorised("Role authorization failure");
                             }
                         }
@@ -105,9 +117,12 @@ namespace APIServer.Aplication.Shared.Behaviours {
                         a => !string.IsNullOrWhiteSpace(a.Policy)
                     );
 
-                    if (authorizeAttributesWithPolicies.Any()) {
-                        foreach (var policy in authorizeAttributesWithPolicies.Select(a => a.Policy)) {
-                            if (!_currentUserService.HasRole(policy.Trim())) {
+                    if (authorizeAttributesWithPolicies.Any())
+                    {
+                        foreach (var policy in authorizeAttributesWithPolicies.Select(a => a.Policy))
+                        {
+                            if (!_currentUserService.HasRole(policy.Trim()))
+                            {
                                 return HandleUnAuthorised($"Policy: {policy} authorization failure");
                             }
                         }
@@ -118,12 +133,13 @@ namespace APIServer.Aplication.Shared.Behaviours {
                         a => a.InnerPolicy == true
                     );
 
-                    if (authorizeAttributesWithInnerPolicies.Any()) {
+                    if (authorizeAttributesWithInnerPolicies.Any())
+                    {
 
                         IValidator<TRequest>[] authValidators = _validators.Where(
                             v => v is IAuthorizationValidator).ToArray();
 
-                        ValidationFailure[] authorization_validator_failures = 
+                        ValidationFailure[] authorization_validator_failures =
                             await CommandAuthValidationFailuresAsync(request, authValidators);
 
                         if (authorization_validator_failures.Any())
@@ -131,13 +147,17 @@ namespace APIServer.Aplication.Shared.Behaviours {
 
                     }
 
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
 
                     _telemetry.SetOtelError(ex);
 
                     throw;
 
-                } finally {
+                }
+                finally
+                {
                     activity?.Stop();
                     activity?.Dispose();
                 }
@@ -147,33 +167,48 @@ namespace APIServer.Aplication.Shared.Behaviours {
             return await next();
         }
 
-        private static TResponse HandleUnAuthorised(object error_obj) {
+        private static TResponse HandleUnAuthorised(object error_obj)
+        {
 
             // In case it is Mutation Response Payload = handled as payload error union
             if (SharedCore.Aplication.Shared.Common.IsSubclassOfRawGeneric(
                 typeof(BasePayload<,>),
                 typeof(TResponse))
-            ) {
+            )
+            {
                 IBasePayload payload = ((IBasePayload)Activator.CreateInstance<TResponse>());
 
-                if (error_obj is ValidationFailure[]) {
-                    foreach (var item in error_obj as ValidationFailure[]) {
+                if (error_obj is ValidationFailure[])
+                {
+                    foreach (var item in error_obj as ValidationFailure[])
+                    {
                         payload.AddError(new UnAuthorised(item.CustomState, item.ErrorMessage));
                     }
-                } else if (error_obj is string) {
+                }
+                else if (error_obj is string)
+                {
                     payload.AddError(new UnAuthorised(error_obj as string));
-                } else {
+                }
+                else
+                {
                     payload.AddError(new UnAuthorised());
                 }
 
                 return (TResponse)payload;
-            } else {
+            }
+            else
+            {
                 // In case it is query response = handled by global filter
-                if (error_obj is ValidationFailure[]) {
+                if (error_obj is ValidationFailure[])
+                {
                     throw new AuthorizationException(error_obj as ValidationFailure[]);
-                } else if (error_obj is string) {
+                }
+                else if (error_obj is string)
+                {
                     throw new AuthorizationException(error_obj as string);
-                } else {
+                }
+                else
+                {
                     throw new AuthorizationException();
                 }
             }
@@ -181,7 +216,8 @@ namespace APIServer.Aplication.Shared.Behaviours {
 
         private static async Task<ValidationFailure[]> CommandAuthValidationFailuresAsync(
             TRequest request,
-            IEnumerable<IValidator<TRequest>> authValidators) {
+            IEnumerable<IValidator<TRequest>> authValidators)
+        {
 
             var validateTasks = authValidators
                 .Select(v => v.ValidateAsync(request));
@@ -193,7 +229,7 @@ namespace APIServer.Aplication.Shared.Behaviours {
                 .Where(f => f != null)
                 .ToArray();
 
-            return validationFailures == null ? 
+            return validationFailures == null ?
                 new ValidationFailure[0] : validationFailures;
 
         }

@@ -17,13 +17,14 @@ namespace APIServer.Application.IntegrationTests.WebHooks
 
         private readonly IDbContextFactory<ApiDbContext> _dbcontextfactory;
 
-        public CreateWebHookTests(XunitFixture fixture):base(fixture){
+        public CreateWebHookTests(XunitFixture fixture) : base(fixture)
+        {
 
             _mediator = this.TestServer.Services
                 .GetService<IMediator>();
 
             _dbcontextfactory = this.TestServer.Services
-                .GetService<IDbContextFactory<ApiDbContext>>(); 
+                .GetService<IDbContextFactory<ApiDbContext>>();
         }
 
         [Fact]
@@ -32,12 +33,13 @@ namespace APIServer.Application.IntegrationTests.WebHooks
 
             TestCommon.SetAndGetAuthorisedTestContext(this.TestServer);
 
-            await using ApiDbContext dbContext = 
+            await using ApiDbContext dbContext =
                 _dbcontextfactory.CreateDbContext();
 
             var count_before = dbContext.WebHooks.AsNoTracking().Count();
 
-            var response =  await _mediator.Send(new CreateWebHook(){
+            var response = await _mediator.Send(new CreateWebHook()
+            {
                 WebHookUrl = "https://test",
                 IsActive = true
             });
@@ -48,10 +50,10 @@ namespace APIServer.Application.IntegrationTests.WebHooks
                 .Subject.errors.Any().Should().BeFalse();
 
             Assert.True(count_before < dbContext.WebHooks.Count());
-            
+
             response.hook.Should().NotBeNull();
 
-            dbContext.WebHooks.AsNoTracking().Any(e=>e.ID == response.hook.ID).Should().BeTrue();
+            dbContext.WebHooks.AsNoTracking().Any(e => e.ID == response.hook.ID).Should().BeTrue();
         }
 
         [Fact]
@@ -60,12 +62,13 @@ namespace APIServer.Application.IntegrationTests.WebHooks
 
             TestCommon.SetAndGetAuthorisedTestContext(this.TestServer);
 
-            await using ApiDbContext dbContext = 
+            await using ApiDbContext dbContext =
                 _dbcontextfactory.CreateDbContext();
 
             var count_before = dbContext.WebHooks.AsNoTracking().Count();
 
-            var response =  await _mediator.Send(new CreateWebHook() {
+            var response = await _mediator.Send(new CreateWebHook()
+            {
                 WebHookUrl = "This is not valid url",
                 IsActive = true
             });
@@ -80,7 +83,7 @@ namespace APIServer.Application.IntegrationTests.WebHooks
                     .Subject.FieldName.Should().Be("WebHookUrl");
 
             Assert.True(count_before == dbContext.WebHooks.Count());
-            
+
             response.hook.Should().BeNull();
         }
 
@@ -89,12 +92,13 @@ namespace APIServer.Application.IntegrationTests.WebHooks
         {
             TestCommon.SetAndGetUnAuthorisedTestConetxt(this.TestServer);
 
-            await using ApiDbContext dbContext = 
+            await using ApiDbContext dbContext =
                 _dbcontextfactory.CreateDbContext();
 
             var count_before = dbContext.WebHooks.AsNoTracking().Count();
 
-            var response =  await _mediator.Send(new CreateWebHook(){
+            var response = await _mediator.Send(new CreateWebHook()
+            {
                 WebHookUrl = "https://test",
                 IsActive = true
             });

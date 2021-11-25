@@ -1,12 +1,14 @@
 using System;
 using System.Security.Claims;
 
-namespace SharedCore.Aplication.Interfaces {
+namespace SharedCore.Aplication.Interfaces
+{
 
     /// <summary>
     /// Current user provider
     /// </summary>
-    public interface ICurrentUser {
+    public interface ICurrentUser
+    {
 
         /// <summary>
         /// Returns true if user exist in context
@@ -27,7 +29,7 @@ namespace SharedCore.Aplication.Interfaces {
         /// <summary>
         /// Returns user claims
         /// </summary>
-        ClaimsIdentity? Claims  { get; }
+        ClaimsIdentity? Claims { get; }
 #nullable disable
 
         /// <summary>
@@ -43,5 +45,5 @@ namespace SharedCore.Aplication.Interfaces {
         bool HasRole(string role_name);
 
     }
-   
+
 }

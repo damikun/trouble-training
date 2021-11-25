@@ -18,19 +18,21 @@ namespace APIServer.API.IntegrationTests
     {
         public IdentityTestStartup(
             IWebHostEnvironment environment,
-            IConfiguration configuration) 
-            : base(configuration,environment)
+            IConfiguration configuration)
+            : base(configuration, environment)
         {
-            
+
         }
 
-        public override void ConfigureServices(IServiceCollection services){
+        public override void ConfigureServices(IServiceCollection services)
+        {
 
             services.AddCorsConfiguration(Environment);
 
             services.AddControllersWithViews();
 
-            services.AddDbContext<AppIdnetityDbContext>(option => {
+            services.AddDbContext<AppIdnetityDbContext>(option =>
+            {
 
                 option.UseInMemoryDatabase(Guid.NewGuid().ToString());
             });
@@ -40,7 +42,8 @@ namespace APIServer.API.IntegrationTests
             services.AddMvc();
 
             // app user 
-            services.AddIdentity<ApplicationUser, IdentityRole>(options => {
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 6;
                 options.Password.RequireNonAlphanumeric = false;
@@ -56,7 +59,7 @@ namespace APIServer.API.IntegrationTests
                 .AddInMemoryApiResources(Resources.GetApiResources())
                 .AddInMemoryApiScopes(Resources.GetApiScopes())
                 .AddTestUsers(Users.Get());
-            
+
             identityServerBuilder.AddDeveloperSigningCredential();
 
             services.AddTelemetryService(Configuration, out string trace_source);
@@ -64,9 +67,11 @@ namespace APIServer.API.IntegrationTests
 
         public override void Configure(
             IApplicationBuilder app,
-            IWebHostEnvironment env) {
+            IWebHostEnvironment env)
+        {
 
-            app.UseForwardedHeaders(new ForwardedHeadersOptions {
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor |
                 ForwardedHeaders.XForwardedProto
             });
@@ -75,8 +80,8 @@ namespace APIServer.API.IntegrationTests
 
             app.UseCors("cors_policy");
 
-            app.UseRouting(); 
-            
+            app.UseRouting();
+
             app.UseIdentityServer();
 
             app.UseAuthentication();
@@ -88,7 +93,7 @@ namespace APIServer.API.IntegrationTests
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{Action=Index}/{id?}");
-                    
+
             });
         }
     }

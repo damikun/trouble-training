@@ -7,45 +7,61 @@ using System.Diagnostics.CodeAnalysis;
 using APIServer.Domain.Core.Models.WebHooks;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace APIServer.Persistence.Extensions {
+namespace APIServer.Persistence.Extensions
+{
 
-    public class EnumArrToString_StringToEnumArr_Converter : ValueConverter<HookEventType[], string> {
+    public class EnumArrToString_StringToEnumArr_Converter : ValueConverter<HookEventType[], string>
+    {
 
         public EnumArrToString_StringToEnumArr_Converter(
             [NotNullAttribute] Expression<Func<HookEventType[], string>> convertToProviderExpression,
             [NotNullAttribute] Expression<Func<string, HookEventType[]>> convertFromProviderExpression)
-                :base(convertToProviderExpression,convertFromProviderExpression){
+                : base(convertToProviderExpression, convertFromProviderExpression)
+        {
         }
 
-        public override Expression<Func<HookEventType[], string>> ConvertToProviderExpression { get {
-            
-            Expression<Func<HookEventType[], string>> converterExpression = x => Convert(x) ;
+        public override Expression<Func<HookEventType[], string>> ConvertToProviderExpression
+        {
+            get
+            {
 
-            return converterExpression;
-        }  }
+                Expression<Func<HookEventType[], string>> converterExpression = x => Convert(x);
 
-        public override Expression<Func<string, HookEventType[]>> ConvertFromProviderExpression { get {
+                return converterExpression;
+            }
+        }
 
-            Expression<Func<string, HookEventType[]>> converterExpression = x => Convert(x) ;
+        public override Expression<Func<string, HookEventType[]>> ConvertFromProviderExpression
+        {
+            get
+            {
 
-            return converterExpression;
-        } }
+                Expression<Func<string, HookEventType[]>> converterExpression = x => Convert(x);
+
+                return converterExpression;
+            }
+        }
 
         public static string Convert(HookEventType[] sourceMember)
         {
             if (sourceMember == null || !sourceMember.Any())
             {
                 return "";
-            }else{
-                
+            }
+            else
+            {
+
                 StringBuilder sb = new StringBuilder();
 
                 for (int i = 0; i < sourceMember.Length; i++)
                 {
-                    if(i==0){
+                    if (i == 0)
+                    {
                         sb.Append(sourceMember[i].ToString());
-                    }else{
-                        sb.Append(string.Format(",{0}",sourceMember[i].ToString()));
+                    }
+                    else
+                    {
+                        sb.Append(string.Format(",{0}", sourceMember[i].ToString()));
                     }
                 }
 
@@ -62,11 +78,15 @@ namespace APIServer.Persistence.Extensions {
                 sourceMember = sourceMember.Trim();
                 foreach (var item in sourceMember.Split(
                     new[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Distinct()
-                ){
-                    if(item != null){
-                        try{
-                             list.Add(Enum.Parse<HookEventType>(item));
-                        }catch{}      
+                )
+                {
+                    if (item != null)
+                    {
+                        try
+                        {
+                            list.Add(Enum.Parse<HookEventType>(item));
+                        }
+                        catch { }
                     }
                 }
             }

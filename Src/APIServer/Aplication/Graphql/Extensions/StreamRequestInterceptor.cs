@@ -10,7 +10,8 @@ using Microsoft.Extensions.Hosting;
 using SharedCore.Aplication.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace APIServer.Aplication.GraphQL.Extensions {
+namespace APIServer.Aplication.GraphQL.Extensions
+{
 
     public class StreamRequestInterceptor : DefaultHttpRequestInterceptor
     {
@@ -18,7 +19,8 @@ namespace APIServer.Aplication.GraphQL.Extensions {
 
         public StreamRequestInterceptor(
             [Service] IWebHostEnvironment env
-            ){
+            )
+        {
             _env = env;
         }
 
@@ -31,10 +33,14 @@ namespace APIServer.Aplication.GraphQL.Extensions {
                 cancellationToken);
         }
 
-        private static bool DoesUserExist(HttpContext context){
-            try{
+        private static bool DoesUserExist(HttpContext context)
+        {
+            try
+            {
                 return context?.User?.GetId<Guid>() != null;
-            }catch{
+            }
+            catch
+            {
                 return false;
             }
         }

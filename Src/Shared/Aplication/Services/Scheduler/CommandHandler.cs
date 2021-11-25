@@ -7,36 +7,44 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using SharedCore.Aplication.Interfaces;
 
-namespace SharedCore.Aplication.Services {
+namespace SharedCore.Aplication.Services
+{
 
-    public class CommandHandlerOptions {
+    public class CommandHandlerOptions
+    {
         public string assembly_name { get; set; } = "APIServer.Aplication";
     }
 
-    public class CommandHandler : ICommandHandler {
+    public class CommandHandler : ICommandHandler
+    {
         private readonly IMediator _mediator;
         private readonly ITelemetry _telemetry;
         public readonly string assembly_name;
-        public CommandHandler(IMediator mediator, ITelemetry telemetry) {
+        public CommandHandler(IMediator mediator, ITelemetry telemetry)
+        {
             this._mediator = mediator;
             this._telemetry = telemetry;
             this.assembly_name = "APIServer.Aplication";
         }
 
         [DisplayName("{0}")]
-        public async Task<Unit> ExecuteCommand(MediatorSerializedObject mediatorSerializedObject) {
+        public async Task<Unit> ExecuteCommand(MediatorSerializedObject mediatorSerializedObject)
+        {
             var type = GetType(mediatorSerializedObject);
 
-            if (type != null) {
+            if (type != null)
+            {
 
-                dynamic req = DeserializeCommand(mediatorSerializedObject.Data,type);
+                dynamic req = DeserializeCommand(mediatorSerializedObject.Data, type);
 
-                if (req != null) {
+                if (req != null)
+                {
 
                     string activity_name = null;
                     Activity activity = null;
 
-                    if (req is ISharedCommandBase) {
+                    if (req is ISharedCommandBase)
+                    {
 
                         activity_name = String.Format(
                                        "SchedulerExecutor: Request<{0}>",
@@ -49,11 +57,14 @@ namespace SharedCore.Aplication.Services {
                                     ActivityKind.Consumer,
                                     I_base_command.ActivityId);
 
-                        if (Activity.Current != null && Activity.Current.ParentId != null) {
+                        if (Activity.Current != null && Activity.Current.ParentId != null)
+                        {
                             Activity.Current.AddTag("Parrent Id", I_base_command.ActivityId);
                         }
 
-                    } else if (req is IRequest) {
+                    }
+                    else if (req is IRequest)
+                    {
 
                         activity_name = String.Format(
                                        "SchedulerExecutor: Request<{0}>",
@@ -61,7 +72,9 @@ namespace SharedCore.Aplication.Services {
 
                         activity = _telemetry.AppSource.StartActivity(activity_name, ActivityKind.Consumer);
 
-                    } else {
+                    }
+                    else
+                    {
                         activity_name = String.Format(
                                         "SchedulerExecutor: Request<{0}>",
                                         (req as object).GetType().FullName);
@@ -69,22 +82,28 @@ namespace SharedCore.Aplication.Services {
                         activity = _telemetry.AppSource.StartActivity(activity_name, ActivityKind.Consumer);
                     }
 
-                    if (Activity.Current != null) {
+                    if (Activity.Current != null)
+                    {
                         Activity.Current.AddTag("Activity Id", Activity.Current.Id);
                     }
 
-                    try {
+                    try
+                    {
                         activity?.Start();
 
                         await _mediator.Send(req as IRequest);
-                        
-                    } catch (Exception ex) {
+
+                    }
+                    catch (Exception ex)
+                    {
 
                         _telemetry.SetOtelError(ex);
 
                         throw;
 
-                    } finally {
+                    }
+                    finally
+                    {
                         activity?.Stop();
 
                         activity?.Dispose();
@@ -95,17 +114,20 @@ namespace SharedCore.Aplication.Services {
             return Unit.Value;
         }
 
-        private dynamic DeserializeCommand(string data, Type type){
+        private dynamic DeserializeCommand(string data, Type type)
+        {
             return JsonSerializer.Deserialize(data, type);
         }
 
-        public Task ExecuteCommand(string reuest) {
+        public Task ExecuteCommand(string reuest)
+        {
             MediatorSerializedObject mediatorSerializedObject = JsonSerializer.Deserialize<MediatorSerializedObject>(reuest);
 
             return ExecuteCommand(mediatorSerializedObject);
         }
 
-        private System.Type GetType(MediatorSerializedObject mediatorSerializedObject) {
+        private System.Type GetType(MediatorSerializedObject mediatorSerializedObject)
+        {
             if (mediatorSerializedObject?.AssemblyName == null)
                 return null;
 

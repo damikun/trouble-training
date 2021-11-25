@@ -24,7 +24,7 @@ namespace IdentityServer.API.UI
                     postal_code = 69118,
                     country = "Germany"
                 };
-                
+
                 return new List<TestUser>
                 {
                     new TestUser

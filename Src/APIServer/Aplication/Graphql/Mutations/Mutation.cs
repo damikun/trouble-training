@@ -1,11 +1,13 @@
 
 
-namespace APIServer.Aplication.GraphQL.Mutation {
+namespace APIServer.Aplication.GraphQL.Mutation
+{
 
     /// <summary>
     /// Mutation
     /// </summary>
-    public class Mutation {
+    public class Mutation
+    {
 
 
     }

@@ -3,15 +3,17 @@ using Microsoft.AspNetCore.Identity;
 namespace IdentityServer.Domain.Models
 {
 
-    public class ApplicationUser  : IdentityUser
+    public class ApplicationUser : IdentityUser
     {
 
-        public ApplicationUser(string userName):base(userName){
+        public ApplicationUser(string userName) : base(userName)
+        {
 
         }
 
-        public ApplicationUser():base(){
-            
+        public ApplicationUser() : base()
+        {
+
         }
 
     }

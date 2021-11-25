@@ -1,7 +1,9 @@
 using System;
 
-namespace APIServer.Domain.Core.Models.WebHooks {
-    public class WebHookRecord {
+namespace APIServer.Domain.Core.Models.WebHooks
+{
+    public class WebHookRecord
+    {
 
         public WebHookRecord() { }
 
@@ -67,7 +69,8 @@ namespace APIServer.Domain.Core.Models.WebHooks {
     }
 
 
-    public enum RecordResult {
+    public enum RecordResult
+    {
         undefined = 0,
         ok,
         parameter_error,

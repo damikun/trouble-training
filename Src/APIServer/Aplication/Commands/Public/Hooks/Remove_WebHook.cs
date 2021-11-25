@@ -16,13 +16,15 @@ using MediatR.Pipeline;
 using SharedCore.Aplication.Core.Commands;
 using SharedCore.Aplication.Services;
 
-namespace APIServer.Aplication.Commands.WebHooks {
+namespace APIServer.Aplication.Commands.WebHooks
+{
 
     /// <summary>
     /// Command for removing hook
     /// </summary>
     [Authorize]
-    public class RemoveWebHook : CommandBase<RemoveWebHookPayload> {
+    public class RemoveWebHook : CommandBase<RemoveWebHookPayload>
+    {
 
         /// <summary>WebHook Id </summary>
         public long WebHookId { get; set; }
@@ -34,11 +36,13 @@ namespace APIServer.Aplication.Commands.WebHooks {
     /// <summary>
     /// RemoveWebHook Validator
     /// </summary>
-    public class RemoveWebHookValidator : AbstractValidator<RemoveWebHook> {
+    public class RemoveWebHookValidator : AbstractValidator<RemoveWebHook>
+    {
 
         private readonly IDbContextFactory<ApiDbContext> _factory;
 
-        public RemoveWebHookValidator(IDbContextFactory<ApiDbContext> factory){
+        public RemoveWebHookValidator(IDbContextFactory<ApiDbContext> factory)
+        {
             _factory = factory;
 
             RuleFor(e => e.WebHookId)
@@ -53,11 +57,12 @@ namespace APIServer.Aplication.Commands.WebHooks {
         public async Task<bool> HookExist(
             RemoveWebHook request,
             long id,
-            CancellationToken cancellationToken) {
-            
-            await using ApiDbContext dbContext = 
+            CancellationToken cancellationToken)
+        {
+
+            await using ApiDbContext dbContext =
                 _factory.CreateDbContext();
-            
+
             return await dbContext.WebHooks.AnyAsync(e => e.ID == request.WebHookId);
         }
     }
@@ -73,7 +78,8 @@ namespace APIServer.Aplication.Commands.WebHooks {
     /// <summary>
     /// RemoveWebHookPayload
     /// </summary>
-    public class RemoveWebHookPayload : BasePayload<RemoveWebHookPayload, IRemoveWebHookError> {
+    public class RemoveWebHookPayload : BasePayload<RemoveWebHookPayload, IRemoveWebHookError>
+    {
 
         /// <summary>
         /// Removed Hook Id
@@ -85,7 +91,8 @@ namespace APIServer.Aplication.Commands.WebHooks {
     //---------------------------------------
 
     /// <summary>Handler for <c>RemoveWebHook</c> command </summary>
-    public class RemoveWebHookHandler : IRequestHandler<RemoveWebHook, RemoveWebHookPayload> {
+    public class RemoveWebHookHandler : IRequestHandler<RemoveWebHook, RemoveWebHookPayload>
+    {
 
         /// <summary>
         /// Injected <c>ApiDbContext</c>
@@ -108,11 +115,12 @@ namespace APIServer.Aplication.Commands.WebHooks {
         public RemoveWebHookHandler(
             IDbContextFactory<ApiDbContext> factory,
             SharedCore.Aplication.Interfaces.IPublisher publisher,
-            ICurrentUser currentuser) {
+            ICurrentUser currentuser)
+        {
 
             _factory = factory;
 
-             _publisher = publisher;
+            _publisher = publisher;
 
             _current = currentuser;
         }
@@ -122,9 +130,10 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// </summary>
         public async Task<RemoveWebHookPayload> Handle(
             RemoveWebHook request,
-            CancellationToken cancellationToken) {
-            
-            await using ApiDbContext dbContext = 
+            CancellationToken cancellationToken)
+        {
+
+            await using ApiDbContext dbContext =
                 _factory.CreateDbContext();
 
             WebHook wh = await dbContext.WebHooks
@@ -132,7 +141,8 @@ namespace APIServer.Aplication.Commands.WebHooks {
             .Where(e => e.ID == request.WebHookId)
             .FirstOrDefaultAsync(cancellationToken);
 
-            if (wh == null) {
+            if (wh == null)
+            {
                 return RemoveWebHookPayload.Error(new WebHookNotFound());
             }
 
@@ -153,7 +163,7 @@ namespace APIServer.Aplication.Commands.WebHooks {
     //---------------------------------------
     //---------------------------------------
 
-    public class RemoveWebHookPostProcessor: IRequestPostProcessor<RemoveWebHook,RemoveWebHookPayload>
+    public class RemoveWebHookPostProcessor : IRequestPostProcessor<RemoveWebHook, RemoveWebHookPayload>
     {
         /// <summary>
         /// Injected <c>IPublisher</c>
@@ -170,16 +180,20 @@ namespace APIServer.Aplication.Commands.WebHooks {
             RemoveWebHookPayload response,
             CancellationToken cancellationToken)
         {
-            if(response != null && !response.HasError()){
-                try {
+            if (response != null && !response.HasError())
+            {
+                try
+                {
 
                     // You can extend and add any custom fields to Notification!
 
-                    await _publisher.Publish(new WebHookRemovedNotifi() {
+                    await _publisher.Publish(new WebHookRemovedNotifi()
+                    {
                         ActivityId = Activity.Current.Id
                     }, PublishStrategy.ParallelNoWait, default(CancellationToken));
 
-                } catch { }
+                }
+                catch { }
             }
         }
     }

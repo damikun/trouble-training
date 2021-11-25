@@ -8,9 +8,12 @@ using APIServer.Aplication.Commands.WebHooks;
 using Microsoft.Extensions.DependencyInjection;
 using APIServer.Aplication.Commands.Internall.Hooks;
 
-namespace APIServer.Configuration {
-    public static partial class ServiceExtension {
-        public static IServiceCollection AddMediatR(this IServiceCollection services) {
+namespace APIServer.Configuration
+{
+    public static partial class ServiceExtension
+    {
+        public static IServiceCollection AddMediatR(this IServiceCollection services)
+        {
 
             services.AddMediatR(cfg => cfg.Using<AppMediator>(), typeof(CreateWebHook).GetTypeInfo().Assembly);
 

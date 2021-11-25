@@ -8,17 +8,21 @@ using SharedCore.Aplication.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace APIServer.Configuration {
-    public static partial class ServiceExtension {
+namespace APIServer.Configuration
+{
+    public static partial class ServiceExtension
+    {
 
         public static IServiceCollection AddTelemerty(
             this IServiceCollection serviceCollection,
-            IConfiguration Configuration, IWebHostEnvironment Environment) {
+            IConfiguration Configuration, IWebHostEnvironment Environment)
+        {
 
             serviceCollection.AddTelemetryService(Configuration, out string source);
-            
-            serviceCollection.AddOpenTelemetryTracing((builder) => {
-                
+
+            serviceCollection.AddOpenTelemetryTracing((builder) =>
+            {
+
                 // Sources
                 builder.AddSource(source);
 
@@ -29,16 +33,17 @@ namespace APIServer.Configuration {
                 //     })
                   .AddService(Environment.ApplicationName));
 
-                builder.AddAspNetCoreInstrumentation(opts => {
+                builder.AddAspNetCoreInstrumentation(opts =>
+                {
                     opts.RecordException = true;
                     opts.Enrich = async (activity, eventName, rawObject) =>
                     {
 
                         await Task.CompletedTask;
-                        
+
                         if (eventName.Equals("OnStartActivity"))
                         {
-                            if (rawObject is HttpRequest {Path: {Value: "/graphql"}})
+                            if (rawObject is HttpRequest { Path: { Value: "/graphql" } })
                             {
                                 // Do something with request..
                             }
@@ -61,7 +66,8 @@ namespace APIServer.Configuration {
                 builder.AddEntityFrameworkCoreInstrumentation(
                     e => e.SetDbStatementForText = true);
 
-                builder.AddOtlpExporter(options => {
+                builder.AddOtlpExporter(options =>
+                {
                     options.Endpoint = new Uri(Configuration["ConnectionStrings:OtelCollector"]); // Export to collector
                     // options.Endpoint = new Uri("http://localhost:8200"); // Export dirrectly to APM
                     // options.BatchExportProcessorOptions = new OpenTelemetry.BatchExportProcessorOptions<Activity>() {

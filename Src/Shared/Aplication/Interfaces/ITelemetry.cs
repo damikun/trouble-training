@@ -1,14 +1,16 @@
 using System;
 using System.Diagnostics;
 
-namespace SharedCore.Aplication.Interfaces {
+namespace SharedCore.Aplication.Interfaces
+{
 
     /// <summary>
     /// Telemetry helpers
     /// </summary>
-    public interface ITelemetry {
-            
-        Activity Current {get;}
+    public interface ITelemetry
+    {
+
+        Activity Current { get; }
 
         void SetOtelError(string error, bool log = false);
 
@@ -16,8 +18,8 @@ namespace SharedCore.Aplication.Interfaces {
 
         void SetOtelWarning(string error);
 
-        ActivitySource AppSource {get;}
+        ActivitySource AppSource { get; }
 
     }
-   
+
 }

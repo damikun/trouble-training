@@ -17,7 +17,7 @@ namespace APIServer.API.IntegrationTests
                     ClientId = "test",
 
                     ClientSecrets = { new Secret("secret".Sha256()) },
-                    
+
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
 
                     AllowOfflineAccess = true,
@@ -62,7 +62,7 @@ namespace APIServer.API.IntegrationTests
                         JwtClaimTypes.ClientId,
                         JwtClaimTypes.SessionId
                         }
-                    
+
                 }
             };
         }
@@ -71,7 +71,7 @@ namespace APIServer.API.IntegrationTests
         {
             return new ApiScope[]
             {
-                new ApiScope("api", new[] { 
+                new ApiScope("api", new[] {
                     JwtClaimTypes.Name,
                     JwtClaimTypes.Role,
                     JwtClaimTypes.Email,

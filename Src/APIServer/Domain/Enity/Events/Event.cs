@@ -1,16 +1,18 @@
 using System;
 
-namespace APIServer.Domain.Core.Models.Events {
+namespace APIServer.Domain.Core.Models.Events
+{
     /// <summary>
     /// Defines event object
     /// </summary>
-    public class DomainEvent {
+    public class DomainEvent
+    {
         public long ID { get; set; }
 
-        #nullable enable
+#nullable enable
         public Guid? ActorID { get; set; }
-        #nullable disable
-        
+#nullable disable
+
         public DateTime TimeStamp { get; set; }
 
         public EventType EventType { get; set; }

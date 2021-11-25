@@ -8,16 +8,20 @@ using Microsoft.AspNetCore.Http;
 using SharedCore.Aplication.Interfaces;
 using SharedCore.Aplication.Services;
 
-namespace BFF.Configuration {
-    public static partial class ServiceExtension {
+namespace BFF.Configuration
+{
+    public static partial class ServiceExtension
+    {
 
         public static IServiceCollection AddTelemerty(
             this IServiceCollection serviceCollection,
-            IConfiguration Configuration, IWebHostEnvironment Environment) {
+            IConfiguration Configuration, IWebHostEnvironment Environment)
+        {
 
             serviceCollection.AddTelemetryService(Configuration, out string source);
-            
-            serviceCollection.AddOpenTelemetryTracing((builder) => {
+
+            serviceCollection.AddOpenTelemetryTracing((builder) =>
+            {
                 // Sources
                 builder.AddSource(source);
 
@@ -28,19 +32,20 @@ namespace BFF.Configuration {
                 //     })
                   .AddService(Environment.ApplicationName));
 
-                builder.AddAspNetCoreInstrumentation(opts => {
+                builder.AddAspNetCoreInstrumentation(opts =>
+                {
                     opts.RecordException = true;
                     opts.Enrich = async (activity, eventName, rawObject) =>
                     {
 
                         if (eventName.Equals("OnStartActivity"))
                         {
-                            if (rawObject is HttpRequest {Path: {Value: "/graphql"}})
+                            if (rawObject is HttpRequest { Path: { Value: "/graphql" } })
                             {
-                            //     var req = rawObject as HttpRequest;
+                                //     var req = rawObject as HttpRequest;
 
-                            //     await SharedCore.Aplication.Shared.Common
-                            //         .HandleTracingActivityRename(req);    
+                                //     await SharedCore.Aplication.Shared.Common
+                                //         .HandleTracingActivityRename(req);    
                             }
                         }
                     };
@@ -54,8 +59,9 @@ namespace BFF.Configuration {
 
                 builder.AddEntityFrameworkCoreInstrumentation(e => e.SetDbStatementForText = true);
 
-                builder.AddOtlpExporter(options => {
-                    options.Endpoint = new Uri(Configuration["ConnectionStrings:OtelCollector"]);             
+                builder.AddOtlpExporter(options =>
+                {
+                    options.Endpoint = new Uri(Configuration["ConnectionStrings:OtelCollector"]);
                 });
 
                 // if (Uri.TryCreate(Configuration.GetConnectionString("Jaeger"), UriKind.Absolute, out var uri)) {
@@ -72,7 +78,7 @@ namespace BFF.Configuration {
                 // }
             });
 
-            serviceCollection.AddSingleton<ITelemetry,Telemetry>();
+            serviceCollection.AddSingleton<ITelemetry, Telemetry>();
 
             return serviceCollection;
         }

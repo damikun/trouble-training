@@ -10,15 +10,20 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using SharedCore.Domain.Models;
 
-namespace SharedCore.Aplication.Shared {
+namespace SharedCore.Aplication.Shared
+{
 
-    public static class Common {    
+    public static class Common
+    {
 
         // Check if object is derived from specific type
-        public static bool IsSubclassOfRawGeneric(Type generic, Type toCheck) {
-            while (toCheck != null && toCheck != typeof(object)) {
+        public static bool IsSubclassOfRawGeneric(Type generic, Type toCheck)
+        {
+            while (toCheck != null && toCheck != typeof(object))
+            {
                 var cur = toCheck.IsGenericType ? toCheck.GetGenericTypeDefinition() : toCheck;
-                if (generic == cur) {
+                if (generic == cur)
+                {
                     return true;
                 }
                 toCheck = toCheck.BaseType;
@@ -26,11 +31,14 @@ namespace SharedCore.Aplication.Shared {
             return false;
         }
 
-        public async static Task<HttpRequest> HandleTracingActivityRename(HttpRequest req) {
+        public async static Task<HttpRequest> HandleTracingActivityRename(HttpRequest req)
+        {
             req.EnableBuffering();
 
-            try{
-                using (var buffer = new MemoryStream()) {
+            try
+            {
+                using (var buffer = new MemoryStream())
+                {
 
                     await req.Body.CopyToAsync(buffer);
 
@@ -40,33 +48,41 @@ namespace SharedCore.Aplication.Shared {
                     {
                         var requestBodyAsString = await reader.ReadToEndAsync();
 
-                        if(requestBodyAsString !=null){
+                        if (requestBodyAsString != null)
+                        {
 
                             PersistedRequestQueryBody parsed_body = null;
 
-                            try{
+                            try
+                            {
                                 parsed_body = JsonConvert.DeserializeObject<PersistedRequestQueryBody>(requestBodyAsString);
 
-                                if(parsed_body !=null && parsed_body.id !=null){
+                                if (parsed_body != null && parsed_body.id != null)
+                                {
 
-                                    if(Activity.Current != null){
-                                        Activity.Current.DisplayName=string.Format(
-                                            "Path: {0}, Id:{1}","/graphql",parsed_body.id);
+                                    if (Activity.Current != null)
+                                    {
+                                        Activity.Current.DisplayName = string.Format(
+                                            "Path: {0}, Id:{1}", "/graphql", parsed_body.id);
                                     }
                                 }
-                            
-                            }catch{
+
+                            }
+                            catch
+                            {
                                 // Ignore this
-                            }                                         
+                            }
                         }
                     }
                 }
-            }finally{
+            }
+            finally
+            {
                 req.Body.Position = 0L;
-            }     
+            }
 
             return req;
         }
-        
+
     }
 }

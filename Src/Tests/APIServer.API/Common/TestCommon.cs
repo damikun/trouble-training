@@ -12,17 +12,22 @@ using static APIServer.API.IntegrationTests.BaseClassFixture;
 namespace APIServer.API.IntegrationTests
 {
 
-    public static class Common {
+    public static class Common
+    {
 
-        public static TestUser GetDefaultUser(){
-            return new TestUser(){
+        public static TestUser GetDefaultUser()
+        {
+            return new TestUser()
+            {
                 UserName = "testuser",
                 Password = "testuser"
             };
         }
 
-        public static TestClinet GetDefaultClinet(){
-            return new TestClinet(){
+        public static TestClinet GetDefaultClinet()
+        {
+            return new TestClinet()
+            {
                 ClinetId = "test",
                 ClientSecret = "secret",
                 Scope = "api"
@@ -37,22 +42,26 @@ namespace APIServer.API.IntegrationTests
             this HttpClient client,
             string query,
             object variables = null,
-            IDictionary<string,string> headers = null
-        ){
+            IDictionary<string, string> headers = null
+        )
+        {
 
-            if(variables == null){
-                variables = new {};
+            if (variables == null)
+            {
+                variables = new { };
             }
 
-            if(headers != null){
+            if (headers != null)
+            {
 
-                foreach (var header in headers.Where(e=>e.Value != null))
+                foreach (var header in headers.Where(e => e.Value != null))
                 {
-                     client.DefaultRequestHeaders.Add(header.Key,header.Value);
+                    client.DefaultRequestHeaders.Add(header.Key, header.Value);
                 }
             }
 
-            var queryObject = new {
+            var queryObject = new
+            {
                 query = query,
                 variables = variables
             };
@@ -63,29 +72,33 @@ namespace APIServer.API.IntegrationTests
                 "application/json"
             );
 
-            var post_response = await client.PostAsync("/graphql",content);
+            var post_response = await client.PostAsync("/graphql", content);
 
             client.DefaultRequestHeaders.Clear();
 
             string data_string = null;
 
-            try{
+            try
+            {
                 data_string = await post_response.Content.ReadAsStringAsync();
-            }catch{}
+            }
+            catch { }
 
-            return new QueryResponse(){
+            return new QueryResponse()
+            {
                 raw_response = post_response,
                 data_content = data_string
             };
         }
     }
 
-    public class QueryResponse {
-            public HttpResponseMessage raw_response {get;set;}
+    public class QueryResponse
+    {
+        public HttpResponseMessage raw_response { get; set; }
 
-            #nullable enable
-            public string? data_content {get;set;}
-            #nullable disable
+#nullable enable
+        public string? data_content { get; set; }
+#nullable disable
     }
 
 

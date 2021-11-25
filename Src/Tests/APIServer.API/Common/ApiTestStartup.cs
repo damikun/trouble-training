@@ -21,16 +21,17 @@ namespace APIServer.API.IntegrationTests
     {
 
         public static HttpMessageHandler BackChannelHandler { get; set; }
-         
+
         public ApiTestStartup(
             IWebHostEnvironment environment,
-            IConfiguration configuration) 
-            : base(configuration,environment)
+            IConfiguration configuration)
+            : base(configuration, environment)
         {
 
         }
 
-        public override void ConfigureServices(IServiceCollection services){
+        public override void ConfigureServices(IServiceCollection services)
+        {
 
             services.AddControllers();
 
@@ -64,9 +65,9 @@ namespace APIServer.API.IntegrationTests
                 {
                     ValidateAudience = false,
                     ValidTypes = new[] { "at+jwt" },
-                    
+
                     NameClaimType = "name",
-                    RoleClaimType = "role" 
+                    RoleClaimType = "role"
                 };
             });
 
@@ -75,7 +76,7 @@ namespace APIServer.API.IntegrationTests
                 options.AddPolicy("ApiCaller", policy =>
                 {
                     policy.RequireClaim("scope", "api");
-                });             
+                });
             });
 
             JwtSecurityTokenHandler.DefaultMapInboundClaims = true;
@@ -90,23 +91,24 @@ namespace APIServer.API.IntegrationTests
             IServiceScopeFactory scopeFactory)
         {
 
-            app.UseForwardedHeaders(new ForwardedHeadersOptions{
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto | ForwardedHeaders.XForwardedHost,
             });
 
-                app.Use(async (context, next) =>
-                {
-                    var header = context.Request.Headers["Authorization"];
-                    
-                    await next();
-                });
+            app.Use(async (context, next) =>
+            {
+                var header = context.Request.Headers["Authorization"];
 
-            app.UseEnsureApiContextCreated(serviceProvider,scopeFactory);
+                await next();
+            });
+
+            app.UseEnsureApiContextCreated(serviceProvider, scopeFactory);
 
             app.UseRouting();
 
             app.UseAuthentication();
-            
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -115,7 +117,8 @@ namespace APIServer.API.IntegrationTests
                     .RequireAuthorization("ApiCaller");
 
                 endpoints.MapGraphQL()
-                .WithOptions(new GraphQLServerOptions {
+                .WithOptions(new GraphQLServerOptions
+                {
                     EnableSchemaRequests = env.IsDevelopment(),
                     Tool = { Enable = false },
                 });
@@ -124,7 +127,7 @@ namespace APIServer.API.IntegrationTests
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
             });
-            
+
         }
     }
 }

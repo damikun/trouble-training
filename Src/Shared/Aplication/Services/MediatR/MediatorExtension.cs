@@ -2,9 +2,11 @@ using System;
 using SharedCore.Aplication.Services;
 using SharedCore.Aplication.Interfaces;
 
-namespace MediatR {
-    public static class MediatorExtension {
-        
+namespace MediatR
+{
+    public static class MediatorExtension
+    {
+
         /// <summary>
         /// Creates a new fire-and-forget job based on a given method call expression.
         /// </summary>
@@ -14,14 +16,15 @@ namespace MediatR {
         public static string Enqueue(
             this IMediator mediator,
             IRequest request,
-            string description = null) {
-    
+            string description = null)
+        {
+
             var appmediator = mediator as AppMediator;
- 
+
             var telemetry = appmediator._serviceFactory.GetInstance<ITelemetry>();
 
             return new Scheduler(
-                new CommandHandler(mediator, telemetry),telemetry)
+                new CommandHandler(mediator, telemetry), telemetry)
                     .Enqueue(request, description);
         }
 
@@ -37,13 +40,14 @@ namespace MediatR {
             this IMediator mediator,
             IRequest request,
             DateTimeOffset scheduleAt,
-            string description = null) {
+            string description = null)
+        {
 
             var appmediator = mediator as AppMediator;
- 
+
             var telemetry = appmediator._serviceFactory.GetInstance<ITelemetry>();
-        
-            new Scheduler( new CommandHandler(mediator, telemetry), telemetry)
+
+            new Scheduler(new CommandHandler(mediator, telemetry), telemetry)
             .Schedule(request, scheduleAt, description);
 
         }
@@ -63,13 +67,14 @@ namespace MediatR {
             string name,
             string cronExpression,
             string description = null,
-            string queue = "default"){
+            string queue = "default")
+        {
 
             var appmediator = mediator as AppMediator;
- 
+
             var telemetry = appmediator._serviceFactory.GetInstance<ITelemetry>();
-            
-            new Scheduler( new CommandHandler(mediator, telemetry), telemetry)
+
+            new Scheduler(new CommandHandler(mediator, telemetry), telemetry)
             .ScheduleRecurring(request, name, cronExpression, description, queue);
 
         }

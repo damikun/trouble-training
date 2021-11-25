@@ -17,13 +17,13 @@ namespace IdentityServer.API
                     ClientId = "spa",
 
                     ClientSecrets = { new Secret("secret".Sha256()) },
-                    
+
                     AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
 
                     RedirectUris = { "https://localhost:5015/signin-oidc" },
-                    
+
                     BackChannelLogoutUri = "https://localhost:5015/bff/backchannel",
-                    
+
                     PostLogoutRedirectUris = { "https://localhost:5015/signout-callback-oidc" },
 
                     AllowedCorsOrigins = new List<string>
@@ -85,7 +85,7 @@ namespace IdentityServer.API
                         JwtClaimTypes.ClientId,
                         JwtClaimTypes.SessionId
                         }
-                    
+
                 }
             };
         }
@@ -94,7 +94,7 @@ namespace IdentityServer.API
         {
             return new ApiScope[]
             {
-                new ApiScope("api", new[] { 
+                new ApiScope("api", new[] {
                     JwtClaimTypes.Name,
                     JwtClaimTypes.Role,
                     JwtClaimTypes.Email,

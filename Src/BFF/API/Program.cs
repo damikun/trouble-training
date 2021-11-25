@@ -21,10 +21,12 @@ namespace BFF
 
                 host.Run();
             }
-            catch (Exception ex){
+            catch (Exception ex)
+            {
                 Log.Fatal(ex, "Runtime unhandled exception");
             }
-            finally{
+            finally
+            {
                 Log.CloseAndFlush();
             }
         }

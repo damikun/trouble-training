@@ -11,12 +11,14 @@ using APIServer.Domain.Core.Models.WebHooks;
 using APIServer.Persistence;
 using SharedCore.Aplication.Core.Commands;
 
-namespace APIServer.Aplication.Commands.Internall.Hooks {
+namespace APIServer.Aplication.Commands.Internall.Hooks
+{
 
     /// <summary>
     /// Command for processing WebHook event
     /// </summary>
-    public class ProcessWebHook : CommandBase {
+    public class ProcessWebHook : CommandBase
+    {
         public long HookId { get; set; }
         public dynamic Event { get; set; }
         public HookEventType EventType { get; set; }
@@ -25,7 +27,8 @@ namespace APIServer.Aplication.Commands.Internall.Hooks {
     /// <summary>
     /// Command handler for <c>ProcessWebHook</c>
     /// </summary>
-    public class ProcessWebHookHandler : IRequestHandler<ProcessWebHook, Unit> {
+    public class ProcessWebHookHandler : IRequestHandler<ProcessWebHook, Unit>
+    {
 
         /// <summary>
         /// Injected <c>ApiDbContext</c>
@@ -48,8 +51,9 @@ namespace APIServer.Aplication.Commands.Internall.Hooks {
         public ProcessWebHookHandler(
             IDbContextFactory<ApiDbContext> factory,
             IMediator mediator,
-            IHttpClientFactory httpClient) {
-             _factory = factory;
+            IHttpClientFactory httpClient)
+        {
+            _factory = factory;
             _mediator = mediator;
             _clientFactory = httpClient;
         }
@@ -57,41 +61,50 @@ namespace APIServer.Aplication.Commands.Internall.Hooks {
         /// <summary>
         /// Command handler for  <c>ProcessWebHook</c>
         /// </summary>
-        public async Task<Unit> Handle(ProcessWebHook request, CancellationToken cancellationToken) {
+        public async Task<Unit> Handle(ProcessWebHook request, CancellationToken cancellationToken)
+        {
 
-            WebHookRecord record = new WebHookRecord() {
+            WebHookRecord record = new WebHookRecord()
+            {
                 WebHookID = request.HookId,
                 Guid = Guid.NewGuid().ToString(),
                 HookType = request.EventType,
                 Timestamp = DateTime.Now
             };
 
-            if (request == null || request.HookId <= 0) {
+            if (request == null || request.HookId <= 0)
+            {
                 record.Result = RecordResult.parameter_error;
             }
 
-            await using ApiDbContext dbContext = 
+            await using ApiDbContext dbContext =
                 _factory.CreateDbContext();
 
-            try {
+            try
+            {
 
                 WebHook hook = null;
 
-                try {
+                try
+                {
                     hook = await dbContext.WebHooks
                         .Where(e => e.ID == request.HookId)
                         .FirstOrDefaultAsync(cancellationToken);
 
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     record.Result = RecordResult.dataQueryError;
                     record.Exception = ex.ToString();
 
                     return Unit.Value;
                 }
 
-                if (hook != null) {
+                if (hook != null)
+                {
 
-                    var options = new JsonSerializerOptions {
+                    var options = new JsonSerializerOptions
+                    {
                         WriteIndented = true,
                         IncludeFields = true,
                     };
@@ -107,7 +120,8 @@ namespace APIServer.Aplication.Commands.Internall.Hooks {
                     /* Set Headers */
                     httpClient.DefaultRequestHeaders.Add("X-Trouble-Delivery", record.Guid);
 
-                    if (!string.IsNullOrWhiteSpace(hook.Secret)) {
+                    if (!string.IsNullOrWhiteSpace(hook.Secret))
+                    {
                         httpClient.DefaultRequestHeaders.Add("X-Trouble-Secret", hook.Secret);
                     }
 
@@ -122,38 +136,52 @@ namespace APIServer.Aplication.Commands.Internall.Hooks {
 
                     record.RequestHeaders = await serialized_headers.ReadAsStringAsync(cancellationToken);
 
-                    if (!string.IsNullOrWhiteSpace(hook.WebHookUrl)) {
-                        try {
+                    if (!string.IsNullOrWhiteSpace(hook.WebHookUrl))
+                    {
+                        try
+                        {
                             using var httpResponse = await httpClient.PostAsync(hook.WebHookUrl, serialised_request_body);
 
-                            if (httpResponse != null) {
+                            if (httpResponse != null)
+                            {
                                 record.StatusCode = (int)httpResponse.StatusCode;
 
-                                if (httpResponse.Content != null) {
+                                if (httpResponse.Content != null)
+                                {
                                     record.ResponseBody = await httpResponse.Content.ReadAsStringAsync(cancellationToken);
                                 }
                             }
 
                             record.Result = RecordResult.ok;
-                        } catch (Exception ex) {
+                        }
+                        catch (Exception ex)
+                        {
                             record.Result = RecordResult.http_error;
                             record.Exception = ex.ToString();
 
                             //throw ex;
                         }
-                    } else {
+                    }
+                    else
+                    {
                         record.Result = RecordResult.parameter_error;
                     }
-                } else {
+                }
+                else
+                {
                     record.Result = RecordResult.parameter_error;
                 }
 
-            } finally {
+            }
+            finally
+            {
 
-                try {
+                try
+                {
                     dbContext.WebHooksHistory.Add(record);
                     await dbContext.SaveChangesAsync(cancellationToken);
-                } catch { }
+                }
+                catch { }
 
             }
 

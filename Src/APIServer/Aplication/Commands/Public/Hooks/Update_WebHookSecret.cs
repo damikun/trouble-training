@@ -13,13 +13,15 @@ using SharedCore.Aplication.Shared.Attributes;
 using APIServer.Domain.Core.Models.WebHooks;
 using SharedCore.Aplication.Core.Commands;
 
-namespace APIServer.Aplication.Commands.WebHooks {
+namespace APIServer.Aplication.Commands.WebHooks
+{
 
     /// <summary>
     /// Command for updateing WebHook secret
     /// </summary>
     [Authorize]
-    public class UpdateWebHookSecret : CommandBase<UpdateWebHookSecretPayload> {
+    public class UpdateWebHookSecret : CommandBase<UpdateWebHookSecretPayload>
+    {
 
         /// <summary>WebHook Id </summary>
         public long WebHookId { get; set; }
@@ -34,13 +36,15 @@ namespace APIServer.Aplication.Commands.WebHooks {
     /// <summary>
     /// UpdateWebHookSecret Validator
     /// </summary>
-    public class UpdateWebHookSecretValidator : AbstractValidator<UpdateWebHookSecret> {
+    public class UpdateWebHookSecretValidator : AbstractValidator<UpdateWebHookSecret>
+    {
 
         private readonly IDbContextFactory<ApiDbContext> _factory;
 
-        public UpdateWebHookSecretValidator(IDbContextFactory<ApiDbContext> factory){
+        public UpdateWebHookSecretValidator(IDbContextFactory<ApiDbContext> factory)
+        {
             _factory = factory;
-            
+
             RuleFor(e => e.WebHookId)
             .NotNull()
             .GreaterThan(0);
@@ -53,11 +57,12 @@ namespace APIServer.Aplication.Commands.WebHooks {
             .WithMessage("Hook was not found");
         }
 
-        public async Task<bool> HookExist(UpdateWebHookSecret request, long id, CancellationToken cancellationToken) {
-    
-            await using ApiDbContext dbContext = 
+        public async Task<bool> HookExist(UpdateWebHookSecret request, long id, CancellationToken cancellationToken)
+        {
+
+            await using ApiDbContext dbContext =
                 _factory.CreateDbContext();
-            
+
             return await dbContext.WebHooks.AnyAsync(e => e.ID == request.WebHookId);
         }
     }
@@ -73,7 +78,8 @@ namespace APIServer.Aplication.Commands.WebHooks {
     /// <summary>
     /// UpdateWebHookSecretPayload
     /// </summary>
-    public class UpdateWebHookSecretPayload : BasePayload<UpdateWebHookSecretPayload, IUpdateWebHookSecretError> {
+    public class UpdateWebHookSecretPayload : BasePayload<UpdateWebHookSecretPayload, IUpdateWebHookSecretError>
+    {
 
         /// <summary>
         /// Updated WebHook
@@ -86,7 +92,8 @@ namespace APIServer.Aplication.Commands.WebHooks {
 
 
     /// <summary>Handler for <c>UpdateWebHookSecret</c> command </summary>
-    public class UpdateWebHookSecretHandler : IRequestHandler<UpdateWebHookSecret, UpdateWebHookSecretPayload> {
+    public class UpdateWebHookSecretHandler : IRequestHandler<UpdateWebHookSecret, UpdateWebHookSecretPayload>
+    {
 
         /// <summary>
         /// Injected <c>ApiDbContext</c>
@@ -109,7 +116,8 @@ namespace APIServer.Aplication.Commands.WebHooks {
         public UpdateWebHookSecretHandler(
             IDbContextFactory<ApiDbContext> factory,
             IMediator mediator,
-            ICurrentUser currentuser) {
+            ICurrentUser currentuser)
+        {
 
             _factory = factory;
 
@@ -121,9 +129,10 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// <summary>
         /// Command handler for <c>UpdateWebHookSecret</c>
         /// </summary>
-        public async Task<UpdateWebHookSecretPayload> Handle(UpdateWebHookSecret request, CancellationToken cancellationToken) {
+        public async Task<UpdateWebHookSecretPayload> Handle(UpdateWebHookSecret request, CancellationToken cancellationToken)
+        {
 
-            await using ApiDbContext dbContext = 
+            await using ApiDbContext dbContext =
                 _factory.CreateDbContext();
 
             WebHook wh = await dbContext.WebHooks
@@ -131,7 +140,8 @@ namespace APIServer.Aplication.Commands.WebHooks {
             .Where(e => e.ID == request.WebHookId)
             .FirstOrDefaultAsync(cancellationToken);
 
-            if (wh == null) {
+            if (wh == null)
+            {
                 return UpdateWebHookSecretPayload.Error(new WebHookNotFound());
             }
 
@@ -151,7 +161,7 @@ namespace APIServer.Aplication.Commands.WebHooks {
     //---------------------------------------
 
     public class UpdateWebHookSecretPostProcessor
-        : IRequestPostProcessor<UpdateWebHookSecret,UpdateWebHookSecretPayload>
+        : IRequestPostProcessor<UpdateWebHookSecret, UpdateWebHookSecretPayload>
     {
         /// <summary>
         /// Injected <c>IPublisher</c>
@@ -168,14 +178,17 @@ namespace APIServer.Aplication.Commands.WebHooks {
             UpdateWebHookSecretPayload response,
             CancellationToken cancellationToken)
         {
-            if(response != null && !response.HasError()){
-                try {
-                    
+            if (response != null && !response.HasError())
+            {
+                try
+                {
+
                     await Task.CompletedTask;
 
                     // Add Notification hire
 
-                } catch { }
+                }
+                catch { }
             }
         }
     }

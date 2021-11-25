@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using HotChocolate;
 
-namespace SharedCore.Aplication.Payload  {
+namespace SharedCore.Aplication.Payload
+{
 
-    public interface IBasePayload {
+    public interface IBasePayload
+    {
 
         void AddError(object o);
 
@@ -13,9 +15,11 @@ namespace SharedCore.Aplication.Payload  {
 
     }
 
-    public abstract class BasePayload<U, T> : IBasePayload where U : BasePayload<U, T>, new() {
+    public abstract class BasePayload<U, T> : IBasePayload where U : BasePayload<U, T>, new()
+    {
 
-        public BasePayload() {
+        public BasePayload()
+        {
             this.errors = new List<T>();
         }
 
@@ -29,7 +33,8 @@ namespace SharedCore.Aplication.Payload  {
         /// Add errors collection and return itself
         /// </summary>
         [GraphQLIgnore]
-        public U PushError(params T[] errors) {
+        public U PushError(params T[] errors)
+        {
             this.errors.AddRange(errors);
 
             return (U)this;
@@ -39,9 +44,11 @@ namespace SharedCore.Aplication.Payload  {
         /// Check if any error exist
         /// </summary>
         [GraphQLIgnore]
-        public bool HasError() {
+        public bool HasError()
+        {
 
-            if(errors != null){
+            if (errors != null)
+            {
                 return errors.Any();
             }
 
@@ -53,7 +60,8 @@ namespace SharedCore.Aplication.Payload  {
         /// </summary>
         /// <param name="errors"></param>
         [GraphQLIgnore]
-        public static U Error(params T[] errors) {
+        public static U Error(params T[] errors)
+        {
             U u = new U();
             u.errors.AddRange(errors);
             return u;
@@ -63,17 +71,22 @@ namespace SharedCore.Aplication.Payload  {
         /// Returns new instance
         /// </summary>
         [GraphQLIgnore]
-        public static U Success() {
+        public static U Success()
+        {
             return new U();
         }
 
         [GraphQLIgnore]
-        public void AddError(object o) {
+        public void AddError(object o)
+        {
 
-            if (o is T) {
+            if (o is T)
+            {
                 T tmp = (T)o;
                 this.errors.Add(tmp);
-            } else {
+            }
+            else
+            {
                 throw new NotSupportedException("Error type does not match base payload supported types");
             }
         }

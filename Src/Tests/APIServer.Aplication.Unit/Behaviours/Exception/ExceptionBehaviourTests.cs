@@ -27,7 +27,7 @@ namespace APIServer.Application.UnitTests.Behaviours
 
             _telemetry = new Mock<ITelemetry>();
 
-            _telemetry.Setup(e=>e.AppSource).Returns(new ActivitySource("SomeSource"));
+            _telemetry.Setup(e => e.AppSource).Returns(new ActivitySource("SomeSource"));
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace APIServer.Application.UnitTests.Behaviours
 
             response.errors.First().Should().BeOfType<InternalServerError>();
 
-            _telemetry.Verify(e=>e.SetOtelError(It.IsAny<Exception>()),Times.Once);
+            _telemetry.Verify(e => e.SetOtelError(It.IsAny<Exception>()), Times.Once);
         }
 
         [Fact]
@@ -79,14 +79,14 @@ namespace APIServer.Application.UnitTests.Behaviours
 
             response.errors.Any().Should().BeFalse();
 
-            _telemetry.Verify(e=>e.SetOtelError(It.IsAny<Exception>()),Times.Never);
+            _telemetry.Verify(e => e.SetOtelError(It.IsAny<Exception>()), Times.Never);
         }
 
         [Fact]
         public async Task ThrowUndefinedErrorMarkerInterface()
         {
             await Task.CompletedTask;
-            
+
             var exBehaviour = new UnhandledExBehaviour<ExceptionUnknownCommand, ExceptionUnknownCommandPayload>(
                 _currentUserService.Object,
                 _logger.Object,
@@ -100,14 +100,14 @@ namespace APIServer.Application.UnitTests.Behaviours
                 new ExceptionTestCommandHandler<ExceptionUnknownCommandPayload>().HandleWithUnknownPayloadError
             )).Should().Throw<NotSupportedException>();
 
-            _telemetry.Verify(e=>e.SetOtelError(It.IsAny<Exception>()),Times.Once);
+            _telemetry.Verify(e => e.SetOtelError(It.IsAny<Exception>()), Times.Once);
         }
 
         [Fact]
         public async Task ThrowQueryException()
         {
             await Task.CompletedTask;
-            
+
             var exBehaviour = new UnhandledExBehaviour<ExceptionQuery, ExceptionQueryResponse>(
                 _currentUserService.Object,
                 _logger.Object,
@@ -121,14 +121,14 @@ namespace APIServer.Application.UnitTests.Behaviours
                 new ExceptionTestQueryHandler<ExceptionQueryResponse>().HandleWithThrow
             )).Should().Throw<System.Exception>();
 
-            _telemetry.Verify(e=>e.SetOtelError(It.IsAny<Exception>()),Times.Once);
+            _telemetry.Verify(e => e.SetOtelError(It.IsAny<Exception>()), Times.Once);
         }
 
         [Fact]
         public async Task ProcessQueryWithoutThrow()
         {
             await Task.CompletedTask;
-            
+
             var exBehaviour = new UnhandledExBehaviour<ExceptionQuery, ExceptionQueryResponse>(
                 _currentUserService.Object,
                 _logger.Object,
@@ -142,7 +142,7 @@ namespace APIServer.Application.UnitTests.Behaviours
                 new ExceptionTestQueryHandler<ExceptionQueryResponse>().HandleWithoutThrow
             )).Should().NotThrow<System.Exception>();
 
-            _telemetry.Verify(e=>e.SetOtelError(It.IsAny<Exception>()),Times.Never);
+            _telemetry.Verify(e => e.SetOtelError(It.IsAny<Exception>()), Times.Never);
         }
     }
 }

@@ -1,8 +1,10 @@
-namespace SharedCore.Aplication.Services {
+namespace SharedCore.Aplication.Services
+{
     /// <summary>
     /// Contains constant CRON expressions 
     /// </summary>
-    public static class CommonCrons {
+    public static class CommonCrons
+    {
         /// <summary>
         /// Every minute.
         /// </summary>

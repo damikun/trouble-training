@@ -13,13 +13,15 @@ namespace APIServer.API.IntegrationTests.WebHooks
     public class QueryWebHookRecordsTests : BaseClassFixture
     {
 
-        public QueryWebHookRecordsTests(XunitFixture fixture):base(fixture){
+        public QueryWebHookRecordsTests(XunitFixture fixture) : base(fixture)
+        {
 
         }
 
-        public static string GetTestQuery(){
+        public static string GetTestQuery()
+        {
 
-            return  @"query($hook_id: ID!){
+            return @"query($hook_id: ID!){
                 webHookRecords(hook_id:$hook_id){
                     edges{
                         node{
@@ -39,11 +41,12 @@ namespace APIServer.API.IntegrationTests.WebHooks
               Common.GetDefaultUser(),
               Common.GetDefaultClinet());
 
-            var variables =  new { 
+            var variables = new
+            {
                 hook_id = "R1FMX1dlYkhvb2sKbDE="
             };
 
-            var response = await HttpClient.ProcessQuery(mutation,variables);
+            var response = await HttpClient.ProcessQuery(mutation, variables);
 
             response.raw_response.StatusCode.Should().Be(200);
 
@@ -55,16 +58,17 @@ namespace APIServer.API.IntegrationTests.WebHooks
         {
             var mutation = GetTestQuery();
 
-            var variables =  new { 
+            var variables = new
+            {
                 hook_id = "R1FMX1dlYkhvb2sKbDE="
             };
 
-            var response = await HttpClient.ProcessQuery(mutation,variables);
+            var response = await HttpClient.ProcessQuery(mutation, variables);
 
             response.raw_response.StatusCode.Should().Be(200);
 
             Snapshot.Match(response.data_content);
         }
-       
+
     }
 }

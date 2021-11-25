@@ -8,26 +8,29 @@ using APIServer.Aplication.Commands.WebHooks;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
-namespace APIServer.Aplication.GraphQL.Mutation {
+namespace APIServer.Aplication.GraphQL.Mutation
+{
 
     /// <summary>
     /// WebHooks Mutations
     /// </summary>
     [ExtendObjectType(OperationTypeNames.Mutation)]
-    public class WebHookMutations {
+    public class WebHookMutations
+    {
 
         /// <summary>
         /// Crate new  webhook
         /// </summary>
-        public class CreateWebHookInput {
+        public class CreateWebHookInput
+        {
 
             /// <summary> Url </summary>
             public string WebHookUrl { get; set; }
 
             /// <summary> Secret </summary>
-            #nullable enable
+#nullable enable
             public string? Secret { get; set; }
-            #nullable disable
+#nullable disable
 
             /// <summary> IsActive </summary>
             public bool IsActive { get; set; }
@@ -43,11 +46,13 @@ namespace APIServer.Aplication.GraphQL.Mutation {
         public async Task<CreateWebHookPayload> CreateWebHook(
             CreateWebHookInput request,
             [Service] IMediator _mediator,
-            [Service] IHttpContextAccessor accessor) {
+            [Service] IHttpContextAccessor accessor)
+        {
 
             var id = accessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            return await _mediator.Send(new CreateWebHook() {
+            return await _mediator.Send(new CreateWebHook()
+            {
                 WebHookUrl = request.WebHookUrl,
                 Secret = request.Secret,
                 IsActive = request.IsActive,
@@ -61,7 +66,8 @@ namespace APIServer.Aplication.GraphQL.Mutation {
         /// <summary>
         /// Update  webhook
         /// </summary>
-        public class UpdateWebHookInput {
+        public class UpdateWebHookInput
+        {
             /// <summary>WebHook Id </summary>
             public long WebHookId { get; set; }
 
@@ -70,9 +76,9 @@ namespace APIServer.Aplication.GraphQL.Mutation {
 
             /// <summary> Secret </summary>
 
-            #nullable enable
+#nullable enable
             public string? Secret { get; set; }
-            #nullable disable
+#nullable disable
 
             /// <summary> IsActive </summary>
             public bool IsActive { get; set; }
@@ -87,9 +93,11 @@ namespace APIServer.Aplication.GraphQL.Mutation {
         /// <returns></returns>
         public async Task<UpdateWebHookPayload> UpdateWebHook(
             UpdateWebHookInput request,
-            [Service] IMediator _mediator) {
+            [Service] IMediator _mediator)
+        {
 
-            return await _mediator.Send(new UpdateWebHook() {
+            return await _mediator.Send(new UpdateWebHook()
+            {
                 WebHookId = request.WebHookId,
                 WebHookUrl = request.WebHookUrl,
                 Secret = request.Secret,
@@ -104,7 +112,8 @@ namespace APIServer.Aplication.GraphQL.Mutation {
         /// <summary>
         /// Update webhook activ state Input
         /// </summary>
-        public class UpdateWebHookActivStateInput {
+        public class UpdateWebHookActivStateInput
+        {
             /// <summary>WebHook Id </summary>
             public long WebHookId { get; set; }
 
@@ -118,9 +127,11 @@ namespace APIServer.Aplication.GraphQL.Mutation {
         /// <returns></returns>
         public async Task<UpdateWebHookActivStatePayload> UpdateWebHookActivState(
             UpdateWebHookActivStateInput request,
-            [Service] IMediator _mediator) {
+            [Service] IMediator _mediator)
+        {
 
-            return await _mediator.Send(new UpdateWebHookActivState() {
+            return await _mediator.Send(new UpdateWebHookActivState()
+            {
                 WebHookId = request.WebHookId,
                 IsActive = request.IsActive,
             });
@@ -132,7 +143,8 @@ namespace APIServer.Aplication.GraphQL.Mutation {
         /// <summary>
         /// Update webhook uri
         /// </summary>
-        public class UpdateWebHookUriInput {
+        public class UpdateWebHookUriInput
+        {
             /// <summary>WebHook Id </summary>
             public long WebHookId { get; set; }
 
@@ -146,9 +158,11 @@ namespace APIServer.Aplication.GraphQL.Mutation {
         /// <returns></returns>
         public async Task<UpdateWebHookUriPayload> UpdateWebHookUri(
             UpdateWebHookUriInput request,
-            [Service] IMediator _mediator) {
+            [Service] IMediator _mediator)
+        {
 
-            return await _mediator.Send(new UpdateWebHookUri() {
+            return await _mediator.Send(new UpdateWebHookUri()
+            {
                 WebHookId = request.WebHookId,
                 WebHookUrl = request.WebHookUrl,
             });
@@ -160,7 +174,8 @@ namespace APIServer.Aplication.GraphQL.Mutation {
         /// <summary>
         /// Update webhook secret
         /// </summary>
-        public class UpdateWebHookSecretInput {
+        public class UpdateWebHookSecretInput
+        {
             /// <summary>WebHook Id </summary>
             public long WebHookId { get; set; }
 
@@ -174,9 +189,11 @@ namespace APIServer.Aplication.GraphQL.Mutation {
         /// <returns></returns>
         public async Task<UpdateWebHookSecretPayload> UpdateWebHookSecret(
             UpdateWebHookSecretInput request,
-            [Service] IMediator _mediator) {
+            [Service] IMediator _mediator)
+        {
 
-            return await _mediator.Send(new UpdateWebHookSecret() {
+            return await _mediator.Send(new UpdateWebHookSecret()
+            {
                 WebHookId = request.WebHookId,
                 Secret = request.Secret,
             });
@@ -188,7 +205,8 @@ namespace APIServer.Aplication.GraphQL.Mutation {
         /// <summary>
         /// Update webhook triger events
         /// </summary>
-        public class UpdateWebHookTriggerEventsInput {
+        public class UpdateWebHookTriggerEventsInput
+        {
             /// <summary>WebHook Id </summary>
             public long WebHookId { get; set; }
 
@@ -202,9 +220,11 @@ namespace APIServer.Aplication.GraphQL.Mutation {
         /// <returns></returns>
         public async Task<UpdateWebHookTriggerEventsPayload> UpdateWebHookTriggerEvents(
             UpdateWebHookTriggerEventsInput request,
-            [Service] IMediator _mediator) {
+            [Service] IMediator _mediator)
+        {
 
-            return await _mediator.Send(new UpdateWebHookTriggerEvents() {
+            return await _mediator.Send(new UpdateWebHookTriggerEvents()
+            {
                 WebHookId = request.WebHookId,
                 HookEvents = request.HookEvents != null ? new HashSet<HookEventType>(request.HookEvents) : new HashSet<HookEventType>(new HookEventType[0]),
             });
@@ -216,7 +236,8 @@ namespace APIServer.Aplication.GraphQL.Mutation {
         /// <summary>
         /// Update  webHook
         /// </summary>
-        public class RemoveWebHookInput {
+        public class RemoveWebHookInput
+        {
             /// <summary>WebHook Id </summary>
             public long WebHookId { get; set; }
         }
@@ -227,9 +248,11 @@ namespace APIServer.Aplication.GraphQL.Mutation {
         /// <returns></returns>
         public async Task<RemoveWebHookPayload> RemoveWebHook(
             RemoveWebHookInput request,
-            [Service] IMediator _mediator) {
+            [Service] IMediator _mediator)
+        {
 
-            return await _mediator.Send(new RemoveWebHook() {
+            return await _mediator.Send(new RemoveWebHook()
+            {
                 WebHookId = request.WebHookId
             });
         }

@@ -6,7 +6,7 @@ namespace APIServer.Application.UnitTests.Behaviours
 {
     public class CommonTests
     {
-        public CommonTests(){ }
+        public CommonTests() { }
 
         [Theory]
         [InlineData("")]
@@ -15,8 +15,8 @@ namespace APIServer.Application.UnitTests.Behaviours
         [InlineData("192.168.0.1")]
         [InlineData("192.168.0.1:9000/test")]
         public void UrlRegex_Fail(string url)
-        {            
-            var result = Regex.Match(url,Common.URI_REGEX);
+        {
+            var result = Regex.Match(url, Common.URI_REGEX);
 
             Assert.False(result.Success);
         }
@@ -31,8 +31,8 @@ namespace APIServer.Application.UnitTests.Behaviours
         [InlineData("http://192.168.0.1/test")]
         [InlineData("http://192.168.0.1:9000/test")]
         public void UrlRegex_Ok(string url)
-        {   
-            var result = Regex.Match(url,Common.URI_REGEX);
+        {
+            var result = Regex.Match(url, Common.URI_REGEX);
 
             Assert.True(result.Success);
         }

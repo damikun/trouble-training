@@ -1,7 +1,9 @@
 
-namespace APIServer.Domain.Core.Models.Events {
+namespace APIServer.Domain.Core.Models.Events
+{
 
-    public enum EventType {
+    public enum EventType
+    {
         WebHook,
         System,
         Project,

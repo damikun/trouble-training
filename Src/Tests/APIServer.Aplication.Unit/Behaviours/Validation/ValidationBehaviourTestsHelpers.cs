@@ -7,15 +7,17 @@ using SharedCore.Aplication.Core.Commands;
 
 namespace APIServer.Application.UnitTests.Behaviours
 {
-    public class ValidationTestCommand : CommandBase<ValidationTestPayload> {
-        public string FirstName {get;set;}
+    public class ValidationTestCommand : CommandBase<ValidationTestPayload>
+    {
+        public string FirstName { get; set; }
 
-        public int Age {get;set;}
+        public int Age { get; set; }
 
-        public object obj {get;set;}
+        public object obj { get; set; }
     }
 
-    public class ValidationTestPayload : BasePayload<ValidationTestPayload, ITestError> {
+    public class ValidationTestPayload : BasePayload<ValidationTestPayload, ITestError>
+    {
         public object data { get; set; }
     }
 
@@ -23,21 +25,25 @@ namespace APIServer.Application.UnitTests.Behaviours
 
     public class QueryCommand : CommandBase<QueryCommandResponse> { }
 
-    public class QueryCommandResponse { 
+    public class QueryCommandResponse
+    {
 
-        public string some_field {get;set;} = "Some default value";
+        public string some_field { get; set; } = "Some default value";
     }
 
     //---------------------------------
 
-    public class TestValidatorNoRules : AbstractValidator<ValidationTestCommand> {
+    public class TestValidatorNoRules : AbstractValidator<ValidationTestCommand>
+    {
 
-        public TestValidatorNoRules(){ }
+        public TestValidatorNoRules() { }
     }
 
-    public class TestValidatorSingleRule : AbstractValidator<ValidationTestCommand> {
+    public class TestValidatorSingleRule : AbstractValidator<ValidationTestCommand>
+    {
 
-        public TestValidatorSingleRule(){
+        public TestValidatorSingleRule()
+        {
 
             RuleFor(e => e.FirstName)
             .NotNull()
@@ -45,9 +51,11 @@ namespace APIServer.Application.UnitTests.Behaviours
         }
     }
 
-    public class TestValidatorMultipleRules : AbstractValidator<ValidationTestCommand> {
+    public class TestValidatorMultipleRules : AbstractValidator<ValidationTestCommand>
+    {
 
-        public TestValidatorMultipleRules(){
+        public TestValidatorMultipleRules()
+        {
 
             RuleFor(e => e.Age)
             .GreaterThan(20);
@@ -59,38 +67,44 @@ namespace APIServer.Application.UnitTests.Behaviours
 
     //---------------------------------
 
-    public class ValidationQuery : IRequest<ValidationQueryResponse> {
-        public long some_id {get;set;}
-     }
+    public class ValidationQuery : IRequest<ValidationQueryResponse>
+    {
+        public long some_id { get; set; }
+    }
 
-    public class ValidationQueryResponse {}
+    public class ValidationQueryResponse { }
 
     //---------------------------------
 
-    
-    public class QuerySingleValidationRule : AbstractValidator<ValidationQuery> {
 
-        public QuerySingleValidationRule(){
+    public class QuerySingleValidationRule : AbstractValidator<ValidationQuery>
+    {
+
+        public QuerySingleValidationRule()
+        {
 
             RuleFor(e => e.some_id)
             .GreaterThan(0);
         }
     }
-    
+
     //---------------------------------
 
-    public class TestCommandHandler<T> where T :IBasePayload, new() {
+    public class TestCommandHandler<T> where T : IBasePayload, new()
+    {
 
-        public TestCommandHandler(){ }
+        public TestCommandHandler() { }
 
-        public async Task<T> HandleWithThrow() {
+        public async Task<T> HandleWithThrow()
+        {
 
             await Task.CompletedTask;
 
             throw new System.Exception();
         }
-        
-        public async Task<T> HandleWithoutThrow() {
+
+        public async Task<T> HandleWithoutThrow()
+        {
 
             await Task.CompletedTask;
 
@@ -98,14 +112,16 @@ namespace APIServer.Application.UnitTests.Behaviours
         }
 
     }
-    
+
     //---------------------------------
 
-    public class TestQueryHandler<T> where T: new() {
+    public class TestQueryHandler<T> where T : new()
+    {
 
-        public TestQueryHandler(){ }
+        public TestQueryHandler() { }
 
-        public async Task<T> HandleDefaultPayload() {
+        public async Task<T> HandleDefaultPayload()
+        {
 
             await Task.CompletedTask;
 

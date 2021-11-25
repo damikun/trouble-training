@@ -26,25 +26,25 @@ namespace APIServer.Application.UnitTests.Behaviours
 
             _logger = new Mock<ILogger>();
 
-            _env = new Mock<IWebHostEnvironment>(); 
+            _env = new Mock<IWebHostEnvironment>();
 
             _telemetry = new Mock<ITelemetry>();
 
-            _telemetry.Setup(e=>e.AppSource).Returns(new ActivitySource("SomeSource"));
+            _telemetry.Setup(e => e.AppSource).Returns(new ActivitySource("SomeSource"));
 
-            _telemetry.Setup(e=>e.Current).Returns(Activity.Current);
+            _telemetry.Setup(e => e.Current).Returns(Activity.Current);
 
-            _telemetry.Setup(e=>e.SetOtelError(It.IsAny<Exception>()));
+            _telemetry.Setup(e => e.SetOtelError(It.IsAny<Exception>()));
 
-            _telemetry.Setup(e=>e.SetOtelError(It.IsAny<string>(),false)); 
+            _telemetry.Setup(e => e.SetOtelError(It.IsAny<string>(), false));
 
-            _telemetry.Setup(e=>e.SetOtelWarning(It.IsAny<string>()));
+            _telemetry.Setup(e => e.SetOtelWarning(It.IsAny<string>()));
         }
 
         [Fact]
         public async Task TestPerfLogProcessed()
         {
-            _env.Setup(e=>e.EnvironmentName).Returns("development");
+            _env.Setup(e => e.EnvironmentName).Returns("development");
 
             var exBehaviour = new PerformanceBehaviour<PerformanceTestCommand, PerformanceTestPayload>(
                 _currentUserService.Object,
@@ -53,7 +53,7 @@ namespace APIServer.Application.UnitTests.Behaviours
                 _telemetry.Object
             );
 
-            var command = new PerformanceTestCommand {};
+            var command = new PerformanceTestCommand { };
 
             command.monitor_time = 70;
 
@@ -69,12 +69,12 @@ namespace APIServer.Application.UnitTests.Behaviours
 
             response.errors.Any().Should().BeFalse();
 
-            _logger.Verify(e=>e.Warning(
+            _logger.Verify(e => e.Warning(
                 String.Format(
                     "Performense values ​​are out of range: Request<{0}>",
                     typeof(PerformanceTestCommand).FullName)
-            ),Times.Once);
+            ), Times.Once);
 
-        }   
+        }
     }
 }

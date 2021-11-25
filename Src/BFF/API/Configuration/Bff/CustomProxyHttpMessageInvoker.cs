@@ -6,24 +6,29 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BFF.Configuration {
+namespace BFF.Configuration
+{
 
-    public class CustomProxyHttpMessageInvoker : HttpMessageInvoker{
-            
+    public class CustomProxyHttpMessageInvoker : HttpMessageInvoker
+    {
+
         public const string RequestIdHeaderName = "Request-Id";
         public const string CorrelationContextHeaderName = "Correlation-Context";
         public const string TraceParentHeaderName = "traceparent";
         public const string TraceStateHeaderName = "tracestate";
 
-        public CustomProxyHttpMessageInvoker(HttpMessageHandler handler):base(handler){
+        public CustomProxyHttpMessageInvoker(HttpMessageHandler handler) : base(handler)
+        {
 
         }
 
-        public CustomProxyHttpMessageInvoker(HttpMessageHandler handler, bool disposeHandler):base(handler,disposeHandler){
-            
+        public CustomProxyHttpMessageInvoker(HttpMessageHandler handler, bool disposeHandler) : base(handler, disposeHandler)
+        {
+
         }
 
-        private static HttpRequestMessage HandleTelemetryContextPropagation(HttpRequestMessage request){
+        private static HttpRequestMessage HandleTelemetryContextPropagation(HttpRequestMessage request)
+        {
             var currentActivity = Activity.Current;
 
             if (currentActivity.IdFormat == ActivityIdFormat.W3C)
@@ -45,7 +50,7 @@ namespace BFF.Configuration {
                 }
             }
 
-                        // we expect baggage to be empty or contain a few items
+            // we expect baggage to be empty or contain a few items
             using (IEnumerator<KeyValuePair<string, string>> e = currentActivity.Baggage.GetEnumerator())
             {
                 if (e.MoveNext())
@@ -69,16 +74,16 @@ namespace BFF.Configuration {
 
             request = HandleTelemetryContextPropagation(request);
 
-            return  base.Send(request,cancellationToken);
+            return base.Send(request, cancellationToken);
         }
 
-        
+
         public override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
 
             request = HandleTelemetryContextPropagation(request);
 
-            return  base.SendAsync(request,cancellationToken);
+            return base.SendAsync(request, cancellationToken);
         }
 
     }

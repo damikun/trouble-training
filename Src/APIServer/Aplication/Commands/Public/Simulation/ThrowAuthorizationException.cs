@@ -7,27 +7,31 @@ using Microsoft.EntityFrameworkCore;
 using SharedCore.Aplication.Payload;
 using SharedCore.Aplication.Shared.Attributes;
 
-namespace APIServer.Aplication.Commands.WebHooks {
+namespace APIServer.Aplication.Commands.WebHooks
+{
 
     /// <summary>
     /// Command for testing authorization exception
     /// </summary>
-    [Authorize(Roles ="NotExistingRole")]
-    public class ThrowAuthorizationException 
-        : IRequest<ThrowAuthorizationExceptionPayload> {
+    [Authorize(Roles = "NotExistingRole")]
+    public class ThrowAuthorizationException
+        : IRequest<ThrowAuthorizationExceptionPayload>
+    {
         public ThrowAuthorizationException() { }
     }
 
     /// <summary>
     /// ThrowAuthorizationException Validator
     /// </summary>
-    public class ThrowAuthorizationExceptionValidator 
-        : AbstractValidator<ThrowAuthorizationException> {
+    public class ThrowAuthorizationExceptionValidator
+        : AbstractValidator<ThrowAuthorizationException>
+    {
 
         private readonly IDbContextFactory<ApiDbContext> _factory;
 
         public ThrowAuthorizationExceptionValidator(
-            IDbContextFactory<ApiDbContext> factory) {
+            IDbContextFactory<ApiDbContext> factory)
+        {
             _factory = factory;
         }
 
@@ -41,14 +45,16 @@ namespace APIServer.Aplication.Commands.WebHooks {
     /// <summary>
     /// ThrowAuthorizationExceptionPayload
     /// </summary>
-    public class ThrowAuthorizationExceptionPayload 
-        : BasePayload<ThrowAuthorizationExceptionPayload, IThrowAuthorizationExceptionError> {
+    public class ThrowAuthorizationExceptionPayload
+        : BasePayload<ThrowAuthorizationExceptionPayload, IThrowAuthorizationExceptionError>
+    {
 
     }
 
     /// <summary>Handler for <c>ThrowAuthorizationException</c> command </summary>
-    public class ThrowAuthorizationExceptionHandler 
-        : IRequestHandler<ThrowAuthorizationException, ThrowAuthorizationExceptionPayload> {
+    public class ThrowAuthorizationExceptionHandler
+        : IRequestHandler<ThrowAuthorizationException, ThrowAuthorizationExceptionPayload>
+    {
 
 
         /// <summary>
@@ -61,8 +67,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// </summary>
         public async Task<ThrowAuthorizationExceptionPayload> Handle(
             ThrowAuthorizationException request,
-            CancellationToken cancellationToken) {
-            
+            CancellationToken cancellationToken)
+        {
+
             await Task.CompletedTask;
 
             return ThrowAuthorizationExceptionPayload.Success();

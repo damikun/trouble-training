@@ -29,20 +29,23 @@ namespace APIServer.API.IntegrationTests
             TokenClient = fixture.TokenClient;
         }
 
-        public class TestUser{
-            public string UserName {get;set;}
-            public string Password {get;set;}
+        public class TestUser
+        {
+            public string UserName { get; set; }
+            public string Password { get; set; }
         }
 
-        public class TestClinet{
-            public string ClinetId {get;set;}
-            public string ClientSecret {get;set;}
-            public string Scope {get;set;}
+        public class TestClinet
+        {
+            public string ClinetId { get; set; }
+            public string ClientSecret { get; set; }
+            public string Scope { get; set; }
         }
 
         public async Task RunAs(
             TestUser user_credentials,
-            TestClinet client_credentials){
+            TestClinet client_credentials)
+        {
 
             var token = await GetAccessTokenForUser(
                 user_credentials.UserName,
@@ -52,10 +55,13 @@ namespace APIServer.API.IntegrationTests
                 client_credentials.Scope
                 );
 
-            if(token != null){
-                HttpClient.DefaultRequestHeaders.Authorization = 
+            if (token != null)
+            {
+                HttpClient.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", token);
-            }else{
+            }
+            else
+            {
                 throw new System.Exception("Resolved token from IdentityServer is null");
             }
 
@@ -68,14 +74,15 @@ namespace APIServer.API.IntegrationTests
             string clientSecret = "secret",
             string scope = "api")
         {
-            
+
             TokenClient tokenClient = new TokenClient(
                 TokenClient,
-                 new TokenClientOptions {
-                      ClientId = clientId,
-                      ClientSecret = clientSecret
-            });
-            
+                 new TokenClientOptions
+                 {
+                     ClientId = clientId,
+                     ClientSecret = clientSecret
+                 });
+
             var disco = await TokenClient.GetDiscoveryDocumentAsync();
 
             var response = await TokenClient.RequestPasswordTokenAsync(
@@ -87,7 +94,7 @@ namespace APIServer.API.IntegrationTests
                     Password = password,
 
                     ClientId = clientId,
-                    ClientSecret =clientSecret,
+                    ClientSecret = clientSecret,
                     Scope = scope,
                 });
 

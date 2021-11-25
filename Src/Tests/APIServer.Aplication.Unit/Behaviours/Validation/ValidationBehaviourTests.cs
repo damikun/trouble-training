@@ -29,15 +29,15 @@ namespace APIServer.Application.UnitTests.Behaviours
 
             _telemetry = new Mock<ITelemetry>();
 
-            _telemetry.Setup(e=>e.AppSource).Returns(new ActivitySource("SomeSource"));
+            _telemetry.Setup(e => e.AppSource).Returns(new ActivitySource("SomeSource"));
 
-            _telemetry.Setup(e=>e.Current).Returns(Activity.Current);
+            _telemetry.Setup(e => e.Current).Returns(Activity.Current);
 
-            _telemetry.Setup(e=>e.SetOtelError(It.IsAny<Exception>()));
+            _telemetry.Setup(e => e.SetOtelError(It.IsAny<Exception>()));
 
-            _telemetry.Setup(e=>e.SetOtelError(It.IsAny<string>(),false)); 
+            _telemetry.Setup(e => e.SetOtelError(It.IsAny<string>(), false));
 
-            _telemetry.Setup(e=>e.SetOtelWarning(It.IsAny<string>()));
+            _telemetry.Setup(e => e.SetOtelWarning(It.IsAny<string>()));
         }
 
         [Fact]
@@ -56,7 +56,7 @@ namespace APIServer.Application.UnitTests.Behaviours
             );
 
             var response = await exBehaviour.Handle(
-                new ValidationTestCommand {FirstName="Zlobor" },
+                new ValidationTestCommand { FirstName = "Zlobor" },
                 new CancellationToken(),
                 new TestCommandHandler<ValidationTestPayload>().HandleWithoutThrow
             );
@@ -66,7 +66,7 @@ namespace APIServer.Application.UnitTests.Behaviours
             response.Should().BeOfType<ValidationTestPayload>();
 
             response.errors.Any().Should().BeFalse();
-        }   
+        }
 
         [Fact]
         public async Task HandleSingleValidationError()
@@ -84,7 +84,7 @@ namespace APIServer.Application.UnitTests.Behaviours
             );
 
             var response = await exBehaviour.Handle(
-                new ValidationTestCommand {FirstName=null },
+                new ValidationTestCommand { FirstName = null },
                 new CancellationToken(),
                 new TestCommandHandler<ValidationTestPayload>().HandleWithoutThrow
             );
@@ -96,7 +96,7 @@ namespace APIServer.Application.UnitTests.Behaviours
             response.errors.Any().Should().BeTrue();
 
             response.errors.Count().Should()
-                .Be(1,"only one validator was defined as: RuleFor(e => e.FirstName).NotNull()");
+                .Be(1, "only one validator was defined as: RuleFor(e => e.FirstName).NotNull()");
 
             response.errors.First().Should().BeOfType<ValidationError>();
 
@@ -120,7 +120,7 @@ namespace APIServer.Application.UnitTests.Behaviours
             );
 
             var response = await exBehaviour.Handle(
-                new ValidationTestCommand {FirstName=null, Age=18 },
+                new ValidationTestCommand { FirstName = null, Age = 18 },
                 new CancellationToken(),
                 new TestCommandHandler<ValidationTestPayload>().HandleWithoutThrow
             );
@@ -141,7 +141,7 @@ namespace APIServer.Application.UnitTests.Behaviours
         public async Task HandleSigleQueryValidationError()
         {
             await Task.CompletedTask;
-            
+
             var validators = new List<IValidator<ValidationQuery>>(){
                 new QuerySingleValidationRule(),
             }.AsEnumerable();
@@ -155,7 +155,7 @@ namespace APIServer.Application.UnitTests.Behaviours
 
             FluentActions.Invoking(() =>
                exBehaviour.Handle(
-                new ValidationQuery {some_id=0},
+                new ValidationQuery { some_id = 0 },
                 new CancellationToken(),
                 new TestQueryHandler<ValidationQueryResponse>().HandleDefaultPayload
             )).Should().Throw<SharedCore.Aplication.Shared.Exceptions.ValidationException>();
@@ -177,7 +177,7 @@ namespace APIServer.Application.UnitTests.Behaviours
             );
 
             var response = await exBehaviour.Handle(
-                new ValidationQuery {some_id=10},
+                new ValidationQuery { some_id = 10 },
                 new CancellationToken(),
                 new TestQueryHandler<ValidationQueryResponse>().HandleDefaultPayload
             );

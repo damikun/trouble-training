@@ -10,18 +10,21 @@ using APIServer.Aplication.Shared.Behaviours;
 
 namespace APIServer.Application.UnitTests.Behaviours
 {
-    public class AuthorizationTestCommand : CommandBase<AuthorizationTestPayload> {
-        public string SomeDataField {get;set;}
+    public class AuthorizationTestCommand : CommandBase<AuthorizationTestPayload>
+    {
+        public string SomeDataField { get; set; }
     }
 
     [Authorize]
-    public class AuthorizationTestCommandWithAttribute : CommandBase<AuthorizationTestPayload> {
-        public string SomeDataField {get;set;}
+    public class AuthorizationTestCommandWithAttribute : CommandBase<AuthorizationTestPayload>
+    {
+        public string SomeDataField { get; set; }
     }
 
-    [Authorize(InnerPolicy=true)]
-    public class AuthorizationTestCommandWithInnerAttribute : CommandBase<AuthorizationTestPayload> {
-        public string SomeDataField {get;set;}
+    [Authorize(InnerPolicy = true)]
+    public class AuthorizationTestCommandWithInnerAttribute : CommandBase<AuthorizationTestPayload>
+    {
+        public string SomeDataField { get; set; }
     }
 
     [Authorize(Roles = "Admin")]
@@ -30,42 +33,48 @@ namespace APIServer.Application.UnitTests.Behaviours
     [Authorize(Policy = "SomePolicy")]
     public class AuthorizationTestCommandWithPolicy : CommandBase<AuthorizationTestPayload> { }
 
-    public class AuthorizationTestPayload : BasePayload<AuthorizationTestPayload, ITestError> {
+    public class AuthorizationTestPayload : BasePayload<AuthorizationTestPayload, ITestError>
+    {
         public string data { get; set; } = "Some data";
     }
 
-    public class AuthorizationQueryTest : IRequest<AuthorizationQueryTestResponse> {}
+    public class AuthorizationQueryTest : IRequest<AuthorizationQueryTestResponse> { }
 
     [Authorize]
-    public class AuthorizationQueryTestAuhorisedAtribute : IRequest<AuthorizationQueryTestResponse> {}
+    public class AuthorizationQueryTestAuhorisedAtribute : IRequest<AuthorizationQueryTestResponse> { }
 
-    public class AuthorizationQueryTestResponse {}
+    public class AuthorizationQueryTestResponse { }
 
     //---------------------------
 
-    public class AuthorizationTestValidator : AuthorizationValidator<AuthorizationTestCommandWithInnerAttribute> {
+    public class AuthorizationTestValidator : AuthorizationValidator<AuthorizationTestCommandWithInnerAttribute>
+    {
 
-        public AuthorizationTestValidator(){
+        public AuthorizationTestValidator()
+        {
 
             RuleFor(e => e.SomeDataField)
             .MustAsync(CanUpdateField);
         }
 
-        public async Task<bool>  CanUpdateField(string url, CancellationToken cancellationToken) {
-            
+        public async Task<bool> CanUpdateField(string url, CancellationToken cancellationToken)
+        {
+
             await Task.CompletedTask;
-    
+
             return false;
         }
     }
 
     //---------------------------
 
-    public class TestAuthorizationCommandHandler<T> where T :IBasePayload, new() {
+    public class TestAuthorizationCommandHandler<T> where T : IBasePayload, new()
+    {
 
-        public TestAuthorizationCommandHandler(){ }
-        
-        public async Task<T> Handler() {
+        public TestAuthorizationCommandHandler() { }
+
+        public async Task<T> Handler()
+        {
 
             await Task.CompletedTask;
 
@@ -74,11 +83,13 @@ namespace APIServer.Application.UnitTests.Behaviours
 
     }
 
-    public class TestAuthorizationQueryHandler<T> where T : new() {
+    public class TestAuthorizationQueryHandler<T> where T : new()
+    {
 
-        public TestAuthorizationQueryHandler(){ }
-        
-        public async Task<T> Handler() {
+        public TestAuthorizationQueryHandler() { }
+
+        public async Task<T> Handler()
+        {
 
             await Task.CompletedTask;
 

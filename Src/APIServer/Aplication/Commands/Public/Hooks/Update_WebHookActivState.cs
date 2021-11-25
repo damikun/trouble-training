@@ -13,13 +13,15 @@ using SharedCore.Aplication.Payload;
 using MediatR.Pipeline;
 using SharedCore.Aplication.Core.Commands;
 
-namespace APIServer.Aplication.Commands.WebHooks {
+namespace APIServer.Aplication.Commands.WebHooks
+{
 
     /// <summary>
     /// Command for updating webhook
     /// </summary>
     [Authorize]
-    public class UpdateWebHookActivState : CommandBase<UpdateWebHookActivStatePayload> {
+    public class UpdateWebHookActivState : CommandBase<UpdateWebHookActivStatePayload>
+    {
 
         /// <summary>WebHook Id </summary>
         public long WebHookId { get; set; }
@@ -35,11 +37,13 @@ namespace APIServer.Aplication.Commands.WebHooks {
     /// <summary>
     /// UpdateWebHookActivState Validator
     /// </summary>
-    public class UpdateWebHookActivStateValidator : AbstractValidator<UpdateWebHookActivState> {
+    public class UpdateWebHookActivStateValidator : AbstractValidator<UpdateWebHookActivState>
+    {
 
         private readonly IDbContextFactory<ApiDbContext> _factory;
 
-        public UpdateWebHookActivStateValidator(IDbContextFactory<ApiDbContext> factory){
+        public UpdateWebHookActivStateValidator(IDbContextFactory<ApiDbContext> factory)
+        {
             _factory = factory;
 
             RuleFor(e => e.WebHookId)
@@ -54,11 +58,12 @@ namespace APIServer.Aplication.Commands.WebHooks {
         public async Task<bool> HookExist(
             UpdateWebHookActivState request,
             long id,
-            CancellationToken cancellationToken) {
-    
-            await using ApiDbContext dbContext = 
+            CancellationToken cancellationToken)
+        {
+
+            await using ApiDbContext dbContext =
                 _factory.CreateDbContext();
-            
+
             return await dbContext.WebHooks.AnyAsync(e => e.ID == request.WebHookId);
         }
     }
@@ -76,7 +81,8 @@ namespace APIServer.Aplication.Commands.WebHooks {
     /// UpdateWebHookActivStatePayload
     /// </summary>
     public class UpdateWebHookActivStatePayload
-        : BasePayload<UpdateWebHookActivStatePayload, IUpdateWebHookActivStateError> {
+        : BasePayload<UpdateWebHookActivStatePayload, IUpdateWebHookActivStateError>
+    {
 
         /// <summary>
         /// Updated WebHook
@@ -90,7 +96,8 @@ namespace APIServer.Aplication.Commands.WebHooks {
 
     /// <summary>Handler for <c>UpdateWebHookActivState</c> command </summary>
     public class UpdateWebHookActivStateHandler
-        : IRequestHandler<UpdateWebHookActivState, UpdateWebHookActivStatePayload> {
+        : IRequestHandler<UpdateWebHookActivState, UpdateWebHookActivStatePayload>
+    {
 
         /// <summary>
         /// Injected <c>ApiDbContext</c>
@@ -113,7 +120,8 @@ namespace APIServer.Aplication.Commands.WebHooks {
         public UpdateWebHookActivStateHandler(
             IDbContextFactory<ApiDbContext> factory,
             IMediator mediator,
-            ICurrentUser currentuser) {
+            ICurrentUser currentuser)
+        {
 
             _factory = factory;
 
@@ -127,9 +135,10 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// </summary>
         public async Task<UpdateWebHookActivStatePayload> Handle(
             UpdateWebHookActivState request,
-            CancellationToken cancellationToken) {
+            CancellationToken cancellationToken)
+        {
 
-            await using ApiDbContext dbContext = 
+            await using ApiDbContext dbContext =
                 _factory.CreateDbContext();
 
             WebHook wh = await dbContext.WebHooks
@@ -137,7 +146,8 @@ namespace APIServer.Aplication.Commands.WebHooks {
             .Where(e => e.ID == request.WebHookId)
             .FirstOrDefaultAsync(cancellationToken);
 
-            if (wh == null) {
+            if (wh == null)
+            {
                 return UpdateWebHookActivStatePayload.Error(new WebHookNotFound());
             }
 
@@ -158,7 +168,7 @@ namespace APIServer.Aplication.Commands.WebHooks {
     //---------------------------------------
 
     public class UpdateWebHookActivStatePostProcessor
-        : IRequestPostProcessor<UpdateWebHookActivState,UpdateWebHookActivStatePayload>
+        : IRequestPostProcessor<UpdateWebHookActivState, UpdateWebHookActivStatePayload>
     {
         /// <summary>
         /// Injected <c>IPublisher</c>
@@ -175,14 +185,17 @@ namespace APIServer.Aplication.Commands.WebHooks {
             UpdateWebHookActivStatePayload response,
             CancellationToken cancellationToken)
         {
-            if(response != null && !response.HasError()){
-                try {
+            if (response != null && !response.HasError())
+            {
+                try
+                {
 
                     await Task.CompletedTask;
 
                     // Add Notification hire
 
-                } catch { }
+                }
+                catch { }
             }
         }
     }

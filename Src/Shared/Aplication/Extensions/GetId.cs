@@ -2,24 +2,28 @@ using System;
 using System.ComponentModel;
 using System.Security.Claims;
 
-namespace SharedCore.Aplication.Extensions {
+namespace SharedCore.Aplication.Extensions
+{
 
-    public static partial class Extensions {
+    public static partial class Extensions
+    {
         public static TId GetId<TId>(this ClaimsPrincipal principal)
         {
-            if (principal == null || principal.Identity == null){
+            if (principal == null || principal.Identity == null)
+            {
                 throw new ArgumentNullException(nameof(principal));
             }
 
-            if(!principal.Identity.IsAuthenticated){
+            if (!principal.Identity.IsAuthenticated)
+            {
                 throw new UnauthorizedAccessException(nameof(principal));
             }
 
             var loggedInUserId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            if (typeof(TId) == typeof(string) || 
-                typeof(TId) == typeof(int) || 
-                typeof(TId) == typeof(long) || 
+            if (typeof(TId) == typeof(string) ||
+                typeof(TId) == typeof(int) ||
+                typeof(TId) == typeof(long) ||
                 typeof(TId) == typeof(Guid))
             {
                 var converter = TypeDescriptor.GetConverter(typeof(TId));
@@ -34,6 +38,6 @@ namespace SharedCore.Aplication.Extensions {
         {
             return principal.GetId<Guid>();
         }
-        
+
     }
 }

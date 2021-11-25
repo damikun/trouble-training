@@ -1,13 +1,16 @@
 using System.Linq;
 
-namespace SharedCore.Aplication.Services {
-    public class MediatorSerializedObject {
+namespace SharedCore.Aplication.Services
+{
+    public class MediatorSerializedObject
+    {
         public MediatorSerializedObject(
             string fullTypeName,
             string data,
             string additionalDescription,
-            string assemblyName = "") {
-                
+            string assemblyName = "")
+        {
+
             FullTypeName = fullTypeName;
             Data = data;
             AdditionalDescription = additionalDescription;
@@ -24,7 +27,8 @@ namespace SharedCore.Aplication.Services {
         /// Override for Hangfire dashboard display.
         /// </summary>
         /// <returns></returns>
-        public override string ToString() {
+        public override string ToString()
+        {
             var commandName = FullTypeName.Split('.').Last();
             return $"{commandName} {AdditionalDescription}";
         }

@@ -210,7 +210,7 @@ namespace IdentityServer.API.UI
                 {
                     var scopeVm = CreateScopeViewModel(parsedScope, apiScope, vm.ScopesConsented.Contains(parsedScope.RawValue) || model == null);
                     scopeVm.Resources = apiResources.Where(x => x.Scopes.Contains(parsedScope.ParsedName))
-                        .Select(x=> new ResourceViewModel
+                        .Select(x => new ResourceViewModel
                         {
                             Name = x.Name,
                             DisplayName = x.DisplayName ?? x.Name,

@@ -6,9 +6,11 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using SharedCore.Aplication.Interfaces;
 using SharedCore.Domain.Models;
 
-namespace SharedCore.Persistence {
+namespace SharedCore.Persistence
+{
 
-    public class AuditEntitiesSaveInterceptor : SaveChangesInterceptor {
+    public class AuditEntitiesSaveInterceptor : SaveChangesInterceptor
+    {
         private readonly ICurrentUser _currentUserService;
 
         public AuditEntitiesSaveInterceptor(ICurrentUser currentUserService)
@@ -41,14 +43,14 @@ namespace SharedCore.Persistence {
             {
                 if (entry.State == EntityState.Added)
                 {
-                    entry.Entity.CreatedBy = _currentUserService.UserId != null ?_currentUserService.UserId?.ToString():"";
+                    entry.Entity.CreatedBy = _currentUserService.UserId != null ? _currentUserService.UserId?.ToString() : "";
                     entry.Entity.CreatedUtc = DateTime.UtcNow;
                 }
 
                 if (entry.State == EntityState.Added ||
                     entry.State == EntityState.Modified)
                 {
-                    entry.Entity.LastModifiedBy =  _currentUserService.UserId != null ?_currentUserService.UserId?.ToString():"";
+                    entry.Entity.LastModifiedBy = _currentUserService.UserId != null ? _currentUserService.UserId?.ToString() : "";
                     entry.Entity.LastModifiedUtc = DateTime.UtcNow;
                 }
             }

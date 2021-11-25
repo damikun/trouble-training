@@ -11,12 +11,14 @@ using Microsoft.EntityFrameworkCore;
 using SharedCore.Aplication.Core.Commands;
 using SharedCore.Aplication.Interfaces;
 
-namespace APIServer.Aplication.Commands.Internall.Hooks  {
+namespace APIServer.Aplication.Commands.Internall.Hooks
+{
 
     /// <summary>
     /// Command for processing WebHook event
     /// </summary>
-    public class EnqueueRelatedWebHooks : CommandBase {
+    public class EnqueueRelatedWebHooks : CommandBase
+    {
         public HookEventType EventType { get; set; }
         public object Event { get; set; }
     }
@@ -24,7 +26,8 @@ namespace APIServer.Aplication.Commands.Internall.Hooks  {
     /// <summary>
     /// Command handler for <c>EnqueueRelatedWebHooks</c>
     /// </summary>
-    public class EnqueueRelatedWebHooksHandler : IRequestHandler<EnqueueRelatedWebHooks, Unit> {
+    public class EnqueueRelatedWebHooksHandler : IRequestHandler<EnqueueRelatedWebHooks, Unit>
+    {
 
         /// <summary>
         /// Injected <c>ApiDbContext</c>
@@ -47,7 +50,8 @@ namespace APIServer.Aplication.Commands.Internall.Hooks  {
         public EnqueueRelatedWebHooksHandler(
             IDbContextFactory<ApiDbContext> factory,
             IScheduler scheduler,
-            IHttpClientFactory httpClient) {
+            IHttpClientFactory httpClient)
+        {
             _factory = factory;
             _scheduler = scheduler;
             _clientFactory = httpClient;
@@ -56,37 +60,47 @@ namespace APIServer.Aplication.Commands.Internall.Hooks  {
         /// <summary>
         /// Command handler for  <c>EnqueueRelatedWebHooks</c>
         /// </summary>
-        public async Task<Unit> Handle(EnqueueRelatedWebHooks request, CancellationToken cancellationToken) {
-            
-            if (request == null || request.Event == null) {
+        public async Task<Unit> Handle(EnqueueRelatedWebHooks request, CancellationToken cancellationToken)
+        {
+
+            if (request == null || request.Event == null)
+            {
                 throw new ArgumentNullException();
             }
 
-            await using ApiDbContext dbContext = 
+            await using ApiDbContext dbContext =
                 _factory.CreateDbContext();
 
             List<WebHook> hooks = await dbContext.WebHooks
             .AsNoTracking()
             .ToListAsync(cancellationToken);
-            
-            // Temporary solution (Because of test postgressql supports projection on array)
-            hooks= hooks.Where(e=>e.HookEvents.Contains(HookEventType.hook)).ToList();
 
-            try {
-                if (hooks != null) {
-                    foreach (var hook_item in hooks) {
-                        if (hook_item.IsActive && hook_item.ID > 0) {
-                            try {
-                                _scheduler.Enqueue(new ProcessWebHook() {
+            // Temporary solution (Because of test postgressql supports projection on array)
+            hooks = hooks.Where(e => e.HookEvents.Contains(HookEventType.hook)).ToList();
+
+            try
+            {
+                if (hooks != null)
+                {
+                    foreach (var hook_item in hooks)
+                    {
+                        if (hook_item.IsActive && hook_item.ID > 0)
+                        {
+                            try
+                            {
+                                _scheduler.Enqueue(new ProcessWebHook()
+                                {
                                     HookId = hook_item.ID,
                                     Event = request.Event,
                                     EventType = request.EventType
                                 });
-                            } catch { }
+                            }
+                            catch { }
                         }
                     }
                 }
-            } catch { }
+            }
+            catch { }
 
 
             return Unit.Value;

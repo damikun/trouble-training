@@ -14,13 +14,15 @@ using APIServer.Domain.Core.Models.WebHooks;
 using SharedCore.Aplication.Shared.Attributes;
 using SharedCore.Aplication.Core.Commands;
 
-namespace APIServer.Aplication.Commands.WebHooks {
+namespace APIServer.Aplication.Commands.WebHooks
+{
 
     /// <summary>
     /// Command for updating webhook Uri
     /// </summary>
     [Authorize]
-    public class UpdateWebHookTriggerEvents : CommandBase<UpdateWebHookTriggerEventsPayload> {
+    public class UpdateWebHookTriggerEvents : CommandBase<UpdateWebHookTriggerEventsPayload>
+    {
 
         /// <summary>WebHook Id </summary>
         public long WebHookId { get; set; }
@@ -35,11 +37,13 @@ namespace APIServer.Aplication.Commands.WebHooks {
     /// <summary>
     /// UpdateWebHookTriggerEvents Validator
     /// </summary>
-    public class UpdateWebHookTriggerEventsValidator : AbstractValidator<UpdateWebHookTriggerEvents> {
+    public class UpdateWebHookTriggerEventsValidator : AbstractValidator<UpdateWebHookTriggerEvents>
+    {
 
         private readonly IDbContextFactory<ApiDbContext> _factory;
 
-        public UpdateWebHookTriggerEventsValidator(IDbContextFactory<ApiDbContext> factory){
+        public UpdateWebHookTriggerEventsValidator(IDbContextFactory<ApiDbContext> factory)
+        {
             _factory = factory;
 
             RuleFor(e => e.WebHookId)
@@ -54,11 +58,12 @@ namespace APIServer.Aplication.Commands.WebHooks {
             .WithMessage("Hook was not found");
         }
 
-        public async Task<bool> HookExist(UpdateWebHookTriggerEvents request, long id, CancellationToken cancellationToken) {
-    
-            await using ApiDbContext dbContext = 
+        public async Task<bool> HookExist(UpdateWebHookTriggerEvents request, long id, CancellationToken cancellationToken)
+        {
+
+            await using ApiDbContext dbContext =
                 _factory.CreateDbContext();
-            
+
             return await dbContext.WebHooks.AnyAsync(e => e.ID == request.WebHookId);
         }
     }
@@ -74,19 +79,21 @@ namespace APIServer.Aplication.Commands.WebHooks {
     /// <summary>
     /// UpdateWebHookTriggerEventsPayload
     /// </summary>
-    public class UpdateWebHookTriggerEventsPayload : BasePayload<UpdateWebHookTriggerEventsPayload, IUpdateWebHookTriggerEventsError> {
+    public class UpdateWebHookTriggerEventsPayload : BasePayload<UpdateWebHookTriggerEventsPayload, IUpdateWebHookTriggerEventsError>
+    {
 
         /// <summary>
         /// Updated WebHook
         /// </summary>
         public WebHook hook { get; set; }
     }
-    
+
     //---------------------------------------
     //---------------------------------------
 
     /// <summary>Handler for <c>UpdateWebHookTriggerEvents</c> command </summary>
-    public class UpdateWebHookTriggerEventsHandler : IRequestHandler<UpdateWebHookTriggerEvents, UpdateWebHookTriggerEventsPayload> {
+    public class UpdateWebHookTriggerEventsHandler : IRequestHandler<UpdateWebHookTriggerEvents, UpdateWebHookTriggerEventsPayload>
+    {
 
         /// <summary>
         /// Injected <c>ApiDbContext</c>
@@ -109,7 +116,8 @@ namespace APIServer.Aplication.Commands.WebHooks {
         public UpdateWebHookTriggerEventsHandler(
             IDbContextFactory<ApiDbContext> factory,
             IMediator mediator,
-            ICurrentUser currentuser) {
+            ICurrentUser currentuser)
+        {
 
             _factory = factory;
 
@@ -121,9 +129,10 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// <summary>
         /// Command handler for <c>UpdateWebHookTriggerEvents</c>
         /// </summary>
-        public async Task<UpdateWebHookTriggerEventsPayload> Handle(UpdateWebHookTriggerEvents request, CancellationToken cancellationToken) {
+        public async Task<UpdateWebHookTriggerEventsPayload> Handle(UpdateWebHookTriggerEvents request, CancellationToken cancellationToken)
+        {
 
-            await using ApiDbContext dbContext = 
+            await using ApiDbContext dbContext =
                 _factory.CreateDbContext();
 
             WebHook wh = await dbContext.WebHooks
@@ -131,7 +140,8 @@ namespace APIServer.Aplication.Commands.WebHooks {
             .Where(e => e.ID == request.WebHookId)
             .FirstOrDefaultAsync(cancellationToken);
 
-            if (wh == null) {
+            if (wh == null)
+            {
                 return UpdateWebHookTriggerEventsPayload.Error(new WebHookNotFound());
             }
 
@@ -151,7 +161,7 @@ namespace APIServer.Aplication.Commands.WebHooks {
     //---------------------------------------
 
     public class UpdateWebHookTriggerEventsPostProcessor
-        : IRequestPostProcessor<UpdateWebHookTriggerEvents,UpdateWebHookTriggerEventsPayload>
+        : IRequestPostProcessor<UpdateWebHookTriggerEvents, UpdateWebHookTriggerEventsPayload>
     {
         /// <summary>
         /// Injected <c>IPublisher</c>
@@ -168,14 +178,17 @@ namespace APIServer.Aplication.Commands.WebHooks {
             UpdateWebHookTriggerEventsPayload response,
             CancellationToken cancellationToken)
         {
-            if(response != null && !response.HasError()){
-                try {
+            if (response != null && !response.HasError())
+            {
+                try
+                {
 
                     await Task.CompletedTask;
 
                     // Add Notification hire
 
-                } catch { }
+                }
+                catch { }
             }
         }
     }

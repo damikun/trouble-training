@@ -1,13 +1,15 @@
 using System;
 using HotChocolate.Types;
 
-namespace APIServer.Aplication.GraphQL.Queries {
+namespace APIServer.Aplication.GraphQL.Queries
+{
 
     /// <summary>
     ///  Webhook Querys
     /// </summary>
     [ExtendObjectType(OperationTypeNames.Query)]
-    public class SystemQueries {
+    public class SystemQueries
+    {
 
         /// <summary>
         /// Return server current date-time

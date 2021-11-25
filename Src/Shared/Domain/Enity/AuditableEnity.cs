@@ -1,7 +1,8 @@
 using System;
 
-namespace SharedCore.Domain.Models {
-    
+namespace SharedCore.Domain.Models
+{
+
     public abstract class AuditableEntity
     {
         public string CreatedBy { get; set; }

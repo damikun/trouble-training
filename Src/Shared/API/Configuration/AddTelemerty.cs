@@ -9,18 +9,22 @@ using SharedCore.Aplication.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace SharedCore.Configuration {
-    public static partial class ServiceExtension {
+namespace SharedCore.Configuration
+{
+    public static partial class ServiceExtension
+    {
 
         public static IServiceCollection AddTelemerty(
             this IServiceCollection serviceCollection,
             IConfiguration Configuration,
-            IWebHostEnvironment Environment) {
+            IWebHostEnvironment Environment)
+        {
 
             serviceCollection.AddTelemetryService(Configuration, out string trace_source);
-            
-            serviceCollection.AddOpenTelemetryTracing((builder) => {
-                
+
+            serviceCollection.AddOpenTelemetryTracing((builder) =>
+            {
+
                 // Sources
                 builder.AddSource(trace_source);
 
@@ -31,16 +35,17 @@ namespace SharedCore.Configuration {
                 //     })
                   .AddService(Environment.ApplicationName));
 
-                builder.AddAspNetCoreInstrumentation(opts => {
+                builder.AddAspNetCoreInstrumentation(opts =>
+                {
                     opts.RecordException = true;
                     opts.Enrich = async (activity, eventName, rawObject) =>
                     {
 
                         await Task.CompletedTask;
-                        
+
                         if (eventName.Equals("OnStartActivity"))
                         {
-                            if (rawObject is HttpRequest {Path: {Value: "/graphql"}})
+                            if (rawObject is HttpRequest { Path: { Value: "/graphql" } })
                             {
                                 // Do something with request..
                             }
@@ -63,7 +68,8 @@ namespace SharedCore.Configuration {
                 builder.AddEntityFrameworkCoreInstrumentation(
                     e => e.SetDbStatementForText = true);
 
-                builder.AddOtlpExporter(options => {
+                builder.AddOtlpExporter(options =>
+                {
                     options.Endpoint = new Uri(Configuration["ConnectionStrings:OtelCollector"]); // Export to collector
                     // options.Endpoint = new Uri("http://localhost:8200"); // Export dirrectly to APM
                     // options.BatchExportProcessorOptions = new OpenTelemetry.BatchExportProcessorOptions<Activity>() {
@@ -84,7 +90,7 @@ namespace SharedCore.Configuration {
                 // }
             });
 
-            serviceCollection.AddSingleton<ITelemetry,Telemetry>();
+            serviceCollection.AddSingleton<ITelemetry, Telemetry>();
 
             return serviceCollection;
         }

@@ -1,7 +1,9 @@
 using System;
 
-namespace APIServer.Domain.Core.Models.WebHooks {
-    public class WebHookHeader {
+namespace APIServer.Domain.Core.Models.WebHooks
+{
+    public class WebHookHeader
+    {
 
         /// <summary>
         /// Hook header ID

@@ -3,15 +3,17 @@ using System.Threading;
 using System.Threading.Tasks;
 using SharedCore.Aplication.Services;
 
-namespace SharedCore.Aplication.Interfaces  {
+namespace SharedCore.Aplication.Interfaces
+{
 
-    public interface IPublisher {
+    public interface IPublisher
+    {
 
         public Task<TResponse> Send<TResponse>(ICommandBase<TResponse> request, CancellationToken cancellationToken = default);
-        
-        #nullable enable
+
+#nullable enable
         public Task<object?> Send(ICommandBase request, CancellationToken cancellationToken = default);
-        #nullable disable
+#nullable disable
 
         public Task Publish<TNotification>(TNotification notification);
 

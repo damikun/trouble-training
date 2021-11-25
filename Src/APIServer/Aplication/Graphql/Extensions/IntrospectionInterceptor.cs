@@ -10,7 +10,8 @@ using Microsoft.Extensions.Hosting;
 using SharedCore.Aplication.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace APIServer.Aplication.GraphQL.Extensions {
+namespace APIServer.Aplication.GraphQL.Extensions
+{
 
     public class IntrospectionInterceptor : DefaultHttpRequestInterceptor
     {
@@ -18,7 +19,8 @@ namespace APIServer.Aplication.GraphQL.Extensions {
 
         public IntrospectionInterceptor(
             [Service] IWebHostEnvironment env
-            ){
+            )
+        {
             _env = env;
         }
 
@@ -27,12 +29,14 @@ namespace APIServer.Aplication.GraphQL.Extensions {
             CancellationToken cancellationToken)
         {
 
-            if(!_env.IsDevelopment()){
+            if (!_env.IsDevelopment())
+            {
 
                 if (DoesUserExist(context))
                 {
                     requestBuilder.AllowIntrospection();
-                } else
+                }
+                else
                 {
                     requestBuilder.SetIntrospectionNotAllowedMessage(
                         "Only logged-in users can introspect the server");
@@ -43,10 +47,14 @@ namespace APIServer.Aplication.GraphQL.Extensions {
                 cancellationToken);
         }
 
-        private static bool DoesUserExist(HttpContext context){
-            try{
+        private static bool DoesUserExist(HttpContext context)
+        {
+            try
+            {
                 return context?.User?.GetId<Guid>() != null;
-            }catch{
+            }
+            catch
+            {
                 return false;
             }
         }

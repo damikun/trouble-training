@@ -18,13 +18,14 @@ namespace APIServer.Application.IntegrationTests.WebHooks
 
         private readonly IDbContextFactory<ApiDbContext> _dbcontextfactory;
 
-        public RemoveWebHookTests(XunitFixture fixture):base(fixture){
+        public RemoveWebHookTests(XunitFixture fixture) : base(fixture)
+        {
 
             _mediator = this.TestServer.Services
                 .GetService<IMediator>();
 
             _dbcontextfactory = this.TestServer.Services
-                .GetService<IDbContextFactory<ApiDbContext>>(); 
+                .GetService<IDbContextFactory<ApiDbContext>>();
         }
 
         [Fact]
@@ -33,22 +34,25 @@ namespace APIServer.Application.IntegrationTests.WebHooks
 
             TestCommon.SetAndGetAuthorisedTestContext(this.TestServer);
 
-            await using ApiDbContext dbContext = 
+            await using ApiDbContext dbContext =
                 _dbcontextfactory.CreateDbContext();
 
-            WebHook hook = new WebHook(){
+            WebHook hook = new WebHook()
+            {
                 WebHookUrl = "https://testurl",
-                IsActive = true};
+                IsActive = true
+            };
 
             dbContext.WebHooks.Add(hook);
-            
+
             await dbContext.SaveChangesAsync();
 
             dbContext.WebHooks.AsNoTracking()
-                .Any(e=>e.ID == hook.ID).Should().BeTrue();
+                .Any(e => e.ID == hook.ID).Should().BeTrue();
 
-            var response =  await _mediator.Send(new RemoveWebHook(){
-                WebHookId =  hook.ID
+            var response = await _mediator.Send(new RemoveWebHook()
+            {
+                WebHookId = hook.ID
             });
 
             response.Should().NotBeNull();
@@ -56,8 +60,8 @@ namespace APIServer.Application.IntegrationTests.WebHooks
             response.Should().BeOfType<RemoveWebHookPayload>()
                 .Subject.errors.Any().Should().BeFalse();
 
-            dbContext.WebHooks.AsNoTracking().Any(e=>e.ID == hook.ID).Should().BeFalse();
-            
+            dbContext.WebHooks.AsNoTracking().Any(e => e.ID == hook.ID).Should().BeFalse();
+
             response.removed_id.Should().Be(hook.ID);
         }
 
@@ -67,16 +71,17 @@ namespace APIServer.Application.IntegrationTests.WebHooks
 
             TestCommon.SetAndGetAuthorisedTestContext(this.TestServer);
 
-            await using ApiDbContext dbContext = 
+            await using ApiDbContext dbContext =
                 _dbcontextfactory.CreateDbContext();
 
             long some_unexisting_id = 999;
 
             dbContext.WebHooks.AsNoTracking()
-                .Any(e=>e.ID == some_unexisting_id).Should().BeFalse();
+                .Any(e => e.ID == some_unexisting_id).Should().BeFalse();
 
-            var response =  await _mediator.Send(new RemoveWebHook(){
-                WebHookId =  some_unexisting_id
+            var response = await _mediator.Send(new RemoveWebHook()
+            {
+                WebHookId = some_unexisting_id
             });
 
             response.Should().NotBeNull();
@@ -94,22 +99,25 @@ namespace APIServer.Application.IntegrationTests.WebHooks
         {
             TestCommon.SetAndGetUnAuthorisedTestConetxt(this.TestServer);
 
-            await using ApiDbContext dbContext = 
+            await using ApiDbContext dbContext =
                 _dbcontextfactory.CreateDbContext();
 
-            WebHook hook = new WebHook(){
+            WebHook hook = new WebHook()
+            {
                 WebHookUrl = "https://testurl",
-                IsActive = true};
+                IsActive = true
+            };
 
             dbContext.WebHooks.Add(hook);
-            
+
             await dbContext.SaveChangesAsync();
 
             dbContext.WebHooks.AsNoTracking()
-                .Any(e=>e.ID == hook.ID).Should().BeTrue();
+                .Any(e => e.ID == hook.ID).Should().BeTrue();
 
-            var response =  await _mediator.Send(new RemoveWebHook(){
-                WebHookId =  hook.ID
+            var response = await _mediator.Send(new RemoveWebHook()
+            {
+                WebHookId = hook.ID
             });
 
             response.Should().NotBeNull();
@@ -120,7 +128,7 @@ namespace APIServer.Application.IntegrationTests.WebHooks
             response.Should().BeOfType<RemoveWebHookPayload>()
                 .Subject.errors.First().Should().BeOfType<UnAuthorised>();
 
-            dbContext.WebHooks.AsNoTracking().Any(e=>e.ID == hook.ID).Should().BeTrue();
+            dbContext.WebHooks.AsNoTracking().Any(e => e.ID == hook.ID).Should().BeTrue();
         }
     }
 }

@@ -1,9 +1,10 @@
 
-namespace SharedCore.Domain.Models {
-    
+namespace SharedCore.Domain.Models
+{
+
     public abstract class PersistedRequestQueryBody
     {
-        public string id {get;set;}
+        public string id { get; set; }
 
         // Ignoring any other as variables
     }

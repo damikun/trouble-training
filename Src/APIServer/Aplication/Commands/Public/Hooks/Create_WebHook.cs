@@ -19,16 +19,19 @@ using SharedCore.Aplication.Shared.Attributes;
 using APIServer.Aplication.Notifications.WebHooks;
 
 
-namespace APIServer.Aplication.Commands.WebHooks {
+namespace APIServer.Aplication.Commands.WebHooks
+{
 
     /// <summary>
     /// Command for creating webhook
     /// </summary>
     [Authorize] // <-- Activate Auth check for command
     // [Authorize(FieldPolicy = true)] <-- Uncommend to activate Field Auth check for command
-    public class CreateWebHook : CommandBase<CreateWebHookPayload> {
+    public class CreateWebHook : CommandBase<CreateWebHookPayload>
+    {
 
-        public CreateWebHook() {
+        public CreateWebHook()
+        {
             this.HookEvents = new HashSet<HookEventType>();
         }
 
@@ -36,9 +39,9 @@ namespace APIServer.Aplication.Commands.WebHooks {
         public string WebHookUrl { get; set; }
 
         /// <summary> Secret </summary>
-        #nullable enable
+#nullable enable
         public string? Secret { get; set; }
-        #nullable disable
+#nullable disable
 
         /// <summary> IsActive </summary>
         public bool IsActive { get; set; }
@@ -53,13 +56,15 @@ namespace APIServer.Aplication.Commands.WebHooks {
     /// <summary>
     /// CreateWebHook Validator
     /// </summary>
-    public class CreateWebHookValidator : AbstractValidator<CreateWebHook> {
+    public class CreateWebHookValidator : AbstractValidator<CreateWebHook>
+    {
 
         private readonly IDbContextFactory<ApiDbContext> _factory;
 
-        const long  MAX_HOOK_COUNT = 10;
+        const long MAX_HOOK_COUNT = 10;
 
-        public CreateWebHookValidator(IDbContextFactory<ApiDbContext> factory){
+        public CreateWebHookValidator(IDbContextFactory<ApiDbContext> factory)
+        {
             _factory = factory;
 
             RuleFor(e => e.WebHookUrl)
@@ -82,9 +87,10 @@ namespace APIServer.Aplication.Commands.WebHooks {
             .NotNull();
         }
 
-        public async Task<bool>  BeUniqueByURL(
+        public async Task<bool> BeUniqueByURL(
             string url,
-            CancellationToken cancellationToken) {
+            CancellationToken cancellationToken)
+        {
 
             await using ApiDbContext dbContext =
                 _factory.CreateDbContext();
@@ -94,7 +100,8 @@ namespace APIServer.Aplication.Commands.WebHooks {
 
         public async Task<bool> CheckMaxAllowedHooksCount(
             string url,
-            CancellationToken cancellationToken) {
+            CancellationToken cancellationToken)
+        {
 
             await using ApiDbContext dbContext =
                 _factory.CreateDbContext();
@@ -106,10 +113,12 @@ namespace APIServer.Aplication.Commands.WebHooks {
     /// <summary>
     /// Authorization validators for CreateWebHook
     /// </summary>
-    public class CreateWebHookAuthorizationValidator : AuthorizationValidator<CreateWebHook> {
+    public class CreateWebHookAuthorizationValidator : AuthorizationValidator<CreateWebHook>
+    {
 
         private readonly IDbContextFactory<ApiDbContext> _factory;
-        public CreateWebHookAuthorizationValidator(IDbContextFactory<ApiDbContext> factory) {
+        public CreateWebHookAuthorizationValidator(IDbContextFactory<ApiDbContext> factory)
+        {
 
             _factory = factory;
 
@@ -128,7 +137,8 @@ namespace APIServer.Aplication.Commands.WebHooks {
     /// <summary>
     /// CreateWebHookPayload
     /// </summary>
-    public class CreateWebHookPayload : BasePayload<CreateWebHookPayload, ICreateWebHookError> {
+    public class CreateWebHookPayload : BasePayload<CreateWebHookPayload, ICreateWebHookError>
+    {
 
         /// <summary>
         /// Created WebHook
@@ -140,7 +150,8 @@ namespace APIServer.Aplication.Commands.WebHooks {
     //---------------------------------------
 
     /// <summary>Handler for <c>CreateWebHook</c> command </summary>
-    public class CreateWebHookHandler : IRequestHandler<CreateWebHook, CreateWebHookPayload> {
+    public class CreateWebHookHandler : IRequestHandler<CreateWebHook, CreateWebHookPayload>
+    {
 
         /// <summary>
         /// Injected <c>IDbContextFactory<ApiDbContext></c>
@@ -163,7 +174,8 @@ namespace APIServer.Aplication.Commands.WebHooks {
         public CreateWebHookHandler(
             IDbContextFactory<ApiDbContext> factory,
             SharedCore.Aplication.Interfaces.IPublisher publisher,
-            ICurrentUser currentuser) {
+            ICurrentUser currentuser)
+        {
 
             _factory = factory;
 
@@ -176,12 +188,14 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// Command handler for <c>CreateWebHook</c>
         /// </summary>
         public async Task<CreateWebHookPayload> Handle(
-            CreateWebHook request,CancellationToken cancellationToken) {
+            CreateWebHook request, CancellationToken cancellationToken)
+        {
 
             await using ApiDbContext dbContext =
                 _factory.CreateDbContext();
 
-            WebHook hook = new WebHook {
+            WebHook hook = new WebHook
+            {
                 WebHookUrl = request.WebHookUrl,
                 Secret = request.Secret,
                 ContentType = "application/json",
@@ -206,7 +220,7 @@ namespace APIServer.Aplication.Commands.WebHooks {
     //---------------------------------------
 
     public class CreateWebHookPostProcessor
-        : IRequestPostProcessor<CreateWebHook,CreateWebHookPayload>
+        : IRequestPostProcessor<CreateWebHook, CreateWebHookPayload>
     {
         /// <summary>
         /// Injected <c>IPublisher</c>
@@ -223,17 +237,21 @@ namespace APIServer.Aplication.Commands.WebHooks {
             CreateWebHookPayload response,
             CancellationToken cancellationToken)
         {
-            if(response != null && !response.HasError()){
+            if (response != null && !response.HasError())
+            {
 
-                try {
+                try
+                {
 
                     // You can extend and add any custom fields to Notification!
 
-                    await _publisher.Publish(new WebHookCreatedNotifi() {
+                    await _publisher.Publish(new WebHookCreatedNotifi()
+                    {
                         ActivityId = Activity.Current.Id
                     }, PublishStrategy.ParallelNoWait, default(CancellationToken));
 
-                } catch { }
+                }
+                catch { }
             }
         }
     }

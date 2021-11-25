@@ -1,16 +1,19 @@
 
-namespace APIServer.Domain.Core.Models.Events {
+namespace APIServer.Domain.Core.Models.Events
+{
 
     /// <summary>
     /// WebHookUpdated
     /// </summary>
-    public class WebHookUpdated : DomainEvent {
+    public class WebHookUpdated : DomainEvent
+    {
 
-        public WebHookUpdated() {
+        public WebHookUpdated()
+        {
 
         }
 
-        public long WebHookId {get;set;}
+        public long WebHookId { get; set; }
 
         // Add any custom props hire...
 

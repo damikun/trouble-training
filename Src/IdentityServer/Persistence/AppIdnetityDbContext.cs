@@ -3,18 +3,21 @@ using IdentityServer.Domain.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace IdentityServer.Persistence {
+namespace IdentityServer.Persistence
+{
 
-        public class AppIdnetityDbContext : IdentityDbContext<ApplicationUser> {
+    public class AppIdnetityDbContext : IdentityDbContext<ApplicationUser>
+    {
 
         // Asset
         public AppIdnetityDbContext(DbContextOptions<AppIdnetityDbContext> options)
             : base(options)
         {
-            
+
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder) {
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
             modelBuilder.HasPostgresExtension("citext");
             // modelBuilder.HasCollation("my_collation", locale: "en-u-ks-primary", provider: "icu", deterministic: false);
 
@@ -27,7 +30,7 @@ namespace IdentityServer.Persistence {
             // });
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppIdnetityDbContext).Assembly);
-            
+
             base.OnModelCreating(modelBuilder);
         }
     }

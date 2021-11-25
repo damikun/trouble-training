@@ -10,13 +10,15 @@ namespace APIServer.API.IntegrationTests.WebHooks
     public class RemoveWebHookTests : BaseClassFixture
     {
 
-        public RemoveWebHookTests(XunitFixture fixture):base(fixture){
+        public RemoveWebHookTests(XunitFixture fixture) : base(fixture)
+        {
 
         }
 
-        public static string GetTestMutation(){
+        public static string GetTestMutation()
+        {
 
-            return  @"mutation($request: RemoveWebHookInput) {
+            return @"mutation($request: RemoveWebHookInput) {
                 removeWebHook(request: $request) {
                     ... on RemoveWebHookPayload {
                     removed_id
@@ -42,8 +44,10 @@ namespace APIServer.API.IntegrationTests.WebHooks
 
             var mutation = GetTestMutation();
 
-            var variables =  new { 
-                request = new { 
+            var variables = new
+            {
+                request = new
+                {
                     webHookId = 1
                 }
             };
@@ -52,7 +56,7 @@ namespace APIServer.API.IntegrationTests.WebHooks
               Common.GetDefaultUser(),
               Common.GetDefaultClinet());
 
-            var response = await HttpClient.ProcessQuery(mutation,variables);
+            var response = await HttpClient.ProcessQuery(mutation, variables);
 
             response.raw_response.StatusCode.Should().Be(200);
 
@@ -66,8 +70,10 @@ namespace APIServer.API.IntegrationTests.WebHooks
 
             var mutation = GetTestMutation();
 
-            var variables =  new { 
-                request = new { 
+            var variables = new
+            {
+                request = new
+                {
                     webHookId = 999
                 }
             };
@@ -76,26 +82,28 @@ namespace APIServer.API.IntegrationTests.WebHooks
               Common.GetDefaultUser(),
               Common.GetDefaultClinet());
 
-            var response = await HttpClient.ProcessQuery(mutation,variables);
+            var response = await HttpClient.ProcessQuery(mutation, variables);
 
             response.raw_response.StatusCode.Should().Be(200);
 
             Snapshot.Match(response.data_content);
         }
-       
+
         [Fact]
         public async Task RemoveWebHook_Unauthorised()
         {
 
             var mutation = GetTestMutation();
-            
-            var variables =  new { 
-                request = new { 
+
+            var variables = new
+            {
+                request = new
+                {
                     webHookId = 2
                 }
             };
 
-            var response = await HttpClient.ProcessQuery(mutation,variables);
+            var response = await HttpClient.ProcessQuery(mutation, variables);
 
             response.raw_response.StatusCode.Should().Be(200);
 

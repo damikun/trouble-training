@@ -6,13 +6,15 @@ using Microsoft.EntityFrameworkCore;
 using APIServer.Persistence;
 using SharedCore.Aplication.Payload;
 
-namespace APIServer.Aplication.Commands.WebHooks {
+namespace APIServer.Aplication.Commands.WebHooks
+{
 
     /// <summary>
     /// Command for testing throwing command exception
     /// </summary>
-    public class ThrowCommandException 
-        : IRequest<ThrowCommandExceptionPayload> {
+    public class ThrowCommandException
+        : IRequest<ThrowCommandExceptionPayload>
+    {
 
         public ThrowCommandException() { }
     }
@@ -20,13 +22,15 @@ namespace APIServer.Aplication.Commands.WebHooks {
     /// <summary>
     /// ThrowCommandException Validator
     /// </summary>
-    public class ThrowCommandExceptionValidator 
-        : AbstractValidator<ThrowCommandException> {
+    public class ThrowCommandExceptionValidator
+        : AbstractValidator<ThrowCommandException>
+    {
 
         private readonly IDbContextFactory<ApiDbContext> _factory;
 
         public ThrowCommandExceptionValidator(
-            IDbContextFactory<ApiDbContext> factory){
+            IDbContextFactory<ApiDbContext> factory)
+        {
             _factory = factory;
         }
 
@@ -40,20 +44,23 @@ namespace APIServer.Aplication.Commands.WebHooks {
     /// <summary>
     /// ThrowCommandExceptionPayload
     /// </summary>
-    public class ThrowCommandExceptionPayload 
-        : BasePayload<ThrowCommandExceptionPayload, IThrowCommandExceptionError> {
+    public class ThrowCommandExceptionPayload
+        : BasePayload<ThrowCommandExceptionPayload, IThrowCommandExceptionError>
+    {
     }
 
     /// <summary>Handler for <c>ThrowCommandException</c> command </summary>
-    public class ThrowCommandExceptionHandler 
-        : IRequestHandler<ThrowCommandException, ThrowCommandExceptionPayload> {
+    public class ThrowCommandExceptionHandler
+        : IRequestHandler<ThrowCommandException, ThrowCommandExceptionPayload>
+    {
 
         private static bool IsEnabled = true;
 
         /// <summary>
         /// Main constructor
         /// </summary>
-        public ThrowCommandExceptionHandler() {
+        public ThrowCommandExceptionHandler()
+        {
 
         }
 
@@ -62,16 +69,18 @@ namespace APIServer.Aplication.Commands.WebHooks {
         /// </summary>
         public async Task<ThrowCommandExceptionPayload> Handle(
             ThrowCommandException request,
-            CancellationToken cancellationToken) {
-                
-                if(IsEnabled){
-                    throw new System.Exception(
-                        "This is simulation of command problem");
-                }
+            CancellationToken cancellationToken)
+        {
 
-                await Task.CompletedTask;
+            if (IsEnabled)
+            {
+                throw new System.Exception(
+                    "This is simulation of command problem");
+            }
 
-                return ThrowCommandExceptionPayload.Success();
+            await Task.CompletedTask;
+
+            return ThrowCommandExceptionPayload.Success();
         }
     }
 }

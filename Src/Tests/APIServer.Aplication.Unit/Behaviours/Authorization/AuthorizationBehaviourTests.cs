@@ -29,21 +29,22 @@ namespace APIServer.Application.UnitTests.Behaviours
 
             _telemetry = new Mock<ITelemetry>();
 
-            _telemetry.Setup(e=>e.AppSource).Returns(new ActivitySource("SomeSource"));
+            _telemetry.Setup(e => e.AppSource).Returns(new ActivitySource("SomeSource"));
 
-            _telemetry.Setup(e=>e.Current).Returns(Activity.Current);
+            _telemetry.Setup(e => e.Current).Returns(Activity.Current);
 
-            _telemetry.Setup(e=>e.SetOtelError(It.IsAny<Exception>()));
+            _telemetry.Setup(e => e.SetOtelError(It.IsAny<Exception>()));
 
-            _telemetry.Setup(e=>e.SetOtelError(It.IsAny<string>(),false)); 
+            _telemetry.Setup(e => e.SetOtelError(It.IsAny<string>(), false));
 
-            _telemetry.Setup(e=>e.SetOtelWarning(It.IsAny<string>()));
+            _telemetry.Setup(e => e.SetOtelWarning(It.IsAny<string>()));
         }
 
         [Fact]
         public async Task HandleCommandWithoutAuthorizationAttribute_NoError()
-        {            
-            var validators = new List<IValidator<AuthorizationTestCommand>>(){
+        {
+            var validators = new List<IValidator<AuthorizationTestCommand>>()
+            {
 
             }.AsEnumerable();
 
@@ -55,7 +56,7 @@ namespace APIServer.Application.UnitTests.Behaviours
             );
 
             var response = await exBehaviour.Handle(
-                new AuthorizationTestCommand {SomeDataField="Zlobor" },
+                new AuthorizationTestCommand { SomeDataField = "Zlobor" },
                 new CancellationToken(),
                 new TestAuthorizationCommandHandler<AuthorizationTestPayload>().Handler
             );
@@ -70,7 +71,8 @@ namespace APIServer.Application.UnitTests.Behaviours
         [Fact]
         public async Task HandleCommandWithAuthorizationAttribute_WithError()
         {
-            var validators = new List<IValidator<AuthorizationTestCommandWithAttribute>>(){
+            var validators = new List<IValidator<AuthorizationTestCommandWithAttribute>>()
+            {
 
             }.AsEnumerable();
 
@@ -82,12 +84,12 @@ namespace APIServer.Application.UnitTests.Behaviours
             );
 
             var response = await exBehaviour.Handle(
-                new AuthorizationTestCommandWithAttribute {SomeDataField="Zlobor" },
+                new AuthorizationTestCommandWithAttribute { SomeDataField = "Zlobor" },
                 new CancellationToken(),
                 new TestAuthorizationCommandHandler<AuthorizationTestPayload>().Handler
             );
 
-            _currentUserService.Verify(e=>e.Exist,Times.Once);
+            _currentUserService.Verify(e => e.Exist, Times.Once);
 
             response.Should().NotBeNull();
 
@@ -101,12 +103,13 @@ namespace APIServer.Application.UnitTests.Behaviours
         [Fact]
         public async Task HandleCommandWithAuthorizationAttribute_NoError()
         {
-            
-            var validators = new List<IValidator<AuthorizationTestCommandWithAttribute>>(){
+
+            var validators = new List<IValidator<AuthorizationTestCommandWithAttribute>>()
+            {
 
             }.AsEnumerable();
 
-            _currentUserService.Setup(e=>e.Exist).Returns(true);
+            _currentUserService.Setup(e => e.Exist).Returns(true);
 
             var exBehaviour = new AuthorizationBehaviour<AuthorizationTestCommandWithAttribute, AuthorizationTestPayload>(
                 _currentUserService.Object,
@@ -116,12 +119,12 @@ namespace APIServer.Application.UnitTests.Behaviours
             );
 
             var response = await exBehaviour.Handle(
-                new AuthorizationTestCommandWithAttribute {SomeDataField="Zlobor" },
+                new AuthorizationTestCommandWithAttribute { SomeDataField = "Zlobor" },
                 new CancellationToken(),
                 new TestAuthorizationCommandHandler<AuthorizationTestPayload>().Handler
             );
 
-            _currentUserService.Verify(e=>e.Exist,Times.Once);
+            _currentUserService.Verify(e => e.Exist, Times.Once);
 
             response.Should().NotBeNull();
 
@@ -134,7 +137,7 @@ namespace APIServer.Application.UnitTests.Behaviours
         [Fact]
         public async Task HandleCommandWithInnerAuthAtribute_InnerAuthError()
         {
-            _currentUserService.Setup(e=>e.Exist).Returns(true);
+            _currentUserService.Setup(e => e.Exist).Returns(true);
 
             var validators = new List<IValidator<AuthorizationTestCommandWithInnerAttribute>>(){
                 new AuthorizationTestValidator()
@@ -148,7 +151,7 @@ namespace APIServer.Application.UnitTests.Behaviours
             );
 
             var response = await exBehaviour.Handle(
-                new AuthorizationTestCommandWithInnerAttribute {SomeDataField="Zlobor" },
+                new AuthorizationTestCommandWithInnerAttribute { SomeDataField = "Zlobor" },
                 new CancellationToken(),
                 new TestAuthorizationCommandHandler<AuthorizationTestPayload>().Handler
             );
@@ -160,17 +163,18 @@ namespace APIServer.Application.UnitTests.Behaviours
             response.errors.Any().Should().BeTrue();
 
             response.errors.First().Should().BeOfType<UnAuthorised>();
-        } 
+        }
 
         [Fact]
-        public async Task  HandleCommandWithRoleAuthAtribute_RoleAuthorisedError()
+        public async Task HandleCommandWithRoleAuthAtribute_RoleAuthorisedError()
         {
 
-            var validators = new List<IValidator<AuthorizationTestCommandWithRole>>(){
+            var validators = new List<IValidator<AuthorizationTestCommandWithRole>>()
+            {
 
             }.AsEnumerable();
 
-            _currentUserService.Setup(e=>e.Exist).Returns(true);
+            _currentUserService.Setup(e => e.Exist).Returns(true);
 
             var exBehaviour = new AuthorizationBehaviour<AuthorizationTestCommandWithRole, AuthorizationTestPayload>(
                 _currentUserService.Object,
@@ -195,14 +199,15 @@ namespace APIServer.Application.UnitTests.Behaviours
         }
 
         [Fact]
-        public async Task  HandleCommandWithPolicyAuthAtribute_PolicyAuthorisedError()
+        public async Task HandleCommandWithPolicyAuthAtribute_PolicyAuthorisedError()
         {
 
-            var validators = new List<IValidator<AuthorizationTestCommandWithPolicy>>(){
+            var validators = new List<IValidator<AuthorizationTestCommandWithPolicy>>()
+            {
 
             }.AsEnumerable();
 
-            _currentUserService.Setup(e=>e.Exist).Returns(true);
+            _currentUserService.Setup(e => e.Exist).Returns(true);
 
             var exBehaviour = new AuthorizationBehaviour<AuthorizationTestCommandWithPolicy, AuthorizationTestPayload>(
                 _currentUserService.Object,
@@ -224,17 +229,18 @@ namespace APIServer.Application.UnitTests.Behaviours
             response.errors.Any().Should().BeTrue();
 
             response.errors.First().Should().BeOfType<UnAuthorised>();
-        } 
+        }
 
         [Fact]
         public async Task HandleQueryWithoutAtribute_NoError()
         {
 
-            var validators = new List<IValidator<AuthorizationQueryTest>>(){
+            var validators = new List<IValidator<AuthorizationQueryTest>>()
+            {
 
             }.AsEnumerable();
 
-            _currentUserService.Setup(e=>e.Exist).Returns(true);
+            _currentUserService.Setup(e => e.Exist).Returns(true);
 
             var exBehaviour = new AuthorizationBehaviour<AuthorizationQueryTest, AuthorizationQueryTestResponse>(
                 _currentUserService.Object,
@@ -252,17 +258,18 @@ namespace APIServer.Application.UnitTests.Behaviours
             response.Should().NotBeNull();
 
             response.Should().BeOfType<AuthorizationQueryTestResponse>();
-        }  
+        }
 
         [Fact]
         public async Task HandleQueryWithAuthorizeAttribute_NoError()
         {
 
-            var validators = new List<IValidator<AuthorizationQueryTestAuhorisedAtribute>>(){
+            var validators = new List<IValidator<AuthorizationQueryTestAuhorisedAtribute>>()
+            {
 
             }.AsEnumerable();
 
-            _currentUserService.Setup(e=>e.Exist).Returns(true);
+            _currentUserService.Setup(e => e.Exist).Returns(true);
 
             var exBehaviour = new AuthorizationBehaviour<AuthorizationQueryTestAuhorisedAtribute, AuthorizationQueryTestResponse>(
                 _currentUserService.Object,
@@ -287,7 +294,8 @@ namespace APIServer.Application.UnitTests.Behaviours
         {
             await Task.CompletedTask;
 
-            var validators = new List<IValidator<AuthorizationQueryTestAuhorisedAtribute>>(){
+            var validators = new List<IValidator<AuthorizationQueryTestAuhorisedAtribute>>()
+            {
 
             }.AsEnumerable();
 
@@ -304,6 +312,6 @@ namespace APIServer.Application.UnitTests.Behaviours
                 new CancellationToken(),
                 new TestAuthorizationQueryHandler<AuthorizationQueryTestResponse>().Handler
             )).Should().Throw<SharedCore.Aplication.Shared.Exceptions.AuthorizationException>();
-        } 
+        }
     }
 }

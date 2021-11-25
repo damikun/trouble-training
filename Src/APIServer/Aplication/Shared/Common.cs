@@ -9,11 +9,14 @@ using SharedCore.Aplication.Payload;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace APIServer.Aplication.Shared {
+namespace APIServer.Aplication.Shared
+{
 
-    public static partial class Common {    
-        
-        public static TResponse HandleBaseCommandException<TResponse>(Exception ex){
+    public static partial class Common
+    {
+
+        public static TResponse HandleBaseCommandException<TResponse>(Exception ex)
+        {
             IBasePayload payload = ((IBasePayload)Activator.CreateInstance<TResponse>());
 
             payload.AddError(new InternalServerError(ex.Message));

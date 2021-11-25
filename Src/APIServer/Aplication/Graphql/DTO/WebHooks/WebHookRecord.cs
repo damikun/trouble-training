@@ -2,10 +2,13 @@
 using System;
 using APIServer.Domain.Core.Models.WebHooks;
 
-namespace APIServer.Aplication.GraphQL.DTO {
+namespace APIServer.Aplication.GraphQL.DTO
+{
 
-    public class GQL_WebHookRecord {
-        public GQL_WebHookRecord() {
+    public class GQL_WebHookRecord
+    {
+        public GQL_WebHookRecord()
+        {
 
         }
 
