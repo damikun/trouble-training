@@ -33,7 +33,7 @@ partial class Build : NukeBuild
         .Executes(() =>
         {
             DotNetRestore(s => s
-                .SetProjectFile(Solution)
+                .SetProjectFile(BFFServerDir)
             //.DisableProcessLogInvocation()
             // .DisableProcessLogOutput()
             );
@@ -44,7 +44,7 @@ partial class Build : NukeBuild
         .Executes(() =>
         {
             DotNetBuild(s => s
-                .SetProjectFile(Solution)
+                .SetProjectFile(BFFServerDir)
                 .SetConfiguration(Configuration)
                 .EnableNoRestore()
                 .SetCopyright($"Copyright © DaliborKundrat {DateTime.Now.Year}")

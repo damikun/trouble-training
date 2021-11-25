@@ -133,9 +133,7 @@ sysctl -w vm.max_map_count=262144
 In the `/Docker` folder you will find prepared images for:
 - **Elasticsearch** - Elastic, Kibana, OtelCollector, APMserver, Logstash.
   - Shell `cd` to `Docker/ElasticSearch` and run `docker-compose up`
-- **PostgresSQL** - Database
-  - Shell `cd` to `Docker/PostgresSql` and run `docker-compose up`
-- **Beats** - (Optional)  FileBeat, HeartBeat, MetricBeat, PacketBeat (⚠️ Skip this in case you dont have enaught RAM)
+- **Beats** - (Optional)  FileBeat, HeartBeat, MetricBeat, PacketBeat (⚠️ Skip this in case you dont have enaught RAM !)
   - Shell `cd` to `Docker/Beats` and run `docker-compose up`
 
 In each folder you will find `docker-compose.yml` and you need to run the command `docker-compose up` in your terminal. The setup has been tested on WSL Docker Desktop.
