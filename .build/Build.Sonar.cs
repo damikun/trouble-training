@@ -46,6 +46,7 @@ partial class Build : NukeBuild
             BFF_Compile,
             Identity_Compile
         )
+        .DependsOn(Restore_Tools)
         .Requires(() => SonarToken)
         .Unlisted()
         .Executes(() =>
@@ -55,7 +56,8 @@ partial class Build : NukeBuild
                 .SetProjectKey(SonarProjectKey)
                 .SetServer(SonarServer)
                 .AddSourceExclusions(sonar_path_exclude)
-                .SetOpenCoverPaths(ArtifactsDirectory / "coverage.xml"));
+                .SetOpenCoverPaths(ArtifactsDirectory / "coverage.xml")
+                .SetFramework("net5.0"));
         });
 
     Target Sonar => _ => _
