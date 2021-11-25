@@ -9,12 +9,12 @@
 #
 #     - To trigger manual generation invoke:
 #
-#         nuke --generate-configuration GitHubActions_sonar --host GitHubActions
+#         nuke --generate-configuration GitHubActions_Sonar --host GitHubActions
 #
 # </auto-generated>
 # ------------------------------------------------------------------------------
 
-name: sonar
+name: Sonar
 
 on: [pull_request]
 
@@ -31,7 +31,7 @@ jobs:
             .nuke/temp
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
-      - name: Run './build.cmd All'
-        run: ./build.cmd All
+      - name: Run './build.cmd Sonar'
+        run: ./build.cmd Sonar
         env:
           SonarToken: ${{ secrets.SONAR_TOKEN }}

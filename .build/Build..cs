@@ -46,12 +46,12 @@ using Nuke.Common.Tooling;
 //     OnPushBranches = new[] { "main" },
 //     AutoGenerate = false)]
 [GitHubActions(
-    "sonar",
+    "Sonar",
     GitHubActionsImage.WindowsLatest,
     On = new[] { GitHubActionsTrigger.PullRequest },
     InvokedTargets = new[] { nameof(Sonar) },
     ImportSecrets = new[] { nameof(SonarToken) },
-    AutoGenerate = false)]
+    AutoGenerate = true)]
 [CheckBuildProjectConfigurations]
 [ShutdownDotNetAfterServerBuild]
 partial class Build : NukeBuild
