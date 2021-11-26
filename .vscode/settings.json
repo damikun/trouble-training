@@ -5,5 +5,9 @@
     "editor.semanticHighlighting.enabled": true,
     "csharp.semanticHighlighting.enabled": true,
     "omnisharp.enableEditorConfigSupport": true,
-    "omnisharp.useGlobalMono": "always"
+    "omnisharp.useGlobalMono": "always",
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/tmp": true
+    }
 }

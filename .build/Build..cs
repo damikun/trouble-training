@@ -45,6 +45,13 @@ using Nuke.Common.Tooling;
 //     },
 //     OnPushBranches = new[] { "main" },
 //     AutoGenerate = false)]
+[GitHubActions(
+    "Sonar",
+    GitHubActionsImage.WindowsLatest,
+    On = new[] { GitHubActionsTrigger.PullRequest },
+    InvokedTargets = new[] { nameof(Sonar) },
+    ImportSecrets = new[] { nameof(SonarToken) },
+    AutoGenerate = false)]
 [CheckBuildProjectConfigurations]
 [ShutdownDotNetAfterServerBuild]
 partial class Build : NukeBuild
@@ -131,6 +138,13 @@ partial class Build : NukeBuild
             Identity_Compile
         );
 
+    Target Backend_All => _ => _
+        .DependsOn(
+            API_All,
+            BFF_All,
+            Identity_All
+        );
+
     Target Frontend_All => _ => _
         .DependsOn(
             Frontend_Clean,
@@ -142,9 +156,7 @@ partial class Build : NukeBuild
 
     Target All => _ => _
         .DependsOn(
-            API_All,
-            BFF_All,
-            Identity_All,
+            Backend_All,
             Frontend_All,
             Restore_Tools
         );
