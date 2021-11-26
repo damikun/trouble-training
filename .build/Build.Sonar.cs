@@ -1,9 +1,9 @@
 
 using Nuke.Common;
-using Nuke.Common.Tools.SonarScanner;
-using static Nuke.Common.Tools.SonarScanner.SonarScannerTasks;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.DotNet;
+using Nuke.Common.Tools.SonarScanner;
+using static Nuke.Common.Tools.SonarScanner.SonarScannerTasks;
 
 partial class Build : NukeBuild
 {
