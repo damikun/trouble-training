@@ -24,6 +24,7 @@ namespace APIServer.Aplication.GraphQL.Extensions
             && directiveTypeDefinition?.RuntimeType == typeof(StreamDirective))
             {
 
+
                 var InitCountArg = directiveTypeDefinition.Arguments
                     .First(e => e.Property?.Name == "InitialCount");
 

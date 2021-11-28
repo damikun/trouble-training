@@ -60,7 +60,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\BFF\Domain\BFF.Domain.csproj" />
+    <ProjectReference Include="..\..\Shared\Domain\Shared.Domain.csproj" />
     <ProjectReference Include="..\..\Shared\Aplication\Shared.Aplication.csproj" />
+    <ProjectReference Include="..\..\Shared\Api\Shared.Api.csproj" />
   </ItemGroup>
 
 

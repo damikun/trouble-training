@@ -38,6 +38,8 @@ namespace SharedCore.Configuration
                 builder.AddAspNetCoreInstrumentation(opts =>
                 {
                     opts.RecordException = true;
+
+                    // Enricher example
                     opts.Enrich = async (activity, eventName, rawObject) =>
                     {
 

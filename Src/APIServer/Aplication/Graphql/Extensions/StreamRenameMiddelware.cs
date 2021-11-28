@@ -6,10 +6,10 @@ using HotChocolate.Language;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace APIServer.Configuration
+namespace APIServer.Aplication.GraphQL.Extensions
 {
 
-    internal sealed class StreamArgumentRewriteMiddelware
+    public sealed class StreamArgumentRewriteMiddelware
     {
         private readonly RequestDelegate _next;
 

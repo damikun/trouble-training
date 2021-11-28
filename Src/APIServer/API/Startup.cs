@@ -3,26 +3,23 @@
 
 using System;
 using Hangfire;
+using SharedCore.Configuration;
 using APIServer.Configuration;
-using HotChocolate.AspNetCore;
-using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using SharedCore.Aplication.Services;
 using SharedCore.Aplication.Interfaces;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Net;
-using System.Net.Security;
 
 namespace APIServer
 {
     public class Startup
-
     {
-        public Startup(IConfiguration configuration, IWebHostEnvironment enviroment)
+        public Startup(
+            IConfiguration configuration,
+            IWebHostEnvironment enviroment)
         {
             Configuration = configuration;
 
@@ -40,10 +37,7 @@ namespace APIServer
 
             services.AddCorsConfiguration(Environment);
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Api", Version = "v1" });
-            });
+            services.AddSwagger();
 
             ConfigureAuth(services);
 
@@ -69,13 +63,8 @@ namespace APIServer
 
             services.AddSingleton(Serilog.Log.Logger);
 
-            ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, errors) =>
-            {
-                // local dev, just approve all certs
-                if (Environment.IsDevelopment()) return true;
+            services.AddSSLCertHanlder(Environment);
 
-                return errors == SslPolicyErrors.None;
-            };
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -85,12 +74,7 @@ namespace APIServer
              IServiceProvider serviceProvider,
              IServiceScopeFactory scopeFactory)
         {
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor |
-                ForwardedHeaders.XForwardedProto |
-                ForwardedHeaders.XForwardedHost
-            });
+            app.UseFwdHeaders();
 
             app.UseEnsureApiContextCreated(serviceProvider, scopeFactory);
 
@@ -118,22 +102,19 @@ namespace APIServer
             if (env.IsDevelopment())
             {
                 app.UseHangfireDashboard("/scheduler");
+
+                app.UsePlayground();
+
+                app.UseVoyager();
             }
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                // .RequireAuthorization("ApiCaller");
 
-                endpoints.MapGraphQL()
-                .WithOptions(new GraphQLServerOptions
-                {
-                    EnableSchemaRequests = env.IsDevelopment(),
-                    Tool = {
-                        Enable = env.IsDevelopment(),
-                        DisableTelemetry = true
-                    },
-                });
+                endpoints.MapGraphQLEndpoint();
+
+                endpoints.MapBCPEndpoint();
 
                 endpoints.MapControllerRoute(
                     name: "default",
@@ -161,5 +142,6 @@ namespace APIServer
         {
             services.AddAuth(Configuration);
         }
+
     }
 }

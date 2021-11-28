@@ -100,6 +100,8 @@ namespace APIServer.API.IntegrationTests
             {
                 var header = context.Request.Headers["Authorization"];
 
+                // You can add aditional logging or breakepoints hire
+
                 await next();
             });
 

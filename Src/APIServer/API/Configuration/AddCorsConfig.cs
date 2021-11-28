@@ -26,7 +26,8 @@ namespace APIServer.Configuration
                     "https://localhost:5070",
                     "https://localhost",
                     "host.docker.internal",
-                    "http://localhost"
+                    "http://localhost",
+                    "https://studio.apollographql.com"
                 };
             }
             else

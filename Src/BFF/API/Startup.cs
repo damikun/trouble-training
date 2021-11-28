@@ -1,6 +1,7 @@
 // Copyright (c) Dalibor Kundrat All rights reserved.
 // See LICENSE in root.
 
+using Duende.Bff.Yarp;
 using BFF.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,10 +10,6 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
-using System.Net;
-using System.Net.Security;
-using Duende.Bff.Yarp;
-
 
 namespace BFF
 {
@@ -28,6 +25,10 @@ namespace BFF
         public IWebHostEnvironment Environment { get; }
 
         public IConfiguration Configuration { get; }
+
+        private const bool csrf_protection_enabled = true;
+
+        private const bool csrf_protection_disabled = false;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -110,12 +111,12 @@ namespace BFF
 
                 endpoints.MapBffManagementEndpoints();   // login, logout, user, backchannel logout...
 
-                bool csrf_protection_enabled = !env.IsDevelopment();
+                endpoints.MapRemoteBffApiEndpoint(
+                    "/traces",
+                    "http://localhost:55690/v1/traces",
+                    csrf_protection_enabled)
+                .AllowAnonymous();
 
-                // proxy endpoint for cross-site APIs
-                // all calls to /api/* will be forwarded to the remote API
-                // user or client access token will be attached in API call
-                // user access token will be managed automatically using the refresh token
                 endpoints.MapRemoteBffApiEndpoint(
                     "/graphql",
                     "https://localhost:5022/graphql",
@@ -123,25 +124,39 @@ namespace BFF
                 .WithOptionalUserAccessToken()
                 .AllowAnonymous();
 
-                endpoints.MapRemoteBffApiEndpoint(
-                    "/traces",
-                    "http://localhost:55690/v1/traces",
-                    csrf_protection_enabled)
-                .AllowAnonymous();
-
                 if (env.IsDevelopment())
                 {
+                    endpoints.MapRemoteBffApiEndpoint(
+                        "/playground",
+                        "https://localhost:5022/playground",
+                        csrf_protection_disabled)
+                    .WithOptionalUserAccessToken()
+                    .AllowAnonymous();
+
+                    endpoints.MapRemoteBffApiEndpoint(
+                        "/voyager",
+                        "https://localhost:5022/voyager",
+                        csrf_protection_disabled)
+                    .WithOptionalUserAccessToken()
+                    .AllowAnonymous();
+
+                    endpoints.MapRemoteBffApiEndpoint(
+                        "/bcp",
+                        "https://localhost:5022/bcp",
+                        csrf_protection_disabled)
+                    .WithOptionalUserAccessToken()
+                    .AllowAnonymous();
 
                     endpoints.MapRemoteBffApiEndpoint(
                         "/hookloopback",
                         "https://localhost:5022/api/Hook/hookloopback",
-                        false)
+                        csrf_protection_disabled)
                     .AllowAnonymous();
 
                     endpoints.MapRemoteBffApiEndpoint(
                         "/reset",
                         "https://localhost:5022/api/Test/ClearDatabase",
-                        false)
+                        csrf_protection_enabled)
                     .AllowAnonymous();
 
                     endpoints.MapRemoteBffApiEndpoint(
