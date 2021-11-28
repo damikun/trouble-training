@@ -56,7 +56,7 @@ partial class Build : NukeBuild
     //---------------
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
-    readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
+    readonly Configuration Configuration = true ? Configuration.Debug : Configuration.Release;
 
     [Parameter] readonly bool CI = false;
 
