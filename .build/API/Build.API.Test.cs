@@ -36,9 +36,7 @@ partial class Build : NukeBuild
         {
             DotNetTest(s => s
                 .SetProjectFile(API_Unit_Tests_Directory)
-                .SetConfiguration(Configuration)
-                .EnableNoRestore()
-                .EnableNoBuild());
+                .SetConfiguration(Configuration));
         });
 
     Target API_IntegrationTest => _ => _
@@ -55,8 +53,6 @@ partial class Build : NukeBuild
                 // Alternativaly you can name your aruments manualy
                 .SetProcessArgumentConfigurator(arguments => arguments
                 .Add($"--configuration {Configuration}")
-                .Add("--no-restore")
-                .Add("--no-build")
                 .Add("--logger console;verbosity=normal")));
         });
 
@@ -67,7 +63,8 @@ partial class Build : NukeBuild
             DotNetTest(s => s
                 .SetProjectFile(API_API_Tests_Directory)
                 .SetConfiguration(Configuration)
-                .EnableNoRestore()
-                .EnableNoBuild());
+                // .EnableNoRestore()
+                // .EnableNoBuild()
+                );
         });
 }
