@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Nuke.Common;
+using Nuke.Common.IO;
 using System.Net.Http;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.Npm;
@@ -21,12 +22,23 @@ partial class Build : NukeBuild
     string APIProcess_Health_Url = "https://localhost:5022/health";
     string BFFProcess_Health_Url = "https://localhost:5015/health";
     string IdentityProcess_Health_Url = "https://localhost:5001/health";
+    string DBResetEndpoint = "https://localhost:5015/reset";
+
+    AbsolutePath Postman_Dir => RootDirectory / "Src" / "Tests" / "Postman";
+
+    string Postman_Collenction_Cfg_Name = "trouble-training.postman_collection.json";
+    string Postman_Enviroment_Cfg_Name = "trouble-training.postman_enviroment.json";
 
     bool API_Logging = false;
     bool BFF_Logging = false;
     bool Identity_Logging = false;
 
     string cypress_test_script_name = "test";
+
+
+#nullable enable
+    [PathExecutable("newman")] readonly Tool? Newman;
+#nullable disable
 
 
     //---------------
@@ -60,14 +72,22 @@ partial class Build : NukeBuild
         .DependsOn(
             Start_API_Server,
             Start_Identity_Server,
-            Start_BFF_Server)
+            Start_BFF_Server,
+            Init_Newman)
         .Triggers(
             Stop_API_Server,
             Stop_BFF_Server,
             Stop_Identity_Server)
-
         .Executes(() =>
             {
+
+                Newman(
+                    @$"run {Postman_Collenction_Cfg_Name} -e {Postman_Enviroment_Cfg_Name} --insecure",
+                    Postman_Dir,
+                    null, // Env variables
+                    null, // timeout
+                    true  // Log output
+                );
 
                 NpmTasks.NpmRun(s => s
                     .SetCommand(cypress_test_script_name)
@@ -134,6 +154,12 @@ partial class Build : NukeBuild
         KillProcess(BFFProcess);
     });
 
+    Target Init_Newman => _ => _
+        .After(Clean)
+        .Executes(() =>
+        {
+            NpmTasks.Npm("install -g newman", Postman_Dir);
+        });
     //--------------------------------------------
 
     Target Start_Identity_Server => _ => _
@@ -236,4 +262,6 @@ partial class Build : NukeBuild
         throw new System.Exception($"Host is not awailable: {host_endpoint}");
     }
 
+
 }
+

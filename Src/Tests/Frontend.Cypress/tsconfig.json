@@ -19,7 +19,7 @@
     "isolatedModules": false,
     "noEmit": true,
     "types": [
-      "../../BFF/API/ClientApp/node_modules/cypress"
+      "../../BFF/API/ClientApp/node_modules/cypress",
     ],
     "jsx": "react-jsx"
   },
@@ -27,6 +27,7 @@
     "../../BFF/API/ClientApp/src",
     "../../BFF/API/ClientApp/babel.config.js",
     "../../BFF/API/ClientApp/node_modules/cypress",
-    "../../Tests/Frontend.Cypress/*/*.ts"
+    "../../Tests/Frontend.Cypress/*/*.ts",
+    "../../BFF/API/ClientApp/src/**/*.ts"
   ]
 }

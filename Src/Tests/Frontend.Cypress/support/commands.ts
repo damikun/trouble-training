@@ -28,6 +28,9 @@
 // Declarations
 ///////////////////
 
+// cypress/support/index.d.ts
+
+
 //@ts-ignore
 declare namespace Cypress {
   interface Chainable {
@@ -35,20 +38,19 @@ declare namespace Cypress {
      * Custom command to login using external identity provider
      * @example cy.login('testuser','password')
      */
-     login(username: string, password:string, nosession?:boolean): Chainable<Element>
+     login(username: string, password: string, nosession?: boolean): void
 
     /**
      * Custom command to clear test database
      * @example cy.resetdb()
      */
-     resetdb(): Chainable<Element>
+     resetdb(): void
 
     /**
      * Custom command to clear test database
      * @example cy.addDummyWebHook("https://localhost/somepath")
      */
-     addDummyWebHook(url:string): Chainable<Element>
-
+     addDummyWebHook(url:string):void
   }
 }
 

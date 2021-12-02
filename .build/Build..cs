@@ -66,8 +66,9 @@ partial class Build : NukeBuild
 
     [GitRepository] readonly GitRepository GitRepository;
 
+#nullable enable
     [PathExecutable] readonly Tool? PowerShell;
-
+#nullable disable
     //---------------
     // Enviroment
     //---------------

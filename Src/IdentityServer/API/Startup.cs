@@ -11,8 +11,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 using Microsoft.AspNetCore.HttpOverrides;
 using SharedCore.Configuration;
-using System.Net;
-using System.Net.Security;
 
 namespace IdentityServer.API
 {

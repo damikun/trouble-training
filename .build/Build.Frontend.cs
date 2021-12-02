@@ -48,7 +48,7 @@ partial class Build : NukeBuild
         {
             // Example of dirrcty npm install command
             NpmTasks.Npm(
-                "install -D tailwindcss@npm:@tailwindcss/postcss7-compat postcss@^7 autoprefixer@^9",
+                "install -D tailwindcss@npm:@tailwindcss/postcss7-compat@2.2.17 postcss@7.0.39 autoprefixer@9.8.8",
                 FrontendDirectory);
         });
 

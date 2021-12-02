@@ -2,13 +2,16 @@ using Microsoft.Extensions.DependencyInjection;
 using IdentityModel.Client;
 using System;
 
-namespace Device.Configuration {
-    public static partial class ServiceExtension {
+namespace Device.Configuration
+{
+    public static partial class ServiceExtension
+    {
 
         // This is your API base addres (You probably wanna move this under Configuration)
         private const string BaseAPIAddress = "https://localhost:5022/api/";
 
-        public static IServiceCollection AddTokenManagment(this IServiceCollection services) {
+        public static IServiceCollection AddTokenManagment(this IServiceCollection services)
+        {
 
 
             services.AddClientAccessTokenManagement(options =>
@@ -28,7 +31,7 @@ namespace Device.Configuration {
                 client.BaseAddress = new Uri(BaseAPIAddress);
             });
 
-            services.AddHttpClient("client_without_token_managment",opt=>opt.BaseAddress = new Uri(BaseAPIAddress));
+            services.AddHttpClient("client_without_token_managment", opt => opt.BaseAddress = new Uri(BaseAPIAddress));
 
             return services;
         }

@@ -46,6 +46,26 @@ namespace IdentityServer.API
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
 
                     AllowedScopes = { "api" },
+                },
+                new Client
+                {
+                    ClientId = "postman",
+
+                    ClientSecrets = { new Secret("postman_secret".Sha256())},
+
+                    ClientName = "Postman password credential flow",
+
+                    RedirectUris = { "https://localhost:5015/signin-oidc" },
+
+                    BackChannelLogoutUri = "https://localhost:5015/bff/backchannel",
+
+                    PostLogoutRedirectUris = { "https://localhost:5015/signout-callback-oidc" },
+
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
+
+                    AllowOfflineAccess = true,
+
+                    AllowedScopes = { "openid", "profile", "api" }
                 }
             };
         }

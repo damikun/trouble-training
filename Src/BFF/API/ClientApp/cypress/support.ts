@@ -1,5 +1,5 @@
 import '../../../../Tests/Frontend.Cypress/support/index';
 
 ///////////////////////////////////////////////////////////////////
-// !!! All cypress files are located under /Str/Tests/Cypres... !!!
+// !!! All cypress files are located under /Str/Tests/Cypress... !!!
 ///////////////////////////////////////////////////////////////////

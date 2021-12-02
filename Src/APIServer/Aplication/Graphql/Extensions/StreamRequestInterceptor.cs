@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 using HotChocolate.AspNetCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
 using SharedCore.Aplication.Extensions;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace APIServer.Aplication.GraphQL.Extensions
 {

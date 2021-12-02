@@ -1,0 +1,1730 @@
+{
+	"info": {
+		"_postman_id": "7e8a5cec-2449-422c-9723-795a9e10350f",
+		"name": "TroubleTraining",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "mutations",
+			"item": [
+				{
+					"name": "createWebHook",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.set(`create_webhook_url`,`https://test.url.com`);\r",
+									"\r",
+									"postman.setNextRequest(\"updateWebHook\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response contains no error object\", function () {\r",
+									"\r",
+									"    const curren_response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(curren_response.errors == undefined, \"Response containse graphql errors\").to.be.true\r",
+									"});\r",
+									"\r",
+									"//------------------------------------------------------------------\r",
+									"\r",
+									"const ignoreProperties = [`id`,`systemid`];\r",
+									"const expected_response = {\r",
+									"    \"data\": {\r",
+									"        \"createWebHook\": {\r",
+									"            \"hook\": {\r",
+									"                \"id\": \"R1FMX1dlYkhvb2sKbDI3NA==\",\r",
+									"                \"systemid\": 338,\r",
+									"                \"webHookUrl\": \"https://test.url.com\",\r",
+									"                \"isActive\": true\r",
+									"            },\r",
+									"            \"errors\": []\r",
+									"        }\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Response must match snapshot\", function () {\r",
+									"    const curren_response = pm.response.json();\r",
+									"    const isEqual = _.isEqual(\r",
+									"        expected_response,\r",
+									"        curren_response,\r",
+									"        (value1, value2, key) => {\r",
+									"            if(ignoreProperties.includes(key)){\r",
+									"                return true;\r",
+									"            }else{\r",
+									"                return undefined;\r",
+									"            }\r",
+									"        });\r",
+									"    pm.expect(isEqual,\"Response diffs from snapshot\").to.be.true;\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.environment.set(\"mutation_hook_dbid\", pm.response.json().data.createWebHook.hook.systemid)\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation($request:CreateWebHookInput){\n  createWebHook(request:$request){\n        ... on CreateWebHookPayload{\n            hook{\n                id\n                systemid\n                webHookUrl\n                isActive\n            }\n            errors{\n                ... on IBaseError{\n                    message\n                }\n            }\n        }\n    }\n}",
+								"variables": "{\n  \"request\": {\n    \"isActive\": true,\n    \"webHookUrl\": \"{{create_webhook_url}}\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "createWebHook",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation($request:CreateWebHookInput){\n  createWebHook(request:$request){\n        ... on CreateWebHookPayload{\n            hook{\n                id\n                webHookUrl\n                isActive\n            }\n            errors{\n                ... on IBaseError{\n                    message\n                }\n            }\n        }\n    }\n}",
+										"variables": "{\n  \"request\": {\n    \"isActive\": true,\n    \"webHookUrl\": \"{{create_webhook_url}}\"\n  }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 02 Dec 2021 04:08:46 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"createWebHook\": {\n            \"hook\": {\n                \"id\": \"R1FMX1dlYkhvb2sKbDMzMQ==\",\n                \"webHookUrl\": \"https://test.url.com\",\n                \"isActive\": true\n            },\n            \"errors\": []\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "updateWebHook",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(`updated_webhook_url`,`https://updated.url.com`);\r",
+									"\r",
+									"var hook_id = pm.environment.get(\"mutation_hook_dbid\")\r",
+									"\r",
+									"if(!hook_id){\r",
+									"     throw new Error(\"HookId not found, You must run this as whole folder. Test depens on prev. requests\");\r",
+									"}\r",
+									"\r",
+									"postman.setNextRequest(\"deleteWebHook\");"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response contains no error object\", function () {\r",
+									"\r",
+									"    const curren_response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(curren_response.errors == undefined, \"Response containse graphql errors\").to.be.true\r",
+									"});\r",
+									"\r",
+									"//------------------------------------------------------------------\r",
+									"\r",
+									"const ignoreProperties = ['id','systemid' ];\r",
+									"const expected_response = {\r",
+									"    \"data\": {\r",
+									"        \"updateWebHook\": {\r",
+									"            \"hook\": {\r",
+									"                \"id\": \"R1FMX1dlYkhvb2sKbDI3NA==\",\r",
+									"                \"systemid\": 338,\r",
+									"                \"webHookUrl\":`${pm.variables.get(\"updated_webhook_url\")}`,\r",
+									"                \"isActive\": true\r",
+									"            },\r",
+									"            \"errors\": []\r",
+									"        }\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Response must match snapshot\", function () {\r",
+									"    const curren_response = pm.response.json();\r",
+									"    const isEqual = _.isEqual(\r",
+									"        expected_response,\r",
+									"        curren_response,\r",
+									"        (value1, value2, key) => {\r",
+									"            if(ignoreProperties.includes(key)){\r",
+									"                return true;\r",
+									"            }else{\r",
+									"                return undefined;\r",
+									"            }\r",
+									"        });\r",
+									"    pm.expect(isEqual,\"Response diffs from snapshot\").to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation($request:UpdateWebHookInput){\n  updateWebHook(request:$request){\n        ... on UpdateWebHookPayload{\n            hook{\n                id\n                systemid\n                webHookUrl\n                isActive\n            }\n            errors{\n                ... on IBaseError{\n                    message\n                }\n            }\n        }\n    }\n}",
+								"variables": "{\n  \"request\": {\n    \"webHookId\": {{mutation_hook_dbid}},\n    \"isActive\": true,\n    \"webHookUrl\": \"{{updated_webhook_url}}\"\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteWebHook",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"var hook_id = pm.environment.get(\"mutation_hook_dbid\")\r",
+									"\r",
+									"if(!hook_id){\r",
+									"     throw new Error(\"HookId not found, You must run this as whole folder. Test depens on prev. requests\");\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response contains no error object\", function () {\r",
+									"\r",
+									"    const curren_response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(curren_response.errors == undefined, \"Response containse graphql errors\").to.be.true\r",
+									"});\r",
+									"\r",
+									"//------------------------------------------------------------------\r",
+									"\r",
+									"const ignoreProperties = ['removed_id'];\r",
+									"const expected_response ={\r",
+									"   \"data\":{\r",
+									"      \"removeWebHook\":{\r",
+									"         \"removed_id\":\"R1FMX1dlYkhvb2sKbDM3NQ==\"\r",
+									"      }\r",
+									"   }\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Response must match snapshot\", function () {\r",
+									"    const curren_response = pm.response.json();\r",
+									"    const isEqual = _.isEqual(\r",
+									"        expected_response,\r",
+									"        curren_response,\r",
+									"        (value1, value2, key) => {\r",
+									"            if(ignoreProperties.includes(key)){\r",
+									"                return true;\r",
+									"            }else{\r",
+									"                return undefined;\r",
+									"            }\r",
+									"        });\r",
+									"    pm.expect(isEqual,\"Response diffs from snapshot\").to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation($request: RemoveWebHookInput){\n  removeWebHook(request:$request){\n        removed_id\n    }\n}",
+								"variables": "{\n  \"request\": {\n    \"webHookId\": {{mutation_hook_dbid}}\n  }\n}"
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"",
+							"if(!isInitScopedRequest){",
+							"    pm.environment.unset(\"mutation_hook_dbid\")",
+							"}",
+							"",
+							"function isInitScopedRequest(){",
+							"    if(!pm.variables.has(`Mutation_scope`)){",
+							"        pm.variables.set(\"Mutation_scope\",true)",
+							"        return true;",
+							"    }else{",
+							"        return false;",
+							"    }",
+							"}"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "queries",
+			"item": [
+				{
+					"name": "01_Me",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"pm.test(\"Response contains no error object\", function () {\r",
+									"\r",
+									"    const curren_response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(curren_response.errors == undefined, \"Response containse graphql errors\").to.be.true\r",
+									"});\r",
+									"\r",
+									"//------------------------------------------------------------------\r",
+									"\r",
+									"const ignoreProperties = [];\r",
+									"const expected_response = {\r",
+									"    \"data\": {\r",
+									"        \"me\": {\r",
+									"            \"email\": null,\r",
+									"            \"id\": \"R1FMX1VzZXIKZDViZTg2MzU5LTA3M2MtNDM0Yi1hZDJkLWEzOTMyMjIyZGFiZQ==\",\r",
+									"            \"name\": \"testuser\",\r",
+									"            \"systemid\": \"5be86359-073c-434b-ad2d-a3932222dabe\"\r",
+									"        }\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Response must match snapshot\", function () {\r",
+									"    const curren_response = pm.response.json();\r",
+									"    const isEqual = _.isEqual(\r",
+									"        expected_response,\r",
+									"        curren_response,\r",
+									"        (value1, value2, key) => {\r",
+									"            if(ignoreProperties.includes(key)){\r",
+									"                return true;\r",
+									"            }else{\r",
+									"                return undefined;\r",
+									"            }\r",
+									"        });\r",
+									"    pm.expect(isEqual,\"Response diffs from snapshot\").to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query me {\n    me {\n        email\n        id\n        name\n        systemid\n    }\n}",
+								"variables": "{\r\n    \r\n}"
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "01_Me",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query me {\n    me {\n        email\n        id\n        name\n        systemid\n    }\n}",
+										"variables": "{\r\n    \r\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 02 Dec 2021 00:53:24 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"me\": {\n            \"email\": null,\n            \"id\": \"R1FMX1VzZXIKZDViZTg2MzU5LTA3M2MtNDM0Yi1hZDJkLWEzOTMyMjIyZGFiZQ==\",\n            \"name\": \"testuser\",\n            \"systemid\": \"5be86359-073c-434b-ad2d-a3932222dabe\"\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "02_ServerDateTime",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var moment = require('moment')\r",
+									"\r",
+									"//------------------------------------------------------------------\r",
+									"\r",
+									"pm.test(\"Response contains no error object\", function () {\r",
+									"    const curren_response = pm.response.json();\r",
+									"\r",
+									"    pm.expect(curren_response.errors == undefined, \"Response containse graphql errors\").to.be.true\r",
+									"});\r",
+									"\r",
+									"//------------------------------------------------------------------\r",
+									"\r",
+									"pm.test(\"Response date is today\", function () {\r",
+									"    const json = pm.response.json();\r",
+									"\r",
+									"    const server_date = json.data.serverDateTime;\r",
+									"\r",
+									"    let timestamp = moment(server_date).format(\"YYYY-MM-DD\")\r",
+									"    let isToday   = moment().format(\"YYYY-MM-DD\")\r",
+									"\r",
+									"    pm.expect(moment(timestamp).isSame(isToday), \"Dates do not match\").to.be.true;\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query serverDateTime {\n    serverDateTime\n}",
+								"variables": "{}"
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "02_ServerDateTime",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query serverDateTime {\n    serverDateTime\n}",
+										"variables": "{}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 02 Dec 2021 00:53:37 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"serverDateTime\": \"2021-12-02T01:53:37.959+01:00\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "03_Webhooks",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"//------------------------------------------------------------------\r",
+									"\r",
+									"const ignoreProperties = [`id`];\r",
+									"const expected_response = {\r",
+									"   \"data\":{\r",
+									"      \"webhooks\":{\r",
+									"         \"edges\":[\r",
+									"            {\r",
+									"               \"node\":{\r",
+									"                  \"id\":\"R1FMX1dlYkhvb2sKbDEw\",\r",
+									"                  \"isActive\":true,\r",
+									"                  \"webHookUrl\":\"https://temporary/url\"\r",
+									"               }\r",
+									"            }\r",
+									"         ]\r",
+									"      }\r",
+									"   }\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Response must match snapshot\", function () {\r",
+									"    const curren_response = pm.response.json();\r",
+									"    const isEqual = _.isEqual(\r",
+									"        expected_response,\r",
+									"        curren_response,\r",
+									"        (value1, value2, key) => {\r",
+									"            if(ignoreProperties.includes(key)){\r",
+									"                return true;\r",
+									"            }else{\r",
+									"                return undefined;\r",
+									"            }\r",
+									"        });\r",
+									"    pm.expect(isEqual,\"Response diffs from snapshot\").to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"/**\r",
+									" * @description Check if request is initial and token need to be requested from token endpoint. \r",
+									" * - If yes, asynchronously process new token request from OIC token endpoint\r",
+									" * - If no, return null\r",
+									" */\r",
+									"asyncSeries([\r",
+									"    (cb) => {\r",
+									"        console.log(\"Creating WebHook\")\r",
+									"\r",
+									"        var query = {\r",
+									"            \"operationName\":null,\r",
+									"            \"variables\":{\r",
+									"                \"request\":{\r",
+									"                    \"isActive\":true,\r",
+									"                    \"webHookUrl\":\"https://temporary/url\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"query\":\"mutation ($request: CreateWebHookInput) {\\n  createWebHook(request: $request) {\\n    ... on CreateWebHookPayload {\\n      hook {\\n        id\\n        webHookUrl\\n        isActive\\n      }\\n      errors {\\n        ... on IBaseError {\\n          message\\n        }\\n      }\\n    }\\n  }\\n}\\n\"\r",
+									"        }\r",
+									"\r",
+									"        return pm.sendRequest({\r",
+									"            url: pm.environment.get(\"URL\"), \r",
+									"            method: 'POST',\r",
+									"            header: {\r",
+									"                'Accept': 'application/json',\r",
+									"                'Content-Type': 'application/json',\r",
+									"                'Authorization' : GetAuthHeaderValue(),\r",
+									"                'X-CSRF': `1`\r",
+									"            },\r",
+									"            body: {\r",
+									"                mode: 'raw',\r",
+									"                raw: JSON.stringify(query)\r",
+									"            }\r",
+									"        },\r",
+									"        (err, res) => cb(err, res));\r",
+									"    }\r",
+									"], (err, res) => {\r",
+									"\r",
+									"    if(!res[0]){\r",
+									"        throw new Error(\"Failed to prepare test enviroment\");\r",
+									"    }\r",
+									"   \r",
+									"});\r",
+									"\r",
+									"\r",
+									"/**\r",
+									" * @description Gets Authorization header value\r",
+									" */\r",
+									"function GetAuthHeaderValue(){\r",
+									"    return `Bearer ${pm.collectionVariables.get('TOKEN')}`\r",
+									"}\r",
+									"\r",
+									"\r",
+									"/**\r",
+									" * @private\r",
+									" * @description Tasks in series\r",
+									" * \r",
+									" * @param {Array<Function>} tasks\r",
+									" * @param {Function} cb\r",
+									" * @param {Number} currOperation\r",
+									" * @param {Array<Any>} results\r",
+									" */\r",
+									"function _series (tasks, cb, currOperation = 0, results = []) {\r",
+									"    // Bail-out condition\r",
+									"    if (currOperation === tasks.length) {\r",
+									"        return cb(null, results);\r",
+									"    }\r",
+									"\r",
+									"    if (typeof tasks[currOperation] !== 'function') {\r",
+									"        return cb(new Error('asyncSeries: Please provide a function'));\r",
+									"    }\r",
+									"\r",
+									"    tasks[currOperation]((err, res) => {\r",
+									"        if (err) {\r",
+									"            return cb(err);\r",
+									"        }\r",
+									"\r",
+									"        results.push(res);\r",
+									"\r",
+									"        // Recursively call the next task in series till we're done executing all the operations\r",
+									"        return _series(tasks, cb, currOperation + 1, results);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"/**\r",
+									" * @description asyncSeries to execute requests in a series format\r",
+									" * \r",
+									" * @param {Array<Function>} tasks\r",
+									" * @param {Function} cb\r",
+									" */\r",
+									"function asyncSeries (tasks, cb = () => {}) {\r",
+									"    return _series(tasks, cb);\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query{\n    webhooks{\n        edges{\n            node{\n                id\n                isActive\n                webHookUrl\n            }\n        }\n    }\n}",
+								"variables": "{\n    \n}"
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "03_Webhooks",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query{\n    webhooks{\n        edges{\n            node{\n                id\n                isActive\n                webHookUrl\n            }\n        }\n    }\n}",
+										"variables": "{\n    \n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 02 Dec 2021 03:47:52 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"webhooks\": {\n            \"edges\": [\n                {\n                    \"node\": {\n                        \"id\": \"R1FMX1dlYkhvb2sKbDI4Mw==\",\n                        \"isActive\": true,\n                        \"webHookUrl\": \"https://temporary/url\"\n                    }\n                }\n            ]\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "04_Webhooks_Filter",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"//------------------------------------------------------------------\r",
+									"\r",
+									"const ignoreProperties = [`id`];\r",
+									"const expected_response = {\r",
+									"    \"data\": {\r",
+									"        \"webhooks\": {\r",
+									"            \"edges\": [\r",
+									"                {\r",
+									"                    \"node\": {\r",
+									"                        \"id\": \"R1FMX1dlYkhvb2sKbDI1\",\r",
+									"                        \"isActive\": true,\r",
+									"                        \"webHookUrl\": `${pm.variables.get(\"test_url\")}`\r",
+									"                    }\r",
+									"                }\r",
+									"            ]\r",
+									"        }\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Response must match snapshot\", function () {\r",
+									"    const curren_response = pm.response.json();\r",
+									"    const isEqual = _.isEqual(\r",
+									"        expected_response,\r",
+									"        curren_response,\r",
+									"        (value1, value2, key) => {\r",
+									"            if(ignoreProperties.includes(key)){\r",
+									"                return true;\r",
+									"            }else{\r",
+									"                return undefined;\r",
+									"            }\r",
+									"        });\r",
+									"    pm.expect(isEqual,\"Response diffs from snapshot\").to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									"pm.variables.set(\"test_url\",\"https://some.test.url.2\")\r",
+									"\r",
+									"/**\r",
+									" * @description Check if request is initial and token need to be requested from token endpoint. \r",
+									" * - If yes, asynchronously process new token request from OIC token endpoint\r",
+									" * - If no, return null\r",
+									" */\r",
+									"asyncSeries([\r",
+									"    (cb) => {\r",
+									"        console.log(\"Creating WebHook1\")\r",
+									"\r",
+									"        CreateWebhook(cb,\"https://some.test.url.1\")\r",
+									"    },\r",
+									"    (cb) => {\r",
+									"        console.log(\"Creating WebHook2\")\r",
+									"\r",
+									"        CreateWebhook(cb,pm.variables.get(\"test_url\"))\r",
+									"    }\r",
+									"], (err, res) => {\r",
+									"\r",
+									"    if(!res[0] || !res[1]){\r",
+									"        throw new Error(\"Failed to prepare test enviroment\");\r",
+									"    }   \r",
+									"});\r",
+									"\r",
+									"function CreateWebhook(cb,hook_url){\r",
+									"     var query = {\r",
+									"            \"operationName\":null,\r",
+									"            \"variables\":{\r",
+									"                \"request\":{\r",
+									"                    \"isActive\":true,\r",
+									"                    \"webHookUrl\":hook_url\r",
+									"                }\r",
+									"            },\r",
+									"            \"query\":\"mutation ($request: CreateWebHookInput) {\\n  createWebHook(request: $request) {\\n    ... on CreateWebHookPayload {\\n      hook {\\n        id\\n        webHookUrl\\n        isActive\\n      }\\n      errors {\\n        ... on IBaseError {\\n          message\\n        }\\n      }\\n    }\\n  }\\n}\\n\"\r",
+									"        }\r",
+									"\r",
+									"        return pm.sendRequest({\r",
+									"            url: pm.environment.get(\"URL\"), \r",
+									"            method: 'POST',\r",
+									"            header: {\r",
+									"                'Accept': 'application/json',\r",
+									"                'Content-Type': 'application/json',\r",
+									"                'Authorization' : GetAuthHeaderValue(),\r",
+									"                'X-CSRF': `1`\r",
+									"            },\r",
+									"            body: {\r",
+									"                mode: 'raw',\r",
+									"                raw: JSON.stringify(query)\r",
+									"            }\r",
+									"        },\r",
+									"        (err, res) => cb(err, res));\r",
+									"}\r",
+									"\r",
+									"\r",
+									"/**\r",
+									" * @description Gets Authorization header value\r",
+									" */\r",
+									"function GetAuthHeaderValue(){\r",
+									"    return `Bearer ${pm.collectionVariables.get('TOKEN')}`\r",
+									"}\r",
+									"\r",
+									"\r",
+									"/**\r",
+									" * @private\r",
+									" * @description Tasks in series\r",
+									" * \r",
+									" * @param {Array<Function>} tasks\r",
+									" * @param {Function} cb\r",
+									" * @param {Number} currOperation\r",
+									" * @param {Array<Any>} results\r",
+									" */\r",
+									"function _series (tasks, cb, currOperation = 0, results = []) {\r",
+									"    // Bail-out condition\r",
+									"    if (currOperation === tasks.length) {\r",
+									"        return cb(null, results);\r",
+									"    }\r",
+									"\r",
+									"    if (typeof tasks[currOperation] !== 'function') {\r",
+									"        return cb(new Error('asyncSeries: Please provide a function'));\r",
+									"    }\r",
+									"\r",
+									"    tasks[currOperation]((err, res) => {\r",
+									"        if (err) {\r",
+									"            return cb(err);\r",
+									"        }\r",
+									"\r",
+									"        results.push(res);\r",
+									"\r",
+									"        // Recursively call the next task in series till we're done executing all the operations\r",
+									"        return _series(tasks, cb, currOperation + 1, results);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"/**\r",
+									" * @description asyncSeries to execute requests in a series format\r",
+									" * \r",
+									" * @param {Array<Function>} tasks\r",
+									" * @param {Function} cb\r",
+									" */\r",
+									"function asyncSeries (tasks, cb = () => {}) {\r",
+									"    return _series(tasks, cb);\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query($url:String!){\n    webhooks(where:{webHookUrl:{eq:$url}}){\n        edges{\n            node{\n                id\n                isActive\n                webHookUrl\n            }\n        }\n    }\n}",
+								"variables": "{\n    \"url\": \"{{test_url}}\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "04_Webhooks_Filter",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query($url:String!){\n    webhooks(where:{webHookUrl:{eq:$url}}){\n        edges{\n            node{\n                id\n                isActive\n                webHookUrl\n            }\n        }\n    }\n}",
+										"variables": "{\n    \"url\": \"{{test_url}}\"\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 02 Dec 2021 03:47:57 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"webhooks\": {\n            \"edges\": [\n                {\n                    \"node\": {\n                        \"id\": \"R1FMX1dlYkhvb2sKbDI4NQ==\",\n                        \"isActive\": true,\n                        \"webHookUrl\": \"https://some.test.url.2\"\n                    }\n                }\n            ]\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "03_WebhookRecords",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"//------------------------------------------------------------------\r",
+									"\r",
+									"const ignoreProperties = [];\r",
+									"const expected_response ={\r",
+									"    \"data\": {\r",
+									"        \"webHookRecords\": {\r",
+									"            \"edges\": []\r",
+									"        }\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Response must match snapshot\", function () {\r",
+									"    const curren_response = pm.response.json();\r",
+									"    const isEqual = _.isEqual(\r",
+									"        expected_response,\r",
+									"        curren_response,\r",
+									"        (value1, value2, key) => {\r",
+									"            if(ignoreProperties.includes(key)){\r",
+									"                return true;\r",
+									"            }else{\r",
+									"                return undefined;\r",
+									"            }\r",
+									"        });\r",
+									"    pm.expect(isEqual,\"Response diffs from snapshot\").to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"\r",
+									"/**\r",
+									" * @description Check if request is initial and token need to be requested from token endpoint. \r",
+									" * - If yes, asynchronously process new token request from OIC token endpoint\r",
+									" * - If no, return null\r",
+									" */\r",
+									"asyncSeries([\r",
+									"    (cb) => {\r",
+									"        console.log(\"Creating WebHook\")\r",
+									"\r",
+									"        var query = {\r",
+									"            \"operationName\":null,\r",
+									"            \"variables\":{\r",
+									"                \"request\":{\r",
+									"                    \"isActive\":true,\r",
+									"                    \"webHookUrl\":\"https://temporary/url\"\r",
+									"                }\r",
+									"            },\r",
+									"            \"query\":\"mutation ($request: CreateWebHookInput) {\\n  createWebHook(request: $request) {\\n    ... on CreateWebHookPayload {\\n      hook {\\n        id\\n        webHookUrl\\n        isActive\\n      }\\n      errors {\\n        ... on IBaseError {\\n          message\\n        }\\n      }\\n    }\\n  }\\n}\\n\"\r",
+									"        }\r",
+									"\r",
+									"        return pm.sendRequest({\r",
+									"            url: pm.environment.get(\"URL\"), \r",
+									"            method: 'POST',\r",
+									"            header: {\r",
+									"                'Accept': 'application/json',\r",
+									"                'Content-Type': 'application/json',\r",
+									"                'Authorization' : GetAuthHeaderValue(),\r",
+									"                'X-CSRF': `1`\r",
+									"            },\r",
+									"            body: {\r",
+									"                mode: 'raw',\r",
+									"                raw: JSON.stringify(query)\r",
+									"            }\r",
+									"        },\r",
+									"        (err, res) => cb(err, res));\r",
+									"    }\r",
+									"], (err, res) => {\r",
+									"\r",
+									"    if(!res[0]){\r",
+									"        throw new Error(\"Failed to prepare test enviroment\");\r",
+									"    }else{\r",
+									"        // parse response\r",
+									"        const async_result = res[0];\r",
+									"\r",
+									"        if( async_result.status != \"OK\"){\r",
+									"            throw new Error(\"Failed to run init script\");\r",
+									"        }\r",
+									"\r",
+									"        // If result is OK vrite token to current collection variables, else throw error\r",
+									"        if(async_result){\r",
+									"\r",
+									"            const id = async_result.json().data.createWebHook.hook.id;\r",
+									"\r",
+									"            if(!id){\r",
+									"                throw new Error(\"Failed to get hook ID\");\r",
+									"            }else{\r",
+									"                pm.variables.set(\"hook_id\",id)\r",
+									"            }\r",
+									"\r",
+									"        }else{\r",
+									"            throw new Error(\"No token returned from id server\");\r",
+									"        }\r",
+									"    }\r",
+									"   \r",
+									"});\r",
+									"\r",
+									"\r",
+									"/**\r",
+									" * @description Gets Authorization header value\r",
+									" */\r",
+									"function GetAuthHeaderValue(){\r",
+									"    return `Bearer ${pm.collectionVariables.get('TOKEN')}`\r",
+									"}\r",
+									"\r",
+									"\r",
+									"/**\r",
+									" * @private\r",
+									" * @description Tasks in series\r",
+									" * \r",
+									" * @param {Array<Function>} tasks\r",
+									" * @param {Function} cb\r",
+									" * @param {Number} currOperation\r",
+									" * @param {Array<Any>} results\r",
+									" */\r",
+									"function _series (tasks, cb, currOperation = 0, results = []) {\r",
+									"    // Bail-out condition\r",
+									"    if (currOperation === tasks.length) {\r",
+									"        return cb(null, results);\r",
+									"    }\r",
+									"\r",
+									"    if (typeof tasks[currOperation] !== 'function') {\r",
+									"        return cb(new Error('asyncSeries: Please provide a function'));\r",
+									"    }\r",
+									"\r",
+									"    tasks[currOperation]((err, res) => {\r",
+									"        if (err) {\r",
+									"            return cb(err);\r",
+									"        }\r",
+									"\r",
+									"        results.push(res);\r",
+									"\r",
+									"        // Recursively call the next task in series till we're done executing all the operations\r",
+									"        return _series(tasks, cb, currOperation + 1, results);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"/**\r",
+									" * @description asyncSeries to execute requests in a series format\r",
+									" * \r",
+									" * @param {Array<Function>} tasks\r",
+									" * @param {Function} cb\r",
+									" */\r",
+									"function asyncSeries (tasks, cb = () => {}) {\r",
+									"    return _series(tasks, cb);\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query($id:ID!){\n    webHookRecords(hook_id:$id){\n        edges{\n            node{\n                id\n            }\n        }\n    }\n}",
+								"variables": "{\n  \"id\": \"{{hook_id}}\"\n}"
+							}
+						},
+						"url": {
+							"raw": "{{url}}",
+							"host": [
+								"{{url}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "03_WebhookRecords",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query($id:ID!){\n    webHookRecords(hook_id:$id){\n        edges{\n            node{\n                id\n            }\n        }\n    }\n}",
+										"variables": "{\n  \"id\": \"{{hook_id}}\"\n}"
+									}
+								},
+								"url": {
+									"raw": "{{url}}",
+									"host": [
+										"{{url}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 02 Dec 2021 03:48:02 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"webHookRecords\": {\n            \"edges\": []\n        }\n    }\n}"
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"",
+							"/**",
+							" * @description Check if request is initial and token need to be requested from token endpoint. ",
+							" * - If yes, asynchronously process new token request from OIC token endpoint",
+							" * - If no, return null",
+							" */",
+							"asyncSeries([",
+							"     (cb) => {",
+							"          // This reset DB before each request",
+							"          return ResetDB(cb);",
+							"    }",
+							"], (err, res) => {",
+							"",
+							"    // Proces result in SYNC mode",
+							"});",
+							"",
+							"// ----------------------------------------------------------------------",
+							"",
+							"function ResetDB(cb){",
+							"",
+							"    console.log(\"Resetting DB\")",
+							"    ",
+							"    return pm.sendRequest({",
+							"        url: pm.environment.get(\"RESET_ENDPOINT\"), ",
+							"        method: 'POST',",
+							"        header: {",
+							"            'Accept': 'application/json',",
+							"            'Content-Type': 'application/x-www-form-urlencoded',",
+							"            'X-CSRF': `1`",
+							"        },",
+							"        body: {",
+							"            mode: 'urlencoded',",
+							"             urlencoded: [ ]",
+							"        }",
+							"    },",
+							"    (err, res) => cb(err, res));",
+							"}",
+							"",
+							"//--HELPERS----------------------------------------",
+							"",
+							"/**",
+							" * @private",
+							" * @description Tasks in series",
+							" * ",
+							" * @param {Array<Function>} tasks",
+							" * @param {Function} cb",
+							" * @param {Number} currOperation",
+							" * @param {Array<Any>} results",
+							" */",
+							"function _series (tasks, cb, currOperation = 0, results = []) {",
+							"    // Bail-out condition",
+							"    if (currOperation === tasks.length) {",
+							"        return cb(null, results);",
+							"    }",
+							"",
+							"    if (typeof tasks[currOperation] !== 'function') {",
+							"        return cb(new Error('asyncSeries: Please provide a function'));",
+							"    }",
+							"",
+							"    tasks[currOperation]((err, res) => {",
+							"        if (err) {",
+							"            return cb(err);",
+							"        }",
+							"",
+							"        results.push(res);",
+							"",
+							"        // Recursively call the next task in series till we're done executing all the operations",
+							"        return _series(tasks, cb, currOperation + 1, results);",
+							"    });",
+							"}",
+							"",
+							"/**",
+							" * @description asyncSeries to execute requests in a series format",
+							" * ",
+							" * @param {Array<Function>} tasks",
+							" * @param {Function} cb",
+							" */",
+							"function asyncSeries (tasks, cb = () => {}) {",
+							"    return _series(tasks, cb);",
+							"}",
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Identity",
+			"item": [
+				{
+					"name": "Get OpenID Provider Metadata",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{OIDC_SERVER}}/.well-known/openid-configuration",
+							"host": [
+								"{{OIDC_SERVER}}"
+							],
+							"path": [
+								".well-known",
+								"openid-configuration"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get OpenID Provider Metadata",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{OIDC_SERVER}}/.well-known/openid-configuration",
+									"host": [
+										"{{OIDC_SERVER}}"
+									],
+									"path": [
+										".well-known",
+										"openid-configuration"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Thu, 02 Dec 2021 05:19:38 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Server",
+									"value": "Kestrel"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"issuer\": \"https://localhost:5001\",\n    \"jwks_uri\": \"https://localhost:5001/.well-known/openid-configuration/jwks\",\n    \"authorization_endpoint\": \"https://localhost:5001/connect/authorize\",\n    \"token_endpoint\": \"https://localhost:5001/connect/token\",\n    \"userinfo_endpoint\": \"https://localhost:5001/connect/userinfo\",\n    \"end_session_endpoint\": \"https://localhost:5001/connect/endsession\",\n    \"check_session_iframe\": \"https://localhost:5001/connect/checksession\",\n    \"revocation_endpoint\": \"https://localhost:5001/connect/revocation\",\n    \"introspection_endpoint\": \"https://localhost:5001/connect/introspect\",\n    \"device_authorization_endpoint\": \"https://localhost:5001/connect/deviceauthorization\",\n    \"frontchannel_logout_supported\": true,\n    \"frontchannel_logout_session_supported\": true,\n    \"backchannel_logout_supported\": true,\n    \"backchannel_logout_session_supported\": true,\n    \"scopes_supported\": [\n        \"role\",\n        \"email\",\n        \"profile\",\n        \"openid\",\n        \"api\",\n        \"offline_access\"\n    ],\n    \"claims_supported\": [\n        \"role\",\n        \"email\",\n        \"email_verified\",\n        \"family_name\",\n        \"given_name\",\n        \"middle_name\",\n        \"nickname\",\n        \"preferred_username\",\n        \"profile\",\n        \"picture\",\n        \"website\",\n        \"gender\",\n        \"birthdate\",\n        \"zoneinfo\",\n        \"locale\",\n        \"updated_at\",\n        \"name\",\n        \"sub\",\n        \"sid\",\n        \"client_id\"\n    ],\n    \"grant_types_supported\": [\n        \"authorization_code\",\n        \"client_credentials\",\n        \"refresh_token\",\n        \"implicit\",\n        \"password\",\n        \"urn:ietf:params:oauth:grant-type:device_code\"\n    ],\n    \"response_types_supported\": [\n        \"code\",\n        \"token\",\n        \"id_token\",\n        \"id_token token\",\n        \"code id_token\",\n        \"code token\",\n        \"code id_token token\"\n    ],\n    \"response_modes_supported\": [\n        \"form_post\",\n        \"query\",\n        \"fragment\"\n    ],\n    \"token_endpoint_auth_methods_supported\": [\n        \"client_secret_basic\",\n        \"client_secret_post\"\n    ],\n    \"id_token_signing_alg_values_supported\": [\n        \"RS256\"\n    ],\n    \"subject_types_supported\": [\n        \"public\"\n    ],\n    \"code_challenge_methods_supported\": [\n        \"plain\",\n        \"S256\"\n    ],\n    \"request_parameter_supported\": true,\n    \"request_object_signing_alg_values_supported\": [\n        \"RS256\",\n        \"RS384\",\n        \"RS512\",\n        \"PS256\",\n        \"PS384\",\n        \"PS512\",\n        \"ES256\",\n        \"ES384\",\n        \"ES512\",\n        \"HS256\",\n        \"HS384\",\n        \"HS512\"\n    ],\n    \"authorization_response_iss_parameter_supported\": true\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "accessTokenUrl",
+				"value": "https://localhost:5001/connect/token",
+				"type": "string"
+			},
+			{
+				"key": "scope",
+				"value": "api",
+				"type": "string"
+			},
+			{
+				"key": "password",
+				"value": "testuser",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "testuser",
+				"type": "string"
+			},
+			{
+				"key": "clientSecret",
+				"value": "postman_secret",
+				"type": "string"
+			},
+			{
+				"key": "clientId",
+				"value": "postman",
+				"type": "string"
+			},
+			{
+				"key": "grant_type",
+				"value": "password_credentials",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// console.log(`#### Processing: ${pm.info.requestName} ####`)",
+					"",
+					"/**",
+					" * @description Check if request is initial and token need to be requested from token endpoint. ",
+					" * - If yes, asynchronously process new token request from OIC token endpoint",
+					" * - If no, return null",
+					" */",
+					"asyncSeries([",
+					"    (cb) => {",
+					"        ",
+					"        // Check if request is initial",
+					"        if(IsInitialRequest()){",
+					"",
+					"            // Try get existing access_token (if exist)",
+					"            var token = pm.collectionVariables.get(\"TOKEN\");",
+					"",
+					"            // Validate token",
+					"            if(!IsValidToken(token)){",
+					"",
+					"                // Request new token",
+					"                return OAuth_Token_Exchange(cb);",
+					"            } ",
+					"        }",
+					"",
+					"        cb(undefined,null)",
+					"    },",
+					"        (cb) => {",
+					"        ",
+					"        // Initial DB reset",
+					"        if(IsInitialRequest()){",
+					"            ResetDB(cb)",
+					"        }",
+					"",
+					"        cb(undefined,null)",
+					"    }",
+					"], (err, res) => {",
+					"",
+					"    // Proces result in SYNC mode",
+					"",
+					"    if(IsInitialRequest){",
+					"        pm.variables.set(\"INIT\",true)",
+					"",
+					"        const async_result = res[0];",
+					"",
+					"        // Check result of token endpoint",
+					"        if(async_result){",
+					"",
+					"            // If result fails throw error",
+					"            if( async_result.status != \"OK\"){",
+					"                throw new Error(\"Failed to run init script\");",
+					"            }",
+					"",
+					"            // If result is OK vrite token to current collection variables, else throw error",
+					"            if(async_result){",
+					"                pm.collectionVariables.set(\"TOKEN\",`${async_result.json().access_token}`)       ",
+					"            }else{",
+					"                throw new Error(\"No token returned from id server\");",
+					"            }",
+					"        }",
+					"    }",
+					"",
+					"    // Set Authorization headers",
+					"    SetAuthHeader();",
+					"",
+					"    // Set CSRF protection headers",
+					"    pm.request.headers.add({key: 'X-CSRF', value:  pm.environment.get(\"X-CSRF\")})",
+					"",
+					"    // Set Request URL",
+					"    pm.variables.set(\"url\", pm.environment.get(\"URL\"));",
+					"",
+					"});",
+					"",
+					"// ----------------------------------------------------------------------",
+					"",
+					"function ResetDB(cb){",
+					"",
+					"    console.log(\"Resetting DB\")",
+					"    ",
+					"    return pm.sendRequest({",
+					"        url: pm.environment.get(\"RESET_ENDPOINT\"), ",
+					"        method: 'POST',",
+					"        header: {",
+					"            'Accept': 'application/json',",
+					"            'Content-Type': 'application/x-www-form-urlencoded',",
+					"            'X-CSRF': `1`",
+					"        },",
+					"        body: {",
+					"            mode: 'urlencoded',",
+					"             urlencoded: [ ]",
+					"        }",
+					"    },",
+					"    (err, res) => cb(err, res));",
+					"}",
+					"",
+					"// ----------------------------------------------------------------------",
+					"",
+					"/**",
+					" * @description Request new token from OIC token endpoint using Password Credentials",
+					" */",
+					"function OAuth_Token_Exchange(cb){",
+					"    ",
+					"    console.log(\"Requesting new token from ID server\")",
+					"",
+					"    var encoded_credentials = GetEncodedCredentials();",
+					"",
+					"    return pm.sendRequest({",
+					"        url: pm.environment.get(\"TOKEN_ENDPOINT\"), ",
+					"        method: 'POST',",
+					"        header: {",
+					"            'Accept': 'application/json',",
+					"            'Content-Type': 'application/x-www-form-urlencoded',",
+					"            'Authorization': `Basic ${encoded_credentials}`",
+					"        },",
+					"        body: {",
+					"            mode: 'urlencoded',",
+					"             urlencoded: [",
+					"                {",
+					"                    key: \"grant_type\",",
+					"                    value: \"password\",",
+					"                },",
+					"                {",
+					"                    key: \"username\",",
+					"                    value: pm.environment.get(\"OAUTH_USERNAME\"),",
+					"                },",
+					"                {",
+					"                    key: \"password\",",
+					"                    value: pm.environment.get(\"OAUTH_PASSWORD\"),",
+					"                },",
+					"                {",
+					"                    key: \"scope\",",
+					"                    value: \"api\",",
+					"                }",
+					"            ]",
+					"        }",
+					"    },",
+					"    (err, res) => cb(err, res));",
+					"}",
+					"",
+					"//--HELPERS----------------------------------------",
+					"",
+					"function GetEncodedCredentials(){",
+					"    var credentials =  `${pm.environment.get('CLIENT_ID')}:${pm.environment.get('CLINET_SECRET')}`;",
+					"",
+					"    return CryptoJS.enc.Base64.stringify(",
+					"        CryptoJS.enc.Utf8.parse(credentials)",
+					"    );",
+					"}",
+					"",
+					"/**",
+					" * @description Validate if token lifetime is OK",
+					" */",
+					"function IsValidToken(token){",
+					"",
+					"    if(!token || token == \"\"){",
+					"        return false",
+					"    }",
+					"",
+					"    var decoded_token = jwt_decode(token)",
+					"",
+					"    if(decoded_token && decoded_token.exp){",
+					"",
+					"        const expiryDT = new Date(decoded_token.exp*1000);",
+					"        const currentDT = new Date();",
+					"",
+					"        return currentDT > expiryDT ? false:true",
+					"",
+					"    }else{",
+					"        return false",
+					"    }",
+					"",
+					"}",
+					"",
+					"/**",
+					" * @description Resets the Auth headers. ",
+					" */",
+					"function SetAuthHeader(){",
+					"",
+					"    if(!pm.request.headers.has(e=>e.key === \"Authorization\")){",
+					"        pm.request.headers.remove(e=>e.key === \"Authorization\")",
+					"    }",
+					"",
+					"    pm.request.headers.add({",
+					"         key: 'Authorization',",
+					"         value: `Bearer ${pm.collectionVariables.get('TOKEN')}`",
+					"    })",
+					"}",
+					"",
+					"/**",
+					" * @description Decode JWT token and returns header part",
+					" */",
+					"function jwt_decode(a) {",
+					"    // get -> header, payload, signature",
+					"    var parts = a.split('.'); ",
+					"    return JSON.parse(atob(parts[1]));",
+					"}",
+					"",
+					"/**",
+					" * @description Returns true if request is first in collection",
+					" */",
+					"function IsInitialRequest(){",
+					"    if(!pm.variables.has(`INIT`)){",
+					"        return true;",
+					"    }else{",
+					"        return false;",
+					"    }",
+					"}",
+					"",
+					"",
+					"/**",
+					" * @private",
+					" * @description Tasks in series",
+					" * ",
+					" * @param {Array<Function>} tasks",
+					" * @param {Function} cb",
+					" * @param {Number} currOperation",
+					" * @param {Array<Any>} results",
+					" */",
+					"function _series (tasks, cb, currOperation = 0, results = []) {",
+					"    // Bail-out condition",
+					"    if (currOperation === tasks.length) {",
+					"        return cb(null, results);",
+					"    }",
+					"",
+					"    if (typeof tasks[currOperation] !== 'function') {",
+					"        return cb(new Error('asyncSeries: Please provide a function'));",
+					"    }",
+					"",
+					"    tasks[currOperation]((err, res) => {",
+					"        if (err) {",
+					"            return cb(err);",
+					"        }",
+					"",
+					"        results.push(res);",
+					"",
+					"        // Recursively call the next task in series till we're done executing all the operations",
+					"        return _series(tasks, cb, currOperation + 1, results);",
+					"    });",
+					"}",
+					"",
+					"/**",
+					" * @description asyncSeries to execute requests in a series format",
+					" * ",
+					" * @param {Array<Function>} tasks",
+					" * @param {Function} cb",
+					" */",
+					"function asyncSeries (tasks, cb = () => {}) {",
+					"    return _series(tasks, cb);",
+					"}",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Response must have success status code\", function () {",
+					"    const expectedStatusCode = 200;",
+					"    pm.response.to.have.status(expectedStatusCode);",
+					"});",
+					"",
+					"pm.test(\"Response must have valid body\", function () {",
+					"     pm.response.to.be.ok;",
+					"     pm.response.to.be.withBody;",
+					"     pm.response.to.be.json;",
+					"});",
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": ""
+		},
+		{
+			"key": "TOKEN",
+			"value": ""
+		}
+	]
+}
