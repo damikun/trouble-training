@@ -138,6 +138,13 @@ partial class Build : NukeBuild
             Frontend_TryBuild
         );
 
+    Target Device_ALL => _ => _
+        .DependsOn(
+            Device_Clean,
+            Device_Compile,
+            Device_Restore_Frontend
+    );
+
     //----------------------------
     //----------------------------
 
@@ -147,6 +154,7 @@ partial class Build : NukeBuild
             BFF_All,
             Identity_All,
             Frontend_All,
+            Device_ALL,
             Restore_Tools
         );
 

@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/Tests/Aplication.Unit/bin/Debug/net5.0/Aplication.UnitTests.dll",
+            "program": "${workspaceFolder}/Tests/Aplication.Unit/bin/Debug/net6.0/Aplication.UnitTests.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Tests/Aplication.Unit",
             "console": "internalConsole",

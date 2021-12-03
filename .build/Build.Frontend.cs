@@ -28,8 +28,14 @@ partial class Build : NukeBuild
         .Executes(() =>
         {
 
-            SourceDirectory.GlobDirectories("**/BFF/API/ClientApp/node_modules")
+            FrontendDirectory.GlobDirectories("**/node_modules")
                 .ForEach(DeleteDirectory);
+
+            FrontendDirectory.GlobFiles("**lock.json")
+                .ForEach(DeleteFile);
+
+            FrontendDirectory.GlobFiles("**yarn.loc")
+                .ForEach(DeleteFile);
         });
 
     Target Frontend_Restore => _ => _

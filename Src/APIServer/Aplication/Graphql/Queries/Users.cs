@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using APIServer.Aplication.GraphQL.DTO;
 using SharedCore.Aplication.Interfaces;
+using System.Security.Claims;
 
 namespace APIServer.Aplication.GraphQL.Queries
 {
@@ -29,8 +30,8 @@ namespace APIServer.Aplication.GraphQL.Queries
             return new GQL_User()
             {
                 Guid = _current.UserId != null ? _current.UserId.Value.ToString() : "",
-                Name = _current.GetClaim("name"),
-                Email = _current.GetClaim("email"),
+                Name = _current.GetClaim(ClaimTypes.Name),
+                Email = _current.GetClaim(ClaimTypes.Email),
                 SessionId = _current.GetClaim("sid"),
             };
         }

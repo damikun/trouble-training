@@ -105,6 +105,7 @@ dlldata.c
 
 #Yarn lock files
 yarn.lock
+*lock.json
 
 # DNX
 project.lock.json

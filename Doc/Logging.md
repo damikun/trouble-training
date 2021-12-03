@@ -12,7 +12,7 @@ Important to understand:
 **Nuget**
 
 1) Main package
-- `dotnet add package Serilog.AspNetCore --version 4.1.1-dev-00229`
+- `dotnet add package Serilog.AspNetCore --version 4.1.1-dev-00241`
 
 2) Extensions for loging
 - `dotnet add package Serilog.Extensions.Logging --version 3.0.2-dev-10289`

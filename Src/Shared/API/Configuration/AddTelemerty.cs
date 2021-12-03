@@ -60,7 +60,8 @@ namespace SharedCore.Configuration
                     // };
                 });
 
-                builder.AddElasticsearchClientInstrumentation();
+                // Uncommented since Net6 is not supported
+                // builder.AddElasticsearchClientInstrumentation();
 
                 builder.AddSqlClientInstrumentation();
 

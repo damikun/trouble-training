@@ -4,7 +4,7 @@
 <p align="center">
   <img  width="900" src="Doc/Assets/stack_logos.png" alt="Workshop stack tools logos" >
 </p>
-<p align="center" > The application contains a full frontend and backend implementation with infrastructure and app monitoring. There are several patterns used such as. <b>Mediator, BFF, Domain</b> etc.. and everything is secured with <b>Identity server</b> fully supporting <b>OpenId Connect</b> and <b>OAuth2.0</b></p>
+<p align="center" > The application contains a full frontend and backend implementation (.Net6) with infrastructure and app monitoring. There are several patterns used such as. <b>Mediator, BFF, Domain</b> etc.. and everything is secured with <b>Identity server</b> fully supporting <b>OpenId Connect</b> and <b>OAuth2.0</b></p>
 
 
 <h5 align="center" >

@@ -110,7 +110,6 @@ namespace SharedCore.Aplication.Services
 
         public string GetClaim(string type)
         {
-
             try
             {
                 return _contextAccessor?.HttpContext?.User?.Claims

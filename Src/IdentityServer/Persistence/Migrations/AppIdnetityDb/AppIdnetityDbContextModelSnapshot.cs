@@ -15,7 +15,7 @@ namespace Persistence.Migrations.AppIdnetityDb
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Npgsql:PostgresExtension:citext", ",,")
-                .HasAnnotation("ProductVersion", "5.0.11");
+                .HasAnnotation("ProductVersion", "6.0.0");
 
             modelBuilder.Entity("IdentityServer.Domain.Models.ApplicationUser", b =>
                 {

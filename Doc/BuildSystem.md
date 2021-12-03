@@ -760,7 +760,7 @@ Often you need to use external tools as `dotnet-ef` to create/apply migration. T
         ]
       },
       "dotnet-ef": {
-        "version": "5.0.11",
+        "version": "6.0.0",
         "commands": [
           "dotnet-ef"
         ]

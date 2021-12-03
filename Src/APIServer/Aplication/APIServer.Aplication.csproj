@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>1591</NoWarn>
   </PropertyGroup>
@@ -8,7 +8,7 @@
   <ItemGroup>
 
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
     <PackageReference Include="Duende.IdentityServer" Version="5.2.2" />
 
     <PackageReference Include="HotChocolate.AspNetCore" Version="12.3.1" />
@@ -17,7 +17,7 @@
     
     <PackageReference Include="HotChocolate.Data.EntityFramework" Version="12.3.1" />
 
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
 
     <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
@@ -30,9 +30,6 @@
     <PackageReference Include="HangFire.Core" Version="1.7.19" />
     <PackageReference Include="Hangfire.PostgreSql" Version="1.8.1" />
 
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.11" />
-
-    
   </ItemGroup>
 
   <ItemGroup>

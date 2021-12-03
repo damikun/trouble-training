@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -15,8 +15,8 @@
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="Moq" Version="4.16.1" />
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="5.0.4" />
-    <PackageReference Include="Serilog.AspNetCore" Version="4.1.1-dev-00229" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="6.0.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="4.1.1-dev-00241" />
   </ItemGroup>
 
   <ItemGroup>

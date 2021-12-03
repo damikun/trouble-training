@@ -8,17 +8,21 @@ using Microsoft.AspNetCore.Http;
 using SharedCore.Aplication.Interfaces;
 using SharedCore.Aplication.Services;
 
-namespace Device.Configuration {
-    public static partial class ServiceExtension {
+namespace Device.Configuration
+{
+    public static partial class ServiceExtension
+    {
 
         public static IServiceCollection AddTelemerty(
             this IServiceCollection serviceCollection,
-            IConfiguration Configuration, IWebHostEnvironment Environment) {
+            IConfiguration Configuration, IWebHostEnvironment Environment)
+        {
 
             serviceCollection.AddTelemetryService(Configuration, out string source);
-            
-            serviceCollection.AddOpenTelemetryTracing((builder) => {
-                
+
+            serviceCollection.AddOpenTelemetryTracing((builder) =>
+            {
+
                 // Sources
                 builder.AddSource(source);
 
@@ -26,25 +30,26 @@ namespace Device.Configuration {
                   .CreateDefault()
                   .AddService(Environment.ApplicationName));
 
-                builder.AddAspNetCoreInstrumentation(opts => {
+                builder.AddAspNetCoreInstrumentation(opts =>
+                {
                     opts.RecordException = true;
                     opts.Enrich = async (activity, eventName, rawObject) =>
                     {
 
                         if (eventName.Equals("OnStartActivity"))
                         {
-                            if (rawObject is HttpRequest {Path: {Value: "/graphql"}})
+                            if (rawObject is HttpRequest { Path: { Value: "/graphql" } })
                             {
                                 var req = rawObject as HttpRequest;
 
                                 await SharedCore.Aplication.Shared.Common
-                                    .HandleTracingActivityRename(req);    
+                                    .HandleTracingActivityRename(req);
                             }
                         }
                     };
                 });
 
-                builder.AddElasticsearchClientInstrumentation();
+                // builder.AddElasticsearchClientInstrumentation();
 
                 builder.AddSqlClientInstrumentation();
 
@@ -52,12 +57,13 @@ namespace Device.Configuration {
 
                 builder.AddEntityFrameworkCoreInstrumentation(e => e.SetDbStatementForText = true);
 
-                builder.AddOtlpExporter(options => {
-                    options.Endpoint = new Uri("http://localhost:55680");             
+                builder.AddOtlpExporter(options =>
+                {
+                    options.Endpoint = new Uri("http://localhost:55680");
                 });
             });
 
-            serviceCollection.AddSingleton<ITelemetry,Telemetry>();
+            serviceCollection.AddSingleton<ITelemetry, Telemetry>();
 
             return serviceCollection;
         }

@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             // "preLaunchTask": "build",
-            "program": "${workspaceFolder}/Src/APIServer/API/bin/Debug/net5.0/APIServer.dll",
+            "program": "${workspaceFolder}/Src/APIServer/API/bin/Debug/net6.0/APIServer.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Src/APIServer/API",
             "stopAtEntry": false,

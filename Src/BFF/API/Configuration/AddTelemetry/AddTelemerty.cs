@@ -1,12 +1,12 @@
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Hosting;
+using System;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Resources;
-using System;
 using Microsoft.AspNetCore.Http;
-using SharedCore.Aplication.Interfaces;
+using Microsoft.AspNetCore.Hosting;
 using SharedCore.Aplication.Services;
+using SharedCore.Aplication.Interfaces;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BFF.Configuration
 {
@@ -51,7 +51,7 @@ namespace BFF.Configuration
                     };
                 });
 
-                builder.AddElasticsearchClientInstrumentation();
+                // builder.AddElasticsearchClientInstrumentation();
 
                 builder.AddSqlClientInstrumentation();
 
