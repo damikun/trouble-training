@@ -1,6 +1,7 @@
 using Nuke.Common;
 using Nuke.Common.IO;
 using Nuke.Common.Tooling;
+using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.EntityFramework;
 
 partial class Build : NukeBuild
@@ -33,6 +34,7 @@ partial class Build : NukeBuild
             EntityFrameworkTasks
                 .EntityFrameworkDatabaseUpdate(e => e
                 .SetProcessWorkingDirectory(APIServerMigrationDir)
+                .SetProcessToolPath(DotNetTasks.DotNetPath)
                 // .SetNoBuild(true)
                 );
 
