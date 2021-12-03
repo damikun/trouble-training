@@ -37,10 +37,11 @@ jobs:
             .nuke/temp
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
-      - name: Run './build.cmd E2E_RunAs_CI All'
-        run: ./build.cmd E2E_RunAs_CI All
+      - name: Run './build.cmd E2E_RunAs_CI All Print_Net_SDK'
+        run: ./build.cmd E2E_RunAs_CI All Print_Net_SDK
         env:
           CI: false
+
   macOS-latest:
     name: macOS-latest
     runs-on: macOS-latest
@@ -53,7 +54,7 @@ jobs:
             .nuke/temp
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj') }}
-      - name: Run './build.cmd E2E_RunAs_CI All'
-        run: ./build.cmd E2E_RunAs_CI All
+      - name: Run './build.cmd E2E_RunAs_CI All Print_Net_SDK'
+        run: ./build.cmd E2E_RunAs_CI All Print_Net_SDK
         env:
           CI: false

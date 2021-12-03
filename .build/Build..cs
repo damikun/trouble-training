@@ -20,14 +20,15 @@ using Nuke.Common.Tooling;
     GitHubActionsImage.MacOsLatest,
     InvokedTargets = new[] {
         nameof(E2E_RunAs_CI),
-        nameof(All)
+        nameof(All),
+        nameof(Print_Net_SDK),
     },
     OnPushIncludePaths = new[] {
         "Src/**",
         ".build/**"
     },
     OnPushBranches = new[] { "main" },
-    AutoGenerate = false)]
+    AutoGenerate = true)]
 // [GitHubActions(
 //     "frontend-restore-and-build",
 //     GitHubActionsImage.WindowsLatest,
@@ -187,6 +188,12 @@ partial class Build : NukeBuild
             DotNetTasks.DotNet("dev-certs https --clean");
         });
 
+    Target Print_Net_SDK => _ => _
+        .Before(Clean)
+        .Executes(() =>
+        {
+            DotNetTasks.DotNet("--list-sdks");
+        });
 
     Target SetupCertificates_Local => _ => _
         .DependsOn(TrustDevCertificates_Local, SetupDevCertificates, Clean_Dev_Certificates);
