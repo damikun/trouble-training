@@ -28,7 +28,7 @@ using Nuke.Common.Tooling;
         ".build/**"
     },
     OnPushBranches = new[] { "main" },
-    AutoGenerate = true)]
+    AutoGenerate = false)]
 // [GitHubActions(
 //     "frontend-restore-and-build",
 //     GitHubActionsImage.WindowsLatest,
