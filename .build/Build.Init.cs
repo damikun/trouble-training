@@ -40,6 +40,8 @@ partial class Build : NukeBuild
         try
         {
             DotNetTasks.DotNetToolRestore();
+
+            DotNetTasks.DotNet("tool install --global dotnet-ef --version 6.0.0");
         }
         catch { }
 
