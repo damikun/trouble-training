@@ -5,6 +5,9 @@ using Nuke.Common.Tools.NuGet;
 using Nuke.Common.Tools.DotNet;
 using Nuke.Common.Tools.Docker;
 using Nuke.Common.Tools.EntityFramework;
+using Nuke.Common.Utilities.Collections;
+using static Nuke.Common.IO.FileSystemTasks;
+using static Nuke.Common.IO.PathConstruction;
 using static Nuke.Common.Tools.DotNet.DotNetTasks;
 
 partial class Build : NukeBuild
@@ -26,7 +29,8 @@ partial class Build : NukeBuild
         .Before(BFF_Restore)
         .Executes(() =>
         {
-
+            BFFServerDir.GlobFiles("**yarn.lock")
+                .ForEach(DeleteFile);
         });
 
     Target BFF_Restore => _ => _

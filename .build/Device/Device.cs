@@ -43,7 +43,7 @@ partial class Build : NukeBuild
             DeviceDir.GlobFiles("**lock.json")
                 .ForEach(DeleteFile);
 
-            DeviceDir.GlobFiles("**yarn.loc")
+            DeviceDir.GlobFiles("**yarn.lock")
                 .ForEach(DeleteFile);
         });
 
