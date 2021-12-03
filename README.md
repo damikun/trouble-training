@@ -16,6 +16,7 @@
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/ElasticSearch.md">Configure Monitoring</a></br>
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/GraphQL%20-%20MutationErrors.md">Handle GraphQL Errors</a></br>
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/BuildSystem.md">Build Automation</a></br>
+  <a href="https://github.com/damikun/trouble-training/tree/main/Src/Tests/Postman">Automate API testing Postman/Newman</a></br>
 </br>
 
 ![Backend-Frontend-Testing](https://github.com/damikun/trouble-training/actions/workflows/Backend-Frontend-Testing.yml/badge.svg)
@@ -52,6 +53,7 @@ Please follow these steps if you want to understand it because of the connection
 5) [Configure monitoring](Doc/ElasticSearch.md) - You will learn how to monitor the entire app stack (this depends on parts 1 and 2).
 6) [Handle GraphQL Mutation errors](https://github.com/damikun/trouble-training/blob/main/Doc/GraphQL%20-%20MutationErrors.md) - You will learn how to integrate *6a* pattern.
 7) [Build automation and workflows](Doc/BuildSystem.md) - You will learn how to setup build plan and generate workflows.
+8) [Automate GraphQL API Testing](https://github.com/damikun/trouble-training/tree/main/Src/Tests/Postman) - You will automate API testing using Postman/Newman from Github-Actions
 
 <br />
 <p align="center">
