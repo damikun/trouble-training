@@ -1,6 +1,8 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
+#nullable disable
+
 namespace APIServer.Persistence.Migrations
 {
     public partial class Init : Migration

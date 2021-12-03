@@ -43,7 +43,7 @@ partial class Build : NukeBuild
             DeviceDir.GlobFiles("**yarn.lock")
                 .ForEach(DeleteFile);
 
-            Npm("cache clean --force");
+            Npm("cache clean");
         });
 
     Target Device_Restore => _ => _

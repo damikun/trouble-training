@@ -42,7 +42,7 @@ partial class Build : NukeBuild
             FrontendDirectory.GlobFiles("**yarn.loc")
                 .ForEach(DeleteFile);
 
-            Npm("cache clean --force");
+            Npm("cache clean");
         });
 
     Target Frontend_Restore => _ => _

@@ -1,9 +1,11 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
+#nullable disable
+
 namespace Persistence.Migrations
 {
-    public partial class configuration : Migration
+    public partial class InitAppConfigurationDbContext_Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

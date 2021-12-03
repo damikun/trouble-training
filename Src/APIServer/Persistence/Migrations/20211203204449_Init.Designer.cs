@@ -6,17 +6,18 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
+#nullable disable
+
 namespace APIServer.Persistence.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20211123134650_Init")]
+    [Migration("20211203204449_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
 
             modelBuilder.Entity("APIServer.Domain.Core.Models.Events.DomainEvent", b =>
                 {
@@ -160,7 +161,7 @@ namespace APIServer.Persistence.Migrations
                     b.Property<long>("WebHookId")
                         .HasColumnType("INTEGER");
 
-                    b.ToTable("WebHookCreatedEvent");
+                    b.ToTable("WebHookCreatedEvent", (string)null);
                 });
 
             modelBuilder.Entity("APIServer.Domain.Core.Models.Events.WebHookRemoved", b =>
@@ -170,7 +171,7 @@ namespace APIServer.Persistence.Migrations
                     b.Property<long>("WebHookId")
                         .HasColumnType("INTEGER");
 
-                    b.ToTable("WebHookRemovedEvent");
+                    b.ToTable("WebHookRemovedEvent", (string)null);
                 });
 
             modelBuilder.Entity("APIServer.Domain.Core.Models.Events.WebHookUpdated", b =>
@@ -180,7 +181,7 @@ namespace APIServer.Persistence.Migrations
                     b.Property<long>("WebHookId")
                         .HasColumnType("INTEGER");
 
-                    b.ToTable("WebHookUpdatedEvent");
+                    b.ToTable("WebHookUpdatedEvent", (string)null);
                 });
 
             modelBuilder.Entity("APIServer.Domain.Core.Models.WebHooks.WebHookHeader", b =>

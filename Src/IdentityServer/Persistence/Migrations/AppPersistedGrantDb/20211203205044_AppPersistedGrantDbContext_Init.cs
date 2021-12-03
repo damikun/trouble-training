@@ -1,9 +1,11 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
+#nullable disable
+
 namespace Persistence.Migrations.AppPersistedGrantDb
 {
-    public partial class grant : Migration
+    public partial class AppPersistedGrantDbContext_Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
