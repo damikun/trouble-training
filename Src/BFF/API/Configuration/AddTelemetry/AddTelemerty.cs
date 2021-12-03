@@ -35,7 +35,7 @@ namespace BFF.Configuration
                 builder.AddAspNetCoreInstrumentation(opts =>
                 {
                     opts.RecordException = true;
-                    opts.Enrich = async (activity, eventName, rawObject) =>
+                    opts.Enrich = (activity, eventName, rawObject) =>
                     {
 
                         if (eventName.Equals("OnStartActivity"))

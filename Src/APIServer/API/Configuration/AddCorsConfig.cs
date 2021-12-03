@@ -14,7 +14,7 @@ namespace APIServer.Configuration
         IWebHostEnvironment Environment)
         {
 
-            string[] allowed_origins = null;
+            string[]? allowed_origins = null;
 
             if (Environment.IsDevelopment())
             {
