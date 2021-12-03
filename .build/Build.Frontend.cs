@@ -52,7 +52,9 @@ partial class Build : NukeBuild
             NpmTasks.NpmInstall(settings =>
                 settings
                     .EnableProcessLogOutput()
-                    .SetProcessWorkingDirectory(FrontendDirectory));
+                    .SetProcessWorkingDirectory(FrontendDirectory)
+                    .SetProcessArgumentConfigurator(e => e.Add("--legacy-peer-deps"))
+                    );
         });
 
     Target Frontend_AddTailwind => _ => _

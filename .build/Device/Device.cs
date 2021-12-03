@@ -74,6 +74,8 @@ partial class Build : NukeBuild
             NpmTasks.NpmInstall(settings =>
                 settings
                     .EnableProcessLogOutput()
-                    .SetProcessWorkingDirectory(DeviceFrontend));
+                    .SetProcessWorkingDirectory(DeviceFrontend)
+                    .SetProcessArgumentConfigurator(e => e.Add("--legacy-peer-deps"))
+                    );
         });
 }
