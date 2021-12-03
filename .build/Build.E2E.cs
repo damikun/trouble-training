@@ -7,6 +7,7 @@ using Nuke.Common.Tooling;
 using Nuke.Common.Tools.Npm;
 using System.Threading.Tasks;
 using Nuke.Common.Tools.Docker;
+using Nuke.Common.Tools.DotNet;
 
 partial class Build : NukeBuild
 {
@@ -107,7 +108,7 @@ partial class Build : NukeBuild
     .Executes(async () =>
     {
         APIProcess = ProcessTasks.StartProcess(
-            "dotnet",
+             DotNetTasks.DotNetPath,
             "run",
             APIServerDir,
             null,           // env variables
@@ -134,7 +135,7 @@ partial class Build : NukeBuild
     .Executes(async () =>
     {
         BFFProcess = ProcessTasks.StartProcess(
-            "dotnet",
+            DotNetTasks.DotNetPath,
             "run",
             BFFServerDir,
             null,           // env variables
@@ -170,7 +171,7 @@ partial class Build : NukeBuild
     .Executes(async () =>
     {
         IdentityProcess = ProcessTasks.StartProcess(
-            "dotnet",
+             DotNetTasks.DotNetPath,
             "run",
             IdentityServerDir,
             null,               // env variables
