@@ -68,6 +68,7 @@ partial class Build : NukeBuild
         });
 
     Target Device_Restore_Frontend => _ => _
+        .After(Frontend_Restore)
         .DependsOn(Device_Clean)
         .Executes(() =>
         {
