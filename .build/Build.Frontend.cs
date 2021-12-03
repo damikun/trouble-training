@@ -19,6 +19,12 @@ partial class Build : NukeBuild
 
     string frontend_build_script_name = "build";
 
+
+#nullable enable
+    [PathExecutable("npm")] readonly Tool? Npm;
+#nullable disable
+
+
     //---------------
     // Build process
     //---------------
@@ -27,7 +33,6 @@ partial class Build : NukeBuild
         .Before(Frontend_Restore)
         .Executes(() =>
         {
-
             FrontendDirectory.GlobDirectories("**/node_modules")
                 .ForEach(DeleteDirectory);
 
@@ -36,6 +41,8 @@ partial class Build : NukeBuild
 
             FrontendDirectory.GlobFiles("**yarn.loc")
                 .ForEach(DeleteFile);
+
+            Npm("cache clean --force");
         });
 
     Target Frontend_Restore => _ => _

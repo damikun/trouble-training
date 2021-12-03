@@ -38,13 +38,12 @@ partial class Build : NukeBuild
                 .ForEach(DeleteDirectory);
 
             DeviceDir.GlobFiles("**lock.json")
-                .ForEach(DeleteDirectory);
-
-            DeviceDir.GlobFiles("**lock.json")
                 .ForEach(DeleteFile);
 
             DeviceDir.GlobFiles("**yarn.lock")
                 .ForEach(DeleteFile);
+
+            Npm("cache clean --force");
         });
 
     Target Device_Restore => _ => _
