@@ -1,7 +1,8 @@
 import React, { useContext, useMemo } from "react";
 import { graphql } from "babel-plugin-relay/macro";
-import { useLazyLoadQuery } from "react-relay/hooks";
-import { UserProviderQuery } from "./__generated__/UserProviderQuery.graphql";
+import {  usePreloadedQuery } from "react-relay/hooks";
+import * as MeQuery from "../Utils/__generated__/UserProviderQuery.graphql";
+import { PreloadedQuery } from "react-relay";
 
 export const UserProviderQueryTag = graphql`
   query UserProviderQuery {
@@ -23,6 +24,7 @@ export type usertype = {
 
 export type UserProviderProps = {
   children?: React.ReactNode;
+  initialQueryRef: PreloadedQuery<MeQuery.UserProviderQuery>;
 };
 
 type userStoreContextType = {
@@ -35,12 +37,17 @@ export const userStoreContext = React.createContext<
 
 export const useUserStore = () => useContext(userStoreContext);
 
-export default function UserProvider({ children }: UserProviderProps) {
+export default function UserProvider({ children,initialQueryRef }: UserProviderProps) {
 
-  const preloaded_user_data = useLazyLoadQuery<UserProviderQuery>(
+  // const preloaded_user_data = useLazyLoadQuery<UserProviderQuery>(
+  //   UserProviderQueryTag,
+  //   {},
+  //   { fetchPolicy: "store-or-network" }
+  // );
+
+  const preloaded_user_data = usePreloadedQuery(
     UserProviderQueryTag,
-    {},
-    { fetchPolicy: "store-or-network" }
+    initialQueryRef
   );
   
   const userStoreInitCtx = useMemo(() => {

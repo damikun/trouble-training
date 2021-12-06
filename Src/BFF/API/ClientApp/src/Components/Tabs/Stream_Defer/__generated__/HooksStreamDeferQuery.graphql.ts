@@ -71,6 +71,7 @@ return {
         "if": null,
         "kind": "Stream",
         "label": "HooksStreamDeferListFragment$stream$webHooksTestStream",
+        "metadata": null,
         "selections": [
           {
             "alias": null,
@@ -113,7 +114,8 @@ return {
             ],
             "storageKey": null
           }
-        ]
+        ],
+        "useCustomizedBatch": null
       }
     ]
   },

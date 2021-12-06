@@ -63,6 +63,7 @@ const node: ConcreteRequest = {
         "if": null,
         "kind": "Stream",
         "label": "HooksStreamListFragment$stream$webHooksTestStream",
+        "metadata": null,
         "selections": [
           {
             "alias": null,
@@ -103,7 +104,8 @@ const node: ConcreteRequest = {
             ],
             "storageKey": null
           }
-        ]
+        ],
+        "useCustomizedBatch": null
       }
     ]
   },

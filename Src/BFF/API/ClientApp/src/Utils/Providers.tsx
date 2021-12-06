@@ -1,14 +1,17 @@
 import React, { Suspense, useState, useContext, useMemo, useEffect } from "react";
 import { Environment } from "react-relay";
-import { RelayEnvironmentProvider } from "react-relay/hooks";
+import { PreloadedQuery, RelayEnvironmentProvider } from "react-relay/hooks";
 import ToastProvider from "../UIComponents/Toast/ToastProvider";
 import { createEnvironment } from "./Environment";
 import UserProvider from "./UserProvider";
 import TraceProvider from "./TraceProvider"
+import * as MeQuery from "../Utils/__generated__/UserProviderQuery.graphql";
+import {RelayEnv} from "../index"
 
 type Props = {
   children: React.ReactNode;
   fallback?: React.ReactNode;
+  initialQueryRef: PreloadedQuery<MeQuery.UserProviderQuery>;
 };
 
 type EnviromentContextType = {
@@ -22,8 +25,8 @@ export const EnviromentContext = React.createContext<
 
 export const useEnvirometHandler = () => useContext(EnviromentContext);
 
-export default function Providers({ children, fallback }: Props) {
-  const [envState, setEnvState] = useState(createEnvironment());
+export default function Providers({ children, fallback, initialQueryRef }: Props) {
+  const [envState, setEnvState] = useState(RelayEnv);
 
   useEffect(() => {
   }, [])
@@ -45,7 +48,7 @@ export default function Providers({ children, fallback }: Props) {
             <RelayEnvironmentProvider environment={state?.env}>
               <Suspense fallback={fallback ? fallback : null}>
                 <TraceProvider>
-                  <UserProvider>
+                  <UserProvider initialQueryRef={initialQueryRef}>
                       <ToastProvider>{children}</ToastProvider>
                   </UserProvider>
                 </TraceProvider>
