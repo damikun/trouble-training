@@ -162,7 +162,7 @@ function DropDownMenu({
       >
         {children}
 
-        <AnimatePresence>
+        <AnimatePresence key={isVisible.toString()}>
           {isVisible && (
             <motion.div
               initial={motionInitial}

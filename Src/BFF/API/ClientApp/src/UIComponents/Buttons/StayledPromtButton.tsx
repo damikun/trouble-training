@@ -65,7 +65,10 @@ export default function StayledPromtButton({
 }: StayledPromtButtonProps) {
   const Var = VARIANTS[variant] || VARIANTS.primaryblue;
 
-  const [isPending, startTransition] = useTransition();
+  //@ts-ignore
+  const [isPending, startTransition] = useTransition({
+    busyDelayMs: 2000,
+  });
 
   const [userPrompVisible, setuserPrompVisible] = useState(false);
 

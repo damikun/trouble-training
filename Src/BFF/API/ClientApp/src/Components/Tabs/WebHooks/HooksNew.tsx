@@ -68,8 +68,11 @@ function HooksNew() {
   );
 
   const navigate = useNavigate();
-
-  const [_,startTransition] = useTransition();
+  
+  //@ts-ignore
+  const [_,startTransition] = useTransition({
+    busyDelayMs: 2000,
+  });
 
   const handleTriggerChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {

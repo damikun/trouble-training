@@ -11,12 +11,12 @@ export const TabsSettings = [
     pattern: "Hooks/*",
   },
   {
-    label: "Test @stream",
+    label: "@stream",
     path: `stream`,
     pattern: "stream/*",
   },
   {
-    label: "Test @stream+@defer",
+    label: "@stream+@defer",
     path: `defer+stream`,
     pattern: "defer+stream/*",
   },

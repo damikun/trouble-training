@@ -91,6 +91,8 @@ function HooksLogs() {
   const activity_id = searchParams.get("hook_id");
 
   const handleModalClose = useCallback(() => {
+
+    console.log("Closing")
     searchParams.delete("hook_id");
     setSearchParams(searchParams);
   }, [searchParams, setSearchParams]);
@@ -105,6 +107,8 @@ function HooksLogs() {
     },
     [searchParams, setSearchParams]
   );
+
+  console.log(`Is open: `+ activity_id !== null)
 
   return (
     <>

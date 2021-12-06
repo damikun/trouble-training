@@ -11,40 +11,6 @@ import {
 import type { ExecutionPatchResult } from 'graphql';
 import { BASE_SERVER_URL, GQL_ENDPOINT } from "../constants";
 
-// function fetchQuery(
-//   //@ts-ignore
-//   operation,
-//   //@ts-ignore
-//   variables,
-
-// ) {
-
-//   // Otherwise, fetch data from server
-//   return fetch(`${BASE_SERVER_URL}/${GQL_ENDPOINT}`, {
-//     credentials: "include",
-//     method: "POST",
-//     mode: 'cors',
-//     headers: {
-//       Accept: "application/json",
-//       "Content-Type": "application/json",
-//       'X-CSRF': '1'
-//     },
-
-//     body: JSON.stringify({
-//       id: operation.id, // NOTE: pass md5 hash to the server
-//       // query: operation.text, // this is now obsolete because text is null
-//       variables,
-//       // operationName: operation.name,
-//     }),
-//   })
-//     .then((response) => {
-//       return response.json();
-//     })
-//     .then((json) => {
-//       return json;
-//     }).catch((ex)=>console.log(ex));
-// }
-
 const fetchGraphQL: FetchFunction = (operation, variables, _cacheConfig) => {
 	return Observable.create((sink) => {
 		(async () => {

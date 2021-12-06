@@ -28,8 +28,11 @@ export default function Hooks() {
   );
 
   const navigate = useNavigate();
-
-  const [isInFlight, startTransition] = useTransition();
+  
+  //@ts-ignore
+  const [isInFlight, startTransition] = useTransition({
+    busyDelayMs: 2000,
+  });
 
   const hanldeCreateNewNavigate = useCallback(() => {
     !isInFlight &&

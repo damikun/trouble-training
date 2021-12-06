@@ -8,7 +8,10 @@ import clsx from "clsx";
 export default function FourOhOne() {
   const history = useNavigate();
 
-  const [isPending, startTransition] = useTransition();
+  //@ts-ignore
+  const [isPending, startTransition] = useTransition({
+    busyDelayMs: 2000,
+  });
 
   const handleRedirectHome = useCallback(() => {
     startTransition(() => {

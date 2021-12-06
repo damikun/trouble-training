@@ -35,7 +35,10 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
     let location = useLocation();
     let path = useResolvedPath(to);
 
-    const [isPending,startTransition] = useTransition();
+    //@ts-ignore
+    const [isPending,startTransition] = useTransition({
+      busyDelayMs: 2000,
+    });
 
     useEffect(() => {
       onTransitionStateChange && onTransitionStateChange(isPending);

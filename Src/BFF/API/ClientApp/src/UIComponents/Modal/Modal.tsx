@@ -85,7 +85,7 @@ export default function Modal({
 }: ModalProps) {
   const $modalref = useRef<HTMLDivElement>(null);
 
-  useOnClickOutside($modalref, isOpen ? OnClose : () => {});
+  useOnClickOutside($modalref, OnClose );
 
   const ModalContexd = useCallback(() => {
     return {
@@ -98,9 +98,11 @@ export default function Modal({
     };
   }, [OnClose, OnConfirm]);
 
+  console.log("internal: "+ isOpen)
+
   return (
     <ModalContext.Provider value={ModalContexd()}>
-      <AnimatePresence>
+      <AnimatePresence key={isOpen.toString()}>
         {isOpen && (
           <motion.div
             key="modal"
