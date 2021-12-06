@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import React, { useTransition, useCallback, useState, useMemo } from "react";
+import React, { useTransition, useCallback, useState } from "react";
 import { useLazyLoadQuery, useMutation } from "react-relay/hooks";
 import { useParams } from "react-router-dom";
 import { graphql } from "babel-plugin-relay/macro";
@@ -54,8 +54,6 @@ function getTriggersInitState(
 
   return map;
 }
-
-
 
  export default function HooksEdit() {
   const { hookid }: any = useParams();

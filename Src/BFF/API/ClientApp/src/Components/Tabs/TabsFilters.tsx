@@ -1,8 +1,8 @@
 import FilterBodyContainer from "../../UIComponents/Container/FilterBodyContainer";
 
-type ProjectSettingsFiltersProps = {};
+type TabsFiltersProps = {};
 
-export default function ProjectSettingsFilters({}: ProjectSettingsFiltersProps) {
+export default function TabsFilters({}: TabsFiltersProps) {
   return (
     <>
       <FilterBodyContainer name={"Menu"}>

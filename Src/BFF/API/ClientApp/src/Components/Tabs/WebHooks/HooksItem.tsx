@@ -4,7 +4,7 @@ import { useFragment, useMutation } from "react-relay/hooks";
 import { graphql } from "babel-plugin-relay/macro";
 import StayledButton from "../../../UIComponents/Buttons/StayledButton";
 import { useNavigate } from "react-router";
-import { useHooksContext } from "../Settings";
+import { useHooksContext } from "../Tabs";
 import { HooksItemFragment$key } from "./__generated__/HooksItemFragment.graphql";
 import { HooksItemRemoveMutation } from "./__generated__/HooksItemRemoveMutation.graphql";
 import { useToast } from "../../../UIComponents/Toast/ToastProvider";
@@ -101,7 +101,8 @@ export default function HooksItem({ dataRef }: HooksItemProps) {
   return (
     <div
       className={clsx(
-        "flex p-3 md:px-5 justify-between bg-white first:rounded-t-md last:rounded-b-md",
+        "flex p-3 md:px-5 justify-between bg-white",
+        "first:rounded-t-md last:rounded-b-md",
         "items-center space-x-10 hover:bg-gray"
       )}
     >

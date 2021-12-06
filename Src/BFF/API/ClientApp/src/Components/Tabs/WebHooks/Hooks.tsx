@@ -5,7 +5,7 @@ import { graphql } from "babel-plugin-relay/macro";
 import { HooksQuery } from "./__generated__/HooksQuery.graphql";
 import StayledButton from "../../../UIComponents/Buttons/StayledButton";
 import { useNavigate } from "react-router";
-import { useHooksContext } from "../Settings";
+import { useHooksContext } from "../Tabs";
 import { HooksListFragment$key } from "./__generated__/HooksListFragment.graphql";
 import { HooksListRefetchQuery } from "./__generated__/HooksListRefetchQuery.graphql";
 import HooksItem from "./HooksItem";

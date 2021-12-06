@@ -6,10 +6,10 @@ import { useUserStore } from "./UserProvider";
 import Login from "../Components/Login";
 import Logout from "../Components/Logout";
 
-const Settings = lazy(
+const Tabs = lazy(
   () =>
     import(
-      /* webpackChunkName: "Settings" */ "../Components/Settings/Settings"
+      /* webpackChunkName: "Tabs" */ "../Components/Tabs/Tabs"
     )
 );
 
@@ -26,13 +26,11 @@ export default function AppRoutes() {
     return (
       <Routes>
 
-        <PrivateRoute  path={"/*"} element={<Settings />} />
+        <PrivateRoute  path={"/*"} element={<Tabs />} />
         
         <PrivateRoute  path={"/logout"} element={<Logout />} />
 
         <PrivateRoute path="*" element={<FourOhFour />} />
-
-        
 
       </Routes>
     );

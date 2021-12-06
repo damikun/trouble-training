@@ -19,7 +19,7 @@ import { useNavigate } from "react-router";
 import { generateErrors, is } from "../../../Utils/Validation";
 import { URL_REGEX } from "../../../constants";
 import { EVENT_TRIGGERS } from "./HooksShared";
-import { useHooksContext } from "../Settings";
+import { useHooksContext } from "../Tabs";
 
 const HooksNewQueryTag = graphql`
   query HooksNewQuery {

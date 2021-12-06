@@ -50,7 +50,8 @@ export default function Item({ dataRef }: ItemProps) {
   return (
     <div
       className={clsx(
-        "flex p-3 md:px-5 justify-between bg-white first:rounded-t-md last:rounded-b-md",
+        "flex p-3 md:px-5 justify-between bg-white",
+        "first:rounded-t-md last:rounded-b-md",
         "items-center space-x-10 hover:bg-gray"
       )}
     >
