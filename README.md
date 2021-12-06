@@ -89,8 +89,7 @@ Based on your system download and [install docker](https://docs.docker.com/engin
 
 There are two options:
 - Use prepared init script. Run `.\build.cmd Init` from project root. This will take time since there are multiple steps as restore, compile, db initialization etc..
-- Manual instalation (Use in case script fails) follow the [manual instal readme](https://github.com/damikun/trouble-training/blob/main/Doc/Manual_Install.md) or use <a href="https://www.youtube.com/watch?v=3LBqZiW_Hvo">step-by-step video</a>
-
+- Manual instalation (Use in case script fails) follow the [manual instal readme](https://github.com/damikun/trouble-training/blob/main/Doc/Manual_Install.md)
 > **NOTE** Restore scripts use `npm`. In case you wanna use `yarn` you need to use manual instalation process..
 
 ### Run Frontned and Backend
