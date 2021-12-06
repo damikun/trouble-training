@@ -79,7 +79,7 @@ Net6.0 is 🚀 (Net5.0 vs Net6.0 measurement)
 <br />
 
 
-### Download docker
+## Download docker
 
 Based on your system download and [install docker](https://docs.docker.com/engine/install/). This is required!
 
@@ -94,13 +94,13 @@ There are two options:
 
 </br>
 
-### Run Frontned and Backend
+## Run Frontned and Backend
 
 From root directory run `tye run` 
 
 </br>
 
-### Compose elastic docker images
+## Compose elastic docker images
 
 Set this configurtaion settings (for localhost) from your `cmd`:
 
@@ -130,7 +130,7 @@ In each folder you will find `docker-compose.yml` and you need to run the comman
 
 </br>
 
-### Run Elastic and Beats
+## Run Elastic and Beats
 
 Start the elasticsearch container group and then beats. Please stick to this order to avoid exception logging due to a missing connection. You can also put everything into a Docker image and wait until the previous section is complete.
 
