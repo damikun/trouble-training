@@ -35,7 +35,7 @@ namespace APIServer
         {
             services.AddControllers();
 
-            services.AddCorsConfiguration(Environment);
+            services.AddCorsConfiguration(Environment, Configuration);
 
             services.AddSwagger();
 

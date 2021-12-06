@@ -57,7 +57,7 @@ partial class Build : NukeBuild
                 .SetProjectFile(APIServerDir)
                 .SetConfiguration(Configuration)
                 .EnableNoRestore()
-                .SetCopyright($"Copyright © DaliborKundrat {DateTime.Now.Year}")
+                .SetCopyright(Copyright)
             // .SetOutputDirectory(OutputDirectory)
             );
         });

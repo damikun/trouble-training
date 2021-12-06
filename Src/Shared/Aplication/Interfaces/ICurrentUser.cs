@@ -25,6 +25,11 @@ namespace SharedCore.Aplication.Interfaces
         /// </summary>
         string Name { get; }
 
+        /// <summary>
+        /// Returns current api access token or null
+        /// </summary>
+        string JwtToken { get; }
+
 #nullable enable
         /// <summary>
         /// Returns user claims
@@ -43,6 +48,11 @@ namespace SharedCore.Aplication.Interfaces
         /// <param name="role_name"></param>
         /// <returns></returns>
         bool HasRole(string role_name);
+
+        /// <summary>
+        /// Returns API authentication state
+        /// </summary>
+        public bool IsAuthenticated { get; }
 
     }
 

@@ -26,10 +26,10 @@ namespace IdentityServer.API
 
                     PostLogoutRedirectUris = { "https://localhost:5015/signout-callback-oidc" },
 
-                    AllowedCorsOrigins = new List<string>
-                    {
-                        "http://localhost:3000", "http://localhost:5001",
-                    },
+                    // AllowedCorsOrigins = new List<string>
+                    // {
+                    //     "http://localhost:3000", "http://localhost:5001",
+                    // },
 
                     AllowOfflineAccess = true,
 

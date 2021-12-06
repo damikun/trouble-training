@@ -51,7 +51,7 @@ partial class Build : NukeBuild
                 .SetProjectFile(BFFServerDir)
                 .SetConfiguration(Configuration)
                 .EnableNoRestore()
-                .SetCopyright($"Copyright © DaliborKundrat {DateTime.Now.Year}")
+                .SetCopyright(Copyright)
             // .SetOutputDirectory(OutputDirectory)
             );
         });

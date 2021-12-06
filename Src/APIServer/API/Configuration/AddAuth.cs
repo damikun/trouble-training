@@ -1,7 +1,8 @@
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
+
 namespace APIServer.Configuration
 {
     public static partial class ServiceExtension
@@ -15,7 +16,8 @@ namespace APIServer.Configuration
             serviceCollection.AddAuthentication("token")
             .AddJwtBearer("token", options =>
             {
-                options.Authority = Configuration["ConnectionStrings:AuthorityServer"];
+                options.Authority = Configuration.GetIdentityServerUri();
+
                 options.MapInboundClaims = true;
 
                 // options.BackchannelHttpHandler = new HttpClientHandler

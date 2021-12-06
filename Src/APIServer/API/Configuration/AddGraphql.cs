@@ -27,12 +27,12 @@ namespace APIServer.Configuration
 {
     public static partial class ServiceExtension
     {
-        private const string Endpoint_Path = "/graphql";
+        private const string Endpoint_path = "/graphql";
         private const string BCP_path = "/bcp";
         private const string Playground_path = "/playground";
         private const string Voyager_path = "/voyager";
         private const string GA_Tracking = null;
-        private const string Persisted_Queries_Path = "./persisted_queries";
+        private const string Persisted_Queries_path = "./persisted_queries";
 
         //--------------------------------------------------
 
@@ -123,7 +123,7 @@ namespace APIServer.Configuration
 
                     .UseCustomPipeline()
                     .UseReadPersistedQuery()
-                    .AddReadOnlyFileSystemQueryStorage(Persisted_Queries_Path);
+                    .AddReadOnlyFileSystemQueryStorage(Persisted_Queries_path);
 
             return serviceCollection;
         }
@@ -193,7 +193,7 @@ namespace APIServer.Configuration
                         ),
                     GaTrackingId = GA_Tracking ?? "G-VZY9HR8VLJ",
                     UseBrowserUrlAsGraphQLEndpoint = true,
-                    GraphQLEndpoint = Endpoint_Path,
+                    GraphQLEndpoint = Endpoint_path,
                 });
         }
 

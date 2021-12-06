@@ -1,5 +1,5 @@
 using System;
-using System.Net.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BFF.Configuration
@@ -7,7 +7,7 @@ namespace BFF.Configuration
     public static partial class ServiceExtension
     {
         public static IServiceCollection AddIdentityConfiguration(
-        this IServiceCollection serviceCollection)
+        this IServiceCollection serviceCollection, IConfiguration cfg)
         {
 
             // cookie options
@@ -36,7 +36,7 @@ namespace BFF.Configuration
             })
             .AddOpenIdConnect("oidc", options =>
             {
-                options.Authority = "https://localhost:5001";
+                options.Authority = cfg.GetIdentityServerUri();
 
                 // confidential client using code flow + PKCE
                 options.ClientId = "spa";

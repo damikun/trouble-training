@@ -16,18 +16,20 @@ namespace APIServer.API.IntegrationTests
 {
     public class IdentityTestStartup : IdentityServer.API.Startup
     {
+
+        private readonly IConfiguration _cfg;
         public IdentityTestStartup(
             IWebHostEnvironment environment,
             IConfiguration configuration)
             : base(configuration, environment)
         {
-
+            _cfg = configuration;
         }
 
         public override void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddCorsConfiguration(Environment);
+            services.AddCorsConfiguration(Environment, _cfg);
 
             services.AddControllersWithViews();
 

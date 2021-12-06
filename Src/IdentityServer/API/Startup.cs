@@ -29,7 +29,7 @@ namespace IdentityServer.API
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            services.AddCorsConfiguration(Environment);
+            services.AddCorsConfiguration(Environment, Configuration);
 
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
 

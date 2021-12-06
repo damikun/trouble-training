@@ -4,6 +4,7 @@ using Nuke.Common;
 using Nuke.Common.CI;
 using Nuke.Common.Git;
 using Nuke.Common.IO;
+using Nuke.Common.Tooling;
 using Nuke.Common.Execution;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tools.DotNet;
@@ -12,7 +13,6 @@ using Nuke.Common.Tools.GitVersion;
 using Nuke.Common.Utilities.Collections;
 using static Nuke.Common.IO.FileSystemTasks;
 using static Nuke.Common.IO.PathConstruction;
-using Nuke.Common.Tooling;
 
 [GitHubActions(
     "Backend-Frontend-Testing",
@@ -84,6 +84,8 @@ partial class Build : NukeBuild
 
     AbsolutePath Build_Root => RootDirectory / ".build";
     AbsolutePath CI_Cert_Script => RootDirectory / ".build" / "ci_certs.ps1";
+
+    string Copyright = $"Copyright © Dalibor-Kundrat {DateTime.Now.Year}";
 
     //---------------
     // Build process

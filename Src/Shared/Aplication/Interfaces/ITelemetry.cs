@@ -18,6 +18,8 @@ namespace SharedCore.Aplication.Interfaces
 
         void SetOtelWarning(string error);
 
+        string GetTraceId();
+
         ActivitySource AppSource { get; }
 
     }

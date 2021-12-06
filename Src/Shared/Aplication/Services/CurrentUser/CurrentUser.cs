@@ -32,6 +32,14 @@ namespace SharedCore.Aplication.Services
             _contextAccessor = contextAccessor;
         }
 
+        public string JwtToken
+        {
+            get
+            {
+                return _contextAccessor.HttpContext?.Request?.Headers["Authorization"];
+            }
+        }
+
         public bool Exist
         {
             get
@@ -132,6 +140,19 @@ namespace SharedCore.Aplication.Services
             }
 
             return false;
+        }
+
+        public bool IsAuthenticated
+        {
+            get
+            {
+                var isAuthenticated = _contextAccessor.HttpContext?.User?.Identities?.FirstOrDefault()?.IsAuthenticated;
+
+                if (!isAuthenticated.HasValue)
+                    return false;
+
+                return isAuthenticated.Value;
+            }
         }
 
     }

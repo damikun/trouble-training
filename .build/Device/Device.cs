@@ -62,7 +62,7 @@ partial class Build : NukeBuild
                 .SetProjectFile(DeviceDir)
                 .SetConfiguration(Configuration)
                 .EnableNoRestore()
-                .SetCopyright($"Copyright © DaliborKundrat {DateTime.Now.Year}")
+                .SetCopyright(Copyright)
             );
         });
 

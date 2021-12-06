@@ -1,0 +1,23 @@
+name: trouble-training
+services:
+  - name: apiserver
+    project: Src/APIServer/API/APIServer.csproj
+    bindings:
+      - protocol: "https"
+        name: "https"
+        host: "localhost"
+
+  - name: identityserver
+    project: Src/IdentityServer/API/IdentityServer.csproj
+    bindings:
+      - protocol: "https"
+        name: "https"
+        host: "localhost"
+
+  - name: bffserver
+    project: Src/BFF/API/BFF.csproj
+    bindings:
+      - protocol: "https"
+        name: "https"
+        port: 5015
+        host: "localhost"

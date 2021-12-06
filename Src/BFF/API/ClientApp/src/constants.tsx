@@ -2,7 +2,7 @@
 /*-----------------------------------------------------------------------*/
 
 export const BASE_SERVER_URL_PROD = "https://api.troubledev.com";
-export const BASE_SERVER_URL_DEV = "https://localhost:5015";
+export const BASE_SERVER_URL_DEV = "";
 export const BASE_SERVER_URL =
   process.env.NODE_ENV === "development"
     ? BASE_SERVER_URL_DEV

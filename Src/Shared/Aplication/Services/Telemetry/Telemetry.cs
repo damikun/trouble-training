@@ -3,6 +3,7 @@ using Serilog;
 using System.Diagnostics;
 using Microsoft.Extensions.Options;
 using SharedCore.Aplication.Interfaces;
+using Microsoft.AspNetCore.Http;
 
 namespace SharedCore.Aplication.Services
 {
@@ -13,13 +14,17 @@ namespace SharedCore.Aplication.Services
 
         private readonly IOptions<TelemetryOptions> _options;
 
+        private readonly IHttpContextAccessor _accessor;
+
         /// <summary>
         /// Main constructor of TelemetryProvider
         /// </summary>
-        public Telemetry(IOptions<TelemetryOptions> options)
+        public Telemetry(IOptions<TelemetryOptions> options, IHttpContextAccessor accessor)
         {
 
             _options = options;
+
+            _accessor = accessor;
 
             AppSource = new(_options.Value.SourceName);
 
@@ -69,6 +74,11 @@ namespace SharedCore.Aplication.Services
             {
                 current?.SetTag("otel.status_description", message);
             }
+        }
+
+        public string GetTraceId()
+        {
+            return Activity.Current?.TraceId.ToString() ?? _accessor?.HttpContext?.TraceIdentifier;
         }
     }
 }

@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
 using Duende.IdentityServer.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace APIServer.Configuration
@@ -11,14 +13,15 @@ namespace APIServer.Configuration
     {
         public static IServiceCollection AddCorsConfiguration(
         this IServiceCollection serviceCollection,
-        IWebHostEnvironment Environment)
+        IWebHostEnvironment env,
+        IConfiguration cfg)
         {
 
-            string[]? allowed_origins = null;
+            List<string> allowed_origins = new List<string>();
 
-            if (Environment.IsDevelopment())
+            if (env.IsDevelopment() && !cfg.IsTyeEnviroment())
             {
-                allowed_origins = new string[]{
+                allowed_origins.AddRange(new string[]{
                     "https://localhost:5001",
                     "https://localhost:5015",
                     "https://localhost:5021",
@@ -26,16 +29,30 @@ namespace APIServer.Configuration
                     "https://localhost:5070",
                     "https://localhost",
                     "host.docker.internal",
-                    "http://localhost",
                     "https://studio.apollographql.com"
-                };
+                });
             }
-            else
+
+
+            var host_uri = cfg.GetHostUrl() ?? cfg["Kestrel:Endpoints:Https:Url"];
+
+            if (!string.IsNullOrWhiteSpace(host_uri))
             {
-                // Add your production origins hire
-                allowed_origins = new string[]{
-                    "https://localhost:5001"
-                };
+                allowed_origins.Add(host_uri);
+            }
+
+            var identity_uri = cfg.GetIdentityServerUri();
+
+            if (!string.IsNullOrWhiteSpace(identity_uri))
+            {
+                allowed_origins.Add(identity_uri);
+            }
+
+            var bff_uri = cfg.GetBFFServerUri();
+
+            if (!string.IsNullOrWhiteSpace(bff_uri))
+            {
+                allowed_origins.Add(bff_uri);
             }
 
             serviceCollection.AddCors(options =>
@@ -45,7 +62,7 @@ namespace APIServer.Configuration
                     policy.AllowAnyHeader();
                     policy.AllowAnyMethod();
                     //------------------------------------
-                    policy.WithOrigins(allowed_origins);
+                    policy.WithOrigins(allowed_origins.ToArray());
                     //policy.AllowAnyOrigin()
                     //------------------------------------
                     policy.AllowCredentials();

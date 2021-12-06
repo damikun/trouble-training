@@ -4,8 +4,7 @@
 <p align="center">
   <img  width="900" src="Doc/Assets/stack_logos.png" alt="Workshop stack tools logos" >
 </p>
-<p align="center" > The application contains a full frontend and backend implementation (.Net6) with infrastructure and app monitoring. There are several patterns used such as. <b>Mediator, BFF, Domain</b> etc.. and everything is secured with <b>Identity server</b> fully supporting <b>OpenId Connect</b> and <b>OAuth2.0</b></p>
-
+<p align="center" > The application contains a full frontend and backend implementation (<b>Net6.0</b>🚀) with infrastructure and app monitoring. There are several patterns used such as. <b>Mediator, BFF, Domain</b> etc.. and everything is secured with <b>Identity server</b> fully supporting <b>OpenId Connect</b> and <b>OAuth2.0</b></p>
 
 <h5 align="center" >
 
@@ -16,7 +15,7 @@
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/ElasticSearch.md">Configure Monitoring</a></br>
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/GraphQL%20-%20MutationErrors.md">Handle GraphQL Errors</a></br>
   <a href="https://github.com/damikun/trouble-training/blob/main/Doc/BuildSystem.md">Build Automation</a></br>
-  <a href="https://github.com/damikun/trouble-training/tree/main/Src/Tests/Postman">Automate API testing Postman/Newman</a></br>
+  <a href="https://github.com/damikun/trouble-training/tree/main/Src/Tests/Postman">API testing Postman/Newman</a></br>
 </br>
 
 ![Backend-Frontend-Testing](https://github.com/damikun/trouble-training/actions/workflows/Backend-Frontend-Testing.yml/badge.svg)
@@ -72,6 +71,9 @@ On this monitoring graphical visualization, you can see entire request sended fr
 
 <img src="Doc/Assets/CreateWebHook_Output.png" alt="Elastic Frontend to backend distributed tracing" >
 
+Net6.0 is 🚀 (Net5.0 vs Net6.0 measurement) 
+<img src="Doc/Assets/net6_speed.png" alt="Net performens"  >
+
 </p>
 
 <br />
@@ -95,24 +97,9 @@ There are two options:
 
 ### Run Frontned and Backend
 
-Go to dirrectory: `APIServer/API` and run `dotnet watch run`
+From root directory run `tye run` 
 
-Go to dirrectory: `IdentityServer/API` and run `dotnet watch run`
-
-Go to dirrectory: `BFF/API` and run `dotnet watch run`
-
-(only if you are gonna test Device)
-Go to dirrectory: `Device/API` and run `dotnet watch run`
-
-</br>
-
-**APIServer** runs on: `https://localhost:5022`
-
-**IdentityServer** runs on: `https://localhost:5001`
-
-**BFF** runs on: `https://localhost:5015`
-
-</br>
+In case you wanna run it manualy:
 
 ### Compose elastic docker images
 

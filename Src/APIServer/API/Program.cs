@@ -36,7 +36,6 @@ namespace APIServer
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    // webBuilder.UseUrls("http://localhost:5021", "https://localhost:5022");
                 })
         .UseSerilog();
     }

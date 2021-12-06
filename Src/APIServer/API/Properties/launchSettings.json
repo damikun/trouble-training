@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Api": {
+    "APIServer": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": true,

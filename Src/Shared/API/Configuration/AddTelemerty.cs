@@ -93,7 +93,7 @@ namespace SharedCore.Configuration
                 // }
             });
 
-            serviceCollection.AddSingleton<ITelemetry, Telemetry>();
+            serviceCollection.AddScoped<ITelemetry, Telemetry>();
 
             return serviceCollection;
         }

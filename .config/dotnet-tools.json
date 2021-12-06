@@ -14,16 +14,16 @@
         "dotnet-ef"
       ]
     },
-    "microsoft.tye": {
-      "version": "0.10.0-alpha.21420.1",
-      "commands": [
-        "tye"
-      ]
-    },
     "dotnet-format": {
       "version": "5.1.250801",
       "commands": [
         "dotnet-format"
+      ]
+    },
+    "microsoft.tye": {
+      "version": "0.7.0-alpha.21279.2",
+      "commands": [
+        "tye"
       ]
     }
   }

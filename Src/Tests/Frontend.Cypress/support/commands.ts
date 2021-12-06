@@ -153,6 +153,7 @@ Cypress.Commands.add('addDummyWebHook', (url) => {
         'visit', 'click', 'trigger',
         'type', 'clear', 'reload',
         'contains']) {
+          //@ts-ignore
           Cypress.Commands.overwrite(command, (originalFn, ...args) => {
               const origVal = originalFn(...args);
   
