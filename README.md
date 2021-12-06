@@ -92,6 +92,8 @@ There are two options:
 - Manual instalation (Use in case script fails) follow the [manual instal readme](https://github.com/damikun/trouble-training/blob/main/Doc/Manual_Install.md)
 > **NOTE** Restore scripts use `npm`. In case you wanna use `yarn` you need to use manual instalation process..
 
+</br>
+
 ### Run Frontned and Backend
 
 From root directory run `tye run` 
