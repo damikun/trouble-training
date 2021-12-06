@@ -93,13 +93,9 @@ There are two options:
 
 > **NOTE** Restore scripts use `npm`. In case you wanna use `yarn` you need to use manual instalation process..
 
-</br>
-
 ### Run Frontned and Backend
 
 From root directory run `tye run` 
-
-In case you wanna run it manualy:
 
 ### Compose elastic docker images
 
