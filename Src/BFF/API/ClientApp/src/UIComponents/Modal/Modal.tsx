@@ -98,8 +98,6 @@ export default function Modal({
     };
   }, [OnClose, OnConfirm]);
 
-  console.log("internal: "+ isOpen)
-
   return (
     <ModalContext.Provider value={ModalContexd()}>
       <AnimatePresence key={isOpen.toString()}>
