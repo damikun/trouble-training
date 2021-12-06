@@ -96,6 +96,8 @@ There are two options:
 
 From root directory run `tye run` 
 
+</br>
+
 ### Compose elastic docker images
 
 Set this configurtaion settings (for localhost) from your `cmd`:
