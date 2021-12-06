@@ -1,4 +1,5 @@
 using System;
+using SharedCore.Configuration;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
@@ -33,7 +34,7 @@ namespace BFF.Configuration
                 });
             }
 
-            var host_uri = cfg.GetHostUrl()?.TrimEnd('/') ?? cfg["Kestrel:Endpoints:Https:Url"];
+            var host_uri = cfg.GetHostUrl();
 
             if (!string.IsNullOrWhiteSpace(host_uri))
             {

@@ -21,7 +21,7 @@
       ]
     },
     "microsoft.tye": {
-      "version": "0.7.0-alpha.21279.2",
+      "version": "0.10.0-alpha.21420.1",
       "commands": [
         "tye"
       ]

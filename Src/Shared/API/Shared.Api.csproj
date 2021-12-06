@@ -12,6 +12,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
 
+    <PackageReference Include="Microsoft.Tye.Extensions.Configuration" Version="0.10.0-alpha.21420.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     <PackageReference Include="OpenTelemetry" Version="1.2.0-rc1" />
     <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.2.0-rc1" />

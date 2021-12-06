@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Duende.IdentityServer.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SharedCore.Configuration;
 
 namespace IdentityServer.Configuration
 {
@@ -33,7 +34,7 @@ namespace IdentityServer.Configuration
                 });
             }
 
-            var host_uri = cfg.GetHostUrl() ?? cfg["Kestrel:Endpoints:Https:Url"];
+            var host_uri = cfg.GetHostUrl();
 
             if (!string.IsNullOrWhiteSpace(host_uri))
             {
