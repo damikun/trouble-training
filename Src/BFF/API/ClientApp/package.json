@@ -59,8 +59,10 @@
     "relaycompile_presisted_js": "relay-compiler --persist-output persisted-output/persisted-queries.json && node converter.js persisted-output/persisted-queries.json ../../../APIServer/API/persisted_queries",
     "relaycompile_experimental_do_not_use_yet": "relay-compiler-experimental --src ./src/ --schema ./src/schema.graphql --artifactDirectory ./__generated__/",
     "startwatch": "npm run watch:css && craco start start",
-    "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider craco start",
-    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider craco build",
+    "start": "craco start",
+    "build": "craco build",
+    "start_node17": "cross-env NODE_OPTIONS=--openssl-legacy-provider craco start",
+    "build_node17": "cross-env NODE_OPTIONS=--openssl-legacy-provider craco build",
     "test": "cypress run --config pageLoadTimeout=30000,baseUrl=https://localhost:5015",
     "cypress": "cypress open --config pageLoadTimeout=30000,baseUrl=https://localhost:5015",
     "eject": "react-scripts eject"
