@@ -767,7 +767,7 @@
 					]
 				},
 				{
-					"name": "04_Webhooks_Filter",
+					"name": "04_Webhooks_Paging",
 					"event": [
 						{
 							"listen": "test",
@@ -785,7 +785,7 @@
 									"                    \"node\": {\r",
 									"                        \"id\": \"R1FMX1dlYkhvb2sKbDI1\",\r",
 									"                        \"isActive\": true,\r",
-									"                        \"webHookUrl\": `${pm.variables.get(\"test_url\")}`\r",
+									"                        \"webHookUrl\": `${pm.variables.get(\"test_url1\")}`\r",
 									"                    }\r",
 									"                }\r",
 									"            ]\r",
@@ -817,8 +817,8 @@
 							"script": {
 								"exec": [
 									"\r",
-									"\r",
-									"pm.variables.set(\"test_url\",\"https://some.test.url.2\")\r",
+									"pm.variables.set(\"test_url1\",\"https://some.test.url.1\")\r",
+									"pm.variables.set(\"test_url2\",\"https://some.test.url.2\")\r",
 									"\r",
 									"/**\r",
 									" * @description Check if request is initial and token need to be requested from token endpoint. \r",
@@ -829,12 +829,12 @@
 									"    (cb) => {\r",
 									"        console.log(\"Creating WebHook1\")\r",
 									"\r",
-									"        CreateWebhook(cb,\"https://some.test.url.1\")\r",
+									"        CreateWebhook(cb,pm.variables.get(\"test_url1\"))\r",
 									"    },\r",
 									"    (cb) => {\r",
 									"        console.log(\"Creating WebHook2\")\r",
 									"\r",
-									"        CreateWebhook(cb,pm.variables.get(\"test_url\"))\r",
+									"        CreateWebhook(cb,pm.variables.get(\"test_url2\"))\r",
 									"    }\r",
 									"], (err, res) => {\r",
 									"\r",
@@ -933,7 +933,7 @@
 						"body": {
 							"mode": "graphql",
 							"graphql": {
-								"query": "query($url:String!){\n    webhooks(where:{webHookUrl:{eq:$url}}){\n        edges{\n            node{\n                id\n                isActive\n                webHookUrl\n            }\n        }\n    }\n}",
+								"query": "query{\n    webhooks(first:1){\n        edges{\n            node{\n                id\n                isActive\n                webHookUrl\n            }\n        }\n    }\n}",
 								"variables": "{\n    \"url\": \"{{test_url}}\"\n}"
 							}
 						},
@@ -946,14 +946,14 @@
 					},
 					"response": [
 						{
-							"name": "04_Webhooks_Filter",
+							"name": "04_Webhooks_Paging",
 							"originalRequest": {
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query($url:String!){\n    webhooks(where:{webHookUrl:{eq:$url}}){\n        edges{\n            node{\n                id\n                isActive\n                webHookUrl\n            }\n        }\n    }\n}",
+										"query": "query{\n    webhooks(first:1){\n        edges{\n            node{\n                id\n                isActive\n                webHookUrl\n            }\n        }\n    }\n}",
 										"variables": "{\n    \"url\": \"{{test_url}}\"\n}"
 									}
 								},
@@ -969,12 +969,12 @@
 							"_postman_previewlanguage": "json",
 							"header": [
 								{
-									"key": "Date",
-									"value": "Thu, 02 Dec 2021 03:47:57 GMT"
-								},
-								{
 									"key": "Content-Type",
 									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 14 Dec 2021 20:45:53 GMT"
 								},
 								{
 									"key": "Server",
@@ -986,7 +986,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"data\": {\n        \"webhooks\": {\n            \"edges\": [\n                {\n                    \"node\": {\n                        \"id\": \"R1FMX1dlYkhvb2sKbDI4NQ==\",\n                        \"isActive\": true,\n                        \"webHookUrl\": \"https://some.test.url.2\"\n                    }\n                }\n            ]\n        }\n    }\n}"
+							"body": "{\n    \"data\": {\n        \"webhooks\": {\n            \"edges\": [\n                {\n                    \"node\": {\n                        \"id\": \"R1FMX1dlYkhvb2sKbDky\",\n                        \"isActive\": true,\n                        \"webHookUrl\": \"https://some.test.url.1\"\n                    }\n                }\n            ]\n        }\n    }\n}"
 						}
 					]
 				},
