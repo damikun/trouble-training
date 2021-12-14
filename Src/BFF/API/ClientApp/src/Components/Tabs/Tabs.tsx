@@ -30,25 +30,14 @@ export const useHooksContext = () => useContext(HooksContext);
 
 export default function Tabs() {
 
-  const [state, setState] = useState("");
-  
-  const ctx = useMemo(() => {
-    return {
-      connection_id: state,
-      setConnectionId: (connection: string) => setState(connection),
-    };
-  }, [state, setState]);
-
   return (
 
     <div
       className={clsx(
-        "flex h-full w-full",
-        "text-xs md:text-sm max-h-full space-y-1",
-        "p-5"
+        "flex h-full w-full p-5",
+        "text-xs md:text-sm max-h-full space-y-1"
       )}
     >
-
       <div className="flex w-full max-w-5xl mx-auto mt-14">
         <div
           className={clsx(
@@ -60,71 +49,88 @@ export default function Tabs() {
             <TabsSection />
           </div>
           <div className="flex-1">
-              <Suspense fallback={<ContainerSpinner />}>
-                <Routes>
-                  <PrivateRoute
-                    path={TabsSettings[0].path}
-                    authorised={true}
-                    element={<Welcome />}
-                  />
-
-                  <PrivateRoute
-                    path={`${TabsSettings[1].path}/*`}
-                    authorised={view_WebHooks}
-                    unauthorisedComponent={<FourOhOne />}
-                    element={
-
-                      <HooksContext.Provider value={ctx}>
-                        <Routes>
-                          <Route path={"Edit/:hookid"}>
-                            <HooksEdit />
-                          </Route>
-                          <Route path={"Logs/:hookid"}>
-                            <HooksLogs />
-                          </Route>
-                          <Route path={"New"}>
-                            <HooksNew />
-                          </Route>
-                          <Route path={"/"}>
-                            <Hooks />
-                          </Route>
-                        </Routes>
-                      </HooksContext.Provider>
-                    }
-                  />
-
-                  <PrivateRoute
-                    path={`${TabsSettings[2].path}/*`}
-                    authorised={view_WebHooks}
-                    unauthorisedComponent={<FourOhOne />}
-                    element={
-                        <Routes>
-                          <Route path={"/"}>
-                            <HooksStream />
-                          </Route>
-                        </Routes>
-                    }
-                  />
-
-                  <PrivateRoute
-                    path={`${TabsSettings[3].path}/*`}
-                    authorised={view_WebHooks}
-                    unauthorisedComponent={<FourOhOne />}
-                    element={
-                        <Routes>
-                          <Route path={"/"}>
-                            <HooksStreamDefer />
-                          </Route>
-                        </Routes>
-                    }
-                  />
-
-                  <Route path={"/*"} element={<Navigate to="" />} />
-                </Routes>
-              </Suspense>
+            <Suspense fallback={<ContainerSpinner />}>
+              <TabBody/>
+            </Suspense>
           </div>
         </div>
       </div>
     </div>
+  );
+}
+
+// ---------------------------------------
+
+export function TabBody(){
+
+  const [state, setState] = useState("");
+  
+  const ctx = useMemo(() => {
+    return {
+      connection_id: state,
+      setConnectionId: (connection: string) => setState(connection),
+    };
+  }, [state, setState]);
+
+  return (
+  <Routes>
+    <PrivateRoute
+      path={TabsSettings[0].path}
+      authorised={true}
+      element={<Welcome />}
+    />
+
+    <PrivateRoute
+      path={`${TabsSettings[1].path}/*`}
+      authorised={view_WebHooks}
+      unauthorisedComponent={<FourOhOne />}
+      element={
+        <HooksContext.Provider value={ctx}>
+          <Routes>
+            <Route path={"Edit/:hookid"}>
+              <HooksEdit />
+            </Route>
+            <Route path={"Logs/:hookid"}>
+              <HooksLogs />
+            </Route>
+            <Route path={"New"}>
+              <HooksNew />
+            </Route>
+            <Route path={"/"}>
+              <Hooks />
+            </Route>
+          </Routes>
+        </HooksContext.Provider>
+    }
+    />
+
+    <PrivateRoute
+        path={`${TabsSettings[2].path}/*`}
+        authorised={view_WebHooks}
+        unauthorisedComponent={<FourOhOne />}
+        element={
+          <Routes>
+            <Route path={"/"}>
+              <HooksStream />
+            </Route>
+          </Routes>
+        }
+    />
+
+    <PrivateRoute
+      path={`${TabsSettings[3].path}/*`}
+      authorised={view_WebHooks}
+      unauthorisedComponent={<FourOhOne />}
+      element={
+        <Routes>
+          <Route path={"/"}>
+            <HooksStreamDefer />
+          </Route>
+        </Routes>
+      }
+    />
+
+    <Route path={"/*"} element={<Navigate to="" />} />
+  </Routes>
   );
 }

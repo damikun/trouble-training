@@ -187,10 +187,7 @@ function StayledButton({
     [startTransition, onClick, transitionTime]
   );
 
-  const is_disabled = useMemo(
-    () => disabled || (isPending as boolean) || isloading,
-    [disabled, isPending, isloading]
-  );
+  const is_disabled = disabled || (isPending as boolean) || isloading
 
   const isloadingDebounced: boolean = useDebounce(isloading, 150);
 

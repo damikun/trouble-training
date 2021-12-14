@@ -1,19 +1,17 @@
 import { WebTracerProvider,SimpleSpanProcessor  } from '@opentelemetry/sdk-trace-web';
-// import { DocumentLoadInstrumentation } from '@opentelemetry/instrumentation-document-load';
 import { ZoneContextManager } from '@opentelemetry/context-zone';
 import { FetchInstrumentation } from '@opentelemetry/instrumentation-fetch';
 import { registerInstrumentations } from '@opentelemetry/instrumentation';
 const { CollectorTraceExporter } =  require('@opentelemetry/exporter-collector-http');
 
 const collectorOptions = {
-    //url: 'https://localhost:5015/traces', 
-    //url: 'http://localhost:5015/traces',
      url: 'https://localhost:5015/traces',
     headers: {
       "Content-Type": "application/json"
      },
     concurrencyLimit: 10, // an optional limit on pending requests
   };
+  
 const provider = new WebTracerProvider();
 const exporter = new CollectorTraceExporter(collectorOptions);
 const fetchInstrumentation = new FetchInstrumentation();

@@ -26,9 +26,9 @@ export default function AppRoutes() {
     return (
       <Routes>
 
-        <PrivateRoute  path={"/*"} element={<Tabs />} />
+        <PrivateRoute path={"/*"} element={<Tabs />} />
         
-        <PrivateRoute  path={"/logout"} element={<Logout />} />
+        <PrivateRoute path={"/logout"} element={<Logout />} />
 
         <PrivateRoute path="*" element={<FourOhFour />} />
 

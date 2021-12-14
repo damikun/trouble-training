@@ -88,7 +88,7 @@ Based on your system download and [install docker](https://docs.docker.com/engin
 ## Restore all projects
 
 There are two options:
-- Use prepared init script. Run `.\build.cmd Init` or `.\build.cmd E2E_RunAs_Local` from project root. (This will take time since restore)
+- Use prepared init script. Run `.\build.cmd E2E_RunAs_Local` from project root. (This will take time since restore)
 - Manual instalation (Use in case script fails) follow the [manual instal readme](https://github.com/damikun/trouble-training/blob/main/Doc/Manual_Install.md)
 > **NOTE** Restore scripts use `npm`. In case you wanna use `yarn` you need to use manual instalation process..
 

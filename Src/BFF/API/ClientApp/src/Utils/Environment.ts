@@ -15,15 +15,15 @@ const fetchGraphQL: FetchFunction = (operation, variables, _cacheConfig) => {
 	return Observable.create((sink) => {
 		(async () => {
 
-			const response = await fetch(`${BASE_SERVER_URL}/${GQL_ENDPOINT}`, {
+		const response = await fetch(`${BASE_SERVER_URL}/${GQL_ENDPOINT}`, {
         credentials: "include",
         method: "POST",
         mode: 'cors',
-				body: JSON.stringify({
-          id: operation.id, // NOTE: pass md5 hash to the server
-          // query: operation.text, // this is now obsolete because text is null
-          variables,
-          // operationName: operation.name,
+		body: JSON.stringify({
+		id: operation.id, // NOTE: pass md5 hash to the server
+		// query: operation.text, // this is now obsolete because text is null
+		variables,
+		// operationName: operation.name,
 				}),
         headers: {
           // Accept: "application/json",

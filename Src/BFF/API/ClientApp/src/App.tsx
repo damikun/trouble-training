@@ -28,6 +28,7 @@ function App({ initialQueryRef }: Props) {
     ),
     []
   );
+  
   return (
     <>
     <Helmet>

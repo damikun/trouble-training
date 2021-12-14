@@ -17,7 +17,7 @@ namespace APIServer.Aplication.GraphQL.Extensions
 
         public StreamRequestInterceptor(
             [Service] IWebHostEnvironment env
-            )
+        )
         {
             _env = env;
         }

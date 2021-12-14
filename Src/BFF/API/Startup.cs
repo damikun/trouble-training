@@ -32,6 +32,8 @@ namespace BFF
 
             services.AddControllersWithViews();
 
+            services.AddRedis(Configuration);
+
             services.AddSpa();
 
             services.AddBff();
@@ -90,7 +92,6 @@ namespace BFF
                 endpoints.MapBffManagementEndpoints();   // login, logout, user, backchannel logout...
 
                 endpoints.MapRemoteEndpoints(); // Remotes
-
             });
 
             app.UseSpa(env);

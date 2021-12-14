@@ -3,13 +3,15 @@ using MediatR;
 using System.Linq;
 using HotChocolate;
 using System.Threading;
-using HotChocolate.Data;
 using HotChocolate.Types;
 using APIServer.Persistence;
 using System.Threading.Tasks;
+using HotChocolate.Resolvers;
 using HotChocolate.Types.Relay;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using APIServer.Aplication.Queries;
+using HotChocolate.Types.Pagination;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
 using SharedCore.Aplication.Interfaces;
@@ -19,130 +21,62 @@ using APIServer.Domain.Core.Models.WebHooks;
 using APIServer.Aplication.GraphQL.Extensions;
 using APIServer.Aplication.GraphQL.DataLoaders;
 
-
 namespace APIServer.Aplication.GraphQL.Queries
 {
-
     /// <summary>
-    ///  Webhook Querys
+    ///  Webhook Queries
     /// </summary>
     [ExtendObjectType(OperationTypeNames.Query)]
     public class WebHookQueries
     {
-
         /// <summary>
         /// Return collection of webhook records
         /// </summary>
-
         [UseApiDbContextAttribute]
-        [UsePaging(typeof(WebHookType))]
-        [UseFiltering]
-        public IQueryable<GQL_WebHook> Webhooks(
-        [Service] ICurrentUser current,
-        [ScopedService] ApiDbContext context)
+        [UseConnection(typeof(WebHookType))]
+        public async Task<Connection<GQL_WebHook>> Webhooks(
+        IResolverContext ctx,
+        [Service] IMediator mediator)
         {
-
-            if (!current.Exist)
+            var command = new GetWebHooks()
             {
-                return null;
-            }
+                arguments = ctx.GetPaggingArguments()
+            };
 
-            return context.WebHooks
-                .AsNoTracking()
-                .Select(e => new GQL_WebHook
-                {
-                    ID = e.ID,
-                    WebHookUrl = e.WebHookUrl,
-                    ContentType = e.ContentType,
-                    IsActive = e.IsActive,
-                    LastTrigger = e.LastTrigger,
-                    ListeningEvents = e.HookEvents
-                })
-                .AsQueryable();
+            var response = await mediator.Send(command);
+
+            return response.connection;
         }
 
-        public async IAsyncEnumerable<GQL_WebHook> WebHooksTestStream(
-        [Service] ICurrentUser current,
-        [Service] IDbContextFactory<ApiDbContext> factory,
-        [EnumeratorCancellation] CancellationToken ct)
-        {
-
-            if (current.Exist)
-            {
-                var db_context = factory.CreateDbContext();
-
-                var stream = db_context.WebHooks
-                    .AsNoTracking()
-                    .Select(e => new GQL_WebHook
-                    {
-                        ID = e.ID,
-                        WebHookUrl = e.WebHookUrl,
-                        ContentType = e.ContentType,
-                        IsActive = e.IsActive,
-                        LastTrigger = e.LastTrigger,
-                        ListeningEvents = e.HookEvents
-                    }).AsAsyncEnumerable();
-
-                await foreach (var hook in stream.WithCancellation(ct))
-                {
-                    yield return hook;
-
-                    Thread.Sleep(350); // Just to slow since DB is fast
-                }
-            }
-        }
 
         /// <summary>
         /// Return collection of webhook records
         /// </summary>
         [UseApiDbContextAttribute]
-        [UsePaging(typeof(WebHookRecordType))]
-        [UseFiltering]
-        public async Task<IEnumerable<GQL_WebHookRecord>> GetWebHookRecords(
+        [UseConnection(typeof(WebHookRecordType))]
+        public async Task<Connection<GQL_WebHookRecord>> GetWebHookRecords(
         [ID(nameof(GQL_WebHook))] long hook_id,
-        [Service] IMediator mediator,
-        [Service] ICurrentUser current,
-        [ScopedService] ApiDbContext context)
+        IResolverContext ctx,
+        [Service] IMediator mediator)
         {
-
-            if (!current.Exist || hook_id <= 0)
+            var command = new GetWebHookRecords()
             {
-                return null;
-            }
+                hook_id = hook_id,
+                arguments = ctx.GetPaggingArguments()
+            };
 
-            await Task.CompletedTask;
+            var response = await mediator.Send(command);
 
-            return context.WebHooksHistory
-            .AsNoTracking()
-            .Where(e => e.WebHookID == hook_id)
-            .Select(e => new GQL_WebHookRecord()
-            {
-                ID = e.ID,
-                WebHookID = e.WebHookID,
-                WebHookSystemID = e.WebHookID,
-                StatusCode = e.StatusCode,
-                ResponseBody = e.ResponseBody,
-                RequestBody = e.RequestBody,
-                RequestHeaders = e.RequestHeaders,
-                Guid = e.Guid,
-                Result = e.Result,
-                TriggerType = e.HookType,
-                Exception = e.Exception,
-                Timestamp = e.Timestamp,
-            }!).OrderByDescending(e => e.Timestamp);
+            return response.connection;
         }
 
         /// <summary>
         /// Returns Webook supported event triggers
         /// </summary>
-        public async Task<IEnumerable<string>> GetWebHookEventsTriggers()
+        public IEnumerable<string> GetWebHookEventsTriggers()
         {
-
-            await Task.CompletedTask;
-
             return Enum.GetNames(typeof(HookEventType)).ToList();
         }
-
 
         /// <summary>
         /// Get WebHook Record by ID
@@ -197,6 +131,38 @@ namespace APIServer.Aplication.GraphQL.Queries
 
             return await loader.LoadAsync(webhook_id, httpcontext.HttpContext.RequestAborted);
         }
+
+        public async IAsyncEnumerable<GQL_WebHook> WebHooksTestStream(
+        [Service] ICurrentUser current,
+        [Service] IDbContextFactory<ApiDbContext> factory,
+        [EnumeratorCancellation] CancellationToken ct)
+        {
+
+            if (current.Exist)
+            {
+                var db_context = factory.CreateDbContext();
+
+                var stream = db_context.WebHooks
+                    .AsNoTracking()
+                    .Select(e => new GQL_WebHook
+                    {
+                        ID = e.ID,
+                        WebHookUrl = e.WebHookUrl,
+                        ContentType = e.ContentType,
+                        IsActive = e.IsActive,
+                        LastTrigger = e.LastTrigger,
+                        ListeningEvents = e.HookEvents
+                    }).AsAsyncEnumerable();
+
+                await foreach (var hook in stream.WithCancellation(ct))
+                {
+                    yield return hook;
+
+                    Thread.Sleep(350); // Just to slow since DB is fast
+                }
+            }
+        }
+
 
     }
 }

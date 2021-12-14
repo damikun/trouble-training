@@ -1,4 +1,8 @@
 name: trouble-training
+
+extensions:
+  - name: dapr
+
 services:
   - name: apiserver
     project: Src/APIServer/API/APIServer.csproj
@@ -21,3 +25,13 @@ services:
         name: "https"
         port: 5015
         host: "localhost"
+
+  # Redis is not part of opensource workshop so for compatibility is uncommented!
+  # - name: redis
+  #   image: redis
+  #   bindings:
+  #     - port: 6379
+  #       connectionString: "${host}:${port}"
+  # - name: redis-cli
+  #   image: redis
+  #   args: "redis-cli -h redis MONITOR"

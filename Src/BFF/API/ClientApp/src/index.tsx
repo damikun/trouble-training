@@ -8,7 +8,6 @@ import ErrorBoundary from './UIComponents/ErrorBoundery/ErrorBoundary';
 import * as MeQuery from "./Utils/__generated__/UserProviderQuery.graphql";
 import GlobalBounderyErrorHandler from './Components/Errors/GlobalBounderyErrorHandler';
 
-
 const App = lazy(
   () =>
     import(
@@ -35,7 +34,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     </Suspense>
 </React.StrictMode>
 );
-
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

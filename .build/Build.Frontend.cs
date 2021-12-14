@@ -82,6 +82,8 @@ partial class Build : NukeBuild
         .DependsOn(Frontend_AddTailwind, Frontend_RelayCompile)
         .Executes(() =>
         {
+
+
             NpmTasks.NpmLogger = CustomLogger;
 
             NpmTasks.NpmRun(settings =>
