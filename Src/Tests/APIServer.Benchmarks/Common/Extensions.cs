@@ -1,49 +1,21 @@
-﻿// Copyright (c) Dalibor Kundrat All rights reserved.
-// See LICENSE in root.
 
 using System.Linq;
-using System.Collections.Generic;
+using System.Text;
 using Newtonsoft.Json;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using static APIServer.API.IntegrationTests.BaseClassFixture;
+using System.Collections.Generic;
 
-namespace APIServer.API.IntegrationTests
+namespace APIServer.Benchmark
 {
-
-    public static class Common
-    {
-
-        public static TestUser GetDefaultUser()
-        {
-            return new TestUser()
-            {
-                UserName = "testuser",
-                Password = "testuser"
-            };
-        }
-
-        public static TestClinet GetDefaultClinet()
-        {
-            return new TestClinet()
-            {
-                ClinetId = "test",
-                ClientSecret = "secret",
-                Scope = "api"
-            };
-        }
-
-    }
-
     public static class Extensions
     {
         public static async Task<QueryResponse> ProcessQuery(
             this HttpClient client,
             string query,
-            object variables = null,
-            IDictionary<string, string> headers = null,
-            string gql_endpoint = "/graphql"
+            object? variables = null,
+            IDictionary<string, string>? headers = null,
+            string gql_endpoint = "graphql"
         )
         {
 
@@ -54,7 +26,6 @@ namespace APIServer.API.IntegrationTests
 
             if (headers != null)
             {
-
                 foreach (var header in headers.Where(e => e.Value != null))
                 {
                     client.DefaultRequestHeaders.Add(header.Key, header.Value);
@@ -75,7 +46,7 @@ namespace APIServer.API.IntegrationTests
 
             var post_response = await client.PostAsync(gql_endpoint, content);
 
-            client.DefaultRequestHeaders.Clear();
+            // client.DefaultRequestHeaders.Clear();
 
             string data_string = null;
 
@@ -92,15 +63,4 @@ namespace APIServer.API.IntegrationTests
             };
         }
     }
-
-    public class QueryResponse
-    {
-        public HttpResponseMessage raw_response { get; set; }
-
-#nullable enable
-        public string? data_content { get; set; }
-#nullable disable
-    }
-
-
 }

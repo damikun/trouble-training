@@ -4,7 +4,6 @@ using Serilog;
 using System.Linq;
 using System.Threading;
 using FluentValidation;
-using APIServer.Domain;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using FluentValidation.Results;

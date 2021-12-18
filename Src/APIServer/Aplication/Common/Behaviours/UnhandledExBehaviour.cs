@@ -2,7 +2,6 @@ using System;
 using MediatR;
 using Serilog;
 using System.Threading;
-using APIServer.Domain;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using SharedCore.Aplication.Payload;

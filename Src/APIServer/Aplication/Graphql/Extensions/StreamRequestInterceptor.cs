@@ -1,4 +1,3 @@
-using System;
 using HotChocolate;
 using System.Threading;
 using HotChocolate.Execution;
@@ -6,7 +5,6 @@ using System.Threading.Tasks;
 using HotChocolate.AspNetCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
-using SharedCore.Aplication.Extensions;
 
 namespace APIServer.Aplication.GraphQL.Extensions
 {
@@ -26,21 +24,10 @@ namespace APIServer.Aplication.GraphQL.Extensions
             IRequestExecutor requestExecutor, IQueryRequestBuilder requestBuilder,
             CancellationToken cancellationToken)
         {
+            // This is part of separate workshop and is not presen hire!
 
             return base.OnCreateAsync(context, requestExecutor, requestBuilder,
                 cancellationToken);
-        }
-
-        private static bool DoesUserExist(HttpContext context)
-        {
-            try
-            {
-                return context?.User?.GetId<Guid>() != null;
-            }
-            catch
-            {
-                return false;
-            }
         }
     }
 }

@@ -107,7 +107,7 @@ namespace APIServer.Configuration
                 /// defaults to "logstash-{0:yyyy.MM.dd}"
                 /// Needs to be lowercased.
                 /// </summary>
-                IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name.ToLower().Replace(".", "-")}-{environment?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}",
+                IndexFormat = $"{Assembly.GetExecutingAssembly()?.GetName()?.Name?.ToLower().Replace(".", "-")}-{environment?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}",
                 // QueueSizeLimit = 1000,
                 // ConnectionTimeout = new TimeSpan(0,5,0), // 5mins
                 // BufferFileSizeLimitBytes = 5242880,

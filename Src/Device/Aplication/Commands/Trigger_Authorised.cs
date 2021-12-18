@@ -64,7 +64,6 @@ namespace Device.Aplication.Commands.Test
         /// </summary>
         public async Task<Trigger_AuthorisedPayload> Handle(Trigger_Authorised request, CancellationToken cancellationToken)
         {
-
             var client = _clientFactory.CreateClient("test_auth_client");
 
             var client_response = await client.GetAsync("Test/TestClientCredentials", cancellationToken);

@@ -3,11 +3,8 @@
 // See LICENSE in root.
 
 using System;
-using System.Collections.Generic;
 using APIServer.Aplication.Shared.Errors;
 using SharedCore.Aplication.Payload;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace APIServer.Aplication.Shared
 {

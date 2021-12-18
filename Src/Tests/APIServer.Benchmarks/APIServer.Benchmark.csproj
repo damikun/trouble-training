@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <NoWarn>1591,8618,8600,8603,1570</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.1" />
+    <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.13.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\APIServer\Domain\APIServer.Domain.csproj" />
+    <ProjectReference Include="..\..\APIServer\API\APIServer.csproj" />
+    <ProjectReference Include="..\..\APIServer\Persistence\APIServer.Persistence.csproj" />
+    <ProjectReference Include="..\..\IdentityServer\API\IdentityServer.csproj" />
+  </ItemGroup>
+
+
+</Project>

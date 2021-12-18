@@ -42,88 +42,88 @@ namespace APIServer.Configuration
         {
 
             serviceCollection.AddGraphQLServer()
-                    .SetPagingOptions(
-                        new PagingOptions
-                        {
-                            IncludeTotalCount = true,
-                            MaxPageSize = 200
-                        })
-                    .ModifyRequestOptions(requestExecutorOptions =>
+                .SetPagingOptions(
+                    new PagingOptions
                     {
-                        if (env.IsDevelopment() ||
-                            System.Diagnostics.Debugger.IsAttached)
-                        {
-                            requestExecutorOptions.ExecutionTimeout = TimeSpan.FromMinutes(1);
-                        }
-
-                        requestExecutorOptions.IncludeExceptionDetails = !env.IsProduction();
+                        IncludeTotalCount = true,
+                        MaxPageSize = 200
                     })
-                    .AllowIntrospection(env.IsDevelopment())
-                    .AddExportDirectiveType()
-
-                    .ModifyOptions(options =>
+                .ModifyRequestOptions(requestExecutorOptions =>
+                {
+                    if (env.IsDevelopment() ||
+                        System.Diagnostics.Debugger.IsAttached)
                     {
-                        options.UseXmlDocumentation = true;
+                        requestExecutorOptions.ExecutionTimeout = TimeSpan.FromMinutes(1);
+                    }
 
-                        options.SortFieldsByName = true;
+                    requestExecutorOptions.IncludeExceptionDetails = !env.IsProduction();
+                })
+                .AllowIntrospection(env.IsDevelopment())
+                .AddExportDirectiveType()
 
-                        options.RemoveUnreachableTypes = true;
-                    })
+                .ModifyOptions(options =>
+                {
+                    options.UseXmlDocumentation = true;
 
-                    .AddGlobalObjectIdentification()
-                    .AddQueryFieldToMutationPayloads()
+                    options.SortFieldsByName = true;
 
-                    .AddHttpRequestInterceptor<IntrospectionInterceptor>()
-                    .TryAddTypeInterceptor<StreamTypeInterceptor>()
-                    .AddHttpRequestInterceptor<StreamRequestInterceptor>()
+                    options.RemoveUnreachableTypes = true;
+                })
 
-                    .AddFiltering()
-                    .AddSorting()
+                .AddGlobalObjectIdentification()
+                .AddQueryFieldToMutationPayloads()
 
-                    .AddQueryType<QueryType>()
-                        .AddTypeExtension<WebHookQueries>()
-                        .AddTypeExtension<UserQueries>()
-                        .AddTypeExtension<SystemQueries>()
-                    .AddMutationType<Mutation>()
-                        .AddTypeExtension<WebHookMutations>()
+                .AddHttpRequestInterceptor<IntrospectionInterceptor>()
+                .TryAddTypeInterceptor<StreamTypeInterceptor>()
+                .AddHttpRequestInterceptor<StreamRequestInterceptor>()
 
-                    .BindRuntimeType<DateTime, DateTimeType>()
-                    .BindRuntimeType<int, IntType>()
-                    .BindRuntimeType<long, LongType>()
+                .AddFiltering()
+                .AddSorting()
 
-                    .AddType<BadRequestType>()
-                    .AddType<InternalServerErrorType>()
-                    .AddType<UnAuthorisedType>()
-                    .AddType<ValidationErrorType>()
-                    .AddType<BaseErrorType>()
-                    .AddType<UserDeactivatedType>()
-                    .AddType<BaseErrorInterfaceType>()
-                    .AddType<WebHookNotFoundType>()
-                    .AddType<WebHookRecordType>()
-                    .AddType<WebHookType>()
-                    .AddType<UserType>()
-                    .AddType<UpdateWebHookUriPayloadType>()
-                    .AddType<UpdateWebHookUriErrorUnion>()
-                    .AddType<UpdateWebHookTriggerEventsPayloadType>()
-                    .AddType<UpdateWebHookTriggerEventsErrorUnion>()
-                    .AddType<UpdateWebHookSecretPayloadType>()
-                    .AddType<UpdateWebHookSecretErrorUnion>()
-                    .AddType<UpdateWebHookPayloadPayloadType>()
-                    .AddType<UpdateWebHookPayloadErrorUnion>()
-                    .AddType<UpdateWebHookActivStatePayloadType>()
-                    .AddType<UpdateWebHookActivStateErrorUnion>()
-                    .AddType<RemoveWebHookPayloadType>()
-                    .AddType<RemoveWebHookErrorUnion>()
-                    .AddType<CreateWebHookPayloadType>()
-                    .AddType<CreateWebHookErrorUnion>()
+                .AddQueryType<QueryType>()
+                    .AddTypeExtension<WebHookQueries>()
+                    .AddTypeExtension<UserQueries>()
+                    .AddTypeExtension<SystemQueries>()
+                .AddMutationType<Mutation>()
+                    .AddTypeExtension<WebHookMutations>()
 
-                    .AddDataLoader<UserByIdDataLoader>()
-                    .AddDataLoader<WebHookByIdDataLoader>()
-                    .AddDataLoader<WebHookRecordByIdDataLoader>()
+                .BindRuntimeType<DateTime, DateTimeType>()
+                .BindRuntimeType<int, IntType>()
+                .BindRuntimeType<long, LongType>()
 
-                    .UseCustomPipeline()
-                    .UseReadPersistedQuery()
-                    .AddReadOnlyFileSystemQueryStorage(Persisted_Queries_path);
+                .AddType<BadRequestType>()
+                .AddType<InternalServerErrorType>()
+                .AddType<UnAuthorisedType>()
+                .AddType<ValidationErrorType>()
+                .AddType<BaseErrorType>()
+                .AddType<UserDeactivatedType>()
+                .AddType<BaseErrorInterfaceType>()
+                .AddType<WebHookNotFoundType>()
+                .AddType<WebHookRecordType>()
+                .AddType<WebHookType>()
+                .AddType<UserType>()
+                .AddType<UpdateWebHookUriPayloadType>()
+                .AddType<UpdateWebHookUriErrorUnion>()
+                .AddType<UpdateWebHookTriggerEventsPayloadType>()
+                .AddType<UpdateWebHookTriggerEventsErrorUnion>()
+                .AddType<UpdateWebHookSecretPayloadType>()
+                .AddType<UpdateWebHookSecretErrorUnion>()
+                .AddType<UpdateWebHookPayloadPayloadType>()
+                .AddType<UpdateWebHookPayloadErrorUnion>()
+                .AddType<UpdateWebHookActivStatePayloadType>()
+                .AddType<UpdateWebHookActivStateErrorUnion>()
+                .AddType<RemoveWebHookPayloadType>()
+                .AddType<RemoveWebHookErrorUnion>()
+                .AddType<CreateWebHookPayloadType>()
+                .AddType<CreateWebHookErrorUnion>()
+
+                .AddDataLoader<UserByIdDataLoader>()
+                .AddDataLoader<WebHookByIdDataLoader>()
+                .AddDataLoader<WebHookRecordByIdDataLoader>()
+
+                .UseCustomPipeline()
+                .UseReadPersistedQuery()
+                .AddReadOnlyFileSystemQueryStorage(Persisted_Queries_path);
 
             return serviceCollection;
         }
@@ -137,6 +137,8 @@ namespace APIServer.Configuration
             {
                 throw new ArgumentNullException(nameof(builder));
             }
+
+            // !The order of call defines pipeline!
 
             return builder
                 .UseInstrumentations()
@@ -171,7 +173,6 @@ namespace APIServer.Configuration
                 }
             });
         }
-
 
         //--------------------------------------------------
 

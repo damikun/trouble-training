@@ -5,7 +5,7 @@
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>1591</NoWarn>
+    <NoWarn>1591,1587</NoWarn>
     
     <UserSecretsId>ef6c81f3-b713-471c-9e7b-c4992150d15f</UserSecretsId>
   </PropertyGroup>

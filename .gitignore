@@ -75,6 +75,10 @@ Thumbs.db
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
+**/*.Artifacts/
+*-report.html
+*-measurements.csv
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/

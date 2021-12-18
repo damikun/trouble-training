@@ -100,11 +100,6 @@ namespace APIServer.Aplication.Commands.WebHooks
         private readonly IDbContextFactory<ApiDbContext> _factory;
 
         /// <summary>
-        /// Injected <c>IPublisher</c>
-        /// </summary>
-        private readonly SharedCore.Aplication.Interfaces.IPublisher _publisher;
-
-        /// <summary>
         /// Injected <c>IMediator</c>
         /// </summary>
         private readonly ICurrentUser _current;
@@ -114,13 +109,10 @@ namespace APIServer.Aplication.Commands.WebHooks
         /// </summary>
         public RemoveWebHookHandler(
             IDbContextFactory<ApiDbContext> factory,
-            SharedCore.Aplication.Interfaces.IPublisher publisher,
             ICurrentUser currentuser)
         {
 
             _factory = factory;
-
-            _publisher = publisher;
 
             _current = currentuser;
         }
@@ -184,9 +176,7 @@ namespace APIServer.Aplication.Commands.WebHooks
             {
                 try
                 {
-
                     // You can extend and add any custom fields to Notification!
-
                     await _publisher.Publish(new WebHookRemovedNotifi()
                     {
                         ActivityId = Activity.Current.Id

@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 
 namespace APIServer.Controllers
 {
-
     [AllowAnonymous]
     public class HookController : BaseController
     {
@@ -28,9 +27,11 @@ namespace APIServer.Controllers
 
                 var str = action.ToString();
 
-                if (str != null && !string.IsNullOrWhiteSpace(str))
+                if (str is not null && !string.IsNullOrWhiteSpace(str))
                 {
-                    dynamic parsedJson = JsonConvert.DeserializeObject(str);
+
+                    dynamic parsedJson = JsonConvert.DeserializeObject(str)!;
+
                     return Ok();
                 }
             }

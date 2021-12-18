@@ -32,7 +32,6 @@ namespace APIServer.Aplication.GraphQL.Queries
         /// <summary>
         /// Return collection of webhook records
         /// </summary>
-        [UseApiDbContextAttribute]
         [UseConnection(typeof(WebHookType))]
         public async Task<Connection<GQL_WebHook>> Webhooks(
         IResolverContext ctx,
@@ -48,11 +47,9 @@ namespace APIServer.Aplication.GraphQL.Queries
             return response.connection;
         }
 
-
         /// <summary>
         /// Return collection of webhook records
         /// </summary>
-        [UseApiDbContextAttribute]
         [UseConnection(typeof(WebHookRecordType))]
         public async Task<Connection<GQL_WebHookRecord>> GetWebHookRecords(
         [ID(nameof(GQL_WebHook))] long hook_id,

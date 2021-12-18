@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +17,11 @@ namespace SharedCore.Aplication.Services
 
             var identityOptions = Configuration.GetSection(nameof(TelemetryOptions))
                 .Get<TelemetryOptions>();
+
+            if (identityOptions is null)
+            {
+                throw new ArgumentNullException(nameof(TelemetryOptions), "Options not found!");
+            }
 
             serviceCollection.Configure<TelemetryOptions>(
                 opt => opt.SourceName = identityOptions.SourceName

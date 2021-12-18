@@ -54,21 +54,18 @@ namespace APIServer.Configuration
             this IApplicationBuilder app_builder,
             IServiceProvider serviceProvider, IServiceScopeFactory scopeFactory)
         {
-
             var serviceScopeFactory = app_builder.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
 
             using (var serviceScope = serviceScopeFactory.CreateScope())
             {
-
                 var _factory = serviceScope.ServiceProvider.GetService<IDbContextFactory<ApiDbContext>>();
 
-                if (_factory != null)
+                if (_factory is not null)
                 {
                     using ApiDbContext dbContext = _factory.CreateDbContext();
 
                     dbContext.Database.EnsureCreated();
                 }
-
             }
 
             return app_builder;

@@ -1,5 +1,7 @@
 using System;
+using HotChocolate;
 using System.Reflection;
+using HotChocolate.Types;
 using HotChocolate.Language;
 using HotChocolate.Resolvers;
 using HotChocolate.Types.Pagination;
@@ -7,9 +9,9 @@ using HotChocolate.Types.Descriptors;
 using System.Runtime.CompilerServices;
 using HotChocolate.Types.Descriptors.Definitions;
 
-namespace HotChocolate.Types
+namespace APIServer.Aplication.GraphQL.Extensions
 {
-    internal sealed class UseConnection : ObjectFieldDescriptorAttribute
+    public sealed class UseConnection : ObjectFieldDescriptorAttribute
     {
 
 #nullable enable
@@ -113,7 +115,6 @@ namespace HotChocolate.Types
 
 #nullable disable
 
-
         public override void OnConfigure(
             IDescriptorContext context,
             IObjectFieldDescriptor descriptor,
@@ -161,9 +162,14 @@ namespace HotChocolate.Types
                     string methodName = "CreateConnectionTypeRef";
 
                     Type type = typeof(PagingObjectFieldDescriptorExtensions);
+
                     MethodInfo info = type.GetMethod(
                         methodName,
-                        BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+                        BindingFlags.NonPublic |
+                        BindingFlags.Public |
+                        BindingFlags.Static |
+                        BindingFlags.FlattenHierarchy
+                    );
 
 #nullable enable
                     d.Type = (ITypeReference?)info?.Invoke(null, new object[] {
@@ -177,8 +183,6 @@ namespace HotChocolate.Types
 
                     d.CustomSettings.Add(typeof(Connection));
                 });
-
-
         }
 
         private static NameString EnsureConnectionNameCasing(string connectionName)
@@ -188,7 +192,10 @@ namespace HotChocolate.Types
                 return connectionName;
             }
 
-            return string.Concat(char.ToUpper(connectionName[0]), connectionName.Substring(1));
+            return string.Concat(char.ToUpper(
+                connectionName[0]),
+                connectionName.Substring(1)
+            );
         }
     }
 
@@ -209,18 +216,18 @@ namespace HotChocolate.Types
             {
                 DefaultPageSize = MaxPageSize;
             }
-
+#nullable enable
             var first = context.ArgumentValue<int?>(CursorPagingArgumentNames.First);
 
             var last = AllowBackwardPagination
                 ? context.ArgumentValue<int?>(CursorPagingArgumentNames.Last)
                 : null;
-
+#nullable disable
             if (first is null && last is null)
             {
                 first = DefaultPageSize;
             }
-
+#nullable enable
             return new CursorPagingArguments(
                 first,
                 last,
@@ -228,6 +235,7 @@ namespace HotChocolate.Types
                 AllowBackwardPagination
                     ? context.ArgumentValue<string?>(CursorPagingArgumentNames.Before)
                     : null);
+#nullable disable
         }
 
         internal static class CursorPagingArgumentNames

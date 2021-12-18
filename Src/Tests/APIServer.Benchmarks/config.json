@@ -1,0 +1,21 @@
+{
+  "Cfg": {
+    "APIServerUri": "https://localhost:5022",
+    "IdenitiyServerUri": "https://localhost:5001",
+    "GraphqlEndpoint":"graphql",
+    "Config_APIServer": "api_appsettings.json",
+    "Config_IdentityServer": "identity_appsettings.json"
+  },
+
+  "DefaultUser": {
+    "UserName": "testuser",
+    "Password": "testuser"
+  },
+
+  "OIDC_Client": {
+    "ClinetId": "test",
+    "ClientSecret": "secret",
+    "Scope": "api"
+  }
+  
+}

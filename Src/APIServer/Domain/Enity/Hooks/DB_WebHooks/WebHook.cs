@@ -19,8 +19,6 @@ namespace APIServer.Domain.Core.Models.WebHooks
         public long ID { get; set; }
 
         /// <summary>
-
-        /// <summary>
         /// Webhook endpoint
         /// </summary>
         public string WebHookUrl { get; set; }

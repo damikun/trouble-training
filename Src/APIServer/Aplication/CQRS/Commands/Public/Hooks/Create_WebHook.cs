@@ -18,7 +18,6 @@ using APIServer.Aplication.Shared.Behaviours;
 using SharedCore.Aplication.Shared.Attributes;
 using APIServer.Aplication.Notifications.WebHooks;
 
-
 namespace APIServer.Aplication.Commands.WebHooks
 {
 
@@ -154,14 +153,10 @@ namespace APIServer.Aplication.Commands.WebHooks
     {
 
         /// <summary>
-        /// Injected <c>IDbContextFactory<ApiDbContext></c>
+        /// Injected IDbContextFactory of ApiDbContext
         /// </summary>
         private readonly IDbContextFactory<ApiDbContext> _factory;
 
-        /// <summary>
-        /// Injected <c>IPublisher</c>
-        /// </summary>
-        private readonly SharedCore.Aplication.Interfaces.IPublisher _publisher;
 
         /// <summary>
         /// Injected <c>ICurrentUser</c>
@@ -173,13 +168,10 @@ namespace APIServer.Aplication.Commands.WebHooks
         /// </summary>
         public CreateWebHookHandler(
             IDbContextFactory<ApiDbContext> factory,
-            SharedCore.Aplication.Interfaces.IPublisher publisher,
             ICurrentUser currentuser)
         {
 
             _factory = factory;
-
-            _publisher = publisher;
 
             _current = currentuser;
         }
@@ -239,12 +231,9 @@ namespace APIServer.Aplication.Commands.WebHooks
         {
             if (response != null && !response.HasError())
             {
-
                 try
                 {
-
                     // You can extend and add any custom fields to Notification!
-
                     await _publisher.Publish(new WebHookCreatedNotifi()
                     {
                         ActivityId = Activity.Current.Id

@@ -64,7 +64,6 @@ namespace APIServer
             services.AddSingleton(Serilog.Log.Logger);
 
             services.AddSSLCertHanlder(Environment);
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

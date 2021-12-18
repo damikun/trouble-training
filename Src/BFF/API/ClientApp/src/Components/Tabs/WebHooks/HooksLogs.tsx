@@ -136,7 +136,7 @@ function HooksLogs() {
                 bgcolor="bg-transparent"
                 onEnd={HandleScrollEnd}
                 // className="bg-white border shadow-sm"
-                isEmptyMessage={"No HookRecords awailable"}
+                isEmptyMessage={"No HookRecords available"}
                 isEmpty={isEmpty}
                 divide
               >

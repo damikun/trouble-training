@@ -232,7 +232,7 @@ partial class Build : NukeBuild
 
                 if (response.IsSuccessStatusCode)
                 {
-                    Logger.Success($"Host: {host_endpoint} is awailable");
+                    Logger.Success($"Host: {host_endpoint} is available");
                     return;
                 }
                 else
@@ -260,7 +260,7 @@ partial class Build : NukeBuild
 
         }
 
-        throw new System.Exception($"Host is not awailable: {host_endpoint}");
+        throw new System.Exception($"Host is not available: {host_endpoint}");
     }
 
 

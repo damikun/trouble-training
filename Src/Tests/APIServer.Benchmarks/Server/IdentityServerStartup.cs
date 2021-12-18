@@ -1,23 +1,21 @@
 using System;
-using Microsoft.AspNetCore.Builder;
+using IdentityServer.Persistence;
 using Microsoft.AspNetCore.Hosting;
+using IdentityServer.Configuration;
+using IdentityServer.Domain.Models;
+using Microsoft.AspNetCore.Builder;
 using SharedCore.Aplication.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using IdentityServer.Configuration;
-using Microsoft.AspNetCore.HttpOverrides;
-using IdentityServer.Persistence;
-using Microsoft.EntityFrameworkCore;
-using IdentityServer.Domain.Models;
-using Microsoft.AspNetCore.Identity;
 
-namespace APIServer.API.IntegrationTests
+namespace APIServer.Benchmark
 {
-    public class IdentityTestStartup : IdentityServer.API.Startup
+    public class IdentityServerStartup : IdentityServer.API.Startup
     {
-
         private readonly IConfiguration _cfg;
-        public IdentityTestStartup(
+        public IdentityServerStartup(
             IWebHostEnvironment environment,
             IConfiguration configuration)
             : base(configuration, environment)
@@ -27,22 +25,21 @@ namespace APIServer.API.IntegrationTests
 
         public override void ConfigureServices(IServiceCollection services)
         {
-
             services.AddCorsConfiguration(Environment, _cfg);
 
             services.AddControllersWithViews();
 
             services.AddDbContext<AppIdnetityDbContext>(option =>
             {
-
                 option.UseInMemoryDatabase(Guid.NewGuid().ToString());
             });
 
             services.AddHealthChecks();
 
+            services.AddHealthChecks();
+
             services.AddMvc();
 
-            // app user 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.Password.RequireDigit = false;
@@ -70,12 +67,9 @@ namespace APIServer.API.IntegrationTests
             IApplicationBuilder app,
             IWebHostEnvironment env)
         {
+            app.UseForwardedHeaders();
 
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor |
-                ForwardedHeaders.XForwardedProto
-            });
+            app.UseHealthChecks("/health");
 
             app.UseCookiePolicy();
 
@@ -94,7 +88,6 @@ namespace APIServer.API.IntegrationTests
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{Action=Index}/{id?}");
-
             });
         }
     }

@@ -1,4 +1,5 @@
 using System;
+using SharedCore.Configuration;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
@@ -6,7 +7,6 @@ using Microsoft.Extensions.Hosting;
 using Duende.IdentityServer.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SharedCore.Configuration;
 
 namespace APIServer.Configuration
 {
