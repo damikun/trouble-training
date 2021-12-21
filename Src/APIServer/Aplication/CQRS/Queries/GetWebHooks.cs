@@ -1,4 +1,5 @@
 using MediatR;
+using AutoMapper;
 using System.Linq;
 using System.Threading;
 using FluentValidation;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 using SharedCore.Aplication.Payload;
 using Microsoft.EntityFrameworkCore;
 using HotChocolate.Types.Pagination;
+using AutoMapper.QueryableExtensions;
 using APIServer.Aplication.GraphQL.DTO;
 using SharedCore.Aplication.Interfaces;
 using SharedCore.Aplication.Core.Commands;
@@ -32,7 +34,10 @@ namespace APIServer.Aplication.Queries
     /// </summary>
     public class GetWebHooksValidator : AbstractValidator<GetWebHooks>
     {
-        public GetWebHooksValidator() { }
+        public GetWebHooksValidator()
+        {
+            // Add Field validation..   
+        }
     }
 
     /// <summary>
@@ -42,7 +47,7 @@ namespace APIServer.Aplication.Queries
     {
         public GetWebHooksAuthorizationValidator()
         {
-            // Add Field authorization cehcks..
+            // Add Field authorization..
         }
     }
 
@@ -84,12 +89,20 @@ namespace APIServer.Aplication.Queries
         private readonly IDbContextFactory<ApiDbContext> _factory;
 
         /// <summary>
+        /// Injected <c>IMapper</c>
+        /// </summary>
+        private readonly IMapper _mapper;
+
+        /// <summary>
         /// Main constructor
         /// </summary>
         public GetWebHooksHandler(
             IDbContextFactory<ApiDbContext> factory,
-            ICurrentUser currentuser)
+            ICurrentUser currentuser,
+            IMapper mapper)
         {
+            _mapper = mapper;
+
             _factory = factory;
 
             _current = currentuser;
@@ -105,7 +118,10 @@ namespace APIServer.Aplication.Queries
         {
             if (!_current.Exist)
             {
-                return GetWebHooksPayload.Success();
+                return new GetWebHooksPayload()
+                {
+                    connection = null
+                };
             }
 
             await using ApiDbContext dbContext =
@@ -113,15 +129,7 @@ namespace APIServer.Aplication.Queries
 
             var query = dbContext.WebHooks
                 .AsNoTracking()
-                .Select(e => new GQL_WebHook
-                {
-                    ID = e.ID,
-                    WebHookUrl = e.WebHookUrl,
-                    ContentType = e.ContentType,
-                    IsActive = e.IsActive,
-                    LastTrigger = e.LastTrigger,
-                    ListeningEvents = e.HookEvents
-                })
+                .ProjectTo<GQL_WebHook>(_mapper.ConfigurationProvider)
                 .AsQueryable();
 
             int? totalCount = await query.CountAsync(cancellationToken);

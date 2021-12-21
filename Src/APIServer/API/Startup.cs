@@ -53,6 +53,8 @@ namespace APIServer
 
             services.AddMemoryCache();
 
+            services.AddMapper();
+
             ConfigureTelemetry(services);
 
             services.AddScoped<ICurrentUser, CurrentUser>();
@@ -120,7 +122,6 @@ namespace APIServer
                     pattern: "{controller}/{action=Index}/{id?}");
             });
         }
-
 
         public virtual void ConfigureDBContext(IServiceCollection services)
         {

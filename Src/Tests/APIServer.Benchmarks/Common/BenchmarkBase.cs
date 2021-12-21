@@ -73,8 +73,6 @@ namespace APIServer.Benchmark
 
         public Task<QueryResponse> SendQueryAsync(string query, object? variables = null)
         {
-            var url = new Uri(APIServerUri, Endpoint).ToString();
-
             System.UriBuilder uriBuilder = new System.UriBuilder(APIServerUri);
             uriBuilder.Path += Endpoint;
 

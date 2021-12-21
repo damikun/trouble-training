@@ -1,4 +1,5 @@
 using MediatR;
+using AutoMapper;
 using System.Linq;
 using System.Threading;
 using FluentValidation;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 using SharedCore.Aplication.Payload;
 using Microsoft.EntityFrameworkCore;
 using HotChocolate.Types.Pagination;
+using AutoMapper.QueryableExtensions;
 using APIServer.Aplication.GraphQL.DTO;
 using SharedCore.Aplication.Interfaces;
 using SharedCore.Aplication.Core.Commands;
@@ -86,12 +88,20 @@ namespace APIServer.Aplication.Queries
         private readonly IDbContextFactory<ApiDbContext> _factory;
 
         /// <summary>
+        /// Injected <c>IMapper</c>
+        /// </summary>
+        private readonly IMapper _mapper;
+
+        /// <summary>
         /// Main constructor
         /// </summary>
         public GetWebHookRecordsHandler(
             IDbContextFactory<ApiDbContext> factory,
-            ICurrentUser currentuser)
+            ICurrentUser currentuser,
+            IMapper mapper)
         {
+            _mapper = mapper;
+
             _factory = factory;
 
             _current = currentuser;
@@ -105,32 +115,21 @@ namespace APIServer.Aplication.Queries
         public async Task<GetWebHookRecordsPayload> Handle(
             GetWebHookRecords request, CancellationToken cancellationToken)
         {
-            if (!_current.Exist)
+            if (!_current.Exist || request.hook_id <= 0)
             {
-                return GetWebHookRecordsPayload.Success();
+                return new GetWebHookRecordsPayload()
+                {
+                    connection = null
+                };
             }
-
             await using ApiDbContext dbContext =
                 _factory.CreateDbContext();
 
             var query = dbContext.WebHooksHistory
             .AsNoTracking()
             .Where(e => e.WebHookID == request.hook_id)
-            .Select(e => new GQL_WebHookRecord()
-            {
-                ID = e.ID,
-                WebHookID = e.WebHookID,
-                WebHookSystemID = e.WebHookID,
-                StatusCode = e.StatusCode,
-                ResponseBody = e.ResponseBody,
-                RequestBody = e.RequestBody,
-                RequestHeaders = e.RequestHeaders,
-                Guid = e.Guid,
-                Result = e.Result,
-                TriggerType = e.HookType,
-                Exception = e.Exception,
-                Timestamp = e.Timestamp,
-            }!).OrderByDescending(e => e.Timestamp);
+            .ProjectTo<GQL_WebHookRecord>(_mapper.ConfigurationProvider)
+            .OrderByDescending(e => e.Timestamp);
 
             int? totalCount = await query.CountAsync(cancellationToken);
 

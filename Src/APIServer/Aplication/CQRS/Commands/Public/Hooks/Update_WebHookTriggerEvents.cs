@@ -1,4 +1,5 @@
 using MediatR;
+using AutoMapper;
 using System.Linq;
 using System.Threading;
 using FluentValidation;
@@ -13,6 +14,7 @@ using APIServer.Aplication.Shared.Errors;
 using APIServer.Domain.Core.Models.WebHooks;
 using SharedCore.Aplication.Shared.Attributes;
 using SharedCore.Aplication.Core.Commands;
+using APIServer.Aplication.GraphQL.DTO;
 
 namespace APIServer.Aplication.Commands.WebHooks
 {
@@ -85,7 +87,7 @@ namespace APIServer.Aplication.Commands.WebHooks
         /// <summary>
         /// Updated WebHook
         /// </summary>
-        public WebHook hook { get; set; }
+        public GQL_WebHook hook { get; set; }
     }
 
     //---------------------------------------
@@ -101,9 +103,9 @@ namespace APIServer.Aplication.Commands.WebHooks
         private readonly IDbContextFactory<ApiDbContext> _factory;
 
         /// <summary>
-        /// Injected <c>IMediator</c>
+        /// Injected <c>IMapper</c>
         /// </summary>
-        private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// Injected <c>IMediator</c>
@@ -115,13 +117,12 @@ namespace APIServer.Aplication.Commands.WebHooks
         /// </summary>
         public UpdateWebHookTriggerEventsHandler(
             IDbContextFactory<ApiDbContext> factory,
-            IMediator mediator,
-            ICurrentUser currentuser)
+            ICurrentUser currentuser,
+            IMapper mapper)
         {
+            _mapper = mapper;
 
             _factory = factory;
-
-            _mediator = mediator;
 
             _current = currentuser;
         }
@@ -151,7 +152,7 @@ namespace APIServer.Aplication.Commands.WebHooks
 
             var response = UpdateWebHookTriggerEventsPayload.Success();
 
-            response.hook = wh;
+            response.hook = _mapper.Map<GQL_WebHook>(wh); ;
 
             return response;
         }

@@ -13,6 +13,8 @@ using APIServer.Aplication.Shared.Errors;
 using APIServer.Domain.Core.Models.WebHooks;
 using SharedCore.Aplication.Shared.Attributes;
 using SharedCore.Aplication.Core.Commands;
+using AutoMapper;
+using APIServer.Aplication.GraphQL.DTO;
 
 namespace APIServer.Aplication.Commands.WebHooks
 {
@@ -106,7 +108,7 @@ namespace APIServer.Aplication.Commands.WebHooks
         /// <summary>
         /// Updated WebHook
         /// </summary>
-        public WebHook hook { get; set; }
+        public GQL_WebHook hook { get; set; }
     }
 
     //---------------------------------------
@@ -124,25 +126,24 @@ namespace APIServer.Aplication.Commands.WebHooks
         /// <summary>
         /// Injected <c>IMediator</c>
         /// </summary>
-        private readonly IMediator _mediator;
+        private readonly ICurrentUser _current;
 
         /// <summary>
-        /// Injected <c>IMediator</c>
+        /// Injected <c>IMapper</c>
         /// </summary>
-        private readonly ICurrentUser _current;
+        private readonly IMapper _mapper;
 
         /// <summary>
         /// Main constructor
         /// </summary>
         public UpdateWebHookUriHandler(
             IDbContextFactory<ApiDbContext> factory,
-            IMediator mediator,
-            ICurrentUser currentuser)
+            ICurrentUser currentuser,
+            IMapper mapper)
         {
+            _mapper = mapper;
 
             _factory = factory;
-
-            _mediator = mediator;
 
             _current = currentuser;
         }
@@ -172,7 +173,7 @@ namespace APIServer.Aplication.Commands.WebHooks
 
             var response = UpdateWebHookUriPayload.Success();
 
-            response.hook = wh;
+            response.hook = _mapper.Map<GQL_WebHook>(wh);
 
             return response;
 

@@ -1,7 +1,5 @@
 using HotChocolate.Types;
 using APIServer.Aplication.Commands.WebHooks;
-using APIServer.Domain.Core.Models.WebHooks;
-using APIServer.Aplication.GraphQL.DTO;
 
 namespace APIServer.Aplication.GraphQL.Types
 {
@@ -9,26 +7,7 @@ namespace APIServer.Aplication.GraphQL.Types
     {
         protected override void Configure(IObjectTypeDescriptor<UpdateWebHookPayload> descriptor)
         {
-            descriptor.Field(e => e.hook).Type<WebHookType>().Resolve(context =>
-            {
-                WebHook e = context.Parent<UpdateWebHookPayload>().hook;
-
-                if (e == null)
-                {
-                    return null;
-                }
-
-                return new GQL_WebHook
-                {
-                    ID = e.ID,
-                    WebHookUrl = e.WebHookUrl,
-                    // Secret = e.Secret,
-                    ContentType = e.ContentType,
-                    IsActive = e.IsActive,
-                    LastTrigger = e.LastTrigger,
-                    ListeningEvents = e.HookEvents
-                };
-            });
+            descriptor.Field(e => e.hook).Type<WebHookType>();
         }
     }
 

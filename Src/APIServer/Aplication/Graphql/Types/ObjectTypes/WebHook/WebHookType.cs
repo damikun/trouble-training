@@ -1,17 +1,17 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using APIServer.Aplication.GraphQL.DataLoaders;
+using APIServer.Aplication.GraphQL.Extensions;
 using APIServer.Aplication.GraphQL.DTO;
-using APIServer.Persistence;
+using HotChocolate.Types.Pagination;
+using APIServer.Aplication.Queries;
 using HotChocolate.Resolvers;
+using System.Threading.Tasks;
 using HotChocolate.Types;
-using Microsoft.EntityFrameworkCore;
-using SharedCore.Aplication.Interfaces;
+using System.Threading;
+using MediatR;
 
 namespace APIServer.Aplication.GraphQL.Types
 {
-#pragma warning disable 612, 618 
+
     /// <summary>
     /// Graphql WebHookType
     /// </summary>
@@ -20,8 +20,7 @@ namespace APIServer.Aplication.GraphQL.Types
 
         protected override void Configure(IObjectTypeDescriptor<GQL_WebHook> descriptor)
         {
-
-            descriptor.AsNode().IdField(t => t.ID).NodeResolver((ctx, id) =>
+            descriptor.ImplementsNode().IdField(t => t.ID).ResolveNode((ctx, id) =>
                 ctx.DataLoader<WebHookByIdDataLoader>().LoadAsync(id, ctx.RequestAborted));
 
             descriptor.Field(t => t.ID).Type<NonNullType<IdType>>();
@@ -32,59 +31,36 @@ namespace APIServer.Aplication.GraphQL.Types
             });
 
             descriptor.Field(t => t.Records)
-            .UseDbContext<ApiDbContext>()
-            .Resolve(async ctx =>
-            {
-
-                await Task.CompletedTask;
-
-                ApiDbContext _context = ctx.Service<ApiDbContext>();
-
-                ICurrentUser _current = ctx.Service<ICurrentUser>();
-
-                long hook_id = ctx.Parent<GQL_WebHook>().ID;
-
-                if (!_current.Exist)
-                {
-                    return null;
-                }
-
-                if (hook_id <= 0)
-                {
-                    return new List<GQL_WebHookRecord>().AsQueryable();
-                }
-
-                return _context.WebHooksHistory
-                .AsNoTracking()
-                .Where(e => e.WebHookID == hook_id)
-                .Select(e => new GQL_WebHookRecord()
-                {
-                    ID = e.ID,
-                    WebHookID = e.WebHookID,
-                    WebHookSystemID = e.WebHookID,
-                    StatusCode = e.StatusCode,
-                    ResponseBody = e.ResponseBody,
-                    RequestBody = e.RequestBody,
-                    TriggerType = e.HookType,
-                    Result = e.Result,
-                    Guid = e.Guid,
-                    RequestHeaders = e.RequestHeaders,
-                    Exception = e.Exception,
-                    Timestamp = e.Timestamp,
-                }!).OrderByDescending(e => e.Timestamp);
-
-            })
-            .UsePaging<WebHookRecordType>()
-            .UseFiltering();
-
+            .ResolveWith<WebHookResolvers>(e => e.WebHookHistory(default!, default!, default))
+            .UseConnection<WebHookRecordType>();
         }
+
+        //-----------------------------------------
+        //-----------------------------------------
 
         private class WebHookResolvers
         {
+            public async Task<Connection<GQL_WebHookRecord>> WebHookHistory(
+               GQL_WebHookRecord hook,
+               IResolverContext ctx,
+               CancellationToken cancellationToken)
+            {
 
+                IMediator _mediator = ctx.Service<IMediator>();
 
+                var command = new GetWebHooks()
+                {
+                    arguments = ctx.GetPaggingArguments()
+                };
+
+                var response = await _mediator.Send(new GetWebHookRecords()
+                {
+                    arguments = ctx.GetPaggingArguments(),
+                    hook_id = ctx.Parent<GQL_WebHook>().ID
+                });
+
+                return response.connection;
+            }
         }
     }
-#pragma warning restore 612, 618
-
 }
