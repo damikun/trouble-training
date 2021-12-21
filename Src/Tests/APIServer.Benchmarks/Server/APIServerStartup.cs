@@ -38,6 +38,8 @@ namespace APIServer.Benchmark
 
             services.AddHealthChecks();
 
+            services.AddMapper();
+
             services.AddScoped<ICurrentUser, CurrentUser>();
 
             services.AddGraphql(Environment);

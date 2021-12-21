@@ -1,8 +1,6 @@
-
-
+using AutoMapper;
 using APIServer.Aplication.GraphQL.DTO;
 using APIServer.Domain.Core.Models.WebHooks;
-using AutoMapper;
 
 namespace APIServer.Aplication.Mapping
 {
@@ -20,9 +18,8 @@ namespace APIServer.Aplication.Mapping
                 .ForMember(dest => dest.ListeningEvents, opt => opt.MapFrom(src => src.HookEvents))
                 .ForMember(dest => dest.ContentType, opt => opt.MapFrom(src => src.ContentType))
                 .ForMember(dest => dest.WebHookUrl, opt => opt.MapFrom(src => src.WebHookUrl))
+                .ForMember(dest => dest.Records, opt => opt.Ignore())
                 .ReverseMap();
         }
     }
 }
-
-

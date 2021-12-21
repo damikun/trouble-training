@@ -159,7 +159,5 @@ namespace APIServer.Aplication.GraphQL.Queries
                 }
             }
         }
-
-
     }
 }

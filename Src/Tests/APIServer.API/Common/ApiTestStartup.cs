@@ -46,6 +46,8 @@ namespace APIServer.API.IntegrationTests
 
             services.AddGraphql(Environment);
 
+            services.AddMapper();
+
             services.AddTelemetryService(Configuration, out string source);
 
             services.AddMediatR();

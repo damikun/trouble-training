@@ -209,7 +209,7 @@ namespace APIServer.Aplication.Commands.WebHooks
 
             var response = CreateWebHookPayload.Success();
 
-            response.hook = _mapper.Map<GQL_WebHook>(hook); ;
+            response.hook = _mapper.Map<GQL_WebHook>(hook);
 
             return response;
         }

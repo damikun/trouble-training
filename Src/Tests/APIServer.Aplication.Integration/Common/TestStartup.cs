@@ -39,6 +39,8 @@ namespace APIServer.Application.IntegrationTests
 
             services.AddTelemetryService(Configuration, out string source);
 
+            services.AddMapper();
+
             services.AddMediatR();
 
             services.AddAuthentication();

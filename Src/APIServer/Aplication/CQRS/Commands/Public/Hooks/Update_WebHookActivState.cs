@@ -138,7 +138,6 @@ namespace APIServer.Aplication.Commands.WebHooks
             UpdateWebHookActivState request,
             CancellationToken cancellationToken)
         {
-
             await using ApiDbContext dbContext =
                 _factory.CreateDbContext();
 
@@ -161,7 +160,6 @@ namespace APIServer.Aplication.Commands.WebHooks
             response.hook = _mapper.Map<GQL_WebHook>(wh); ;
 
             return response;
-
         }
     }
 

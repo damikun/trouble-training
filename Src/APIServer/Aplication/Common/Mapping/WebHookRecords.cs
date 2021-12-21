@@ -25,6 +25,7 @@ namespace APIServer.Aplication.Mapping
                 .ForMember(dest => dest.TriggerType, opt => opt.MapFrom(src => src.HookType))
                 .ForMember(dest => dest.Exception, opt => opt.MapFrom(src => src.Exception))
                 .ForMember(dest => dest.Timestamp, opt => opt.MapFrom(src => src.Timestamp))
+                .ForMember(dest => dest.WebHook, opt => opt.Ignore())
                 .ReverseMap();
         }
     }

@@ -7,7 +7,8 @@ namespace APIServer.Aplication.GraphQL.Types
     {
         protected override void Configure(IObjectTypeDescriptor<CreateWebHookPayload> descriptor)
         {
-            descriptor.Field(e => e.hook).Type<WebHookType>();
+            descriptor.Field(e => e.hook)
+            .Type<WebHookType>();
         }
     }
 
