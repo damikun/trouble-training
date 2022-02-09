@@ -11,29 +11,26 @@ Important to understand:
 
 **Nuget**
 
-1) Main package
-- `dotnet add package Serilog.AspNetCore --version 4.1.1-dev-00241`
-
-2) Extensions for loging
-- `dotnet add package Serilog.Extensions.Logging --version 3.0.2-dev-10289`
-
-3) Be able to log Exception details and auto serialize it
-- `dotnet add package Serilog.Exceptions --version 7.0.0`
-
-4) Extensions to include enviroment and machine info
-- `dotnet add package Serilog.Enrichers.Environment --version 2.2.0-dev-00784`
-
-5) Extension to include `span` information with logs important for opentelemetry connection with traces
-- `dotnet add package Serilog.Enrichers.Span --version 1.2.0`
-
-6) Sink for exporting log streams to elasticsearch storage
-- `dotnet add package Serilog.Sinks.Elasticsearch --version 8.5.0-alpha0003`
-
-7) Suppor to use Serilog in Hosted services
-- `dotnet add package Serilog.Extensions.Hosting --version 4.1.2`
-
-8) Console extension - Used to colorise Console output
-- `dotnet add package Serilog.Sinks.Console --version 4.0.0`
+```xml
+    <!-- Main package -->
+    <PackageReference Include="Serilog.AspNetCore" Version="4.1.1-dev-00241" />
+    <!-- Extensions for loging -->
+    <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.2-dev-10289" />
+    <!-- Extensions to include enviroment and machine info -->
+    <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0-dev-00784" />
+    <!-- Extension to include `span` information with logs important for opentelemetry connection with traces -->
+    <PackageReference Include="Serilog.Enrichers.Span" Version="1.2.0" />
+    <!-- Be able to log Exception details and auto serialize it -->
+    <PackageReference Include="Serilog.Exceptions" Version="7.0.0" />
+    <!-- Suppor to use Serilog in Hosted services -->
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="4.1.2" />
+    <!-- Be able to update configuration -->
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.2.0-dev-00272" />
+    <!-- Console extension - Used to colorise Console output -->
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.0" />
+    <!-- Sink for exporting log streams to elasticsearch storage -->
+    <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.5.0-alpha0003" />
+```
 
 ### Setup
 
@@ -50,6 +47,18 @@ public static IHostBuilder CreateHostBuilder(string[] args) =>
 ```
 
 This demo uses ['Serilog'](https://serilog.net/), which overrides the default configuration and is used in addition to the `.NetCore` configuration.
+
+This require to extend the default builder to include `UseSerilog()`
+
+```c#
+    public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            })
+    .UseSerilog(); // <--- This
+```
 
 In `Program.cs` the function `ConfigureLogging(...)` is called to define the Serilog configuration.
 
@@ -71,39 +80,40 @@ using Microsoft.Extensions.DependencyInjection;
 
     using (var scope = host.Services.CreateScope()) {
 
-        var services = scope.ServiceProvider;
+      var services = scope.ServiceProvider;
 
-        var hostEnvironment =   scope
-                                .ServiceProvider
-                                .GetRequiredService<IWebHostEnvironment>();
-        
-        var configuration = GetLogConfigurationFromJson();
+      var hostEnvironment = scope
+                              .ServiceProvider
+                              .GetRequiredService<IWebHostEnvironment>();
 
-        logCfg = logCfg
-            .Enrich.FromLogContext()
-            .Enrich.WithExceptionDetails()
-            .Enrich.WithMachineName()
-            .Enrich.WithSpan()
-            .Enrich.WithElasticApmCorrelationInfo()
-            .Enrich.WithProperty(
-                "Environment",
-                  hostEnvironment.EnvironmentName)
-            .ReadFrom.Configuration(configuration);
+      var configuration = GetLogConfigurationFromJson();
 
-        try {
+      logCfg = logCfg
+          .Enrich.FromLogContext()
+          .Enrich.WithExceptionDetails()
+          .Enrich.WithMachineName()
+          .Enrich.WithSpan()
+          .Enrich.WithElasticApmCorrelationInfo()
+          .Enrich.WithProperty(
+              "Environment",
+                hostEnvironment.EnvironmentName)
+          .ReadFrom.Configuration(configuration);
 
-            if (hostEnvironment.IsDevelopment()) {
-                logCfg = logCfg.WriteTo.Console(
-                    theme: AnsiConsoleTheme.Code,
-                    outputTemplate: "[{ElasticApmTraceId} {ElasticApmTransactionId} {Message:lj} {NewLine}{Exception}",
-                    applyThemeToRedirectedOutput: true);
-            }
+      try
+      {
 
-            logCfg = logCfg.WriteTo.Elasticsearch(
-                ConfigureElasticSink(configuration, hostEnvironment.EnvironmentName));
+          if (hostEnvironment.IsDevelopment())
+          {
+              logCfg = logCfg.WriteTo.Console(
+                  theme: AnsiConsoleTheme.Code,
+                  outputTemplate: "[{ElasticApmTraceId} {ElasticApmTransactionId} {Message:lj} {NewLine}{Exception}",
+                  applyThemeToRedirectedOutput: true);
+          }
 
-                                    
-        } catch { }
+          logCfg = logCfg.WriteTo.Elasticsearch(
+              ConfigureElasticSink(configuration, hostEnvironment.EnvironmentName));
+      }
+      catch { }
     }
 
     Log.Logger = logCfg.CreateLogger();
@@ -111,11 +121,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 public static IConfigurationRoot  GetLogConfigurationFromJson(){
     return new ConfigurationBuilder()
-        .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-        .AddJsonFile(
-            $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",
-            optional: true)
-        .Build();
+      .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+      .AddJsonFile(
+          path: $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",
+          optional: true)
+      .Build();
 }
 
 ```
@@ -388,3 +398,4 @@ Or from `AppSettings`
 }
 
 ```
+
