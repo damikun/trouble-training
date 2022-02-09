@@ -1,12 +1,8 @@
 using Xunit;
-using MediatR;
 using System.Net.Http;
 using FluentAssertions;
 using Snapshooter.Xunit;
-using APIServer.Persistence;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-
 namespace APIServer.API.IntegrationTests.WebHooks
 {
     [Collection("Sequential")]

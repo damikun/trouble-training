@@ -115,8 +115,7 @@ namespace APIServer.Aplication.Notifications.WebHooks
         public WebHookCreatedHookQueueHandler(
             IScheduler scheduler,
             ICurrentUser currentuser,
-            ILogger logger,
-            IHttpClientFactory clientFactory
+            ILogger logger
             )
         {
 

@@ -14,7 +14,8 @@ namespace APIServer.Configuration
             IWebHostEnvironment env)
         {
             // This can be used to temporary dont validate certs!
-            // This is just example!
+            // ! This is just example! dont use this in production!!! 
+            // ! I also dont recommend using this under dev.!
             ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, errors) =>
             {
                 // local dev, just approve all certs

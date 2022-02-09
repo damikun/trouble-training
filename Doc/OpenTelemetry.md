@@ -1,23 +1,27 @@
 
 # Table of contents
 
-- [OpenTelemetry](#opentelemetry)
+- [Table of contents](#table-of-contents)
+  - [OpenTelemetry](#opentelemetry)
     - [OpenTelemetry components](#opentelemetry-components)
     - [Flow](#flow)
     - [Distributed trace](#distributed-trace)
-        - [Tracing signal](#tracing-signal)
-        - [Spans](#spans)
-        - [SpanContext](#spancontext)
-        - [Span Attributes](#span-attributes)
-        - [SpanKind](#spankind)
-        - [LifeCicle](#lifecicle)
-- [Logs vs Telemtry](#logs-vs-telemtry)
+      - [Tracing signal](#tracing-signal)
+      - [Spans](#spans)
+      - [Span Context](#span-context)
+      - [Span Attributes](#span-attributes)
+      - [Span Kind](#span-kind)
+      - [LifeCicle](#lifecicle)
+  - [Logs vs Telemtry](#logs-vs-telemtry)
     - [Backend .Net Setup](#backend-net-setup)
-        - [What is instrumentation](#what-is-instrumentation)
-        - [Configuration](#configuration)
+      - [What is instrumentation](#what-is-instrumentation)
+      - [Configuration](#configuration)
     - [Frontend React Setup](#frontend-react-setup)
-- [Jaeger](#jaeger)
-    - [Docker Install](#docker-install)
+  - [Jaeger](#jaeger)
+    - [Docker Jaeger](#docker-jaeger)
+  - [Collector docker](#collector-docker)
+    - [Collector compose](#collector-compose)
+    - [Collector config](#collector-config)
 
 ## OpenTelemetry
 
@@ -46,8 +50,6 @@ This real example from this demo that includes frontend to backend tracing and m
 <img src="./Assets/CreateWebHook_Output.png" alt="Elastic Frontend to backend distributed tracing" >
 
 </p>
-
-
 
 ### OpenTelemetry components
 
@@ -90,7 +92,7 @@ Take a look at the opentelemetry part. As you can see, our app exports data via 
 
 This communication is done via `http` or `grpc`.
 - `http` is used to send data from the frontend client to backend over proxy
-- `grpc` is used for all other communications between backend and collector and collector and APM server.
+- `grpc` is used for all other communications between backend and collector and collector and APM server. (Can be also used to frontend > collector/backend)
 
 </br>
 
@@ -122,7 +124,7 @@ A span represents an operation within a transaction and encapsulates:
 
 - `Span name` concisely identifies the work represented by the Span. Example: `get_account/{accountId}`
 
-#### SpanContext
+#### Span Context
 
 Represents all the information that identifies `Span` and encapsulates:
  - `TraceId` is the identifier for a trace (unique). TraceId is used to group all spans for a specific trace.
@@ -137,7 +139,7 @@ Attributes are key-value pairs that provide detail about a span.
  - `SpanKind` - (standardized propert) 
  - `User-Defined` - you can also create your own attribute key/value
 
-#### SpanKind
+#### Span Kind
 
 SpanKind describes the relationship between the Span, its parents, and its children in a Trace.
 
@@ -192,26 +194,26 @@ Separate-collection             |  Unified-collection
 
 **Nuget**
 
-1) Main package SDK
-- `dotnet add package OpenTelemetry --version 1.1.0`
-
-2) Main package API
-- `dotnet add package OpenTelemetry.Api --version 1.1.0`
-
-3) Extensions Hosting - Support to use in DI
-- `dotnet add package OpenTelemetry.Extensions.Hosting --version 1.0.0-rc7`
-
-4) Instrumentation `AspNetCore`
-- `dotnet add package OpenTelemetry.Instrumentation.AspNetCore --version 1.0.0-rc7`
-
-5) Instrumentation `Http`
-- `dotnet add package OpenTelemetry.Instrumentation.Http --version 1.0.0-rc7`
-
-6) Instrumentation `SQL Client`
-- `dotnet add package OpenTelemetry.Instrumentation.SqlClient --version 1.0.0-rc7`
-
-7) Instrumentation `EFCore`
-- `dotnet add package OpenTelemetry.Contrib.Instrumentation.EntityFrameworkCore --version 1.0.0-beta2`
+```xml
+    <!-- Main package SDK -->
+    <PackageReference Include="OpenTelemetry" Version="1.2.0-rc2" />
+    <!-- Extensions Hosting - Support to use in DI -->
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.0.0-rc9" />
+    <!-- Instrumentation `AspNetCore -->
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc9" />
+    <!-- Instrumentation `Http -->
+    <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0-rc9" />
+    <!-- Instrumentation `SQL Client -->
+    <PackageReference Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.0.0-rc9" />
+    <!-- Instrumentation `EFCore -->
+    <PackageReference Include="OpenTelemetry.Contrib.Instrumentation.EntityFrameworkCore" Version="1.0.0-beta2" />
+    <!-- Instrumentation `HC Graphql server -->
+    <PackageReference Include="HotChocolate.Diagnostics" Version="12.6.0" />
+    <!-- Enable trace data export to Jaeger -->
+    <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="1.2.0-rc2" />
+    <!-- Enable trace data export using Otel protocol -->
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.2.0-rc1" />
+```
 
 #### What is instrumentation
 
@@ -252,38 +254,48 @@ In `Program.cs` function `services.AddTelemerty(...)`is called to configure Open
 
         public static IServiceCollection AddTelemerty(
             this IServiceCollection serviceCollection,
-            IConfiguration Configuration, IWebHostEnvironment Environment) {
+            IConfiguration Configuration,
+            IWebHostEnvironment Environment)
+        {
 
-            serviceCollection.AddOpenTelemetryTracing((builder) => {
+            serviceCollection.AddTelemetryService(Configuration, out string trace_source);
+
+            serviceCollection.AddOpenTelemetryTracing((builder) =>
+            {
                 // Sources
-                builder.AddSource(Sources.DemoSource.Name);
+                builder.AddSource(trace_source);
 
                 builder.SetResourceBuilder(ResourceBuilder
                   .CreateDefault()
-                    //.AddAttributes( new List<KeyValuePair<String, object>> { 
-                    //   new KeyValuePair<String, object>("SomeKey", "This is String Value")
-                    //  })
+                //   .AddAttributes( new List<KeyValuePair<String, object>> { 
+                //     new KeyValuePair<String, object>("SomeKey", "This is String Value")
+                //     })
                   .AddService(Environment.ApplicationName));
 
-                  builder.AddAspNetCoreInstrumentation(opts => {
+                builder.AddAspNetCoreInstrumentation(opts =>
+                {
                     opts.RecordException = true;
+
+                    // Enricher example
                     opts.Enrich = async (activity, eventName, rawObject) =>
                     {
+
+                        await Task.CompletedTask;
+
                         if (eventName.Equals("OnStartActivity"))
                         {
-                            if (rawObject is HttpRequest {Path: {Value: "/graphql"}})
+                            if (rawObject is HttpRequest { Path: { Value: "/graphql" } })
                             {
-                                // Do something else
+                                // Do something with request..
                             }
                         }
                     };
                     // opts.Filter = (httpContext) =>
                     // {
-                    //     // only collect telemetry about HTTP GET requests
+                    // only collect telemetry about HTTP GET requests
+                    // return httpContext.Request.Method.Equals("GET");
                     // };
                 });
-
-                builder.AddElasticsearchClientInstrumentation();
 
                 builder.AddSqlClientInstrumentation();
 
@@ -293,26 +305,44 @@ In `Program.cs` function `services.AddTelemerty(...)`is called to configure Open
                 builder.AddEntityFrameworkCoreInstrumentation(
                     e => e.SetDbStatementForText = true);
 
-                builder.AddOtlpExporter(options => {
-                    options.Endpoint = new Uri("http://localhost:55680"); // Export to collector
-                    // options.Endpoint = new Uri("http://localhost:8200"); // Export dirrectly to APM
-                    // options.BatchExportProcessorOptions = new OpenTelemetry.BatchExportProcessorOptions<Activity>() {
-                    // };                
+                builder.AddHotChocolateInstrumentation();
+
+                builder.AddOtlpExporter(options =>
+                {
+                    // Load endpoint url from appsetting.json
+                    options.Endpoint = new Uri(Configuration["ConnectionStrings:OtelCollector"]);
+
+                    options.TimeoutMilliseconds = 10000;            
                 });
 
-                if (Uri.TryCreate(Configuration.GetConnectionString("Jaeger"), UriKind.     Absolute, out var uri)) {
-                    builder.AddJaegerExporter(opts => {
-                        opts.AgentHost = uri.Host;
-                        opts.AgentPort = uri.Port;
-                        opts.BatchExportProcessorOptions = new OpenTelemetry.BatchExportProcessorOptions<Activity>() {
-                        };
-                    });
-                
-                    // builder.AddZipkinExporter(opts => {
-                    //     opts.Endpoint = new Uri("http://localhost:9412/api/v2/spans");
-                    // });
-                }
+                // This is example for Jaeger integration
+                // if (Uri.TryCreate(Configuration.GetConnectionString("Jaeger"), UriKind.Absolute, out var uri)) {
+                //     builder.AddJaegerExporter(opts => {
+                //         opts.AgentHost = uri.Host;
+                //         opts.AgentPort = uri.Port;
+                //         opts.BatchExportProcessorOptions = new OpenTelemetry.BatchExportProcessorOptions<Activity>() {
+                //         };
+                //     });
+
+                //     // builder.AddZipkinExporter(opts => {
+                //     //     opts.Endpoint = new Uri("http://localhost:9412/api/v2/spans");
+                //     // });
+                // }
             });
+
+            serviceCollection.AddLogging(opt =>
+            {
+                opt.AddTraceSource(trace_source);
+
+                opt.AddOpenTelemetry(e =>
+                {
+                    e.IncludeFormattedMessage = true;
+
+                    e.IncludeScopes = true;
+                });
+            });
+
+            serviceCollection.AddScoped<ITelemetry, Telemetry>();
 
             return serviceCollection;
         }
@@ -359,7 +389,7 @@ public static class SourcesExtensions {
     
     </br>
 
-    ```
+    ```c#
     builder.SetResourceBuilder(ResourceBuilder
         .CreateDefault()
         .AddService(Environment.ApplicationName)); // APIServer or Identityserver or BFF
@@ -367,9 +397,9 @@ public static class SourcesExtensions {
     
     </br>
 
-- `.AddAttributes` - Using the builder you can adittionaly add any other global attributes to traces. This attributes are not scoped but defined for one instance.
+- `.AddAttributes` - Using the builder you can additionaly add any other global attributes to traces. This attributes are not scoped but defined for one instance.
 
-```
+```c#
 builder.SetResourceBuilder(ResourceBuilder
     .CreateDefault()
     .AddAttributes( new List<KeyValuePair<String, object>> { 
@@ -387,13 +417,14 @@ Required imports from `package.json` are:
 
 ```json
 "dependencies": {
-    "@opentelemetry/api": "^1.0.3",
-    "@opentelemetry/context-zone": "^0.25.0",
-    "@opentelemetry/exporter-collector": "^0.25.0",
-    "@opentelemetry/instrumentation-document-load": "^0.25.0",
-    "@opentelemetry/instrumentation-fetch": "^0.25.0",
-    "@opentelemetry/sdk-trace-base": "^0.25.0",
-    "@opentelemetry/sdk-trace-web": "^0.25.0",
+    "@opentelemetry/api": "1.0.4",
+    "@opentelemetry/context-zone": "1.0.1",
+    "@opentelemetry/exporter-trace-otlp-http": "0.27.0",
+    "@opentelemetry/instrumentation-document-load": "0.27.0",
+    "@opentelemetry/instrumentation-fetch": "0.27.0",
+    "@opentelemetry/sdk-trace-base": "1.0.1",
+    "@opentelemetry/sdk-trace-web": "1.0.1",
+    "@opentelemetry/resources": "1.0.1",
 }
 ```
 
@@ -431,10 +462,10 @@ import React from "react";
 import { WebTracerProvider  } from '@opentelemetry/sdk-trace-web';
 import { SimpleSpanProcessor } from '@opentelemetry/sdk-trace-base';
 import { ZoneContextManager } from '@opentelemetry/context-zone';
-import { Resource } from '@opentelemetry/resources';
 import { FetchInstrumentation } from '@opentelemetry/instrumentation-fetch';
 import { registerInstrumentations } from '@opentelemetry/instrumentation';
-import { CollectorTraceExporter } from "@opentelemetry/exporter-collector"
+import { Resource } from '@opentelemetry/resources';
+import { OTLPTraceExporter  } from "@opentelemetry/exporter-trace-otlp-http"
 import {TRACES_ENDPOINT} from "../constants"
 
 const collectorOptions = {
@@ -455,7 +486,7 @@ const provider = new WebTracerProvider({
   )});
 
 // Exporter (opentelemetry collector hidden behind bff proxy)
-const exporter = new CollectorTraceExporter(collectorOptions);
+const exporter = new OTLPTraceExporter (collectorOptions);
 
 // Instrumentation configurations for frontend
 const fetchInstrumentation = new FetchInstrumentation({
@@ -507,176 +538,176 @@ With this configuration, our frontend instruments only the outbound fetches need
 
 ```
 {
-    "resourceSpans": [
+  "resourceSpans": [
+    {
+      "resource": {
+        "attributes": [
+          {
+            "key": "service.name",
+            "value": {
+              "stringValue": "Frontend"
+            }
+          },
+          {
+            "key": "telemetry.sdk.language",
+            "value": {
+              "stringValue": "webjs"
+            }
+          },
+          {
+            "key": "telemetry.sdk.name",
+            "value": {
+              "stringValue": "opentelemetry"
+            }
+          },
+          {
+            "key": "telemetry.sdk.version",
+            "value": {
+              "stringValue": "1.0.1"
+            }
+          }
+        ],
+        "droppedAttributesCount": 0
+      },
+      "instrumentationLibrarySpans": [
         {
-            "resource": {
-                "attributes": [
-                    {
-                        "key": "service.name",
-                        "value": {
-                            "stringValue": "Frontend"
-                        }
-                    },
-                    {
-                        "key": "telemetry.sdk.language",
-                        "value": {
-                            "stringValue": "webjs"
-                        }
-                    },
-                    {
-                        "key": "telemetry.sdk.name",
-                        "value": {
-                            "stringValue": "opentelemetry"
-                        }
-                    },
-                    {
-                        "key": "telemetry.sdk.version",
-                        "value": {
-                            "stringValue": "0.25.0"
-                        }
-                    }
-                ],
-                "droppedAttributesCount": 0
-            },
-            "instrumentationLibrarySpans": [
+          "spans": [
+            {
+              "traceId": "d6d75718930b3558e4fe0808877f8e80",
+              "spanId": "3b7f9b452a7b5ddf",
+              "name": "HTTP POST",
+              "kind": 3,
+              "startTimeUnixNano": 1644389713311600000,
+              "endTimeUnixNano": 1644389713673100000,
+              "attributes": [
                 {
-                    "spans": [
-                        {
-                            "traceId": "feb38bd3b490541cfc55c78a1ede4274",
-                            "spanId": "b951b114a6794850",
-                            "name": "HTTP POST",
-                            "kind": 3,
-                            "startTimeUnixNano": 1632346729734600000,
-                            "endTimeUnixNano": 1632346730239500000,
-                            "attributes": [
-                                {
-                                    "key": "component",
-                                    "value": {
-                                        "stringValue": "fetch"
-                                    }
-                                },
-                                {
-                                    "key": "http.method",
-                                    "value": {
-                                        "stringValue": "POST"
-                                    }
-                                },
-                                {
-                                    "key": "http.url",
-                                    "value": {
-                                        "stringValue": "https://localhost:5015/graphql"
-                                    }
-                                },
-                                {
-                                    "key": "http.status_code",
-                                    "value": {
-                                        "intValue": 200
-                                    }
-                                },
-                                {
-                                    "key": "http.status_text",
-                                    "value": {
-                                        "stringValue": ""
-                                    }
-                                },
-                                {
-                                    "key": "http.host",
-                                    "value": {
-                                        "stringValue": "localhost:5015"
-                                    }
-                                },
-                                {
-                                    "key": "http.scheme",
-                                    "value": {
-                                        "stringValue": "https"
-                                    }
-                                },
-                                {
-                                    "key": "http.user_agent",
-                                    "value": {
-                                        "stringValue": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36"
-                                    }
-                                },
-                                {
-                                    "key": "http.response_content_length",
-                                    "value": {
-                                        "intValue": 176
-                                    }
-                                }
-                            ],
-                            "droppedAttributesCount": 0,
-                            "events": [
-                                {
-                                    "timeUnixNano": 1632346729735600000,
-                                    "name": "fetchStart",
-                                    "attributes": [],
-                                    "droppedAttributesCount": 0
-                                },
-                                {
-                                    "timeUnixNano": 1632346729735600000,
-                                    "name": "domainLookupStart",
-                                    "attributes": [],
-                                    "droppedAttributesCount": 0
-                                },
-                                {
-                                    "timeUnixNano": 1632346729735600000,
-                                    "name": "domainLookupEnd",
-                                    "attributes": [],
-                                    "droppedAttributesCount": 0
-                                },
-                                {
-                                    "timeUnixNano": 1632346729735600000,
-                                    "name": "connectStart",
-                                    "attributes": [],
-                                    "droppedAttributesCount": 0
-                                },
-                                {
-                                    "timeUnixNano": 1632346729735600000,
-                                    "name": "secureConnectionStart",
-                                    "attributes": [],
-                                    "droppedAttributesCount": 0
-                                },
-                                {
-                                    "timeUnixNano": 1632346729735600000,
-                                    "name": "connectEnd",
-                                    "attributes": [],
-                                    "droppedAttributesCount": 0
-                                },
-                                {
-                                    "timeUnixNano": 1632346729736600000,
-                                    "name": "requestStart",
-                                    "attributes": [],
-                                    "droppedAttributesCount": 0
-                                },
-                                {
-                                    "timeUnixNano": 1632346730234800000,
-                                    "name": "responseStart",
-                                    "attributes": [],
-                                    "droppedAttributesCount": 0
-                                },
-                                {
-                                    "timeUnixNano": 1632346730235700000,
-                                    "name": "responseEnd",
-                                    "attributes": [],
-                                    "droppedAttributesCount": 0
-                                }
-                            ],
-                            "droppedEventsCount": 0,
-                            "status": {
-                                "code": 0
-                            },
-                            "links": [],
-                            "droppedLinksCount": 0
-                        }
-                    ],
-                    "instrumentationLibrary": {
-                        "name": "@opentelemetry/instrumentation-fetch",
-                        "version": "0.25.0"
-                    }
+                  "key": "component",
+                  "value": {
+                    "stringValue": "fetch"
+                  }
+                },
+                {
+                  "key": "http.method",
+                  "value": {
+                    "stringValue": "POST"
+                  }
+                },
+                {
+                  "key": "http.url",
+                  "value": {
+                    "stringValue": "/graphql"
+                  }
+                },
+                {
+                  "key": "http.status_code",
+                  "value": {
+                    "intValue": 200
+                  }
+                },
+                {
+                  "key": "http.status_text",
+                  "value": {
+                    "stringValue": ""
+                  }
+                },
+                {
+                  "key": "http.host",
+                  "value": {
+                    "stringValue": "localhost:5015"
+                  }
+                },
+                {
+                  "key": "http.scheme",
+                  "value": {
+                    "stringValue": "https"
+                  }
+                },
+                {
+                  "key": "http.user_agent",
+                  "value": {
+                    "stringValue": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36"
+                  }
+                },
+                {
+                  "key": "http.response_content_length",
+                  "value": {
+                    "intValue": 168
+                  }
                 }
-            ]
+              ],
+              "droppedAttributesCount": 0,
+              "events": [
+                {
+                  "timeUnixNano": 1644389713312300000,
+                  "name": "fetchStart",
+                  "attributes": [],
+                  "droppedAttributesCount": 0
+                },
+                {
+                  "timeUnixNano": 1644389713312300000,
+                  "name": "domainLookupStart",
+                  "attributes": [],
+                  "droppedAttributesCount": 0
+                },
+                {
+                  "timeUnixNano": 1644389713312300000,
+                  "name": "domainLookupEnd",
+                  "attributes": [],
+                  "droppedAttributesCount": 0
+                },
+                {
+                  "timeUnixNano": 1644389713312300000,
+                  "name": "connectStart",
+                  "attributes": [],
+                  "droppedAttributesCount": 0
+                },
+                {
+                  "timeUnixNano": 1644389713312300000,
+                  "name": "secureConnectionStart",
+                  "attributes": [],
+                  "droppedAttributesCount": 0
+                },
+                {
+                  "timeUnixNano": 1644389713312300000,
+                  "name": "connectEnd",
+                  "attributes": [],
+                  "droppedAttributesCount": 0
+                },
+                {
+                  "timeUnixNano": 1644389713314500000,
+                  "name": "requestStart",
+                  "attributes": [],
+                  "droppedAttributesCount": 0
+                },
+                {
+                  "timeUnixNano": 1644389713670100000,
+                  "name": "responseStart",
+                  "attributes": [],
+                  "droppedAttributesCount": 0
+                },
+                {
+                  "timeUnixNano": 1644389713670800100,
+                  "name": "responseEnd",
+                  "attributes": [],
+                  "droppedAttributesCount": 0
+                }
+              ],
+              "droppedEventsCount": 0,
+              "status": {
+                "code": 0
+              },
+              "links": [],
+              "droppedLinksCount": 0
+            }
+          ],
+          "instrumentationLibrary": {
+            "name": "@opentelemetry/instrumentation-fetch",
+            "version": "0.27.0"
+          }
         }
-    ]
+      ]
+    }
+  ]
 }
 ```
 
@@ -713,7 +744,7 @@ If you wanna use Jaeger without `Opentelemetry SDK` You can [explore its SDK](ht
     - Kafka
     - memory storage
 
-### Docker Install
+### Docker Jaeger
 
 You can use Jaeger when you start distributed tracing.
 
@@ -727,3 +758,70 @@ Isn`t it a bit strange if we want to track a large distributed service, but only
 > **In production enviroment you wanna choose scalable jaeger deployment!**
 
 For deployin `Jaeger` in production please [follow official documentation](https://www.jaegertracing.io/docs/1.24/deployment/).
+
+
+## Collector docker
+
+This is example of Collector configuration docker file + otel cfg.
+
+> Detail configuration with elastic search is presented in separate doc. file for elasticsearch integration!
+
+### Collector compose
+
+```yaml  
+opentelemetry-collector:
+container_name: opentelemetry-collector
+hostname: opentelemetry-collector
+image: otel/opentelemetry-collector:0.43.0
+command: [ "--config=/etc/otel-collector-config.yml" ]
+volumes:
+    - ./otel-collector-config.yml:/etc/otel-collector-config.yml
+ports:
+    - "14250:14250"
+    - "55680:55680"
+    - "55690:55690"
+# depends_on:
+#     elasticsearch01:
+#     condition: service_healthy
+#     apm-server:
+#     condition: service_healthy
+networks:
+    - elastic
+
+networks:
+  elastic:
+    driver: bridge
+```
+
+### Collector config
+
+```yaml
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:55680
+      http:
+        endpoint: "0.0.0.0:55690"
+
+processors:
+  batch:
+
+exporters:
+  otlp/2:
+    endpoint: apm-server:8200
+    tls:
+      insecure: true
+  logging:
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [logging, otlp/2]
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [logging, otlp/2]
+```

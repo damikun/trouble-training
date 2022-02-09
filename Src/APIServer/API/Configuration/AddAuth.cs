@@ -20,22 +20,26 @@ namespace APIServer.Configuration
 
                 options.MapInboundClaims = true;
 
-                // options.BackchannelHttpHandler = new HttpClientHandler
-                // {
-                //     ServerCertificateCustomValidationCallback = (sender, certificate, chain, sslPolicyErrors) => { return true; }
-                // };
-
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateAudience = false,
                     ValidateIssuer = true,
                     ValidateLifetime = true,
-
                     ValidTypes = new[] { "at+jwt" },
-
                     NameClaimType = "name",
                     RoleClaimType = "role"
                 };
+
+                /*  Use this to force disable SSL validation in dev.
+                options.BackchannelHttpHandler = new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = (
+                        sender,
+                        certificate,
+                        chain,
+                        sslPolicyErrors) => { return true; }
+                };
+                */
             });
 
             serviceCollection.AddAuthorization(options =>

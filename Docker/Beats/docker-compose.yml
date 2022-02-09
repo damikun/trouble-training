@@ -1,7 +1,7 @@
 version: '3'
 services:
   filebeat:
-    image: docker.elastic.co/beats/filebeat:7.15.0
+    image: docker.elastic.co/beats/filebeat:7.17.0
     restart: on-failure
     container_name: filebeat
     # Need to override user so we can access the log files, and docker.sock
@@ -25,7 +25,7 @@ services:
     network_mode: "host"
 
   heartbeat:
-    image: docker.elastic.co/beats/heartbeat:7.15.0
+    image: docker.elastic.co/beats/heartbeat:7.17.0
     restart: on-failure
     user: root
     container_name: heartbeat
@@ -39,7 +39,7 @@ services:
     command: --strict.perms=false -e  # -e flag to log to stderr and disable syslog/file output
 
   metricbeat:
-    image: docker.elastic.co/beats/metricbeat:7.15.0
+    image: docker.elastic.co/beats/metricbeat:7.17.0
     restart: on-failure
     container_name: metricbeat
     user: root
@@ -53,7 +53,7 @@ services:
     command: "--strict.perms=false -e"
 
   packetbeat:
-    image: docker.elastic.co/beats/packetbeat:7.15.0
+    image: docker.elastic.co/beats/packetbeat:7.17.0
     restart: on-failure
     container_name: packetbeat
     user: root

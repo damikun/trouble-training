@@ -39,12 +39,7 @@ namespace APIServer.Aplication.Shared.Behaviours
         )
         {
 
-            var activity = _telemetry.AppSource.StartActivity(
-                String.Format(
-                    "UnhandledExBehaviour: Request<{0}>",
-                     typeof(TRequest).FullName),
-                      ActivityKind.Server
-            );
+            var activity = GetActivity(request);
 
             try
             {
@@ -73,7 +68,6 @@ namespace APIServer.Aplication.Shared.Behaviours
 
                     if (!ex.Data.Contains("command_failed"))
                     {
-
                         ex.Data.Add("command_failed", true);
                     }
 
@@ -86,6 +80,15 @@ namespace APIServer.Aplication.Shared.Behaviours
                 activity?.Stop();
                 activity?.Dispose();
             }
+        }
+
+        private Activity GetActivity(TRequest request)
+        {
+            return _telemetry.AppSource.StartActivity(
+                String.Format(
+                    "UnhandledExBehaviour: Request<{0}>",
+                    typeof(TRequest).FullName),
+                    ActivityKind.Server);
         }
     }
 }

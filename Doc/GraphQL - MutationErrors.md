@@ -206,7 +206,7 @@ namespace APIServer.Aplication.Commands.WebHooks {
     public class CreateWebHookPayload : BasePayload<CreateWebHookPayload, ICreateWebHookError> {
 
         /// <summary> Created WebHook </summary>
-        public WebHook hook { get; set; }
+        public GQL_WebHook hook { get; set; }
     }
 
     /// <summary>Handler for <c>CreateWebHook</c> command </summary>
@@ -228,12 +228,20 @@ namespace APIServer.Aplication.Commands.WebHooks {
         private readonly ICurrentUser _current;
 
         /// <summary>
+        /// Injected <c>IMapper</c>
+        /// </summary>
+        private readonly IMapper _mapper;
+
+        /// <summary>
         /// Main constructor
         /// </summary>
         public CreateWebHookHandler(
             IDbContextFactory<ApiDbContext> factory,
             SharedCore.Aplication.Interfaces.IPublisher publisher,
-            ICurrentUser currentuser) {
+            ICurrentUser currentuser,
+            IMapper mapper) {
+
+            _mapper = mapper;
 
             _factory = factory;
 
@@ -270,7 +278,7 @@ namespace APIServer.Aplication.Commands.WebHooks {
 
                 var response = CreateWebHookPayload.Success();
 
-                response.hook = hook;
+                response.hook = _mapper.Map<GQL_WebHook>(hook);
 
                 return response;
         }
@@ -796,20 +804,8 @@ namespace ErrorHandling.Aplication.GraphQL.Types {
                 return _context.WebHooksHistory
                 .AsNoTracking()
                 .Where(e => e.WebHookID == hook_id)
-                .Select(e => new GQL_WebHookRecord() {
-                    ID = e.ID,
-                    WebHookID = e.WebHookID,
-                    WebHookSystemID = e.WebHookID,
-                    StatusCode = e.StatusCode,
-                    ResponseBody = e.ResponseBody,
-                    RequestBody = e.RequestBody,
-                    TriggerType = e.HookType,
-                    Result = e.Result,
-                    Guid = e.Guid,
-                    RequestHeaders = e.RequestHeaders,
-                    Exception = e.Exception,
-                    Timestamp = e.Timestamp,
-                }!).OrderByDescending(e => e.Timestamp);
+                .ProjectTo<GQL_WebHookRecord>(_mapper.ConfigurationProvider)
+                .OrderByDescending(e => e.Timestamp);
 
             })
             .UsePaging<WebHookRecordType>()
@@ -831,22 +827,7 @@ And mutation types are:
 namespace ErrorHandling.Aplication.GraphQL.Types {
     public class CreateWebHookPayloadType : ObjectType<CreateWebHookPayload> {
         protected override void Configure(IObjectTypeDescriptor<CreateWebHookPayload> descriptor) {
-            descriptor.Field(e => e.hook).Type<WebHookType>().Resolve(context => {
-                WebHook e = context.Parent<CreateWebHookPayload>().hook;
-
-                if (e == null) {
-                    return null;
-                }
-
-                return new GQL_WebHook {
-                    ID = e.ID,
-                    WebHookUrl = e.WebHookUrl,
-                    ContentType = e.ContentType,
-                    IsActive = e.IsActive,
-                    LastTrigger = e.LastTrigger,
-                    ListeningEvents = e.HookEvents
-                };
-            });
+            descriptor.Field(e => e.hook).Type<WebHookType>();
         }
     }
 

@@ -1,7 +1,7 @@
 version: '3'
 services:
   metricbeat:
-    image: docker.elastic.co/beats/metricbeat:7.15.0
+    image: docker.elastic.co/beats/metricbeat:7.17.0
     user: root
     container_name: metricbeat
     # configs:

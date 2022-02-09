@@ -15,19 +15,19 @@ namespace SharedCore.Aplication.Services
            IConfiguration Configuration, out string source_name)
         {
 
-            var identityOptions = Configuration.GetSection(nameof(TelemetryOptions))
+            var cfgOption = Configuration.GetSection(nameof(TelemetryOptions))
                 .Get<TelemetryOptions>();
 
-            if (identityOptions is null)
+            if (cfgOption is null || string.IsNullOrWhiteSpace(cfgOption?.SourceName))
             {
-                throw new ArgumentNullException(nameof(TelemetryOptions), "Options not found!");
+                throw new ArgumentNullException(nameof(TelemetryOptions), "Options not found or value is incorrect!");
             }
 
             serviceCollection.Configure<TelemetryOptions>(
-                opt => opt.SourceName = identityOptions.SourceName
+                opt => opt.SourceName = cfgOption.SourceName
             );
 
-            source_name = new ActivitySource(identityOptions.SourceName).Name;
+            source_name = new ActivitySource(cfgOption.SourceName).Name;
 
             serviceCollection.AddSingleton<ITelemetry, Telemetry>();
 

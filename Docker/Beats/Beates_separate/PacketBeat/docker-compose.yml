@@ -1,7 +1,7 @@
 version: '3'
 services:
   packetbeat:
-    image: docker.elastic.co/beats/packetbeat:7.15.0
+    image: docker.elastic.co/beats/packetbeat:7.17.0
     container_name: packetbeat
      # Need to override user so we can access the log files, and docker.sock
     user: root

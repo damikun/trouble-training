@@ -78,44 +78,20 @@ namespace SharedCore.Aplication.Services
             CancellationToken cancellationToken = default)
         {
 
-            Activity activity = _telemetry.AppSource.StartActivity(
-                    String.Format(
-                        "PublishCore: Notification<{0}>",
-                        notification.GetType().FullName),
-                        ActivityKind.Producer);
+            Activity activity = StartActivity(notification);
 
-            if (notification is INotificationBase)
+            if (notification is INotificationBase I_base_notify)
             {
+                SetTrace_ActivityId(I_base_notify);
 
-                INotificationBase I_base_notify = notification as INotificationBase;
+                SetTrace_ParrentId(I_base_notify);
 
-                // If any activity is in context will be set as default in case value of ActivityId == null
-                if (I_base_notify.ActivityId == null
-                    && Activity.Current != null
-                    && Activity.Current.Id != null)
-                {
-                    I_base_notify.ActivityId = Activity.Current.Id;
-                }
-
-                // This chane activity parrent / children relation..
-                if (I_base_notify.ActivityId != null
-                     && Activity.Current != null
-                     && Activity.Current.ParentId == null)
-                {
-                    Activity.Current?.SetParentId(I_base_notify.ActivityId);
-                }
-
-                if (Activity.Current != null
-                    && Activity.Current.ParentId != null)
-                {
-                    Activity.Current?.AddTag("Parrent Id", Activity.Current.ParentId);
-                }
-
+                SetTraceDataCtx_ParrentId();
             }
 
             try
             {
-                Activity.Current?.AddTag("Activity Id", Activity.Current.Id);
+                SetTraceDataCtx_ActivityId();
 
                 activity?.Start();
 
@@ -128,6 +104,48 @@ namespace SharedCore.Aplication.Services
                 activity?.Stop();
                 activity?.Dispose();
             }
+        }
+
+        private Activity StartActivity(INotification notification)
+        {
+            return _telemetry.AppSource.StartActivity(
+                    String.Format(
+                        "PublishCore: Notification<{0}>",
+                        notification.GetType().FullName),
+                        ActivityKind.Producer);
+        }
+
+        private void SetTrace_ParrentId(INotificationBase I_base_notify)
+        {
+            if (I_base_notify.ActivityId != null
+                && Activity.Current?.ParentId == null)
+            {
+                Activity.Current?.SetParentId(I_base_notify.ActivityId);
+            }
+        }
+
+        private void SetTrace_ActivityId(INotificationBase I_base_notify)
+        {
+            // If any activity is in context will be set as default in case value of ActivityId == null
+            if (I_base_notify.ActivityId == null
+                && Activity.Current?.Id != null)
+            {
+                I_base_notify.ActivityId = Activity.Current.Id;
+            }
+        }
+
+        private void SetTraceDataCtx_ParrentId()
+        {
+            if (Activity.Current != null
+                && Activity.Current.ParentId != null)
+            {
+                Activity.Current?.AddTag("Parrent Id", Activity.Current.ParentId);
+            }
+        }
+
+        private void SetTraceDataCtx_ActivityId()
+        {
+            Activity.Current?.AddTag("Activity Id", Activity.Current.Id);
         }
     }
 }

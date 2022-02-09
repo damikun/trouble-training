@@ -129,6 +129,7 @@ namespace APIServer.Aplication.GraphQL.Queries
             return await loader.LoadAsync(webhook_id, httpcontext.HttpContext.RequestAborted);
         }
 
+        // !This is just example, you wanna normaly move it to separate handler...
         public async IAsyncEnumerable<GQL_WebHook> WebHooksTestStream(
         [Service] ICurrentUser current,
         [Service] IDbContextFactory<ApiDbContext> factory,

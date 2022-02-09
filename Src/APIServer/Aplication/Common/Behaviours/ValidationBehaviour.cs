@@ -23,18 +23,18 @@ namespace APIServer.Aplication.Shared.Behaviours
     public class ValidationBehaviour<TRequest, TResponse>
      : IPipelineBehavior<TRequest, TResponse>
     {
-        private readonly ICurrentUser _currentUserService;
+        private readonly ICurrentUser _currentUser;
         private readonly IEnumerable<IValidator<TRequest>> _validators;
         private readonly ILogger _logger;
         private readonly ITelemetry _telemetry;
 
         public ValidationBehaviour(
-            ICurrentUser currentUserService,
+            ICurrentUser currentUser,
             IEnumerable<IValidator<TRequest>> validators,
             ILogger logger,
             ITelemetry telemetry)
         {
-            _currentUserService = currentUserService;
+            _currentUser = currentUser;
             _validators = validators;
             _logger = logger;
             _telemetry = telemetry;
@@ -46,42 +46,26 @@ namespace APIServer.Aplication.Shared.Behaviours
             RequestHandlerDelegate<TResponse> next)
         {
 
-
             if (_validators.Any())
             {
+                var activity = GetActivity(request);
 
-                var activity = _telemetry.AppSource.StartActivity(
-                    String.Format(
-                        "ValidationBehaviour: Request<{0}>",
-                        request.GetType().FullName),
-                        ActivityKind.Server);
                 try
                 {
-
                     activity?.Start();
 
-                    var context = new ValidationContext<TRequest>(request);
+                    var context = GetValidationCtx(request);
 
-                    var validationResults = await Task.WhenAll(
-                        _validators.Where(v => !(v is IAuthorizationValidator))
-                        .Select(v => v.ValidateAsync(context, cancellationToken)));
-
-                    var failures = validationResults
-                    .SelectMany(r => r.Errors)
-                    .Where(f => f != null)
-                    .ToList();
+                    var failures = await Validate<TRequest>(context, cancellationToken);
 
                     if (failures.Count != 0)
                         return HandleValidationErrors(failures);
-
                 }
                 catch (Exception ex)
                 {
-
                     _telemetry.SetOtelError(ex);
 
                     throw;
-
                 }
                 finally
                 {
@@ -92,6 +76,24 @@ namespace APIServer.Aplication.Shared.Behaviours
 
             // Continue in pipe
             return await next();
+        }
+
+        private async Task<List<ValidationFailure>> Validate<T>(
+            ValidationContext<T> ctx, CancellationToken ct)
+        {
+            var validationResults = await Task.WhenAll(
+            _validators.Where(v => !(v is IAuthorizationValidator))
+            .Select(v => v.ValidateAsync(ctx, ct)));
+
+            return validationResults
+            .SelectMany(r => r.Errors)
+            .Where(f => f != null)
+            .ToList();
+        }
+
+        private ValidationContext<TRequest> GetValidationCtx(TRequest request)
+        {
+            return new ValidationContext<TRequest>(request);
         }
 
         private static TResponse HandleValidationErrors(List<ValidationFailure> error_obj)
@@ -107,7 +109,6 @@ namespace APIServer.Aplication.Shared.Behaviours
 
                 foreach (var item in error_obj)
                 {
-
                     payload.AddError(
                         new ValidationError(
                             item.PropertyName,
@@ -142,6 +143,15 @@ namespace APIServer.Aplication.Shared.Behaviours
                 .ValidationException("Validation error appear");
 
             }
+        }
+
+        private Activity GetActivity(TRequest request)
+        {
+            return _telemetry.AppSource.StartActivity(
+                    String.Format(
+                        "ValidationBehaviour: Request<{0}>",
+                        request.GetType().FullName),
+                        ActivityKind.Server);
         }
     }
 }

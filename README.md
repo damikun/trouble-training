@@ -94,9 +94,11 @@ There are two options:
 
 </br>
 
-## Run Frontned and Backend
+## Run Frontend and Backend
 
-From root directory run `tye run` 
+From root directory run `tye run`  
+
+(Make sure Docker is running before)
 
 </br>
 

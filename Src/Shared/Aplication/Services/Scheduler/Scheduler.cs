@@ -28,59 +28,48 @@ namespace SharedCore.Aplication.Services
             string description = null)
         {
 
-            Activity activity = _telemetry.AppSource.StartActivity(
-                    String.Format(
-                        "SchedulerEnqueue: Request<{0}>",
-                        request.GetType().FullName),
-                        ActivityKind.Producer); ;
+            Activity activity = StartActivity(request);
 
-            if (request is ISharedCommandBase)
+            if (request is ISharedCommandBase i_request_base)
             {
-                ISharedCommandBase i_request_base = request as ISharedCommandBase;
-
+                // This gets later in command scheduler executor overide by current activity ID.
                 i_request_base.ActivityId = Activity.Current.Id;
 
-                // This chane activity parrent / children relation..
-                if (i_request_base.ActivityId != null
-                    && Activity.Current != null
-                    && Activity.Current.ParentId == null)
-                {
-                    Activity.Current.SetParentId(Activity.Current.Id);
-                }
+                // This sets Parent id as current activity Id relation
+                i_request_base.SetActivityIdAsParrentId();
 
-                if (Activity.Current != null && Activity.Current.ParentId != null)
-                {
-                    Activity.Current.AddTag("Parrent Id", Activity.Current.ParentId);
-                }
+                // This sets helper Data tag (ParentId) in trace ctx.
+                SetTraceCtxData_ParrentId();
             }
 
             try
             {
-
-                Activity.Current?.AddTag("Activity Id", Activity.Current.Id);
+                // This sets helper Data tag (ActivityId) in trace ctx.
+                SetTraceCtxData_ActivityId();
 
                 activity?.Start();
 
                 var mediatorSerializedObject = SerializeObject(request, description);
 
-                return BackgroundJob.Enqueue(
+                var id = BackgroundJob.Enqueue(
                     () => _handler.ExecuteCommand(mediatorSerializedObject));
+
+                SetTraceCtxData_ScheduledId(id);
+
+                return id;
 
             }
             catch (Exception ex)
             {
-
                 _telemetry.SetOtelError(ex);
 
                 throw;
-
             }
             finally
             {
                 activity?.Stop();
                 activity?.Dispose();
             }
-
         }
 
         private string Enqueue(
@@ -202,5 +191,34 @@ namespace SharedCore.Aplication.Services
 
             return new MediatorSerializedObject(fullTypeName, data, description);
         }
+
+        private Activity StartActivity(IRequest request)
+        {
+            return _telemetry.AppSource.StartActivity(
+                    String.Format(
+                        "SchedulerEnqueue: Request<{0}>",
+                        request.GetType().FullName),
+                        ActivityKind.Producer);
+        }
+
+        private void SetTraceCtxData_ParrentId()
+        {
+            if (Activity.Current?.ParentId != null)
+            {
+                Activity.Current.AddTag("Parrent Id", Activity.Current.ParentId);
+            }
+        }
+
+        private void SetTraceCtxData_ScheduledId(string id)
+        {
+            if (Activity.Current != null)
+            {
+                Activity.Current.AddTag("Scheduled Id", id);
+            }
+        }
+
+        private void SetTraceCtxData_ActivityId() =>
+            Activity.Current?.AddTag("Activity Id", Activity.Current.Id);
+
     }
 }

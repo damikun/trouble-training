@@ -2,10 +2,10 @@ import React from "react";
 import { WebTracerProvider  } from '@opentelemetry/sdk-trace-web';
 import { SimpleSpanProcessor } from '@opentelemetry/sdk-trace-base';
 import { ZoneContextManager } from '@opentelemetry/context-zone';
-import { Resource } from '@opentelemetry/resources';
 import { FetchInstrumentation } from '@opentelemetry/instrumentation-fetch';
 import { registerInstrumentations } from '@opentelemetry/instrumentation';
-import { CollectorTraceExporter } from "@opentelemetry/exporter-collector"
+import { Resource } from '@opentelemetry/resources';
+import { OTLPTraceExporter  } from "@opentelemetry/exporter-trace-otlp-http"
 import {TRACES_ENDPOINT} from "../constants"
 
 const collectorOptions = {
@@ -26,7 +26,7 @@ const provider = new WebTracerProvider({
   )});
 
 // Exporter (opentelemetry collector hidden behind bff proxy)
-const exporter = new CollectorTraceExporter(collectorOptions);
+const exporter = new OTLPTraceExporter (collectorOptions);
 
 // Instrumentation configurations for frontend
 const fetchInstrumentation = new FetchInstrumentation({

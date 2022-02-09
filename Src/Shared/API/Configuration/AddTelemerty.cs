@@ -8,6 +8,7 @@ using SharedCore.Aplication.Services;
 using SharedCore.Aplication.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace SharedCore.Configuration
 {
@@ -24,7 +25,6 @@ namespace SharedCore.Configuration
 
             serviceCollection.AddOpenTelemetryTracing((builder) =>
             {
-
                 // Sources
                 builder.AddSource(trace_source);
 
@@ -55,8 +55,8 @@ namespace SharedCore.Configuration
                     };
                     // opts.Filter = (httpContext) =>
                     // {
-                    //     // only collect telemetry about HTTP GET requests
-                    //     // return httpContext.Request.Method.Equals("GET");
+                    // only collect telemetry about HTTP GET requests
+                    // return httpContext.Request.Method.Equals("GET");
                     // };
                 });
 
@@ -71,14 +71,22 @@ namespace SharedCore.Configuration
                 builder.AddEntityFrameworkCoreInstrumentation(
                     e => e.SetDbStatementForText = true);
 
+                builder.AddHotChocolateInstrumentation();
+
                 builder.AddOtlpExporter(options =>
                 {
-                    options.Endpoint = new Uri(Configuration["ConnectionStrings:OtelCollector"]); // Export to collector
-                    // options.Endpoint = new Uri("http://localhost:8200"); // Export dirrectly to APM
+                    // Export to collector
+                    options.Endpoint = new Uri(Configuration["ConnectionStrings:OtelCollector"]);
+
+                    options.TimeoutMilliseconds = 10000;
+
+                    // Export dirrectly to APM
+                    // options.Endpoint = new Uri("http://localhost:8200"); 
                     // options.BatchExportProcessorOptions = new OpenTelemetry.BatchExportProcessorOptions<Activity>() {
                     // };                
                 });
 
+                // This is example for Jaeger integration
                 // if (Uri.TryCreate(Configuration.GetConnectionString("Jaeger"), UriKind.Absolute, out var uri)) {
                 //     builder.AddJaegerExporter(opts => {
                 //         opts.AgentHost = uri.Host;
@@ -91,6 +99,18 @@ namespace SharedCore.Configuration
                 //     //     opts.Endpoint = new Uri("http://localhost:9412/api/v2/spans");
                 //     // });
                 // }
+            });
+
+            serviceCollection.AddLogging(opt =>
+            {
+                opt.AddTraceSource(trace_source);
+
+                opt.AddOpenTelemetry(e =>
+                {
+                    e.IncludeFormattedMessage = true;
+
+                    e.IncludeScopes = true;
+                });
             });
 
             serviceCollection.AddScoped<ITelemetry, Telemetry>();

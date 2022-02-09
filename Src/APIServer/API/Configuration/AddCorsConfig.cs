@@ -22,6 +22,7 @@ namespace APIServer.Configuration
 
             if (env.IsDevelopment() && !cfg.IsTyeEnviroment())
             {
+                // This is dev. allowed origins
                 allowed_origins.AddRange(new string[]{
                     "https://localhost:5001",
                     "https://localhost:5015",

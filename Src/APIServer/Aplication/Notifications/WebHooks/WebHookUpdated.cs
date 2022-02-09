@@ -45,8 +45,7 @@ namespace APIServer.Aplication.Notifications.WebHooks
         public WebHookUpdatedEventLogHandler(
             IScheduler scheduler,
             ICurrentUser currentuser,
-            ILogger logger,
-            IHttpClientFactory clientFactory
+            ILogger logger
             )
         {
 
@@ -70,6 +69,7 @@ namespace APIServer.Aplication.Notifications.WebHooks
 
             try
             {
+
                 _scheduler.Enqueue(new EnqueSaveEvent<WebHookUpdated>()
                 {
                     Event = new WebHookUpdated()

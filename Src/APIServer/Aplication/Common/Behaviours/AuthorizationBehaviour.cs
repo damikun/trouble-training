@@ -68,11 +68,7 @@ namespace APIServer.Aplication.Shared.Behaviours
             if (authorizeAttributes.Any())
             {
 
-                var activity = _telemetry.AppSource.StartActivity(
-                    String.Format(
-                        "AuthorizationBehaviour: Request<{0}>",
-                        request.GetType().FullName),
-                        ActivityKind.Server);
+                var activity = GetActivity(request);
 
                 try
                 {
@@ -231,7 +227,15 @@ namespace APIServer.Aplication.Shared.Behaviours
 
             return validationFailures == null ?
                 new ValidationFailure[0] : validationFailures;
+        }
 
+        private Activity GetActivity(TRequest request)
+        {
+            return _telemetry.AppSource.StartActivity(
+                    String.Format(
+                        "AuthorizationBehaviour: Request<{0}>",
+                        request.GetType().FullName),
+                        ActivityKind.Server);
         }
     }
 }

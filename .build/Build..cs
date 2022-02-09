@@ -83,6 +83,7 @@ partial class Build : NukeBuild
     AbsolutePath Identity_Project => RootDirectory / "Src" / "IdentityServer" / "API";
 
     AbsolutePath Build_Root => RootDirectory / ".build";
+
     AbsolutePath CI_Cert_Script => RootDirectory / ".build" / "ci_certs.ps1";
 
     string Copyright = $"Copyright © Dalibor-Kundrat {DateTime.Now.Year}";

@@ -7,7 +7,6 @@ namespace SharedCore.Aplication.Interfaces
 
     public interface IScheduler
     {
-
         string Enqueue(
             IRequest request,
             string description = null);

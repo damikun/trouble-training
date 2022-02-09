@@ -1,7 +1,7 @@
 version: '3'
 services:
   apm-server:
-    image: docker.elastic.co/apm/apm-server:7.15.0
+    image: docker.elastic.co/apm/apm-server:7.17.0
     hostname: apm-server
     depends_on:
       elasticsearch01:
@@ -30,7 +30,7 @@ services:
   opentelemetry-collector:
     container_name: opentelemetry-collector
     hostname: opentelemetry-collector
-    image: otel/opentelemetry-collector:0.33.0
+    image: otel/opentelemetry-collector:0.43.0
     command: [ "--config=/etc/otel-collector-config.yml" ]
     volumes:
       - ./otel-collector-config.yml:/etc/otel-collector-config.yml
@@ -47,7 +47,7 @@ services:
       - elastic
       
   elasticsearch01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
     hostname: elasticsearch01
     restart: on-failure
     container_name: es01
@@ -75,7 +75,7 @@ services:
       retries: 50
 
   elasticsearch02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
     hostname: elasticsearch02
     restart: on-failure
     container_name: es02
@@ -95,7 +95,7 @@ services:
     networks:
       - elastic
   kibana:
-    image: docker.elastic.co/kibana/kibana:7.15.0
+    image: docker.elastic.co/kibana/kibana:7.17.0
     hostname: kibana
     depends_on:
       elasticsearch01:
@@ -113,11 +113,8 @@ services:
       test: curl --write-out 'HTTP %{http_code}' --fail --silent --output /dev/null http://localhost:5601/api/status
 
   logstash:
-    image: docker.elastic.co/logstash/logstash:7.15.0
+    image: docker.elastic.co/logstash/logstash:7.17.0
     hostname: logstash
-    depends_on:
-      elasticsearch01:
-        condition: service_healthy
     volumes:
       # - type: bind
       #   source: ./logstash/logstash.yml

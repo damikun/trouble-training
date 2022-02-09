@@ -23,5 +23,4 @@ namespace SharedCore.Aplication.Interfaces
         ActivitySource AppSource { get; }
 
     }
-
 }

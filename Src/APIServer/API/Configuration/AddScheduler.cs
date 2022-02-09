@@ -19,7 +19,7 @@ namespace APIServer.Configuration
 
             serviceCollection.AddHangfire((provider, configuration) =>
             {
-
+                // This is alternative for PostgreSQL
                 // configuration.UsePostgreSqlStorage(
                 //     Configuration["ConnectionStrings:HangfireConnection"]);
 

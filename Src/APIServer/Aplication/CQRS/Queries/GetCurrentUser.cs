@@ -89,7 +89,10 @@ namespace APIServer.Aplication.Queries
             if (!_current.Exist)
             {
                 // We return null in case user is not authenticated!
-                return GetCurrentUserPayload.Success();
+                return new GetCurrentUserPayload()
+                {
+                    user = null
+                };
             }
 
             // You can extend object as needed

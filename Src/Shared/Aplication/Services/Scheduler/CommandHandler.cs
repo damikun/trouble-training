@@ -20,11 +20,14 @@ namespace SharedCore.Aplication.Services
         private readonly IMediator _mediator;
         private readonly ITelemetry _telemetry;
         public readonly string assembly_name;
-        public CommandHandler(IMediator mediator, ITelemetry telemetry)
+        public CommandHandler(
+            IMediator mediator,
+            ITelemetry telemetry,
+            string assembly_name = "APIServer.Aplication")
         {
             this._mediator = mediator;
             this._telemetry = telemetry;
-            this.assembly_name = "APIServer.Aplication";
+            this.assembly_name = assembly_name;
         }
 
         [DisplayName("{0}")]
@@ -40,52 +43,24 @@ namespace SharedCore.Aplication.Services
                 if (req != null)
                 {
 
-                    string activity_name = null;
                     Activity activity = null;
 
-                    if (req is ISharedCommandBase)
+                    if (req is ISharedCommandBase I_base_command)
                     {
+                        activity = CreateActivity(I_base_command, ActivityKind.Consumer);
 
-                        activity_name = String.Format(
-                                       "SchedulerExecutor: Request<{0}>",
-                                       (req as ISharedCommandBase).GetType().FullName);
-
-                        ISharedCommandBase I_base_command = req as ISharedCommandBase;
-
-                        activity = _telemetry.AppSource.StartActivity(
-                                    activity_name,
-                                    ActivityKind.Consumer,
-                                    I_base_command.ActivityId);
-
-                        if (Activity.Current != null && Activity.Current.ParentId != null)
-                        {
-                            Activity.Current.AddTag("Parrent Id", I_base_command.ActivityId);
-                        }
-
+                        SetTraceCtxData_ParrentId(I_base_command);
                     }
-                    else if (req is IRequest)
+                    else if (req is IRequest I_mediatr_command)
                     {
-
-                        activity_name = String.Format(
-                                       "SchedulerExecutor: Request<{0}>",
-                                       (req as IRequest).GetType().FullName);
-
-                        activity = _telemetry.AppSource.StartActivity(activity_name, ActivityKind.Consumer);
-
+                        activity = CreateActivity(I_mediatr_command, ActivityKind.Consumer);
                     }
                     else
                     {
-                        activity_name = String.Format(
-                                        "SchedulerExecutor: Request<{0}>",
-                                        (req as object).GetType().FullName);
-
-                        activity = _telemetry.AppSource.StartActivity(activity_name, ActivityKind.Consumer);
+                        activity = CreateActivity(req, ActivityKind.Consumer);
                     }
 
-                    if (Activity.Current != null)
-                    {
-                        Activity.Current.AddTag("Activity Id", Activity.Current.Id);
-                    }
+                    SetTraceCtxData_ActivityId();
 
                     try
                     {
@@ -96,11 +71,9 @@ namespace SharedCore.Aplication.Services
                     }
                     catch (Exception ex)
                     {
-
                         _telemetry.SetOtelError(ex);
 
                         throw;
-
                     }
                     finally
                     {
@@ -134,5 +107,29 @@ namespace SharedCore.Aplication.Services
             return Assembly.Load(assembly_name).GetType(mediatorSerializedObject.FullTypeName);
         }
 
+        private Activity CreateActivity(object request, ActivityKind kind)
+        {
+            return _telemetry.AppSource.StartActivity(
+                    String.Format(
+                        "SchedulerEnqueue: Request<{0}>",
+                        request.GetType().FullName),
+                        kind, request is ISharedCommandBase sharedBase ? sharedBase.ActivityId : null);
+        }
+
+        private void SetTraceCtxData_ParrentId(ISharedCommandBase command)
+        {
+            if (command.ActivityId is not null)
+            {
+                Activity.Current.AddTag("Parrent Id", command.ActivityId);
+            }
+        }
+
+        private void SetTraceCtxData_ActivityId()
+        {
+            if (Activity.Current?.Id is not null)
+            {
+                Activity.Current.AddTag("Activity Id", Activity.Current?.Id);
+            }
+        }
     }
 }

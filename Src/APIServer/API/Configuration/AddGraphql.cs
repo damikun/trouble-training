@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Primitives;
 using GraphQL.Server.Ui.Playground;
 using GraphQL.Server.Ui.Voyager;
+using HotChocolate.Diagnostics;
 
 namespace APIServer.Configuration
 {
@@ -74,8 +75,16 @@ namespace APIServer.Configuration
                 .AddQueryFieldToMutationPayloads()
 
                 .AddHttpRequestInterceptor<IntrospectionInterceptor>()
+
+                // This 2 are temporary workerounds to enable stream under relay
                 .TryAddTypeInterceptor<StreamTypeInterceptor>()
                 .AddHttpRequestInterceptor<StreamRequestInterceptor>()
+
+                .AddInstrumentation(opt =>
+                {
+                    opt.RenameRootActivity = true;
+                    opt.RequestDetails = RequestDetails.All;
+                })
 
                 .AddFiltering()
                 .AddSorting()

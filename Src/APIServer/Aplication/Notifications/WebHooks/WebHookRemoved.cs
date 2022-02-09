@@ -45,8 +45,7 @@ namespace APIServer.Aplication.Notifications.WebHooks
         public WebHookRemovedEventLogHandler(
             IScheduler scheduler,
             ICurrentUser currentuser,
-            ILogger logger,
-            IHttpClientFactory clientFactory
+            ILogger logger
             )
         {
 

@@ -20,7 +20,8 @@ namespace APIServer.Aplication.GraphQL.Types
                  ctx.DataLoader<UserByIdDataLoader>()
                  .LoadAsync(id, ctx.RequestAborted));
 
-            descriptor.Field("systemid").Type<NonNullType<StringType>>().Resolve((IResolverContext context) =>
+            descriptor.Field("systemid").Type<NonNullType<StringType>>()
+            .Resolve((IResolverContext context) =>
             {
                 return context.Parent<GQL_User>().Guid.ToString();
             });

@@ -38,29 +38,22 @@ namespace APIServer.Aplication.Shared.Behaviours
             RequestHandlerDelegate<TResponse> next)
         {
 
-            var activity = _telemetry.AppSource.StartActivity(
-                String.Format(
-                    "TracingBehaviour: Request<{0}>",
-                    typeof(TRequest).FullName),
-                    ActivityKind.Server
-            );
+            var activity = GetActivity(request);
 
             if (typeof(TRequest).IsSubclassOf(typeof(CommandBase)))
             {
 
                 ISharedCommandBase I_base_command = request as ISharedCommandBase;
 
-                if (I_base_command.ActivityId == null
-                    && Activity.Current != null
-                    && Activity.Current.Id != null)
+                if (I_base_command.ActivityId is null
+                    && Activity.Current?.Id is not null)
                 {
                     I_base_command.ActivityId = Activity.Current.Id;
                 }
 
-                // This chane activity parrent / children relation..
-                if (I_base_command.ActivityId != null
-                    && Activity.Current != null
-                    && Activity.Current.ParentId == null)
+                // This sets activity parrent / children relation..
+                if (I_base_command.ActivityId is not null
+                    && Activity.Current?.ParentId is null)
                 {
                     Activity.Current.SetParentId(I_base_command.ActivityId);
                 }
@@ -78,6 +71,15 @@ namespace APIServer.Aplication.Shared.Behaviours
                 activity?.Stop();
                 activity?.Dispose();
             }
+        }
+
+        private Activity GetActivity(TRequest request)
+        {
+            return _telemetry.AppSource.StartActivity(
+                String.Format(
+                    "TracingBehaviour: Request<{0}>",
+                    typeof(TRequest).FullName),
+                    ActivityKind.Server);
         }
     }
 }

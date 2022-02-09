@@ -8,6 +8,8 @@ using GreenDonut;
 using APIServer.Persistence;
 using APIServer.Aplication.GraphQL.DTO;
 using SharedCore.Aplication.Interfaces;
+using AutoMapper.QueryableExtensions;
+using AutoMapper;
 
 namespace APIServer.Aplication.GraphQL.DataLoaders
 {
@@ -25,14 +27,23 @@ namespace APIServer.Aplication.GraphQL.DataLoaders
         /// </summary>
         private readonly ICurrentUser _current;
 
+        /// <summary>
+        /// Injected <c>IMapper</c>
+        /// </summary>
+        private readonly IMapper _mapper;
+
         private SemaphoreSlim _semaphoregate = new SemaphoreSlim(1);
 
         public WebHookRecordByIdDataLoader(
             IBatchScheduler scheduler,
             IDbContextFactory<ApiDbContext> factory,
-            ICurrentUser current) : base(scheduler)
+            ICurrentUser current,
+            IMapper mapper) : base(scheduler)
         {
+            _mapper = mapper;
+
             _current = current;
+
             _factory = factory;
         }
 
@@ -56,21 +67,7 @@ namespace APIServer.Aplication.GraphQL.DataLoaders
                 return await dbContext.WebHooksHistory
                 .AsNoTracking()
                 .Where(s => keys.Contains(s.ID))
-                .Select(e => new GQL_WebHookRecord
-                {
-                    ID = e.ID,
-                    WebHookID = e.WebHookID,
-                    WebHookSystemID = e.WebHookID,
-                    StatusCode = e.StatusCode,
-                    ResponseBody = e.ResponseBody,
-                    RequestBody = e.RequestBody,
-                    TriggerType = e.HookType,
-                    Result = e.Result,
-                    Guid = e.Guid,
-                    RequestHeaders = e.RequestHeaders,
-                    Exception = e.Exception,
-                    Timestamp = e.Timestamp
-                })
+                .ProjectTo<GQL_WebHookRecord>(_mapper.ConfigurationProvider)
                 .ToDictionaryAsync(t => t.ID, cancellationToken);
             }
             finally

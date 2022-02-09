@@ -2,7 +2,6 @@ using MediatR;
 using HotChocolate;
 using HotChocolate.Types;
 using System.Threading.Tasks;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using APIServer.Domain.Core.Models.WebHooks;
@@ -48,9 +47,6 @@ namespace APIServer.Aplication.GraphQL.Mutation
             [Service] IMediator _mediator,
             [Service] IHttpContextAccessor accessor)
         {
-
-            var id = accessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-
             return await _mediator.Send(new CreateWebHook()
             {
                 WebHookUrl = request.WebHookUrl,
