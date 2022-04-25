@@ -741,7 +741,7 @@ namespace APIServer.Aplication.Commands.WebHooks {
 As you can see, the logic of the commands (as underling under GraphQL) already prepares the request/response objects to fit well in the GraphQL layer.
 
 This means:
-- Validation and Athorization checks are automatically transferred into validation and authorization errors under the MediatR behaviour.
+- Validation and Authorization checks are automatically transferred into validation and authorization errors under the MediatR behaviour.
 - The handler returns a `payload` based object that is later consumed by GraphQL.
 - Each command also defines a custom marker interface, such as `ICreateWebHookError`.
 
